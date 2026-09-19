@@ -43,7 +43,26 @@ img{max-width:100%}
 
 .page{display:none}.page.active{display:block}
 
-.hero{text-align:center;padding:4rem var(--g) 2.5rem;max-width:620px;margin-inline:auto}
+.hero-wrap{position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;display:flex;justify-content:center;gap:1rem;opacity:.12;filter:blur(2px);z-index:0;pointer-events:none}
+.hero-bg img{width:220px;height:320px;object-fit:cover;border-radius:var(--r);flex-shrink:0}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .hero-bg{opacity:.08}}
+:root[data-theme="dark"] .hero-bg{opacity:.08}
+.hero{text-align:center;padding:4rem var(--g) 2.5rem;max-width:620px;margin-inline:auto;position:relative;z-index:1}
+
+.photo-strip{display:flex;gap:.75rem;overflow:hidden;padding:0;margin:0 calc(var(--g)*-1)}
+.photo-strip img{height:200px;flex:1 0 auto;min-width:200px;object-fit:cover;border-radius:0}
+@media(max-width:768px){.photo-strip img{height:140px;min-width:140px}}
+
+.cta-photo{position:relative;overflow:hidden}
+.cta-photo-bg{position:absolute;inset:0;z-index:0}
+.cta-photo-bg img{width:100%;height:100%;object-fit:cover}
+.cta-photo-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(27,62,30,.88),rgba(27,62,30,.94))}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .cta-photo-bg::after{background:linear-gradient(to bottom,rgba(10,10,8,.92),rgba(10,10,8,.96))}}
+:root[data-theme="dark"] .cta-photo-bg::after{background:linear-gradient(to bottom,rgba(10,10,8,.92),rgba(10,10,8,.96))}
+.cta-photo .cta-inner{position:relative;z-index:1}
+.cta-photo h2{color:#fff!important}
+.cta-photo p{color:rgba(255,255,255,.7)!important}
 .hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:var(--yellow-bg);border:1px solid rgba(251,192,45,.2);padding:.5rem 1rem;border-radius:var(--r-pill);font-size:.8125rem;font-weight:600;color:#F57F17;margin-bottom:1.75rem}
 .hero h1{font-family:var(--font-d);font-size:clamp(2.25rem,6vw,3.25rem);line-height:1.15;color:var(--ink);margin-bottom:1rem;font-weight:400}
 .hero h1 em{font-style:italic;color:var(--accent);text-decoration:underline;text-decoration-color:rgba(46,125,50,.3);text-underline-offset:4px}
@@ -190,6 +209,8 @@ img{max-width:100%}
   </div>
 </nav></div>
 
+<div class="hero-wrap">
+<div class="hero-bg" aria-hidden="true" id="hero-bg"></div>
 <div class="hero">
   <div class="hero-badge">&#x1F4AA; Pour les étudiants qui s'entraînent</div>
   <h1>Des repas muscu <em>pile dans ton budget</em></h1>
@@ -213,6 +234,7 @@ img{max-width:100%}
     </div>
   </div>
 </div>
+</div><!-- /hero-wrap -->
 
 <!-- LOGOS -->
 <div class="logos-w">
@@ -236,6 +258,9 @@ img{max-width:100%}
     <span class="logo-chip"><img id="img-bulk" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAC/ElEQVRYhe2XvUtjTRSHn3tjTFCCHyg2aqEhEUQ7G4kfKVSEFL61ARuRSMBSULCxEaMIymVTLDaC1i+K+A/YBAsLC9NoKZpgjBDXaJTfFlmvm43Vwm628MCFYX4zc55z7pkZxqBom8B/QA3wwp+1KuAb8D8wB/AFUIW+LwbwQDHyStg3E8hXyDlA3gQKFQQomBV0DsAnwCfAvwMQiURYXl7+7YVcLheWZTE+Pm73BQIBLMuioaGhZGxfXx/RaJTq6moArgGdn59L0m8fqzU1NZIky7LsvsXFRUlSe3t7ydjm5mYFAgE5nc5rOwMXFxecnJzQ399PIpHg9PSUcDhsU3u9XizLwufzvafPNNna2mJoaIjHx0cAbm5ubP329haAl5fi/TY8PMzOzg7pdJrj42MKhcJ7BjY2NpTNZiVJyWRSl5eXkqTNzU0BCgaDkqRQKGRHYhiGJCkWiwmQJC0tLdn67OxsSVbv7u4kSYZhvPW9Z8DhcFBXV8fk5CRdXV10dHQwPz/P3NwcnZ2dnJ2dAZDL5ewIi2tDOp3+qCx4fn4GIBQKEY/HcTgcdHd32/PgpyL0+/1cXV2xt7dni2trawBMT0/bKX54eChz9FZMvwJms1kADg4OiEQiFAoFkslkyVwb4OnpCZfL9WEk9/f3vL6+AuB2u8v0Nw2gtbXVbjc1NQHF3RAIBMhkMmQyGTweT8n8a0CxWEyStL29LdM05Xa7dXh4KElqaWkRoFwup1QqpcbGRhmGod3dXUmSz+cToKOjI0lSMBgUoJmZmZIaME1TkhSPx+0asAH29/clSfl8Xj9bOBy2F+jt7dWvFo1Gbb2qqkqJREKSNDAwoNHRUUlSW1ubPUaSUqlUOcDY2JgGBwfldru1srKi9fV1eb3esv3u8Xi0sLCg1dVV9fT0fHgmTE1Nye/3q76+XuFwWLW1tbY2MTGhkZERG8D4AdDy4c//83bz79wFnwCfAJUEcFbQv9MEyg/3v2duB9AK9FUI4Kvxo7EFTFCB5/l34L/k55p0ABgAAAAASUVORK5CYII=" alt="Bulk" width="20" height="20">Bulk</span>
   </div>
 </div>
+
+<!-- PHOTO STRIP -->
+<div class="photo-strip" id="photo-strip" aria-hidden="true"></div>
 
 <!-- MEALS -->
 <section class="sec">
@@ -289,7 +314,8 @@ img{max-width:100%}
   </div>
 </section>
 
-<div class="cta-w">
+<div class="cta-w cta-photo">
+  <div class="cta-photo-bg" id="cta-bg"></div>
   <div class="cta-inner">
     <h2>Prêt à manger pour tes objectifs ?</h2>
     <p>Calcule tes macros en 2 minutes. Gratuit, sans inscription.</p>
@@ -378,4 +404,25 @@ document.getElementById('res-content').innerHTML=h;showPage('result');
 setTimeout(function(){document.querySelectorAll('.macro-fill').forEach(function(el){el.style.width=el.getAttribute('data-w')})},100)}
 function initReveal(){var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target)}})},{threshold:0.08,rootMargin:'0px 0px -40px 0px'});document.querySelectorAll('.rv').forEach(function(el){el.classList.remove('vis');obs.observe(el)})}
 initReveal();
+
+(function(){
+  var photos=[
+    document.getElementById('img-chicken'),
+    document.getElementById('img-lentil'),
+    document.getElementById('img-wrap'),
+    document.getElementById('img-pasta'),
+    document.getElementById('img-bolo'),
+    document.getElementById('img-pancakes')
+  ];
+  var srcs=photos.map(function(i){return i?i.src:''}).filter(Boolean);
+  // Hero background: clone food photos as faded bg
+  var hbg=document.getElementById('hero-bg');
+  if(hbg&&srcs.length){srcs.forEach(function(s){var img=document.createElement('img');img.src=s;img.alt='';hbg.appendChild(img)})}
+  // Photo strip between logos and meals
+  var strip=document.getElementById('photo-strip');
+  if(strip&&srcs.length){srcs.concat(srcs.slice(0,3)).forEach(function(s){var img=document.createElement('img');img.src=s;img.alt='';strip.appendChild(img)})}
+  // CTA background
+  var cbg=document.getElementById('cta-bg');
+  if(cbg&&srcs[0]){var img=document.createElement('img');img.src=srcs[0];img.alt='';cbg.appendChild(img)}
+})();
 </script>
