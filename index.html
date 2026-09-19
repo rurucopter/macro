@@ -71,16 +71,21 @@ img{max-width:100%}
 .hero-small{font-size:.75rem;color:var(--faint);display:flex;align-items:center;gap:1rem}
 .hero-small span{display:flex;align-items:center;gap:.25rem}
 
-.preview-w{max-width:380px;margin:2.5rem auto 0;background:var(--surface);border-radius:var(--r);border:1px solid var(--border);box-shadow:var(--shadow-lg);overflow:hidden}
-.preview-top{background:var(--accent-bg);padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:center;font-size:.8125rem;font-weight:600;color:var(--accent-text)}
-.preview-body{padding:1rem 1.25rem}
-.preview-item{display:flex;align-items:center;gap:.75rem;padding:.625rem 0;border-bottom:1px solid var(--border)}
+.preview-w{max-width:340px;margin:2rem auto 0;background:var(--surface);border-radius:1rem;border:1px solid var(--border);box-shadow:var(--shadow-lg);overflow:hidden;transform:rotate(-1deg);transition:transform .3s}
+.preview-w:hover{transform:rotate(0deg) scale(1.02)}
+.preview-top{background:var(--accent);padding:.75rem 1rem;display:flex;justify-content:space-between;align-items:center;font-size:.75rem;font-weight:600;color:#fff}
+.preview-body{padding:.75rem 1rem .5rem}
+.preview-item{display:flex;align-items:center;gap:.5rem;padding:.375rem 0;border-bottom:1px solid var(--border)}
 .preview-item:last-child{border:none}
-.preview-emoji{font-size:1.25rem;width:32px;text-align:center}
-.preview-text{flex:1;font-size:.875rem;color:var(--ink2)}
-.preview-qty{font-size:.8125rem;color:var(--faint);font-weight:500}
-.preview-total{display:flex;justify-content:space-between;padding-top:.75rem;margin-top:.25rem;border-top:2px dashed var(--border);font-weight:700;color:var(--ink)}
-.preview-check{text-align:center;padding:.75rem 0 .25rem;font-size:.8125rem;color:var(--accent);font-weight:600}
+.preview-emoji{font-size:1rem;width:24px;text-align:center}
+.preview-text{flex:1;font-size:.8125rem;color:var(--ink2)}
+.preview-qty{font-size:.75rem;color:var(--faint);font-weight:600;background:var(--bg2);padding:.125rem .5rem;border-radius:var(--r-pill)}
+.preview-total{display:flex;justify-content:space-between;padding-top:.5rem;margin-top:.125rem;border-top:2px dashed var(--border);font-weight:700;font-size:.9375rem;color:var(--ink)}
+.preview-total span:last-child{color:var(--accent)}
+.preview-bar{height:4px;background:var(--bg2);border-radius:2px;margin-top:.5rem;overflow:hidden}
+.preview-bar-fill{height:100%;width:48%;background:var(--accent);border-radius:2px}
+.preview-bar-label{display:flex;justify-content:space-between;font-size:.625rem;color:var(--faint);margin-top:.25rem}
+.preview-check{text-align:center;padding:.5rem 0 .25rem;font-size:.75rem;color:#fff;font-weight:600;background:var(--accent);margin:.5rem -1rem -.5rem;padding:.5rem}
 
 .logos-w{padding:2.5rem 0;overflow:hidden;position:relative}
 .logos-w::before,.logos-w::after{content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none}
@@ -255,7 +260,7 @@ img{max-width:100%}
   </div>
 
   <div class="preview-w">
-    <div class="preview-top"><span>&#x1F6D2; Liste de courses</span><span>Budget : 24&#x20AC; / 50&#x20AC;</span></div>
+    <div class="preview-top"><span>&#x1F6D2; Liste de courses — Semaine 38</span><span>Lidl</span></div>
     <div class="preview-body">
       <div class="preview-item"><span class="preview-emoji">&#x1F357;</span><span class="preview-text">Filets de poulet</span><span class="preview-qty">1,8 kg</span></div>
       <div class="preview-item"><span class="preview-emoji">&#x1F35A;</span><span class="preview-text">Riz basmati</span><span class="preview-qty">1 kg</span></div>
@@ -264,7 +269,9 @@ img{max-width:100%}
       <div class="preview-item"><span class="preview-emoji">&#x1F96B;</span><span class="preview-text">Thon en conserve</span><span class="preview-qty">&#xD7;6</span></div>
       <div class="preview-item"><span class="preview-emoji">&#x1FAD8;</span><span class="preview-text">Lentilles corail</span><span class="preview-qty">500 g</span></div>
       <div class="preview-total"><span>Total</span><span>24,12 &#x20AC;</span></div>
-      <div class="preview-check">&#x2713; 147g de protéines / jour — objectif atteint</div>
+      <div class="preview-bar"><div class="preview-bar-fill"></div></div>
+      <div class="preview-bar-label"><span>24,12&#x20AC; dépensés</span><span>50&#x20AC; budget</span></div>
+      <div class="preview-check">&#x2713; 147g prot/jour — objectif atteint</div>
     </div>
   </div>
 </div>
