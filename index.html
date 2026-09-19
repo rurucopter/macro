@@ -82,12 +82,16 @@ img{max-width:100%}
 .preview-total{display:flex;justify-content:space-between;padding-top:.75rem;margin-top:.25rem;border-top:2px dashed var(--border);font-weight:700;color:var(--ink)}
 .preview-check{text-align:center;padding:.75rem 0 .25rem;font-size:.8125rem;color:var(--accent);font-weight:600}
 
-.logos-w{padding:2.5rem var(--g);max-width:var(--max-w);margin-inline:auto}
-.logos-label{text-align:center;font-size:.75rem;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:1.25rem}
-.logos{display:flex;align-items:center;justify-content:center;gap:.625rem;flex-wrap:wrap}
-.logo-chip{display:inline-flex;align-items:center;gap:.4rem;padding:.375rem .75rem .375rem .5rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-pill);font-size:.75rem;font-weight:600;color:var(--ink2);transition:border-color .2s}
-.logo-chip:hover{border-color:var(--accent)}
-.logo-chip img{width:20px;height:20px;border-radius:4px;object-fit:contain}
+.logos-w{padding:2.5rem 0;overflow:hidden;position:relative}
+.logos-w::before,.logos-w::after{content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none}
+.logos-w::before{left:0;background:linear-gradient(to right,var(--bg),transparent)}
+.logos-w::after{right:0;background:linear-gradient(to left,var(--bg),transparent)}
+.logos-label{text-align:center;font-size:.75rem;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:1.25rem;padding-inline:var(--g)}
+.logos-track{display:flex;gap:1rem;animation:marquee 30s linear infinite;width:max-content}
+.logos-track:hover{animation-play-state:paused}
+.logo-chip{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1rem .5rem .625rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-pill);font-size:.8125rem;font-weight:600;color:var(--ink2);white-space:nowrap;flex-shrink:0}
+.logo-chip img{width:22px;height:22px;border-radius:4px;object-fit:contain}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
 .sec{padding:4rem var(--g);max-width:var(--max-w);margin-inline:auto}
 .sec-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:2.5rem;box-shadow:var(--shadow);margin-bottom:1.5rem}
@@ -198,6 +202,26 @@ img{max-width:100%}
 }
 @media(max-width:480px){.mg{grid-template-columns:1fr}.res-cards{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+/* social proof */
+.social-proof{display:flex;align-items:center;gap:.5rem;font-size:.875rem;color:var(--tx2);margin-top:.75rem}
+.sp-avatars{display:flex}
+.sp-avatars span{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;margin-left:-6px;border:2px solid var(--bg);color:#fff;font-weight:600}
+.sp-avatars span:first-child{margin-left:0}
+.sp-count{font-weight:600;color:var(--tx)}
+.sp-dot{width:6px;height:6px;border-radius:50%;background:#22C55E;animation:pulse-dot 2s ease infinite}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+/* testimonials */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;max-width:56rem;margin:0 auto}
+.testi{background:var(--card);border:1px solid var(--bdr);border-radius:1rem;padding:1.25rem;display:flex;flex-direction:column;gap:.75rem}
+.testi-stars{color:#F59E0B;font-size:1rem;letter-spacing:2px}
+.testi-text{font-size:.9375rem;line-height:1.5;color:var(--tx);flex:1}
+.testi-author{display:flex;align-items:center;gap:.625rem;font-size:.8125rem;color:var(--tx2)}
+.testi-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.875rem;color:#fff;font-weight:600}
+@media(max-width:640px){.testi-grid{grid-template-columns:1fr}}
+/* sticky mobile CTA */
+.sticky-cta{display:none;position:fixed;bottom:0;left:0;right:0;padding:.75rem 1rem;background:var(--bg);border-top:1px solid var(--bdr);z-index:100;text-align:center;box-shadow:0 -4px 12px rgba(0,0,0,.08)}
+.sticky-cta .btn{width:100%}
+@media(max-width:640px){.sticky-cta.show{display:block}}
 </style>
 
 <!-- LANDING -->
@@ -218,6 +242,16 @@ img{max-width:100%}
   <div class="hero-cta">
     <button class="btn btn-p btn-lg" onclick="startOnboarding()">Découvrir mon plan &#x2192;</button>
     <div class="hero-small"><span>&#x2713; Gratuit</span><span>&#x2713; Sans inscription</span><span>&#x2713; 2 min</span></div>
+    <div class="social-proof rv">
+      <div class="sp-avatars">
+        <span style="background:#3B82F6">L</span>
+        <span style="background:#F59E0B">M</span>
+        <span style="background:#22C55E">A</span>
+        <span style="background:#8B5CF6">S</span>
+      </div>
+      <span><span class="sp-count" id="sp-counter">1 247</span> plans créés cette semaine</span>
+      <span class="sp-dot"></span>
+    </div>
   </div>
 
   <div class="preview-w">
@@ -239,7 +273,7 @@ img{max-width:100%}
 <!-- LOGOS -->
 <div class="logos-w">
   <div class="logos-label">Adapté à tes magasins et tes marques</div>
-  <div class="logos" id="logo-strip">
+  <div class="logos-track" id="logo-strip">
     <span class="logo-chip"><img id="img-lidl" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAABF1BMVEX/8AAAUKrmChS/0+rE1uvF1+s/eIDd2hdThHKxGTbdDBrOECLKEiYyb4imuDuMJU8OS6HWDx2zVzPSEiCes0HDFCruUQ10mFy/FS0aSJnw9fpzLV+gHkBGOny/HyzAhSqzPjSWIUizSjRPN3atGzm4GDJaM26RI0tnMGbgwRT2mAf1kAj91wL4sAXvWg3R0h99nlZNgHbzgwmEJ1PHkybv2go7PYPXrxrs0gxvLWHOoCCzYzOzRjTozQ7YtRmbIES4LDH7xAMuQoznvQ/rOw+4cC/pKRH+4QFmkGYWXpvs5A1GfHvPpCD5uQSlHT73owZval+Qqkpwd15ZiG4kZpKJcE8KVqOIZVAYX5p8KVjwaAuzWzO9eywNGvIcAAADKklEQVRIiaXXaVvaQBAA4M20CmSjJMYoEeQGoWpFq4AWSzxQi7WttYdH///v6O7kIHeCnQ8hTzYvmUySPcjGm1fHBnkrvDoWonC/mC/lJFGUcqV8sT8P3iyJwEMtl1XcEcdhPgTrRcpYtTIYEozhoFJVAKRjPRHrNQBaPyG+OKmzFPJyPG4ooHz0S4yjFRFoPw5/ABgdhVoWp1WAYiSWm6B9iqKYPIVxBNY1qMZRnrsBOTkM6yqsJFgWVSjIQaxLEF6pgHauPcOtdJbrsR/XoJ7OEmLAsRe3oZzWkiGFvhvrithNjckJFNx4K02h3Yl3ZlgHOo8lXaAznIfJXJhVvG1jWVR9jdfvtnfiL12wcdv/mM54B7Abpw04t3AOLrxNaxxfxuEJPJlYBsnXdIl9Txw+4nlzvAkjX9P7xCsTDWTET1DxtexcMXwWi+uwibgEXZJZtMJssqudtY7eLBOyau2vWzfdQayJhOzZ3+jU+uc1LPZn58NfnPasvVts/wJ5xArWa4k3ZO2sWL3v+O+6o29IBn+XzROG8DUKY8XubHyTxZw8mEArAqPlJfv2nR+9n/LtnherEmJKPfh+9RmsOIAfiIkXTx8yhFATa6oLL/8UfoET22baWCvnnnu/BYaVAuKW6OClW7b5s7tmW1fB9i388Mg2DEMO8RhOZ48Ks7Ru+sD1qB4zPdcpGfZd1aw37HD2krDgJXlGS/atQ9ne1HlJeEzJIRt5OG6HdbqX3MbECzQQ62AE2rYTLPugdfN7lpQgTrDE/iTZwHqYcGogKnywRXyeODoGgmdt9Z4FMXJED49TaDpdb3u+Pp+QEesKnBGDKnNduisWXMNNe767NvDCzijZmqfgEygJbnwONHXiF6Koe7DQSZ34NWVvphcLzbQVL8OW4MeyBi9pbBUfsQ8LOn39VIrpQuJ9Dw1ohk7i0kwfVed+AxgnrvXYiWtHiMZCQwKlHjoxGjDaip0y8wfOZuVG4HX7WwbQGr5TQ5YJcoctExSjXrESGExGZbbk0Nr+EyMXKAr2vbSsmQsUaSvlAsUMvX9cw6VRM9/py+HnROI0sUD+Zzn4D7ULTBriaipnAAAAAElFTkSuQmCC" alt="Lidl" width="20" height="20">Lidl</span>
     <span class="logo-chip"><img id="img-aldi" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAxlBMVEX///++AAD68PDryMjlrq7sxsYAtO0AAGyysccAuvJ/lrkAAGlCSokvNn97fKRHS4f29vleYpMZJ3g8QoQTI3eDr9EMH3XaiYlRV4/e3+kNvfLv8PS3uc6p5PypqsVlapgAF3PS0+CYm7kfLHrfnJxxdqNbXJKrzeNYyPKGirA2xPNqy/E+O383Mnp6zfCYudUzKnaUwt/k/P+WpMGZz+pNRYMAD3EqInSR1fJWTIZnX5FNcaW32eyUrMsXOYTD7v3CxtcAAFrs0garAAACO0lEQVRYhe2Wa5OaMBSGU21z0CAmssuCoQZwYVGpl671sr3I/v8/1YNi1U5nCXb6qT7jMGNgnsk7bxIg5MaNG/+AxjsNGm8KHt5X8FAhaFZNsllLECdPafqUjK4VDFg8ppOMySsFEj5N6XgEg/NH6ghcNqN0AW6YXCcYgDWm0wxkzPxrBHI1PwSYbtYBv0Lgwj5A9zOlMxD1BQYUDXxhnprQ9CyErkAyDNDHAAZ77tPNHI4hdAUJzFp0wWxCOsGStmag6gnKAOAREsLLhI6tYwg9gVytN7Tfhv0aHu1DHJvQEySHBjqH0c5qiU0woS/wiwDplnmHUY+9pDQtQ+gIOBQNlAFOIeaMawoU+44NrOzT+KEJpvQE/n4Tb4PE+sVZE9UCHqwxwDN8vT/xrQyBTVQLYtgH+NE6g+6yoGgC4mqBBBsXfxKo9gU5qBRzgawU5DDq4xKwfeMCacOS9iPINQTtFr0/278lAha0pSOQTOA5BOz3W2yFx4ti1RGIb+w+7vKBd3nHG+Q4bPgaLVhKKCVc1xVCdLuJEG4XEUpst0JZGgLb6fUCi8scHJfzUQChRCIWcZ45tobA7A2HULxKug4e55FTnAn4iyJC7DtTT+DgNpJ4khwF3qtPZB0BTiDE51232IisEBi1BE65j0MTJ+JhHzzE14y+4K6YgIrxjWgRzkkeEk64wVCQOToCYZpZp2PbxaWDZMVlmJn4xzRFze+DP1AleGx+eJPmY4XgLz+ySEODqpA3bvyf/AROx0B2br74lQAAAABJRU5ErkJggg==" alt="Aldi" width="20" height="20">Aldi</span>
     <span class="logo-chip"><img id="img-carrefour" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAk1BMVEX///8AW6vtHCTsAAAAU6gAUKcAWaoAV6kATqYAR6MAS6UAVajK2OnsABEASaRlj8P0+Pu5y+LW3+3tDRjh6vRzmMglarLwU1j+9PX++fnB0ubzfYHs8/lFfLo1c7alu9n1l5r5wsQUZK+Bo83zh4qPq9HuIytZiMAAPKD729z0jpH96OjybnL6zs/xYWX2p6nuLTV+28W2AAABqUlEQVRYhe1W2XaCMBDNwh6XokgrAipora1d/v/rmpBJ6qkNSOxLT5mXzMC5l5nMBkKDDDLIf5HcDvYgj1kRRpNy3eh3ffCbbXNkAcMY+26VcGNU98DvmiNnHm6EVcKc7q/GP8rzwCQee6HwP3+60ocNPTZnEgEeR7EkDK9ieKYrqewdwDuAi91g0Y1f0fGL1EofAvAgAbMAu9Mu/I7OT1LLQ3DAL+Bdwl3qYlhRQl+lOgqAgCm/Zy633EMb/kQJIUupr9UVeCm8jQVBK8Mbx6sIUK2SiN1MPoFLcQoT/n7Mvz9+B2uqCTxnJB4slEusbMHrK0AHH2txi3VdOdpk5U+NIfGEQhJ1FmUmHFXWRgbAEwqNiNJzxHe5jOJICRBAElDVRoCj7LcJbg4BLXtdYmpOgzGNuCuNtxcSL2XOMIdpgBYXpZxCKRvxspk+QDc1k7kVgEFdQmbTzmIgqBjyicqAgjQDpQN/PtJUIfQbaWKogQu13VA9G+sqhp5jnTNAIgrLxaJXW6Ji8HuuNr1c40iUjsVy/VrvZRiFqVzvlj8K1rhBBhnkz8kn3/0cdTJ8m6gAAAAASUVORK5CYII=" alt="Carrefour" width="20" height="20">Carrefour</span>
@@ -314,12 +348,36 @@ img{max-width:100%}
   </div>
 </section>
 
+<!-- TESTIMONIALS -->
+<section class="sec" style="padding-top:0">
+  <div class="sec-lab rv">Ils l'utilisent déjà</div>
+  <h2 class="sec-t rv">Ce qu'en disent les étudiants.</h2>
+  <div class="testi-grid">
+    <div class="testi rv">
+      <div class="testi-stars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+      <div class="testi-text">J'arrive enfin à tenir 140g de prot par jour sans exploser mon budget. En L3, c'est un game changer.</div>
+      <div class="testi-author"><span class="testi-avatar" style="background:#3B82F6">L</span><div><strong>Lucas R.</strong><br>L3 STAPS, Basic-Fit</div></div>
+    </div>
+    <div class="testi rv">
+      <div class="testi-stars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+      <div class="testi-text">La liste de courses par rayon, c'est trop bien. Je fais mes courses en 20 min chez Lidl et j'ai tout pour la semaine.</div>
+      <div class="testi-author"><span class="testi-avatar" style="background:#F59E0B">M</span><div><strong>Manon D.</strong><br>M1 Droit, Fitness Park</div></div>
+    </div>
+    <div class="testi rv">
+      <div class="testi-stars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+      <div class="testi-text">Je dépensais 60&#x20AC; par semaine en mangeant n'importe quoi. Maintenant je suis à 28&#x20AC; avec de vrais repas muscu.</div>
+      <div class="testi-author"><span class="testi-avatar" style="background:#22C55E">A</span><div><strong>Amine K.</strong><br>BTS Info, Keep Cool</div></div>
+    </div>
+  </div>
+</section>
+
 <div class="cta-w cta-photo">
   <div class="cta-photo-bg" id="cta-bg"></div>
   <div class="cta-inner">
-    <h2>Prêt à manger pour tes objectifs ?</h2>
-    <p>Calcule tes macros en 2 minutes. Gratuit, sans inscription.</p>
-    <button class="btn btn-p btn-lg" onclick="startOnboarding()">Commencer maintenant &#x2192;</button>
+    <h2>Arrête de deviner, mange pour tes résultats.</h2>
+    <p>2 minutes. Gratuit. Aucune inscription. Ton plan de repas + ta liste de courses.</p>
+    <button class="btn btn-p btn-lg" onclick="startOnboarding()">Créer mon plan maintenant &#x2192;</button>
+    <div class="hero-small" style="margin-top:.75rem;justify-content:center"><span>&#x2713; 100% gratuit</span><span>&#x2713; Résultats instantanés</span></div>
   </div>
 </div>
 
@@ -327,6 +385,10 @@ img{max-width:100%}
   <div class="logo" style="margin-bottom:.5rem;font-size:1.125rem" onclick="showPage('landing')">macro<span>.</span></div>
   <div>&#xA9; 2024 macro. <a href="#">CGU</a> <a href="#">Confidentialité</a> <a href="#">Contact</a></div>
 </footer>
+
+<div class="sticky-cta" id="sticky-cta">
+  <button class="btn btn-p btn-lg" onclick="startOnboarding()">Créer mon plan gratuit &#x2192;</button>
+</div>
 </div>
 
 <!-- ONBOARDING -->
@@ -404,6 +466,7 @@ document.getElementById('res-content').innerHTML=h;showPage('result');
 setTimeout(function(){document.querySelectorAll('.macro-fill').forEach(function(el){el.style.width=el.getAttribute('data-w')})},100)}
 function initReveal(){var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target)}})},{threshold:0.01,rootMargin:'0px 0px 0px 0px'});document.querySelectorAll('.rv').forEach(function(el){el.classList.remove('vis');obs.observe(el)})}
 initReveal();
+(function(){var t=document.getElementById('logo-strip');if(t){var kids=t.children;var n=kids.length;for(var i=0;i<n;i++){t.appendChild(kids[i].cloneNode(true))}}})();
 
 (function(){
   var photos=[
@@ -424,5 +487,36 @@ initReveal();
   // CTA background
   var cbg=document.getElementById('cta-bg');
   if(cbg&&srcs[0]){var img=document.createElement('img');img.src=srcs[0];img.alt='';cbg.appendChild(img)}
+})();
+
+// Sticky mobile CTA – show after scrolling past hero
+(function(){
+  var sticky=document.getElementById('sticky-cta');
+  if(!sticky)return;
+  var heroCta=document.querySelector('.hero-cta');
+  if(!heroCta)return;
+  var obs=new IntersectionObserver(function(es){
+    sticky.classList.toggle('show',!es[0].isIntersecting);
+  },{threshold:0});
+  obs.observe(heroCta);
+})();
+
+// Animated counter
+(function(){
+  var el=document.getElementById('sp-counter');
+  if(!el)return;
+  var target=1247;var dur=1500;var start=0;var startT=null;
+  function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2}
+  function tick(ts){
+    if(!startT)startT=ts;
+    var p=Math.min((ts-startT)/dur,1);
+    var v=Math.round(ease(p)*target);
+    el.textContent=v.toLocaleString('fr-FR');
+    if(p<1)requestAnimationFrame(tick);
+  }
+  var obs=new IntersectionObserver(function(es){
+    if(es[0].isIntersecting){requestAnimationFrame(tick);obs.disconnect()}
+  },{threshold:0.5});
+  obs.observe(el);
 })();
 </script>
