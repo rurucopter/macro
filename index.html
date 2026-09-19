@@ -43,16 +43,16 @@ img{max-width:100%}
 
 .page{display:none}.page.active{display:block}
 
-.hero-wrap{position:relative;overflow:hidden}
+.hero-wrap{position:relative;overflow:hidden;max-width:100vw}
 .hero-bg{position:absolute;inset:0;display:flex;justify-content:center;gap:1rem;opacity:.12;filter:blur(2px);z-index:0;pointer-events:none}
 .hero-bg img{width:220px;height:320px;object-fit:cover;border-radius:var(--r);flex-shrink:0}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .hero-bg{opacity:.08}}
 :root[data-theme="dark"] .hero-bg{opacity:.08}
 .hero{text-align:center;padding:4rem var(--g) 2.5rem;max-width:620px;margin-inline:auto;position:relative;z-index:1}
 
-.photo-strip{display:flex;gap:.75rem;overflow:hidden;padding:0;margin:0 calc(var(--g)*-1)}
-.photo-strip img{height:200px;flex:1 0 auto;min-width:200px;object-fit:cover;border-radius:0}
-@media(max-width:768px){.photo-strip img{height:140px;min-width:140px}}
+.photo-strip{display:flex;gap:0;overflow:hidden;padding:0;max-width:100vw}
+.photo-strip img{height:200px;flex:1 1 0;min-width:0;object-fit:cover;border-radius:0}
+@media(max-width:768px){.photo-strip img{height:140px}}
 
 .cta-photo{position:relative;overflow:hidden}
 .cta-photo-bg{position:absolute;inset:0;z-index:0}
@@ -183,7 +183,7 @@ img{max-width:100%}
 .res-cta{text-align:center;padding:1rem var(--g) 3rem;max-width:var(--max-w);margin-inline:auto}
 .res-cta p{color:var(--muted);margin-bottom:1rem;font-size:.875rem}
 
-.rv{opacity:0;transform:translateY(16px);transition:opacity .45s,transform .45s}.rv.vis{opacity:1;transform:none}
+.rv{opacity:0;transform:translateY(16px);transition:opacity .45s,transform .45s}.rv.vis{opacity:1;transform:translateY(0)}
 
 @media(max-width:768px){
   .hero h1{font-size:2rem}
@@ -402,7 +402,7 @@ h+='<div class="macro-row"><div class="macro-label">Lipides</div><div class="mac
 h+='<div class="res-cta"><p>Ton plan est pr\u00eat.</p><button class="btn btn-p btn-lg">G\u00e9n\u00e9rer ma semaine \u2192</button></div>';
 document.getElementById('res-content').innerHTML=h;showPage('result');
 setTimeout(function(){document.querySelectorAll('.macro-fill').forEach(function(el){el.style.width=el.getAttribute('data-w')})},100)}
-function initReveal(){var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target)}})},{threshold:0.08,rootMargin:'0px 0px -40px 0px'});document.querySelectorAll('.rv').forEach(function(el){el.classList.remove('vis');obs.observe(el)})}
+function initReveal(){var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target)}})},{threshold:0.01,rootMargin:'0px 0px 0px 0px'});document.querySelectorAll('.rv').forEach(function(el){el.classList.remove('vis');obs.observe(el)})}
 initReveal();
 
 (function(){
