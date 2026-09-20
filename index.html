@@ -791,6 +791,37 @@ initReveal();
   obs.observe(el);
 })();
 // MEAL DATABASE
+// FUNNEL SUMMARY - shows accumulated choices
+function buildSummary(){
+var labels={gym:'\u{1F3CB}️',store:'\u{1F6D2}',meals:'\u{1F372}',budget:'\u{1F4B0}',diet:'\u{1F957}',goal:'\u{1F3AF}'};
+var suffixes={budget:'€/sem',meals:' repas/sem'};
+var sm='';
+for(var k in D){if(D[k]&&labels[k]){sm+='<span class="ob-chip">'+labels[k]+' '+D[k]+(suffixes[k]||'')+'</span>'}}
+return sm?'<div class="ob-summary">'+sm+'</div>':'';
+}
+
+// LOADING SCREEN
+function showLoading(cb){
+var el=document.createElement('div');el.className='loading-overlay';el.id='loading-screen';
+el.innerHTML='<div class="loading-spinner"></div><div class="loading-text">On construit ton plan...</div><div class="loading-steps"><div class="loading-step active" id="ls-0"><span class="ls-icon"></span>Analyse de ton profil</div><div class="loading-step" id="ls-1"><span class="ls-icon"></span>Calcul de tes macros</div><div class="loading-step" id="ls-2"><span class="ls-icon"></span>Sélection des repas</div><div class="loading-step" id="ls-3"><span class="ls-icon"></span>Génération de ta liste</div></div>';
+document.body.appendChild(el);
+var steps=['ls-0','ls-1','ls-2','ls-3'];var i=0;
+var iv=setInterval(function(){
+if(i>0){var prev=document.getElementById(steps[i-1]);if(prev){prev.className='loading-step done';prev.querySelector('.ls-icon').innerHTML='✓'}}
+if(i<steps.length){var cur=document.getElementById(steps[i]);if(cur)cur.className='loading-step active'}
+i++;
+if(i>steps.length){clearInterval(iv);setTimeout(function(){var lo=document.getElementById('loading-screen');if(lo)lo.remove();if(cb)cb()},400)}
+},800);
+}
+
+// PAYWALL
+function showPaywall(){
+var rc=document.getElementById('res-content');
+if(!rc)return;
+var resHtml=rc.innerHTML;
+rc.innerHTML='<div class="paywall-overlay"><div class="paywall-blur">'+resHtml+'</div><div class="paywall-gate"><div class="paywall-card"><div style="font-size:2rem;margin-bottom:.5rem">\u{1F512}</div><h2>Ton plan est prêt</h2><p>Débloque ton plan repas personnalisé avec tes macros, recettes et liste de courses.</p><div class="paywall-price">4,99€ <small>/ semaine</small></div><div class="paywall-period">Sans engagement · Annule quand tu veux</div><div class="paywall-features"><div class="paywall-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Plan repas personnalisé chaque semaine</div><div class="paywall-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Liste de courses par rayon</div><div class="paywall-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>+150 recettes muscu</div><div class="paywall-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Macros calculées automatiquement</div></div><button class="btn btn-p btn-lg btn-full" onclick="alert(\'Paiement Stripe à intégrer\')">Débloquer mon plan →</button><div class="paywall-guarantee">\u{1F6E1}️ Garantie satisfait ou remboursé 7 jours</div></div></div></div>';
+}
+
 var MEALS=[
 {n:'Poulet grillé + riz basmati',p:42,g:55,l:8,cal:462,price:2.1,cat:'dejeuner',emoji:'\u{1F357}'},
 {n:'Omelette 4 œufs + flocons avoine',p:28,g:40,l:18,cal:430,price:1.2,cat:'petit-dej',emoji:'\u{1F373}'},
