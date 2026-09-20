@@ -337,7 +337,7 @@ img{max-width:100%}
 .paywall-overlay{position:relative}
 .paywall-blur{filter:blur(8px);pointer-events:none;user-select:none;opacity:.6}
 .paywall-gate{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:10}
-.paywall-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:2rem;max-width:420px;width:calc(100% - 2rem);text-align:center;box-shadow:var(--shadow-xl);animation:scale-in .5s cubic-bezier(.22,1,.36,1)}
+.paywall-card{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:2rem;max-width:420px;width:calc(100% - 2rem);text-align:center;box-shadow:var(--shadow-xl);animation:scale-in .5s cubic-bezier(.22,1,.36,1)}
 .paywall-card h2{font-family:var(--font-d);font-size:1.5rem;font-weight:800;color:var(--ink);margin-bottom:.375rem;letter-spacing:-.02em}
 .paywall-card p{color:var(--muted);font-size:.875rem;margin-bottom:1.25rem;line-height:1.6}
 .paywall-price{font-size:2.5rem;font-weight:800;color:var(--accent);margin-bottom:.25rem;font-variant-numeric:tabular-nums}
@@ -458,6 +458,22 @@ img{max-width:100%}
 .paywall-plan .pp-sub{font-size:.6875rem;color:var(--accent);font-weight:600;margin-top:.25rem}
 .pp-badge{position:absolute;top:-.5rem;left:50%;transform:translateX(-50%);background:var(--grad);color:#fff;font-size:.5625rem;font-weight:700;padding:.1875rem .5rem;border-radius:var(--r-pill);white-space:nowrap;text-transform:uppercase;letter-spacing:.02em}
 .paywall-proof{font-size:.6875rem;color:var(--accent);font-weight:600;margin-top:.75rem;text-align:center}
+
+
+.paywall-close{position:absolute;top:.75rem;right:.75rem;width:28px;height:28px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);color:var(--muted);font-size:1rem;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.paywall-close:hover{background:var(--border);color:var(--ink)}
+.downsell-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:1rem}
+.downsell-spin{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+.downsell-wait{color:#fff;font-size:.875rem;margin-top:1rem;position:absolute;margin-top:3.5rem}
+.downsell-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:2rem;max-width:380px;width:calc(100% - 2rem);text-align:center;box-shadow:var(--shadow-xl);animation:scale-in .4s cubic-bezier(.22,1,.36,1)}
+.downsell-card h2{font-family:var(--font-d);font-size:1.375rem;font-weight:800;color:var(--ink);margin-bottom:.375rem;letter-spacing:-.02em}
+.downsell-card p{color:var(--muted);font-size:.875rem;margin-bottom:1rem;line-height:1.5}
+.downsell-price{font-size:2rem;font-weight:800;color:var(--accent);margin-bottom:.25rem;font-variant-numeric:tabular-nums}
+.downsell-price small{font-size:.8125rem;font-weight:500;color:var(--muted)}
+.downsell-old{font-size:1.125rem;font-weight:600;color:var(--faint);text-decoration:line-through;margin-right:.5rem}
+.downsell-sub{font-size:.75rem;color:var(--yellow);font-weight:600;margin-bottom:1.25rem}
+.downsell-decline{background:none;border:none;color:var(--faint);font-size:.75rem;margin-top:.75rem;cursor:pointer;text-decoration:underline;padding:.25rem}
+.downsell-decline:hover{color:var(--muted)}
 
 </style>
 
@@ -839,7 +855,7 @@ var resHtml=rc.innerHTML;
 var gymTxt=D.gym?' à '+D.gym:'';
 var storeTxt=D.store||'ton magasin';
 var personaLine='On a vu que tu t\'entraînes'+gymTxt+' et que tu fais tes courses chez '+storeTxt+'. Ton plan est calibré pour ça.';
-rc.innerHTML='<div class="paywall-overlay"><div class="paywall-blur">'+resHtml+'</div><div class="paywall-gate"><div class="paywall-card"><div style="font-size:2rem;margin-bottom:.5rem">\u{1F512}</div><h2>Ton plan est prêt</h2><p class="paywall-persona">'+personaLine+'</p><p>Débloque tes recettes détaillées et ta liste de courses par rayon.</p>'+
+rc.innerHTML='<div class="paywall-overlay"><div class="paywall-blur">'+resHtml+'</div><div class="paywall-gate"><div class="paywall-card"><button class="paywall-close" onclick="closePaywall()" aria-label="Fermer">&times;</button><div style="font-size:2rem;margin-bottom:.5rem">\u{1F512}</div><h2>Ton plan est prêt</h2><p class="paywall-persona">'+personaLine+'</p><p>Débloque tes recettes détaillées et ta liste de courses par rayon.</p>'+
 '<div class="paywall-plans">'+
 '<button class="paywall-plan" id="plan-month" onclick="selectPlan(\'month\')"><div class="pp-name">Mensuel</div><div class="pp-price">7,99€<small>/mois</small></div></button>'+
 '<button class="paywall-plan active" id="plan-year" onclick="selectPlan(\'year\')"><span class="pp-badge">2 mois offerts</span><div class="pp-name">Annuel</div><div class="pp-price">79,99€<small>/an</small></div><div class="pp-sub">soit 6,67€/mois</div></button>'+
@@ -857,6 +873,29 @@ if(y)y.className='paywall-plan'+(p==='year'?' active':'');
 }
 var selectedPlan='year';
 
+function closePaywall(){
+var el=document.createElement('div');el.className='downsell-overlay';el.id='downsell-screen';
+el.innerHTML='<div class="downsell-spin"></div><div class="downsell-wait">Une seconde...</div>';
+document.body.appendChild(el);
+setTimeout(function(){
+el.innerHTML='<div class="downsell-card">'+
+'<div style="font-size:2rem;margin-bottom:.5rem">\u{1F381}</div>'+
+'<h2>Attends !</h2>'+
+'<p>Juste pour toi : <strong>-50% sur l\'annuel</strong>, une seule fois.</p>'+
+'<div class="downsell-price"><span class="downsell-old">79,99€</span> 39,99€ <small>/ an</small></div>'+
+'<div class="downsell-sub">Soit 3,33€/mois — offre valable maintenant seulement</div>'+
+'<button class="btn btn-p btn-lg btn-full" onclick="acceptDownsell()">Profiter de l\'offre →</button>'+
+'<button class="downsell-decline" onclick="declineDownsell()">Non merci, continuer sans plan</button>'+
+'</div>';
+},1400);
+}
+function acceptDownsell(){
+var el=document.getElementById('downsell-screen');if(el)el.remove();
+alert('Paiement à intégrer — 39,99€/an');
+}
+function declineDownsell(){
+var el=document.getElementById('downsell-screen');if(el)el.remove();
+}
 var MEALS=[
 {n:'Poulet grillé + riz basmati',p:42,g:55,l:8,cal:462,price:2.1,cat:'dejeuner',emoji:'\u{1F357}'},
 {n:'Omelette 4 œufs + flocons avoine',p:28,g:40,l:18,cal:430,price:1.2,cat:'petit-dej',emoji:'\u{1F373}'},
