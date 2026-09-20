@@ -299,7 +299,7 @@ img{max-width:100%}
 /* sticky mobile CTA */
 .sticky-cta{display:none;position:fixed;bottom:0;left:0;right:0;padding:.75rem 1rem;background:var(--bg);border-top:1px solid var(--bdr);z-index:100;text-align:center;box-shadow:0 -4px 12px rgba(0,0,0,.08)}
 .sticky-cta .btn{width:100%}
-@media(max-width:640px){.sticky-cta.show{display:block}}
+@media(max-width:640px){.sticky-cta.show{display:block}body:has(.sticky-cta.show){padding-bottom:78px}}
 
 .transfo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;max-width:var(--max-w);margin-inline:auto;padding-inline:var(--g)}
 .transfo-card{position:relative;border-radius:var(--r);overflow:hidden;aspect-ratio:3/4}
