@@ -441,6 +441,24 @@ img{max-width:100%}
 /* Mobile meal plan */
 @media(max-width:640px){.mp-meal{gap:.5rem;padding:.625rem .75rem}.mp-name{font-size:.75rem}.mp-macros{font-size:.625rem}.mp-shop-item{grid-template-columns:1.5rem 1fr auto auto;gap:.375rem;padding:.375rem .5rem;font-size:.75rem}}
 
+
+.paywall-persona{background:var(--accent-bg);border:1px solid rgba(16,185,129,.15);border-radius:var(--r-sm);padding:.625rem .875rem;font-size:.8125rem;color:var(--accent-text);margin-bottom:1rem;line-height:1.5;text-align:left}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .paywall-persona{color:var(--accent)}}
+:root[data-theme="dark"] .paywall-persona{color:var(--accent)}
+.paywall-plans{display:grid;grid-template-columns:1fr 1fr;gap:.625rem;margin-bottom:1.25rem}
+.paywall-plan{position:relative;background:var(--bg2);border:2px solid var(--border);border-radius:var(--r-sm);padding:1rem .75rem;text-align:center;cursor:pointer;transition:all .25s cubic-bezier(.22,1,.36,1);font-family:inherit}
+.paywall-plan:hover{border-color:var(--accent-light)}
+.paywall-plan.active{border-color:var(--accent);background:var(--accent-bg);box-shadow:0 4px 16px rgba(5,150,105,.12)}
+.paywall-plan .pp-name{font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin-bottom:.375rem}
+.paywall-plan.active .pp-name{color:var(--accent-text)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .paywall-plan.active .pp-name{color:var(--accent)}}
+:root[data-theme="dark"] .paywall-plan.active .pp-name{color:var(--accent)}
+.paywall-plan .pp-price{font-size:1.25rem;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+.paywall-plan .pp-price small{font-size:.6875rem;font-weight:500;color:var(--muted)}
+.paywall-plan .pp-sub{font-size:.6875rem;color:var(--accent);font-weight:600;margin-top:.25rem}
+.pp-badge{position:absolute;top:-.5rem;left:50%;transform:translateX(-50%);background:var(--grad);color:#fff;font-size:.5625rem;font-weight:700;padding:.1875rem .5rem;border-radius:var(--r-pill);white-space:nowrap;text-transform:uppercase;letter-spacing:.02em}
+.paywall-proof{font-size:.6875rem;color:var(--accent);font-weight:600;margin-top:.75rem;text-align:center}
+
 </style>
 
 <!-- LANDING -->
@@ -814,13 +832,30 @@ if(i>steps.length){clearInterval(iv);setTimeout(function(){var lo=document.getEl
 },800);
 }
 
-// PAYWALL
 function showPaywall(){
 var rc=document.getElementById('res-content');
 if(!rc)return;
 var resHtml=rc.innerHTML;
-rc.innerHTML='<div class="paywall-overlay"><div class="paywall-blur">'+resHtml+'</div><div class="paywall-gate"><div class="paywall-card"><div style="font-size:2rem;margin-bottom:.5rem">\u{1F512}</div><h2>Ton plan est prêt</h2><p>Débloque ton plan repas personnalisé avec tes macros, recettes et liste de courses.</p><div class="paywall-price">4,99€ <small>/ semaine</small></div><div class="paywall-period">Sans engagement · Annule quand tu veux</div><div class="paywall-features"><div class="paywall-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Plan repas personnalisé chaque semaine</div><div class="paywall-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Liste de courses par rayon</div><div class="paywall-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>+150 recettes muscu</div><div class="paywall-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Macros calculées automatiquement</div></div><button class="btn btn-p btn-lg btn-full" onclick="alert(\'Paiement Stripe à intégrer\')">Débloquer mon plan →</button><div class="paywall-guarantee">\u{1F6E1}️ Garantie satisfait ou remboursé 7 jours</div></div></div></div>';
+var gymTxt=D.gym?' à '+D.gym:'';
+var storeTxt=D.store||'ton magasin';
+var personaLine='On a vu que tu t\'entraînes'+gymTxt+' et que tu fais tes courses chez '+storeTxt+'. Ton plan est calibré pour ça.';
+rc.innerHTML='<div class="paywall-overlay"><div class="paywall-blur">'+resHtml+'</div><div class="paywall-gate"><div class="paywall-card"><div style="font-size:2rem;margin-bottom:.5rem">\u{1F512}</div><h2>Ton plan est prêt</h2><p class="paywall-persona">'+personaLine+'</p><p>Débloque tes recettes détaillées et ta liste de courses par rayon.</p>'+
+'<div class="paywall-plans">'+
+'<button class="paywall-plan" id="plan-month" onclick="selectPlan(\'month\')"><div class="pp-name">Mensuel</div><div class="pp-price">7,99€<small>/mois</small></div></button>'+
+'<button class="paywall-plan active" id="plan-year" onclick="selectPlan(\'year\')"><span class="pp-badge">2 mois offerts</span><div class="pp-name">Annuel</div><div class="pp-price">79,99€<small>/an</small></div><div class="pp-sub">soit 6,67€/mois</div></button>'+
+'</div>'+
+'<div class="paywall-features"><div class="paywall-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Plan repas personnalisé chaque semaine</div><div class="paywall-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Liste de courses par rayon</div><div class="paywall-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>+150 recettes muscu</div><div class="paywall-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Macros calculées automatiquement</div></div>'+
+'<button class="btn btn-p btn-lg btn-full" onclick="alert(\'Paiement à intégrer\')">Débloquer mon plan →</button>'+
+'<div class="paywall-proof">Les étudiants gagnent en moyenne 45 min/semaine et 60€/mois avec macro.</div>'+
+'<div class="paywall-guarantee">\u{1F6E1}️ Garantie satisfait ou remboursé 7 jours</div></div></div></div>';
 }
+function selectPlan(p){
+selectedPlan=p;
+var m=document.getElementById('plan-month'),y=document.getElementById('plan-year');
+if(m)m.className='paywall-plan'+(p==='month'?' active':'');
+if(y)y.className='paywall-plan'+(p==='year'?' active':'');
+}
+var selectedPlan='year';
 
 var MEALS=[
 {n:'Poulet grillé + riz basmati',p:42,g:55,l:8,cal:462,price:2.1,cat:'dejeuner',emoji:'\u{1F357}'},
