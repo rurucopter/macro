@@ -475,6 +475,17 @@ img{max-width:100%}
 .downsell-decline{background:none;border:none;color:var(--faint);font-size:.75rem;margin-top:.75rem;cursor:pointer;text-decoration:underline;padding:.25rem}
 .downsell-decline:hover{color:var(--muted)}
 
+
+.paywall-bump{display:flex;align-items:flex-start;gap:.625rem;background:var(--bg2);border:1.5px dashed var(--border);border-radius:var(--r-sm);padding:.75rem;margin-bottom:1rem;text-align:left;cursor:pointer;transition:all .2s}
+.paywall-bump:has(input:checked){border-style:solid;border-color:var(--accent);background:var(--accent-bg)}
+.paywall-bump input{position:absolute;opacity:0;width:0;height:0}
+.bump-check-visual{flex-shrink:0;width:20px;height:20px;border-radius:5px;border:2px solid var(--border);margin-top:.125rem;position:relative;transition:all .2s}
+.paywall-bump input:checked ~ .bump-check-visual{background:var(--accent);border-color:var(--accent)}
+.paywall-bump input:checked ~ .bump-check-visual::after{content:'';position:absolute;left:5px;top:1px;width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.bump-text{font-size:.75rem;color:var(--ink2);line-height:1.5}
+.bump-text strong{color:var(--ink);font-size:.8125rem}
+.bump-text s{color:var(--faint)}
+
 </style>
 
 <!-- LANDING -->
@@ -489,22 +500,13 @@ img{max-width:100%}
 <div class="hero-wrap">
 <div class="hero-bg" aria-hidden="true" id="hero-bg"></div>
 <div class="hero">
-  <div class="hero-badge"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#10B981;animation:pulse-ring 2s infinite;margin-right:.25rem"></span> 1 247 plans créés cette semaine</div>
+  <div class="hero-badge"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#10B981;animation:pulse-ring 2s infinite;margin-right:.25rem"></span> Calibré sur ta salle, ton budget et tes objectifs</div>
   <h1>Tes repas muscu.<br><em>Ton budget. Tes règles.</em></h1>
   <p class="hero-sub">140g+ de protéines par jour, dès 25&#x20AC;/semaine. Le plan repas qui s'adapte à ton budget, ta salle et tes objectifs.</p>
   <div class="hero-cta">
     <button class="btn btn-p btn-lg" onclick="startOnboarding()" style="animation:pulse-ring 3s infinite,hero-in .7s cubic-bezier(.22,1,.36,1) .55s forwards;opacity:0">Créer mon plan gratuit &#x2192;</button>
     <div class="hero-small"><span>&#x2713; Gratuit</span><span>&#x2713; Sans inscription</span><span>&#x2713; 2 min</span></div>
-    <div class="social-proof rv">
-      <div class="sp-avatars">
-        <span style="background:#3B82F6">L</span>
-        <span style="background:#F59E0B">M</span>
-        <span style="background:#22C55E">A</span>
-        <span style="background:#8B5CF6">S</span>
-      </div>
-      <span>Rejoins <span class="sp-count" id="sp-counter">1 247</span> étudiants</span>
-      <span class="sp-dot"></span>
-    </div>
+
   </div>
 
   <div class="preview-w">
@@ -617,25 +619,19 @@ img{max-width:100%}
   </div>
 </section>
 
-<!-- TESTIMONIALS -->
+<!-- WHY IT WORKS -->
 <section class="sec" style="padding-top:0">
-  <div class="sec-lab rv">Ils l'utilisent déjà</div>
-  <h2 class="sec-t rv">Ce qu'en disent les étudiants.</h2>
+  <div class="sec-lab rv">Comment ça marche</div>
+  <h2 class="sec-t rv">Pensé pour la réalité étudiante.</h2>
   <div class="testi-grid">
     <div class="testi rv">
-      <div class="testi-stars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
-      <div class="testi-text">J'arrive enfin à tenir 140g de prot par jour sans exploser mon budget. En L3, c'est un game changer.</div>
-      <div class="testi-author"><span class="testi-avatar" style="background:#3B82F6">L</span><div><strong>Lucas R.</strong><br>L3 STAPS, Basic-Fit</div></div>
+      <div class="testi-text"><strong>140g+ de protéines par jour</strong>, calculées pour ton poids, ton objectif et ton niveau d'activité — pas un chiffre générique.</div>
     </div>
     <div class="testi rv">
-      <div class="testi-stars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
-      <div class="testi-text">La liste de courses par rayon, c'est trop bien. Je fais mes courses en 20 min chez Lidl et j'ai tout pour la semaine.</div>
-      <div class="testi-author"><span class="testi-avatar" style="background:#F59E0B">M</span><div><strong>Manon D.</strong><br>M1 Droit, Fitness Park</div></div>
+      <div class="testi-text"><strong>Liste de courses par rayon</strong>, adaptée au magasin que tu utilises déjà, pour ne pas perdre de temps en rayon.</div>
     </div>
     <div class="testi rv">
-      <div class="testi-stars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
-      <div class="testi-text">Je dépensais 60&#x20AC; par semaine en mangeant n'importe quoi. Maintenant je suis à 28&#x20AC; avec de vrais repas muscu.</div>
-      <div class="testi-author"><span class="testi-avatar" style="background:#22C55E">A</span><div><strong>Amine K.</strong><br>BTS Info, Keep Cool</div></div>
+      <div class="testi-text"><strong>Repas pensés pour un budget étudiant</strong>, dès 25&#x20AC;/semaine, sans sacrifier les protéines.</div>
     </div>
   </div>
 </section>
@@ -849,6 +845,7 @@ if(i>steps.length){clearInterval(iv);setTimeout(function(){var lo=document.getEl
 }
 
 function showPaywall(){
+bumpSelected=false;
 var rc=document.getElementById('res-content');
 if(!rc)return;
 var resHtml=rc.innerHTML;
@@ -861,8 +858,9 @@ rc.innerHTML='<div class="paywall-overlay"><div class="paywall-blur">'+resHtml+'
 '<button class="paywall-plan active" id="plan-year" onclick="selectPlan(\'year\')"><span class="pp-badge">2 mois offerts</span><div class="pp-name">Annuel</div><div class="pp-price">79,99€<small>/an</small></div><div class="pp-sub">soit 6,67€/mois</div></button>'+
 '</div>'+
 '<div class="paywall-features"><div class="paywall-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Plan repas personnalisé chaque semaine</div><div class="paywall-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Liste de courses par rayon</div><div class="paywall-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>+150 recettes muscu</div><div class="paywall-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Macros calculées automatiquement</div></div>'+
-'<button class="btn btn-p btn-lg btn-full" onclick="alert(\'Paiement à intégrer\')">Débloquer mon plan →</button>'+
-'<div class="paywall-proof">Les étudiants gagnent en moyenne 45 min/semaine et 60€/mois avec macro.</div>'+
+'<label class="paywall-bump"><input type="checkbox" id="bump-check" onchange="toggleBump()"><span class="bump-check-visual"></span><span class="bump-text"><strong>+ Pack 30 recettes batch cooking</strong><br>Prépare ta semaine en 1h. <s>14,99€</s> 4,99€ (une fois)</span></label>'+
+'<button class="btn btn-p btn-lg btn-full" id="paywall-cta-btn" onclick="alert(\'Paiement à intégrer\')">Débloquer mon plan →</button>'+
+'<div class="paywall-proof">Calculé chaque semaine pour ton budget, ta salle et ton objectif.</div>'+
 '<div class="paywall-guarantee">\u{1F6E1}️ Garantie satisfait ou remboursé 7 jours</div></div></div></div>';
 }
 function selectPlan(p){
@@ -896,6 +894,13 @@ alert('Paiement à intégrer — 39,99€/an');
 function declineDownsell(){
 var el=document.getElementById('downsell-screen');if(el)el.remove();
 }
+function toggleBump(){
+var c=document.getElementById('bump-check');
+bumpSelected=c&&c.checked;
+var btn=document.getElementById('paywall-cta-btn');
+if(btn)btn.textContent=bumpSelected?'Débloquer mon plan + bonus →':'Débloquer mon plan →';
+}
+var bumpSelected=false;
 var MEALS=[
 {n:'Poulet grillé + riz basmati',p:42,g:55,l:8,cal:462,price:2.1,cat:'dejeuner',emoji:'\u{1F357}'},
 {n:'Omelette 4 œufs + flocons avoine',p:28,g:40,l:18,cal:430,price:1.2,cat:'petit-dej',emoji:'\u{1F373}'},
