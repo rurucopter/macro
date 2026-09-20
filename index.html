@@ -236,7 +236,7 @@ img{max-width:100%}
 .macro-row{display:flex;align-items:center;gap:.75rem}
 .macro-label{width:80px;font-weight:600;font-size:.8125rem;color:var(--ink)}
 .macro-bar{flex:1;height:28px;background:var(--bg2);border-radius:var(--r-sm);overflow:hidden}
-.macro-fill{height:100%;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:flex-end;padding-right:.625rem;font-size:.6875rem;font-weight:600;color:#fff;transition:width 1s cubic-bezier(.22,1,.36,1)}
+.macro-fill{height:100%;min-width:3rem;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:flex-end;padding-right:.625rem;font-size:.6875rem;font-weight:600;color:#fff;white-space:nowrap;transition:width 1s cubic-bezier(.22,1,.36,1)}
 .macro-fill.prot{background:linear-gradient(90deg,var(--accent),var(--accent-light));box-shadow:0 2px 8px rgba(5,150,105,.25)}
 .macro-fill.carb{background:linear-gradient(90deg,var(--blue),#42A5F5);box-shadow:0 2px 8px rgba(21,101,192,.25)}
 .macro-fill.fat{background:linear-gradient(90deg,#F9A825,var(--yellow));color:#795548;box-shadow:0 2px 8px rgba(251,192,45,.25)}
