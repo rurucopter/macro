@@ -694,6 +694,15 @@ body:has(#onboarding.active),body:has(#result.active){background:#161B14}
 /* Paywall sheet: dark */
 .pw-sheet{border-top:1px solid rgba(255,255,255,.1)}
 
+
+/* Polish: chalk slider track, compact 2x2 result cards on mobile */
+.ob-range{background:linear-gradient(90deg,#10B981 0,#059669 var(--p,50%),rgba(15,21,18,.12) var(--p,50%))}
+@media(max-width:480px){
+  .res-cards{grid-template-columns:repeat(2,1fr)!important;gap:.625rem;padding-inline:1rem}
+  .res-card{padding:.875rem .5rem}
+  .res-card-n{font-size:1.75rem}
+  .res-hero{padding-top:.25rem}
+}
 </style>
 
 <!-- LANDING -->
