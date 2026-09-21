@@ -71,10 +71,10 @@ img{max-width:100%}
 
 .hero-wrap{position:relative;overflow:hidden;max-width:100vw;background:var(--bg)}
 .hero-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.hero-bg img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(1.2);width:100%;height:100%;object-fit:cover;filter:blur(22px) saturate(1.15) brightness(.42);opacity:0}
+.hero-bg img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(1.15);width:100%;height:100%;object-fit:cover;filter:blur(11px) saturate(1.2) brightness(.68) contrast(1.05);opacity:0}
 .hero-bg img:first-child{opacity:1;animation:hero-photo-in 1.4s ease forwards}
-@keyframes hero-photo-in{from{opacity:0;transform:translate(-50%,-50%) scale(1.32)}to{opacity:1;transform:translate(-50%,-50%) scale(1.2)}}
-.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,9,.25) 0%,rgba(10,12,9,.55) 55%,var(--bg) 96%)}
+@keyframes hero-photo-in{from{opacity:0;transform:translate(-50%,-50%) scale(1.25)}to{opacity:1;transform:translate(-50%,-50%) scale(1.15)}}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,9,.12) 0%,rgba(10,12,9,.4) 45%,rgba(10,12,9,.72) 75%,var(--bg) 97%)}
 .hero{text-align:center;padding:4.5rem var(--g) 2.5rem;max-width:620px;margin-inline:auto;position:relative;z-index:1}
 
 
@@ -214,7 +214,13 @@ img{max-width:100%}
 .ob-w{min-height:100dvh;display:flex;flex-direction:column}
 .ob-bar{height:6px;background:var(--border);border-radius:3px;margin:0 var(--g)}
 .ob-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-light));transition:width .5s cubic-bezier(.22,1,.36,1);border-radius:3px;box-shadow:0 0 8px rgba(5,150,105,.3)}
-.ob-main{flex:1;max-width:520px;margin-inline:auto;width:100%;padding:2rem var(--g) 4rem;display:flex;flex-direction:column}
+.ob-main{flex:1;max-width:520px;margin-inline:auto;width:100%;padding:2rem var(--g) 4rem;display:flex;flex-direction:column;position:relative;z-index:1}
+#onboarding{position:relative}
+.ob-page-bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.ob-page-bg img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(1.3);width:100%;height:100%;object-fit:cover;filter:blur(30px) saturate(1.1) brightness(.5);opacity:0;transition:opacity 1s ease}
+.ob-page-bg img.loaded{opacity:.16}
+.ob-page-bg::after{content:"";position:absolute;inset:0;background:var(--bg);opacity:.86}
+#onboarding .nav-w,#onboarding .ob-bar,#onboarding .ob-main{position:relative;z-index:1}
 .ob-back{display:inline-flex;align-items:center;gap:.25rem;font-size:.8125rem;color:var(--muted);background:none;border:none;cursor:pointer;padding:.375rem;margin-left:-.375rem;margin-bottom:1.5rem;border-radius:var(--r-sm)}
 .ob-back:hover{color:var(--ink)}
 .ob-back svg{width:16px;height:16px}
@@ -674,6 +680,7 @@ img{max-width:100%}
 
 <!-- ONBOARDING -->
 <div id="onboarding" class="page">
+<div class="ob-page-bg" id="ob-bg" aria-hidden="true"></div>
 <div class="nav-w"><nav class="nav"><div class="nav-pill"><div class="logo" onclick="showPage('landing')">macro<span>.</span></div><div id="ob-step-label" style="font-size:.75rem;color:var(--faint)">1 / 8</div></div></nav></div>
 <div class="ob-bar"><div class="ob-fill" id="ob-fill" style="width:12.5%"></div></div>
 <div class="ob-main" id="ob-main"></div>
@@ -794,6 +801,9 @@ initReveal();
   if(gymStrip&&gymSrcs.length){gymSrcs.concat(gymSrcs).forEach(function(s){var img=document.createElement('img');img.src=s;img.alt='';gymStrip.appendChild(img)})}
   // Hero background: one strong, blurred gym photo
   if(hbg&&gymSrcs.length){var heroImg=document.createElement('img');heroImg.src=gymSrcs[1]||gymSrcs[0];heroImg.alt='';hbg.appendChild(heroImg)}
+  // Onboarding funnel background: subtle blurred photo
+  var obBg=document.getElementById('ob-bg');
+  if(obBg&&gymSrcs.length){var obImg=document.createElement('img');obImg.src=gymSrcs[3]||gymSrcs[0];obImg.alt='';obImg.onload=function(){obImg.classList.add('loaded')};obBg.appendChild(obImg)}
 
   var resGym=document.getElementById('res-gym-strip');
   if(resGym&&gymSrcs.length){gymSrcs.concat(gymSrcs).forEach(function(s){var img=document.createElement('img');img.src=s;img.alt='';resGym.appendChild(img)})}
