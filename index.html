@@ -635,6 +635,65 @@ body:has(#onboarding.active),body:has(#result.active){background:#2E2C28}
 .pw-sheet .paywall-card h2{color:var(--ink)}
 .downsell-card{background:var(--surface);color:var(--ink)}
 
+
+/* ===== macro identity: chalk + iron (overrides the first pass) ===== */
+#onboarding,#result{
+  --bg:#EEF1EC;--bg2:#E2E8E1;--surface:#FBFCFA;--ink:#0F1512;--ink2:#34403A;--muted:#66746B;--faint:#98A39C;
+  --border:rgba(15,21,18,.12);--accent:#0E9F6E;--accent-hover:#0B855C;--accent-light:#6EE7B7;--accent-bg:rgba(14,159,110,.1);--accent-text:#065F46;
+  --glass:rgba(251,252,250,.75);--glass-border:rgba(15,21,18,.1);--shadow:0 2px 8px rgba(15,21,18,.07);--shadow-lg:0 12px 36px rgba(15,21,18,.12);--nav-bg:rgba(238,241,236,.85);
+  --grad:linear-gradient(135deg,#10B981 0%,#059669 55%,#047857 100%)}
+.pw-modal,.downsell-overlay,.loading-overlay{
+  --bg:#181D16;--bg2:#20261D;--surface:#262D22;--ink:#EDF1E8;--ink2:#C2CBB9;--muted:#8A9481;--faint:#6B7563;
+  --border:rgba(255,255,255,.09);--accent:#34D399;--accent-hover:#6EE7B7;--accent-light:#A7F3D0;--accent-bg:rgba(52,211,153,.1);--accent-text:#A7F3D0;
+  --glass:rgba(38,45,34,.7);--glass-border:rgba(255,255,255,.08);--shadow:0 2px 8px rgba(0,0,0,.35);--shadow-lg:0 12px 40px rgba(0,0,0,.45);
+  --grad:linear-gradient(135deg,#34D399 0%,#10B981 50%,#059669 100%)}
+body:has(#onboarding.active),body:has(#result.active){background:#161B14}
+
+/* Header: back + brand + step count, segmented bar */
+.ob-head{padding:1.25rem 1.5rem .5rem}
+.ob-top{display:flex;align-items:center;gap:.75rem;margin-bottom:.875rem}
+.ob-brand{margin:0;text-align:left;font-size:1.25rem;flex:1}
+.ob-pct{font-weight:800;font-size:.8125rem;color:var(--muted);letter-spacing:.04em;font-family:var(--font)}
+.ob-bar{display:flex;gap:5px;height:8px;background:none;box-shadow:none;border-radius:0;flex:none;width:100%;max-width:none}
+.ob-bar i{flex:1;border-radius:99px;background:rgba(15,21,18,.12);transition:background .35s}
+.ob-bar i.done{background:var(--accent)}
+.ob-bar i.cur{background:linear-gradient(90deg,var(--accent) 45%,rgba(15,21,18,.12) 45%)}
+.ob-counter{justify-content:flex-start}
+.ob-step,.ob-title,.ob-desc{text-align:left}
+.ob-summary{justify-content:flex-start}
+
+/* Budget: barbell plates grow with the budget */
+.ob-cash{display:flex;align-items:center;justify-content:center;gap:3px;height:112px;margin:.25rem 0 1.25rem;padding-left:0}
+.rod-end{width:22px;height:9px;border-radius:3px;background:linear-gradient(180deg,#E5E8E4,#8E958F)}
+.rod-mid{width:56px;height:9px;background:linear-gradient(180deg,#D9DDD8,#7C837D)}
+.plate{width:13px;border-radius:5px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.28),0 3px 8px rgba(15,21,18,.3);animation:plate-in .35s cubic-bezier(.22,1,.36,1) backwards}
+@keyframes plate-in{from{opacity:0;scale:.4 1}}
+
+/* Desktop: split screen with a photo panel */
+@media(min-width:900px){
+  #onboarding.active{max-width:1080px;display:grid;grid-template-columns:.85fr 1.15fr;grid-template-rows:auto 1fr}
+  #onboarding .ob-page-bg{display:block;position:relative;inset:auto;grid-column:1;grid-row:1/3;z-index:0}
+  #onboarding .ob-page-bg img{filter:saturate(1.05);transform:translate(-50%,-50%) scale(1.02)}
+  #onboarding .ob-page-bg img.loaded{opacity:1}
+  #onboarding .ob-page-bg::after{background:linear-gradient(180deg,rgba(10,14,9,.1) 25%,rgba(10,14,9,.86));opacity:1}
+  #onboarding .ob-page-bg::before{content:"Tes macros.\A Ton budget.\A Ton plan.";white-space:pre-line;position:absolute;left:2rem;right:2rem;bottom:2.5rem;z-index:2;color:#fff;font-weight:800;font-size:2.25rem;line-height:1.1;letter-spacing:-.03em}
+  #onboarding .ob-head{grid-column:2;grid-row:1}
+  #onboarding .ob-main{grid-column:2;grid-row:2}
+}
+
+/* Loading: dark glass */
+.loading-overlay{background:radial-gradient(ellipse at 50% 0%,#20301F,#12160F 70%)}
+.ld-card{background:rgba(38,45,34,.72);border:1px solid rgba(255,255,255,.08);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);color:var(--ink)}
+.ld-emo{background:#20261D}
+.ld-price{color:var(--accent);background:rgba(52,211,153,.12)}
+.ld-step.active .ls-icon{border-color:var(--accent);border-top-color:transparent}
+.ld-step.done .ls-icon{background:var(--accent);border-color:var(--accent);color:#0F1512}
+.ld-bar{background:rgba(255,255,255,.1)}
+.ld-fill{background:linear-gradient(90deg,#34D399,#10B981)}
+
+/* Paywall sheet: dark */
+.pw-sheet{border-top:1px solid rgba(255,255,255,.1)}
+
 </style>
 
 <!-- LANDING -->
@@ -810,7 +869,7 @@ body:has(#onboarding.active),body:has(#result.active){background:#2E2C28}
 <!-- ONBOARDING -->
 <div id="onboarding" class="page">
 <div class="ob-page-bg" id="ob-bg" aria-hidden="true"></div>
-<div class="ob-head"><div class="ob-brand">macro<span>.</span></div><div class="ob-progress"><button class="ob-backbtn" onclick="obBack()" aria-label="Retour"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button><div class="ob-bar"><div class="ob-fill" id="ob-fill" style="width:12.5%"></div></div><span class="ob-pct" id="ob-pct">13%</span></div><div class="ob-counter" id="ob-counter"></div></div>
+<div class="ob-head"><div class="ob-top"><button class="ob-backbtn" onclick="obBack()" aria-label="Retour"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button><div class="ob-brand">macro<span>.</span></div><span class="ob-pct" id="ob-pct"></span></div><div class="ob-bar" id="ob-bar"></div><div class="ob-counter" id="ob-counter"></div></div>
 <div class="ob-main" id="ob-main"></div>
 </div>
 
@@ -858,7 +917,7 @@ var S=[
 {id:'profile',title:'Pour finir',desc:'Derni\u00e8re question.',type:'profile'}
 ];
 function renderStep(){
-var s=S[step],pct=((step+1)/S.length*100);document.getElementById('ob-fill').style.width=pct+'%';document.getElementById('ob-pct').textContent=Math.round(pct)+'%';updateCounter();var h='';
+var s=S[step],pct=((step+1)/S.length*100);setSegs(step);document.getElementById('ob-pct').textContent=(step+1)+'/'+S.length;updateCounter();var h='';
 if(step>0)h+='<button class="ob-back" onclick="pStep()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Retour</button>';
 h+='<div class="ob-step">\u00C9TAPE '+(step+1)+' SUR '+S.length+'</div><div class="ob-title">'+s.title+'</div>';
 if(s.desc)h+='<div class="ob-desc">'+s.desc+'</div>';if(step>1)h+=buildSummary();
@@ -984,8 +1043,9 @@ return sm?'<div class="ob-summary">'+sm+'</div>':'';
 function obBack(){if(step>0)pStep();else showPage('landing')}
 function initRanges(){document.querySelectorAll('.ob-range').forEach(function(r){r.style.setProperty('--p',((r.value-r.min)/(r.max-r.min)*100)+'%')})}
 document.addEventListener('input',function(e){var t=e.target;if(t&&t.classList&&t.classList.contains('ob-range'))t.style.setProperty('--p',((t.value-t.min)/(t.max-t.min)*100)+'%')});
-function cashN(v){return Math.max(2,Math.round(v/8))}
-function cashHtml(v){var n=cashN(v),h='';for(var i=0;i<n;i++){var rot=(i-(n-1)/2)*7;h+='<span class="bill" style="transform:rotate('+rot+'deg) translateY('+(Math.abs(rot)*.6)+'px);z-index:'+i+'">€</span>'}return h}
+function cashN(v){return Math.max(1,Math.min(6,Math.round((v-10)/12)))}
+function cashHtml(v){var n=cashN(v),cols=['#D64545','#3B82C4','#E8B923','#2E9E5B','#EDEDED','#B8B8B8'],hs=[104,94,84,72,60,50],p=[];for(var i=0;i<n;i++)p.push('<span class="plate" style="height:'+hs[i]+'px;background:'+cols[i]+'"></span>');return '<span class="rod-end"></span>'+p.slice().reverse().join('')+'<span class="rod-mid"></span>'+p.join('')+'<span class="rod-end"></span>'}
+function setSegs(i){var b=document.getElementById('ob-bar');if(!b)return;if(!b.children.length){var h='';for(var k=0;k<S.length;k++)h+='<i></i>';b.innerHTML=h}Array.prototype.forEach.call(b.children,function(e,k){e.className=k<i?'done':(k===i?'cur':'')})}
 var _avs='';
 function avatarsHtml(){if(_avs)return _avs;['img-chicken','img-lentil','img-wrap','img-pasta','img-pancakes'].forEach(function(id){var el=document.getElementById(id);if(el)_avs+='<img src="'+el.src+'" alt="">'});return _avs}
 function updateCounter(){
