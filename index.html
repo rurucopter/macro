@@ -520,6 +520,121 @@ img{max-width:100%}
 .bump-text strong{color:var(--ink);font-size:.8125rem}
 .bump-text s{color:var(--faint)}
 
+
+/* ===== Funnel + result: warm cream card theme (scoped) ===== */
+#onboarding,#result,.pw-modal,.downsell-overlay,.loading-overlay{
+  --bg:#EFE9D8;--bg2:#E6DEC8;--surface:#F7F2E4;--ink:#12200F;--ink2:#3C4A34;--muted:#7A705C;--faint:#A89E86;
+  --border:rgba(110,92,55,.22);--accent:#3A8B3D;--accent-hover:#2E7D32;--accent-light:#8BCB8F;--accent-bg:rgba(58,139,61,.1);
+  --accent-text:#1F5A22;--yellow:#E0A82E;--blue:#4C8DD6;
+  --glass:rgba(247,242,228,.75);--glass-border:rgba(110,92,55,.2);
+  --shadow:0 2px 8px rgba(80,60,20,.08);--shadow-lg:0 12px 36px rgba(80,60,20,.14);--shadow-xl:0 24px 60px rgba(60,45,15,.22);
+  --nav-bg:rgba(239,233,216,.85);--grad:linear-gradient(135deg,#3F8F42 0%,#2B7230 55%,#1F5A22 100%)
+}
+body:has(#onboarding.active),body:has(#result.active){background:#2E2C28}
+#onboarding.active,#result.active{max-width:680px;margin:1.5rem auto;background:var(--bg);color:var(--ink);border-radius:28px;min-height:calc(100vh - 3rem);overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+@media(max-width:700px){#onboarding.active,#result.active{margin:0;border-radius:0;min-height:100vh;max-width:none;box-shadow:none}}
+.ob-page-bg{display:none}
+#result .photo-strip-wrap{display:none}
+#result .nav-w{position:relative;background:transparent;border:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+#result .nav{padding:1rem 1.25rem;max-width:none}
+
+/* Header: brand + back + progress orb + counter */
+.ob-head{padding:1.25rem 1.5rem .5rem}
+.ob-brand{text-align:center;font-weight:800;font-size:1.125rem;letter-spacing:-.02em;color:var(--ink2);margin-bottom:.875rem}
+.ob-brand span{color:var(--accent)}
+.ob-progress{display:flex;align-items:center;gap:.875rem}
+.ob-backbtn{flex-shrink:0;width:40px;height:40px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--ink);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow);transition:transform .2s}
+.ob-backbtn:hover{transform:translateX(-2px)}
+.ob-backbtn svg{width:18px;height:18px}
+.ob-bar{flex:1;height:12px;background:#DDD3BD;border-radius:99px;margin:0;width:auto;max-width:none;position:relative;box-shadow:inset 0 1px 3px rgba(80,60,20,.18)}
+.ob-fill{overflow:visible;background:linear-gradient(180deg,#63C169,#2E7D32);border-radius:99px;box-shadow:0 0 12px rgba(58,139,61,.45)}
+.ob-fill::after{content:"";position:absolute;top:50%;right:-11px;bottom:auto;left:auto;width:22px;height:22px;transform:translateY(-50%);border-radius:50%;background:radial-gradient(circle at 35% 30%,#C4F2BE,#3E9E44 55%,#1F6B25);border:2px solid rgba(255,255,255,.65);box-shadow:0 3px 10px rgba(46,125,50,.5);animation:none}
+.ob-pct{flex-shrink:0;min-width:2.75rem;text-align:right;font-family:ui-monospace,Consolas,monospace;font-size:.8125rem;font-weight:700;color:var(--accent)}
+.ob-counter{display:none;align-items:center;justify-content:center;gap:.625rem;margin-top:.875rem;font-size:.8125rem;color:var(--ink2)}
+.ob-counter b{color:var(--accent);font-weight:800}
+.ob-avs{display:flex;padding-left:8px}
+.ob-avs img{width:26px;height:26px;border-radius:50%;object-fit:cover;border:2px solid var(--bg);margin-left:-8px}
+
+/* Step content */
+.ob-main{max-width:none;padding:1.25rem 1.5rem 3rem;margin:0;background:none;border:none;box-shadow:none;border-radius:0;-webkit-backdrop-filter:none;backdrop-filter:none;animation:ob-slide .35s cubic-bezier(.22,1,.36,1)}
+.ob-main>*{max-width:520px;margin-inline:auto;width:100%}
+.ob-step,.ob-title,.ob-desc{text-align:center}
+.ob-step{font-weight:700;letter-spacing:.1em;color:var(--accent);font-size:.6875rem}
+.ob-title{font-size:clamp(1.5rem,4.5vw,1.875rem);font-weight:800;letter-spacing:-.025em;line-height:1.15;color:var(--ink);margin-bottom:.5rem}
+.ob-desc{font-size:.9375rem;color:var(--muted);margin-bottom:1.5rem}
+.ob-summary{justify-content:center;background:transparent;border:none;padding:0}
+.ob-chip{background:var(--surface);border-color:var(--border);color:var(--ink2)}
+.ob-opt{background:var(--surface);border:1.5px solid var(--border);color:var(--ink)}
+.ob-opt-label{color:var(--ink)}
+.ob-opt:hover{border-color:var(--accent);box-shadow:0 6px 18px rgba(80,60,20,.12)}
+.ob-opt.selected{border-color:var(--accent);background:var(--accent-bg);box-shadow:0 4px 16px rgba(58,139,61,.2)}
+.ob-slider-val{color:var(--ink);font-size:3.75rem;font-weight:800;letter-spacing:-.03em}
+.ob-slider-val small{font-size:1.25rem;color:var(--muted);font-weight:700}
+.ob-range{-webkit-appearance:none;appearance:none;width:100%;height:14px;border-radius:99px;outline:none;background:linear-gradient(90deg,#57B95D 0,#2E7D32 var(--p,50%),#DDD3BD var(--p,50%));box-shadow:inset 0 1px 3px rgba(80,60,20,.18)}
+.ob-range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#C4F2BE,#3E9E44 55%,#1F6B25);border:3px solid rgba(255,255,255,.75);box-shadow:0 3px 10px rgba(46,125,50,.55);cursor:grab}
+.ob-range::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#C4F2BE,#3E9E44 55%,#1F6B25);border:3px solid rgba(255,255,255,.75);box-shadow:0 3px 10px rgba(46,125,50,.55);cursor:grab}
+.ob-range-labels{color:var(--muted)}
+.ob-insight{background:var(--accent-bg);border:1px solid rgba(58,139,61,.2);color:var(--ink2);text-align:center}
+.ob-stepper-n{color:var(--ink)}
+.ob-stepper-btn{background:var(--surface);color:var(--ink)}
+.ob-stepper-btn:last-child{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(46,125,50,.35)}
+.ob-stepper-btn:last-child:hover{color:#fff}
+.ob-preset{color:var(--ink2)}
+.ob-back{display:none}
+
+/* Budget: fanned bills */
+.ob-cash{display:flex;justify-content:center;align-items:flex-end;height:112px;margin:.25rem 0 1.25rem;padding-left:30px}
+.bill{width:52px;height:74px;border-radius:9px;margin-left:-28px;background:linear-gradient(160deg,#8DD190,#3A8B3D);border:2px solid rgba(255,255,255,.6);box-shadow:0 4px 10px rgba(30,70,30,.3);color:#fff;font-weight:800;font-size:1.1rem;display:flex;align-items:center;justify-content:center;animation:bill-in .35s cubic-bezier(.22,1,.36,1) backwards}
+@keyframes bill-in{from{opacity:0;translate:0 22px;scale:.8}}
+
+/* Loading screen (cream card on charcoal) */
+.loading-overlay{background:#2E2C28;padding:1rem}
+.ld-card{background:var(--bg);color:var(--ink);border-radius:28px;width:min(560px,100%);padding:1.75rem 1.5rem 2rem;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.5);animation:scale-in .4s cubic-bezier(.22,1,.36,1)}
+.ld-brand{font-weight:800;font-size:1.125rem;color:var(--ink2);margin-bottom:1.25rem}
+.ld-brand span{color:var(--accent)}
+.ld-prices{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.ld-track{display:flex;gap:.75rem;width:max-content;animation:marquee 14s linear infinite}
+.ld-tile{width:76px;flex-shrink:0}
+.ld-emo{height:64px;border-radius:18px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.9rem;box-shadow:var(--shadow)}
+.ld-price{margin-top:.375rem;font-size:.6875rem;font-weight:700;color:#C4553B;background:rgba(196,85,59,.12);border-radius:99px;padding:.15rem .4rem}
+.ld-cap{font-size:.75rem;color:var(--muted);margin:.75rem 0 1.5rem}
+.ld-card h2{font-size:1.375rem;font-weight:800;letter-spacing:-.02em;margin-bottom:1.25rem;color:var(--ink)}
+.ld-steps{display:flex;flex-direction:column;gap:.75rem;width:max-content;max-width:100%;margin:0 auto 1.5rem;text-align:left}
+.ld-step{display:flex;align-items:center;gap:.75rem;font-size:.9375rem;color:var(--faint);transition:color .3s}
+.ld-step .ls-icon{width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.75rem;color:#fff;transition:all .3s}
+.ld-step.active{color:var(--ink);font-weight:600}
+.ld-step.active .ls-icon{border-color:#C4553B;border-top-color:transparent;animation:spin .8s linear infinite}
+.ld-step.done{color:var(--ink)}
+.ld-step.done .ls-icon{background:#8A8F76;border-color:#8A8F76}
+.ld-bar{height:10px;border-radius:99px;background:#DDD3BD;overflow:hidden}
+.ld-fill{height:100%;width:0;background:linear-gradient(90deg,#57B95D,#2E7D32);border-radius:99px;transition:width .12s linear}
+.ld-pct{margin-top:.5rem;font-weight:800;font-size:.875rem;color:var(--accent)}
+
+/* Result: locked days + sticky CTA */
+.res-hero{padding:1rem 1.5rem 0;text-align:center}
+.res-badge{display:inline-flex;align-items:center;gap:.375rem;background:var(--accent-bg);border:1px solid rgba(58,139,61,.25);color:var(--accent-text);padding:.375rem .875rem;border-radius:99px;font-size:.75rem;font-weight:700;margin-bottom:.875rem}
+.res-hero h1{color:var(--ink)}
+.res-cards{padding-inline:1.25rem;max-width:none}
+.res-macros,.meal-plan{max-width:none;padding-inline:1.25rem}
+.mp-day.locked,.mp-shopping.locked{position:relative;cursor:pointer}
+.mp-day.locked .mp-meal,.mp-shopping.locked .mp-shop-list{filter:blur(6px);opacity:.65;user-select:none;pointer-events:none}
+.mp-day.locked::after,.mp-shopping.locked::after{content:"\1F512  D\00E9bloquer";position:absolute;left:50%;top:62%;transform:translate(-50%,-50%);background:var(--ink);color:#fff;padding:.45rem 1rem;border-radius:99px;font-size:.75rem;font-weight:700;box-shadow:var(--shadow-lg);white-space:nowrap}
+.mp-shopping.locked::after{top:58%}
+.res-sticky{position:fixed;left:50%;bottom:1rem;transform:translateX(-50%);width:min(640px,calc(100% - 2rem));z-index:90}
+.res-sticky .btn{box-shadow:0 10px 30px rgba(20,60,20,.45)}
+#result .meal-plan{padding-bottom:6rem}
+
+/* Paywall bottom sheet */
+.pw-modal{position:fixed;inset:0;z-index:300;display:flex;align-items:flex-end;justify-content:center;background:rgba(20,18,12,.55);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);opacity:0;transition:opacity .3s}
+.pw-modal.open{opacity:1}
+.pw-sheet{position:relative;background:var(--bg);color:var(--ink);width:100%;max-width:480px;max-height:92vh;overflow-y:auto;border-radius:28px 28px 0 0;padding:2rem 1.25rem 1.25rem;transform:translateY(40px);transition:transform .4s cubic-bezier(.22,1,.36,1)}
+.pw-modal.open .pw-sheet{transform:none}
+@media(min-width:640px){.pw-modal{align-items:center}.pw-sheet{border-radius:28px}}
+.pw-x{position:absolute;top:.875rem;right:.875rem;width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:var(--ink2);font-size:1.25rem;line-height:1;cursor:pointer;z-index:2}
+.pw-sheet .paywall-card{box-shadow:none;border:none;background:transparent;padding:0;animation:none;max-width:none;width:100%}
+.pw-sheet .paywall-card h2{color:var(--ink)}
+.downsell-card{background:var(--surface);color:var(--ink)}
+
 </style>
 
 <!-- LANDING -->
@@ -695,8 +810,7 @@ img{max-width:100%}
 <!-- ONBOARDING -->
 <div id="onboarding" class="page">
 <div class="ob-page-bg" id="ob-bg" aria-hidden="true"></div>
-<div class="nav-w"><nav class="nav"><div class="nav-pill"><div class="logo" onclick="showPage('landing')">macro<span>.</span></div><div id="ob-step-label" style="font-size:.75rem;color:var(--faint)">1 / 8</div></div></nav></div>
-<div class="ob-bar"><div class="ob-fill" id="ob-fill" style="width:12.5%"></div></div>
+<div class="ob-head"><div class="ob-brand">macro<span>.</span></div><div class="ob-progress"><button class="ob-backbtn" onclick="obBack()" aria-label="Retour"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button><div class="ob-bar"><div class="ob-fill" id="ob-fill" style="width:12.5%"></div></div><span class="ob-pct" id="ob-pct">13%</span></div><div class="ob-counter" id="ob-counter"></div></div>
 <div class="ob-main" id="ob-main"></div>
 </div>
 
@@ -744,20 +858,20 @@ var S=[
 {id:'profile',title:'Pour finir',desc:'Derni\u00e8re question.',type:'profile'}
 ];
 function renderStep(){
-var s=S[step],pct=((step+1)/S.length*100);document.getElementById('ob-fill').style.width=pct+'%';document.getElementById('ob-step-label').textContent=(step+1)+' / '+S.length;var h='';
+var s=S[step],pct=((step+1)/S.length*100);document.getElementById('ob-fill').style.width=pct+'%';document.getElementById('ob-pct').textContent=Math.round(pct)+'%';updateCounter();var h='';
 if(step>0)h+='<button class="ob-back" onclick="pStep()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Retour</button>';
 h+='<div class="ob-step">\u00C9TAPE '+(step+1)+' SUR '+S.length+'</div><div class="ob-title">'+s.title+'</div>';
 if(s.desc)h+='<div class="ob-desc">'+s.desc+'</div>';if(step>1)h+=buildSummary();
 if(s.type==='grid'){h+='<div class="ob-grid" style="grid-template-columns:repeat('+(s.cols||3)+',1fr)">';s.options.forEach(function(o){var ic;if(o.imgId){var el=document.getElementById(o.imgId);ic=el?'<img src="'+el.src+'" alt="'+o.label+'" style="width:28px;height:28px;object-fit:contain;border-radius:4px">':o.label.charAt(0);h+='<button class="ob-opt" onclick="pick(\''+s.id+"','"+o.label.replace(/'/g,"\\'")+"')\"><div class=\"ob-icon\" style=\"background:"+o.bg+";padding:4px\">"+ic+"</div><div class=\"ob-opt-label\">"+o.label+"</div></button>"}else{h+='<button class="ob-opt" onclick="pick(\''+s.id+"','"+o.label.replace(/'/g,"\\'")+"')\"><div class=\"ob-icon\" style=\"background:"+o.bg+"\">"+o.icon+"</div><div class=\"ob-opt-label\">"+o.label+"</div></button>"}});h+='</div>'}
 else if(s.type==='list'){h+='<div class="ob-opts">';s.options.forEach(function(o){var val=o.val||o.label;var tag=o.tag?'<span class="ob-tag">'+o.tag+'</span>':'';var ic;if(o.imgId){var el=document.getElementById(o.imgId);ic=el?'<img src="'+el.src+'" alt="'+o.label+'" style="width:28px;height:28px;object-fit:contain;border-radius:4px">':o.label.charAt(0);h+='<button class="ob-opt" onclick="pick(\''+s.id+"','"+val+"')\"><div class=\"ob-icon\" style=\"background:"+o.bg+";padding:4px\">"+ic+"</div><div style=\"flex:1\"><div class=\"ob-opt-label\">"+o.label+"</div>"+(o.sub?'<div class="ob-opt-sub">'+o.sub+"</div>":"")+"</div>"+tag+"</button>"}else{h+='<button class="ob-opt" onclick="pick(\''+s.id+"','"+val+"')\"><div class=\"ob-icon\" style=\"background:"+o.bg+"\">"+o.icon+"</div><div style=\"flex:1\"><div class=\"ob-opt-label\">"+o.label+"</div>"+(o.sub?'<div class="ob-opt-sub">'+o.sub+"</div>":"")+"</div>"+tag+"</button>"}});h+='</div>'}
-else if(s.type==='slider'){var v=D[s.id]||s.default;h+='<div class="ob-slider-val" id="sv">'+v+' <small>'+s.unit+s.suffix+'</small></div><input type="range" class="ob-range" min="'+s.min+'" max="'+s.max+'" value="'+v+'" oninput="updS(this)"><div class="ob-range-labels"><span>'+s.min+' '+s.unit+'</span><span>'+s.max+' '+s.unit+'</span></div>';var meals=parseInt(D.meals)||14;var ppm=(v/meals).toFixed(2).replace('.',',');h+='<div class="ob-insight" id="ob-ins"><strong>'+ppm+' \u20AC</strong> par repas sur '+meals+' repas/semaine</div><button class="btn btn-p btn-lg btn-full" style="margin-top:1.5rem" onclick="pick(\''+s.id+"',document.querySelector('.ob-range').value)\">Continuer \u2192</button>"}
+else if(s.type==='slider'){var v=D[s.id]||s.default;h+='<div class="ob-slider-val" id="sv">'+v+' <small>'+s.unit+s.suffix+'</small></div><div class="ob-cash" id="ob-cash" data-n="'+cashN(v)+'">'+cashHtml(v)+'</div><input type="range" class="ob-range" min="'+s.min+'" max="'+s.max+'" value="'+v+'" oninput="updS(this)"><div class="ob-range-labels"><span>'+s.min+' '+s.unit+'</span><span>'+s.max+' '+s.unit+'</span></div>';var meals=parseInt(D.meals)||14;var ppm=(v/meals).toFixed(2).replace('.',',');h+='<div class="ob-insight" id="ob-ins"><strong>'+ppm+' \u20AC</strong> par repas sur '+meals+' repas/semaine</div><button class="btn btn-p btn-lg btn-full" style="margin-top:1.5rem" onclick="pick(\''+s.id+"',document.querySelector('.ob-range').value)\">Continuer \u2192</button>"}
 else if(s.type==='double-slider'){var v1=D.taille||s.s1.default,v2=D.poids||s.s2.default;h+='<div style="font-weight:600;font-size:.8125rem;color:var(--muted);margin-bottom:.25rem">'+s.s1.label+'</div><div class="ob-slider-val" id="sv1">'+v1+'<small>'+s.s1.unit+'</small></div><input type="range" class="ob-range" id="r1" min="'+s.s1.min+'" max="'+s.s1.max+'" value="'+v1+'" oninput="document.getElementById(\'sv1\').innerHTML=this.value+\'<small>'+s.s1.unit+"</small>'\"><div class=\"ob-range-labels\"><span>"+s.s1.min+s.s1.unit+"</span><span>"+s.s1.max+s.s1.unit+"</span></div>";h+='<div style="font-weight:600;font-size:.8125rem;color:var(--muted);margin-top:1.5rem;margin-bottom:.25rem">'+s.s2.label+'</div><div class="ob-slider-val" id="sv2">'+v2+'<small>'+s.s2.unit+'</small></div><input type="range" class="ob-range" id="r2" min="'+s.s2.min+'" max="'+s.s2.max+'" value="'+v2+'" oninput="document.getElementById(\'sv2\').innerHTML=this.value+\'<small>'+s.s2.unit+"</small>'\"><div class=\"ob-range-labels\"><span>"+s.s2.min+s.s2.unit+"</span><span>"+s.s2.max+s.s2.unit+"</span></div>";h+='<button class="btn btn-p btn-lg btn-full" style="margin-top:1.5rem" onclick="pickBody()">Continuer \u2192</button>'}
 else if(s.type==='stepper'){var v=D[s.id]||s.default;h+='<div class="ob-stepper"><button class="ob-stepper-btn" onclick="stepMeals(-1)">&#x2212;</button><div class="ob-stepper-val"><div class="ob-stepper-n" id="stepper-n">'+v+'</div><div class="ob-stepper-u">'+s.unit+'</div></div><button class="ob-stepper-btn" onclick="stepMeals(1)">+</button></div>';h+='<div class="ob-presets">';s.presets.forEach(function(p){var cls=p.val===v?' active':'';var tag=p.tag?'<span class="ob-tag">'+p.tag+'</span>':'';h+='<button class="ob-preset'+cls+'" onclick="setMeals('+p.val+')">'+p.val+' \u2014 '+p.label+tag+'</button>'});h+='</div><button class="btn btn-p btn-lg btn-full" onclick="pick(\''+s.id+"',document.getElementById('stepper-n').textContent)\">Continuer \u2192</button>"}
 else if(s.type==='profile'){h+='<div class="ob-grid" style="grid-template-columns:repeat(2,1fr);margin-bottom:1rem"><button class="ob-opt" id="g-h" onclick="pickG(\'Homme\')"><div class="ob-icon" style="background:#3B82F6">\u2642</div><div class="ob-opt-label">Homme</div></button><button class="ob-opt" id="g-f" onclick="pickG(\'Femme\')"><div class="ob-icon" style="background:#EC4899">\u2640</div><div class="ob-opt-label">Femme</div></button></div>';var age=D.age||22;h+='<div style="font-weight:600;font-size:.8125rem;color:var(--muted);margin-bottom:.25rem">\u00C2ge</div><div class="ob-slider-val" id="sv-age">'+age+'<small> ans</small></div><input type="range" class="ob-range" id="r-age" min="16" max="60" value="'+age+'" oninput="document.getElementById(\'sv-age\').innerHTML=this.value+\'<small> ans</small>\'"><div class="ob-range-labels"><span>16</span><span>60</span></div><button class="btn btn-p btn-lg btn-full" style="margin-top:1.5rem" onclick="finishWithLoading()">Voir mon plan \u2192</button>'}
-document.getElementById('ob-main').innerHTML=h;window.scrollTo(0,0)}
+document.getElementById('ob-main').innerHTML=h;window.scrollTo(0,0);initRanges()}
 function pick(id,val){D[id]=val;step++;if(step<S.length)renderStep();else showResult()}
 function pStep(){if(step>0){step--;renderStep()}}
-function updS(el){var s=S[step];document.getElementById('sv').innerHTML=el.value+' <small>'+s.unit+s.suffix+'</small>';var meals=parseInt(D.meals)||14;var ppm=(el.value/meals).toFixed(2).replace('.',',');document.getElementById('ob-ins').innerHTML='<strong>'+ppm+' \u20AC</strong> par repas sur '+meals+' repas/semaine'}
+function updS(el){var s=S[step];var cc=document.getElementById('ob-cash');if(cc){var nn=cashN(el.value);if(cc.getAttribute('data-n')!=nn){cc.setAttribute('data-n',nn);cc.innerHTML=cashHtml(el.value)}}document.getElementById('sv').innerHTML=el.value+' <small>'+s.unit+s.suffix+'</small>';var meals=parseInt(D.meals)||14;var ppm=(el.value/meals).toFixed(2).replace('.',',');document.getElementById('ob-ins').innerHTML='<strong>'+ppm+' \u20AC</strong> par repas sur '+meals+' repas/semaine'}
 function pickBody(){D.taille=document.getElementById('r1').value;D.poids=document.getElementById('r2').value;step++;renderStep()}
 function pickG(g){selGender=g;document.getElementById('g-h').className='ob-opt'+(g==='Homme'?' selected':'');document.getElementById('g-f').className='ob-opt'+(g==='Femme'?' selected':'')}
 
@@ -771,7 +885,7 @@ var cal=go==='Prise de masse'?Math.round(tdee*1.15):go==='S\u00e8che'?Math.round
 var protG=Math.round(p*1.8),protC=protG*4,fatC=Math.round(cal*0.25),fatG=Math.round(fatC/9),carbC=cal-protC-fatC,carbG=Math.round(carbC/4);
 var ppm=(b/m).toFixed(2).replace('.',',');var protPct=Math.min(Math.round(protC/cal*100),100),carbPct=Math.min(Math.round(carbC/cal*100),100),fatPct=Math.min(Math.round(fatC/cal*100),100);
 var protM=Math.round(protG/(m/7));var gLabel=go==='Prise de masse'?'construire du muscle':go==='S\u00e8che'?'perdre du gras':'maintenir ta composition';
-var h='<div class="res-hero"><h1>Ton plan macro.</h1><p>Pour '+gLabel+' : <strong>'+cal+' kcal/jour</strong>, <strong>'+protM+'g de prot par repas</strong>. Budget : '+b+' \u20AC/sem soit '+ppm+' \u20AC/repas.</p></div>';
+var h='<div class="res-hero"><div class="res-badge">&#10003; Calcul&#233; pour toi</div><h1>Ton plan macro.</h1><p>Pour '+gLabel+' : <strong>'+cal+' kcal/jour</strong>, <strong>'+protM+'g de prot par repas</strong>. Budget : '+b+' \u20AC/sem soit '+ppm+' \u20AC/repas.</p></div>';
 h+='<div class="res-cards"><div class="res-card"><div class="res-card-n">'+cal+'</div><div class="res-card-u">kcal/jour</div><div class="res-card-l">Calories</div></div>';
 h+='<div class="res-card"><div class="res-card-n">'+protG+'</div><div class="res-card-u">g/jour</div><div class="res-card-l">Prot\u00e9ines</div></div>';
 h+='<div class="res-card"><div class="res-card-n">'+protM+'</div><div class="res-card-u">g/repas</div><div class="res-card-l">Par repas</div></div>';
@@ -780,8 +894,8 @@ h+='<div class="res-macros"><h3>R\u00e9partition des macros</h3><div class="macr
 h+='<div class="macro-row"><div class="macro-label">Prot\u00e9ines</div><div class="macro-bar"><div class="macro-fill prot" style="width:0" data-w="'+protPct+'%">'+protG+'g</div></div></div>';
 h+='<div class="macro-row"><div class="macro-label">Glucides</div><div class="macro-bar"><div class="macro-fill carb" style="width:0" data-w="'+carbPct+'%">'+carbG+'g</div></div></div>';
 h+='<div class="macro-row"><div class="macro-label">Lipides</div><div class="macro-bar"><div class="macro-fill fat" style="width:0" data-w="'+fatPct+'%">'+fatG+'g</div></div></div></div></div>';
-h+=renderMealPlan(null,protG,carbG,fatG,cal,b,m);h+='<div class="res-cta"><p>Ton plan est pr\u00eat. D\u00e9bloque tes recettes et ta liste de courses.</p><button class="btn btn-p btn-lg" onclick="showPaywall()">D\u00e9bloquer mon plan \u2192</button></div>';
-document.getElementById('res-content').innerHTML=h;showPage('result');document.querySelectorAll('.meal-plan').forEach(function(el){el.style.filter='blur(6px)';el.style.pointerEvents='none';el.style.userSelect='none'});
+h+=renderMealPlan(null,protG,carbG,fatG,cal,b,m);h+='<div class="res-sticky"><button class="btn btn-p btn-lg btn-full" onclick="showPaywall()">\u{1F513} D\u00e9bloquer mon plan complet</button></div>';
+document.getElementById('res-content').innerHTML=h;window._pwAuto=false;showPage('result');setTimeout(function(){if(!window._pwAuto&&document.getElementById('result').classList.contains('active'))showPaywall()},2800);
 setTimeout(function(){document.querySelectorAll('.macro-fill').forEach(function(el){el.style.width=el.getAttribute('data-w')})},100)}
 function finishWithLoading(){if(!selGender)pickG("Homme");D.gender=selGender||"Homme";D.age=document.getElementById("r-age").value;showLoading(function(){showResult()})}
 function initReveal(){var delay=0;var lastTop=-1;var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var d=parseFloat(e.target.getAttribute('data-rv-d'))||0;setTimeout(function(){e.target.classList.add('vis')},d);obs.unobserve(e.target)}})},{threshold:0.01,rootMargin:'0px 0px 0px 0px'});document.querySelectorAll('.rv').forEach(function(el,i){el.classList.remove('vis');var t=el.getBoundingClientRect().top;if(Math.abs(t-lastTop)<30){delay+=80}else{delay=0}lastTop=t;el.setAttribute('data-rv-d',delay);obs.observe(el)})}
@@ -867,38 +981,68 @@ return sm?'<div class="ob-summary">'+sm+'</div>':'';
 }
 
 // LOADING SCREEN
+function obBack(){if(step>0)pStep();else showPage('landing')}
+function initRanges(){document.querySelectorAll('.ob-range').forEach(function(r){r.style.setProperty('--p',((r.value-r.min)/(r.max-r.min)*100)+'%')})}
+document.addEventListener('input',function(e){var t=e.target;if(t&&t.classList&&t.classList.contains('ob-range'))t.style.setProperty('--p',((t.value-t.min)/(t.max-t.min)*100)+'%')});
+function cashN(v){return Math.max(2,Math.round(v/8))}
+function cashHtml(v){var n=cashN(v),h='';for(var i=0;i<n;i++){var rot=(i-(n-1)/2)*7;h+='<span class="bill" style="transform:rotate('+rot+'deg) translateY('+(Math.abs(rot)*.6)+'px);z-index:'+i+'">€</span>'}return h}
+var _avs='';
+function avatarsHtml(){if(_avs)return _avs;['img-chicken','img-lentil','img-wrap','img-pasta','img-pancakes'].forEach(function(id){var el=document.getElementById(id);if(el)_avs+='<img src="'+el.src+'" alt="">'});return _avs}
+function updateCounter(){
+var c=document.getElementById('ob-counter');if(!c)return;
+var m=parseInt(D.meals),b=parseInt(D.budget),t='';
+if(m&&b){t='<b>'+m+'</b> repas · ≈ <b>'+(b/m).toFixed(2).replace('.',',')+' €</b> par repas'}
+else if(m){t='<b>'+m+'</b> repas par semaine'}
+else if(D.store){t='Courses chez <b>'+D.store+'</b>'}
+if(!t){c.style.display='none';return}
+c.innerHTML='<span class="ob-avs">'+avatarsHtml()+'</span><span>'+t+'</span>';c.style.display='flex'}
+
 function showLoading(cb){
+var store=D.store||'ton magasin';
+var items=[['\u{1F95A}','0,24 €/u'],['\u{1F357}','5,49 €/kg'],['\u{1F35A}','1,69 €/kg'],['\u{1F966}','1,99 €/kg'],['\u{1F95B}','1,05 €/L'],['\u{1F35D}','1,19 €/kg'],['\u{1F9C0}','2,49 €/u'],['\u{1F34C}','1,29 €/kg']];
+var tiles=items.concat(items).map(function(it){return '<div class="ld-tile"><div class="ld-emo">'+it[0]+'</div><div class="ld-price">'+it[1]+'</div></div>'}).join('');
+var labels=['Calcul de tes macros','Sélection de tes repas','Optimisation pour ton budget chez '+store];
+var steps=labels.map(function(l,i){return '<div class="ld-step'+(i===0?' active':'')+'" id="ls-'+i+'"><span class="ls-icon"></span>'+l+'</div>'}).join('');
 var el=document.createElement('div');el.className='loading-overlay';el.id='loading-screen';
-el.innerHTML='<div class="loading-spinner"></div><div class="loading-text">On construit ton plan...</div><div class="loading-steps"><div class="loading-step active" id="ls-0"><span class="ls-icon"></span>Analyse de ton profil</div><div class="loading-step" id="ls-1"><span class="ls-icon"></span>Calcul de tes macros</div><div class="loading-step" id="ls-2"><span class="ls-icon"></span>Sélection des repas</div><div class="loading-step" id="ls-3"><span class="ls-icon"></span>Génération de ta liste</div></div>';
+el.innerHTML='<div class="ld-card"><div class="ld-brand">macro<span>.</span></div><div class="ld-prices"><div class="ld-track">'+tiles+'</div></div><div class="ld-cap">Prix estimés chez '+store+'</div><h2>macro. compose ta semaine…</h2><div class="ld-steps">'+steps+'</div><div class="ld-bar"><div class="ld-fill" id="ld-fill"></div></div><div class="ld-pct" id="ld-pct">0 %</div></div>';
 document.body.appendChild(el);
-var steps=['ls-0','ls-1','ls-2','ls-3'];var i=0;
+var p=0,cur=0;
 var iv=setInterval(function(){
-if(i>0){var prev=document.getElementById(steps[i-1]);if(prev){prev.className='loading-step done';prev.querySelector('.ls-icon').innerHTML='✓'}}
-if(i<steps.length){var cur=document.getElementById(steps[i]);if(cur)cur.className='loading-step active'}
-i++;
-if(i>steps.length){clearInterval(iv);setTimeout(function(){var lo=document.getElementById('loading-screen');if(lo)lo.remove();if(cb)cb()},400)}
-},800);
+p+=2;
+var fill=document.getElementById('ld-fill'),pc=document.getElementById('ld-pct');
+if(fill)fill.style.width=p+'%';if(pc)pc.textContent=p+' %';
+var idx=Math.min(2,Math.floor(p/34));
+if(idx!==cur){var prev=document.getElementById('ls-'+cur);if(prev){prev.className='ld-step done';prev.querySelector('.ls-icon').innerHTML='✓'}var nx=document.getElementById('ls-'+idx);if(nx)nx.className='ld-step active';cur=idx}
+if(p>=100){clearInterval(iv);var last=document.getElementById('ls-'+cur);if(last){last.className='ld-step done';last.querySelector('.ls-icon').innerHTML='✓'}setTimeout(function(){var lo=document.getElementById('loading-screen');if(lo)lo.remove();if(cb)cb()},450)}
+},90);
 }
 
-function showPaywall(){
+function unlockCardHtml(){
 bumpSelected=false;
-var rc=document.getElementById('res-content');
-if(!rc)return;
-var resHtml=rc.innerHTML;
 var gymTxt=D.gym?' à '+D.gym:'';
 var storeTxt=D.store||'ton magasin';
 var personaLine='On a vu que tu t\'entraînes'+gymTxt+' et que tu fais tes courses chez '+storeTxt+'. Ton plan est calibré pour ça.';
-rc.innerHTML='<div class="paywall-overlay"><div class="paywall-blur">'+resHtml+'</div><div class="paywall-gate"><div class="paywall-card"><button class="paywall-close" onclick="closePaywall()" aria-label="Fermer">&times;</button><div style="font-size:2rem;margin-bottom:.5rem">\u{1F512}</div><h2>Ton plan est prêt</h2><p class="paywall-persona">'+personaLine+'</p><p>Débloque tes recettes détaillées et ta liste de courses par rayon.</p>'+
+var chk='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>';
+return '<div class="paywall-card" id="unlock-card"><div style="font-size:2rem;margin-bottom:.5rem">\u{1F512}</div><h2>Débloque ton plan</h2><p class="paywall-persona">'+personaLine+'</p>'+
 '<div class="paywall-plans">'+
 '<button class="paywall-plan" id="plan-month" onclick="selectPlan(\'month\')"><div class="pp-name">Mensuel</div><div class="pp-price">7,99€<small>/mois</small></div></button>'+
 '<button class="paywall-plan active" id="plan-year" onclick="selectPlan(\'year\')"><span class="pp-badge">2 mois offerts</span><div class="pp-name">Annuel</div><div class="pp-price">79,99€<small>/an</small></div><div class="pp-sub">soit 6,67€/mois</div></button>'+
 '</div>'+
-'<div class="paywall-features"><div class="paywall-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Plan repas personnalisé chaque semaine</div><div class="paywall-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Liste de courses par rayon</div><div class="paywall-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>+150 recettes muscu</div><div class="paywall-feat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Macros calculées automatiquement</div></div>'+
+'<div class="paywall-features"><div class="paywall-feat">'+chk+'Plan repas personnalisé chaque semaine</div><div class="paywall-feat">'+chk+'Liste de courses par rayon</div><div class="paywall-feat">'+chk+'Recettes muscu adaptées à ton budget</div><div class="paywall-feat">'+chk+'Macros calculées automatiquement</div></div>'+
 '<label class="paywall-bump" onclick="event.preventDefault();var bc=document.getElementById(\'bump-check\');bc.checked=!bc.checked;toggleBump()"><input type="checkbox" id="bump-check" tabindex="-1"><span class="bump-check-visual"></span><span class="bump-text"><strong>+ Pack 30 recettes batch cooking</strong><br>Prépare ta semaine en 1h. <s>14,99€</s> 4,99€ (une fois)</span></label>'+
 '<button class="btn btn-p btn-lg btn-full" id="paywall-cta-btn" onclick="alert(\'Paiement à intégrer\')">Débloquer mon plan →</button>'+
 '<div class="paywall-proof">Calculé chaque semaine pour ton budget, ta salle et ton objectif.</div>'+
-'<div class="paywall-guarantee">\u{1F6E1}️ Garantie satisfait ou remboursé 7 jours</div></div></div></div>';
+'<div class="paywall-guarantee">\u{1F6E1}️ Garantie satisfait ou remboursé 7 jours</div></div>';
 }
+function showPaywall(){
+if(document.getElementById('pw-modal'))return;
+window._pwAuto=true;
+var m=document.createElement('div');m.id='pw-modal';m.className='pw-modal';
+m.innerHTML='<div class="pw-sheet"><button class="pw-x" onclick="closePaywall()" aria-label="Fermer">&times;</button>'+unlockCardHtml()+'</div>';
+document.body.appendChild(m);
+requestAnimationFrame(function(){m.classList.add('open')});
+}
+
 function selectPlan(p){
 selectedPlan=p;
 var m=document.getElementById('plan-month'),y=document.getElementById('plan-year');
@@ -907,8 +1051,7 @@ if(y)y.className='paywall-plan'+(p==='year'?' active':'');
 }
 var selectedPlan='year';
 
-function closePaywall(){
-var el=document.createElement('div');el.className='downsell-overlay';el.id='downsell-screen';
+function closePaywall(){var pm=document.getElementById('pw-modal');if(pm)pm.remove();var el=document.createElement('div');el.className='downsell-overlay';el.id='downsell-screen';
 el.innerHTML='<div class="downsell-spin"></div><div class="downsell-wait">Une seconde...</div>';
 document.body.appendChild(el);
 setTimeout(function(){
@@ -979,13 +1122,12 @@ var gen=generatePlan(cal,protG,carbG,fatG,mealsPerWeek,budget);
 var h='<div class="meal-plan">';
 h+='<div class="mp-header"><h2>\u{1F4CB} Ton plan repas de la semaine</h2><p>'+mealsPerWeek+' repas · '+gen.weekCost.toFixed(2).replace('.',',')+' €/semaine</p></div>';
 h+='<div class="mp-days">';
-gen.plan.forEach(function(day){
-h+='<div class="mp-day"><div class="mp-day-head"><strong>'+day.day+'</strong><span class="mp-day-macros">'+day.totals.cal+' kcal · '+day.totals.p+'g P</span></div>';
+gen.plan.forEach(function(day,di){h+='<div class="mp-day'+(di>0?' locked':'')+'"'+(di>0?' onclick="showPaywall()"':'')+'><div class="mp-day-head"><strong>'+day.day+'</strong><span class="mp-day-macros">'+day.totals.cal+' kcal · '+day.totals.p+'g P</span></div>';
 day.meals.forEach(function(m){
 h+='<div class="mp-meal"><span class="mp-emoji">'+m.emoji+'</span><div class="mp-info"><div class="mp-name">'+m.n+'</div><div class="mp-macros">'+m.cal+' kcal · '+m.p+'g P · '+m.g+'g G · '+m.l+'g L</div></div><span class="mp-price">'+m.price.toFixed(2).replace('.',',')+' €</span></div>'});
 h+='</div>'});
 h+='</div>';
-h+='<div class="mp-shopping"><h3>\u{1F6D2} Liste de courses estimée</h3><div class="mp-shop-list">';
+h+='<div class="mp-shopping locked" onclick="showPaywall()"><h3>\u{1F6D2} Liste de courses estimée</h3><div class="mp-shop-list">';
 var items=[
 {n:'Filets de poulet',q:'1,5 kg',p:'6,90 €',emoji:'\u{1F414}'},
 {n:'Riz basmati',q:'1 kg',p:'1,49 €',emoji:'\u{1F35A}'},
