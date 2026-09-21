@@ -772,6 +772,24 @@ body:has(#legal.active){background:#161B14}
 
 
 .hero h1{font-size:clamp(1.75rem,7.6vw,3.25rem);line-height:1.08}
+
+/* LP: giant CTA, minimal copy */
+.hero .hero-btns{width:100%;max-width:440px;margin-inline:auto}
+.hero .hero-btns .btn-lg{flex:1 1 100%;justify-content:center;font-size:1.3rem;font-weight:800;padding:1.25rem 2rem;min-height:68px;border-radius:99px}
+.hero .hero-g{flex:1 1 100%;justify-content:center;min-height:56px}
+.hero .hero-sub{font-size:1.125rem;max-width:26rem;margin-bottom:1.75rem}
+#landing .sec-lab,.steps .step-d,.cta-w p{display:none}
+.cta-w .btn-lg{font-size:1.25rem;padding:1.15rem 2.5rem;min-height:64px;font-weight:800}
+.sticky-cta .btn{font-size:1.125rem;padding:1.05rem 1.25rem;min-height:58px;font-weight:800}
+/* Shopping-list card: calm, static, neutral */
+.preview-w{transform:none!important;opacity:1;animation:none;background:var(--surface);backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:0 18px 44px rgba(0,0,0,.28)}
+.preview-w .preview-item{opacity:1;animation:none}
+.preview-item:hover{transform:none;background:none}
+.preview-top{background:#2A3229;color:#E6ECE2}
+.preview-top span[style]{background:rgba(255,255,255,.1)!important}
+.preview-total span:last-child{color:var(--ink)}
+.preview-bar-fill{width:48%;animation:none;background:#8FA394}
+.preview-macro-n{color:var(--ink2)}
 </style>
 
 <!-- LANDING -->
@@ -786,7 +804,7 @@ body:has(#legal.active){background:#161B14}
 <div class="hero-wrap">
 <div class="hero-bg" aria-hidden="true" id="hero-bg"></div>
 <div class="hero">
-  <h1>Prends du muscle avec<br><em>25&nbsp;&euro; de courses par semaine.</em></h1><p class="hero-sub">Ton plan repas et ta liste de courses de la semaine, calés sur ta salle, ton magasin et ton budget.</p><div class="hero-cta"><div class="hero-btns"><button class="btn btn-p btn-lg" onclick="startOnboarding()">Créer mon plan &#x2192;</button><span id="hero-google"></span></div><div class="hero-small"><span>2 minutes</span><span>Sans carte bancaire</span></div></div>
+  <h1>Prends du muscle avec<br><em>25&nbsp;&euro; de courses par semaine.</em></h1><p class="hero-sub">Plan repas + liste de courses, calés sur ton budget.</p><div class="hero-cta"><div class="hero-btns"><button class="btn btn-p btn-lg" onclick="startOnboarding()">Créer mon plan &#x2192;</button><span id="hero-google"></span></div><div class="hero-small"><span>2 minutes</span><span>Sans carte bancaire</span></div></div>
 
   <div class="preview-w">
     <div class="preview-top">
