@@ -790,6 +790,9 @@ body:has(#legal.active){background:#161B14}
 .preview-total span:last-child{color:var(--ink)}
 .preview-bar-fill{width:48%;animation:none;background:#8FA394}
 .preview-macro-n{color:var(--ink2)}
+
+/* Photo strips are driven by JS (works with reduced-motion / touch) */
+.photo-strip{animation:none!important;will-change:transform}
 </style>
 
 <!-- LANDING -->
@@ -1448,6 +1451,33 @@ h+='</div></div></div>';
 return h}
 
 initAuth();
+function initMarquee(){
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('.photo-strip').forEach(function(s){
+    if(s._mq)return;s._mq=1;
+    var dir=s.classList.contains('rev')?1:-1,speed=reduce?14:30,x=0,last=0,hold=0;
+    var wrap=s.parentNode;
+    function pause(){hold=Infinity}
+    function resume(){hold=performance.now()+700}
+    ['touchstart','mousedown'].forEach(function(e){wrap.addEventListener(e,pause,{passive:true})});
+    ['touchend','touchcancel','mouseup','mouseleave'].forEach(function(e){wrap.addEventListener(e,resume,{passive:true})});
+    function tick(t){
+      if(!last)last=t;
+      var dt=Math.min(t-last,64)/1000;last=t;
+      var half=s.scrollWidth/2;
+      if(half>0&&!document.hidden&&t>=hold){
+        x+=dir*speed*dt;
+        if(x<=-half)x+=half;
+        if(x>0)x-=half;
+        s.style.transform='translate3d('+x.toFixed(2)+'px,0,0)';
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  });
+}
+
+initMarquee();
 </script>
 </body>
 </html>
