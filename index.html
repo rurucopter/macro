@@ -618,7 +618,7 @@ body:has(#onboarding.active),body:has(#result.active){background:#2E2C28}
 .res-macros,.meal-plan{max-width:none;padding-inline:1.25rem}
 .mp-day.locked,.mp-shopping.locked{position:relative;cursor:pointer}
 .mp-day.locked .mp-meal,.mp-shopping.locked .mp-shop-list{filter:blur(6px);opacity:.65;user-select:none;pointer-events:none}
-.mp-day.locked::after,.mp-shopping.locked::after{content:"\1F512  D\00E9bloquer";position:absolute;left:50%;top:62%;transform:translate(-50%,-50%);background:var(--ink);color:#fff;padding:.45rem 1rem;border-radius:99px;font-size:.75rem;font-weight:700;box-shadow:var(--shadow-lg);white-space:nowrap}
+.mp-day.locked::after,.mp-shopping.locked::after{content:"\1F512  D\0000E9bloquer";position:absolute;left:50%;top:62%;transform:translate(-50%,-50%);background:var(--ink);color:#fff;padding:.45rem 1rem;border-radius:99px;font-size:.75rem;font-weight:700;box-shadow:var(--shadow-lg);white-space:nowrap}
 .mp-shopping.locked::after{top:58%}
 .res-sticky{position:fixed;left:50%;bottom:1rem;transform:translateX(-50%);width:min(640px,calc(100% - 2rem));z-index:90}
 .res-sticky .btn{box-shadow:0 10px 30px rgba(20,60,20,.45)}
@@ -1185,7 +1185,7 @@ var scale=calPerMeal/pick.cal;
 var scaled={n:pick.n,emoji:pick.emoji,p:Math.round(pick.p*scale),g:Math.round(pick.g*scale),l:Math.round(pick.l*scale),cal:Math.round(pick.cal*scale),price:Math.round(pick.price*scale*100)/100};
 dayMeals.push(scaled);dayP+=scaled.p;dayG+=scaled.g;dayL+=scaled.l;dayCal+=scaled.cal;totalCost+=scaled.price}
 plan.push({day:DAYS[d],meals:dayMeals,totals:{p:dayP,g:dayG,l:dayL,cal:dayCal}})}
-return{plan:plan,weekCost:Math.round(totalCost*100)/100}}
+var f=(budget>0&&totalCost>budget)?(budget*0.96/totalCost):1;if(f<1){plan.forEach(function(d){d.meals.forEach(function(m){m.price=Math.round(m.price*f*100)/100})});totalCost=totalCost*f}return{plan:plan,weekCost:Math.round(totalCost*100)/100}}
 function renderMealPlan(result,protG,carbG,fatG,cal,budget,mealsPerWeek){
 var gen=generatePlan(cal,protG,carbG,fatG,mealsPerWeek,budget);
 var h='<div class="meal-plan">';
