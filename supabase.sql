@@ -27,5 +27,5 @@ create policy "events_insert_anon" on public.events for insert to anon, authenti
 
 -- Reglages a faire dans le dashboard :
 --  Authentication > Providers > Google : activer et renseigner Client ID / Secret (Google Cloud Console)
---  Authentication > URL Configuration : Site URL et Redirect URLs = https://macro-deploy-ten.vercel.app
+--  Authentication > URL Configuration : Site URL et Redirect URLs = https://mangereco.com
 --  Puis renseigner supabaseUrl et supabaseKey (anon) dans MACRO_CFG (index.html).

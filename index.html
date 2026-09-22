@@ -1095,7 +1095,7 @@ h+='<div class="macro-row"><div class="macro-label">Lipides</div><div class="mac
 h+=renderMealPlan(null,mc.protG,mc.carbG,mc.fatG,mc.cal,mc.b,mc.m);h+=isUnlocked()?'<div class="res-unlocked-badge">&#10003; Plan complet débloqué</div>':'<div class="res-sticky"><button class="btn btn-p btn-lg btn-full" onclick="showPaywall()">\u{1F513} Débloquer mon plan complet</button></div>';
 document.getElementById('res-content').innerHTML=h;showPage('result');track('result_view');
 setTimeout(function(){document.querySelectorAll('.macro-fill').forEach(function(el){el.style.width=el.getAttribute('data-w')})},100)}
-function finishWithLoading(){if(!selGender)pickG("Homme");D.gender=selGender||"Homme";D.age=document.getElementById("r-age").value;showLoading(function(){gateThenResult()})}
+function finishWithLoading(){if(!selGender)pickG("Homme");D.gender=selGender||"Homme";D.age=document.getElementById("r-age").value;showLoading(function(){afterOnboarding()})}
 function initReveal(){var delay=0;var lastTop=-1;var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var d=parseFloat(e.target.getAttribute('data-rv-d'))||0;setTimeout(function(){e.target.classList.add('vis')},d);obs.unobserve(e.target)}})},{threshold:0.01,rootMargin:'0px 0px 0px 0px'});document.querySelectorAll('.rv').forEach(function(el,i){el.classList.remove('vis');var t=el.getBoundingClientRect().top;if(Math.abs(t-lastTop)<30){delay+=80}else{delay=0}lastTop=t;el.setAttribute('data-rv-d',delay);obs.observe(el)})}
 initReveal();
 (function(){var t=document.getElementById('logo-strip');if(t){var kids=t.children;var n=kids.length;for(var i=0;i<n;i++){t.appendChild(kids[i].cloneNode(true))}}})();
@@ -1235,7 +1235,7 @@ return '<div class="paywall-card" id="unlock-card"><div style="font-size:2rem;ma
 }
 function showPaywall(){
 if(document.getElementById('pw-modal'))return;
-window._pwAuto=true;track('paywall_view');
+window._pwAuto=true;track('paywall_view');setLeadStatus('paywall_view');
 var m=document.createElement('div');m.id='pw-modal';m.className='pw-modal';
 m.innerHTML='<div class="pw-sheet"><button class="pw-x" onclick="closePaywall()" aria-label="Fermer">&times;</button>'+unlockCardHtml()+'</div>';
 document.body.appendChild(m);
@@ -1335,7 +1335,9 @@ function sbUser(sess){
     return{id:j.id,email:j.email,name:m.full_name||m.name||'',provider:(j.app_metadata&&j.app_metadata.provider)||'email'};
   }).catch(function(){return null});
 }
-function afterLogin(fromRedirect){track('login');if(lsGet('macro_start_funnel')){lsDel('macro_start_funnel');startOnboarding();return}
+function afterLogin(fromRedirect){track('login');
+  if(lsGet('macro_gate_pending')){lsDel('macro_gate_pending');track('signup_completed',{provider:Auth.user?Auth.user.provider:''});setLeadStatus('signed_up');if(!restoreProfile())restoreProfile();showResult();return}
+  if(lsGet('macro_start_funnel')){lsDel('macro_start_funnel');startOnboarding();return}
   if(Auth.after){var f=Auth.after;Auth.after=null;Auth.gate=false;f();return}
   if(fromRedirect){
     if(restoreProfile()){showDashboard();return}
@@ -1393,11 +1395,26 @@ function openMyPlan(){
   loadRemoteProfile(function(ok){if(ok)showDashboard();else startOnboarding()});
 }
 
-function gateThenResult(){
+function setLeadStatus(status){
+  if(!(Auth.user&&Auth.session&&sbOn()))return;
+  sbFetch('/rest/v1/profiles?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:Auth.user.id,email:Auth.user.email,data:{D:D,g:selGender||null,status:status},updated_at:new Date().toISOString()})},Auth.session.access_token).catch(function(){});
+}
+function afterOnboarding(){
   saveProfile();
-  if(Auth.user||!authReady()){window._holdPaywall=false;showResult();return}
-  window._holdPaywall=true;showResult();
-  Auth.gate=true;openAuth('signup',function(){window._holdPaywall=false;showPaywall()});
+  if(Auth.user||!authReady()){showResult();return}
+  renderSignupGate();
+}
+function renderSignupGate(){
+  showPage('onboarding');
+  setSegs(S.length);document.getElementById('ob-pct').textContent='';document.getElementById('ob-counter').innerHTML='';
+  var g=sbOn()?'<button class="au-google" onclick="gateGoogle()">'+GSVG+'Continuer avec Google</button>':'<button class="au-google" onclick="gateGoogle()">'+GSVG+'Continuer avec Google</button>';
+  document.getElementById('ob-main').innerHTML='<div class="au-ico">🔓</div><h2 class="au-t">Ton plan est prêt</h2><p class="au-s">Connecte-toi pour le voir. 10 secondes, aucune carte requise.</p>'+g;
+  window.scrollTo(0,0);track('signup_gate_view');
+}
+function gateGoogle(){
+  if(!sbOn()){toast('La connexion Google arrive très bientôt.');return}
+  lsSet('macro_gate_pending',1);
+  authGoogle();
 }
 function openAuth(mode,after){
   closeAuth();Auth.after=after||null;Auth.mode=mode||'signup';
@@ -1440,7 +1457,7 @@ function authEmail(e){
 }
 
 function startCheckout(kind){
-  track('checkout_click',{plan:kind==='downsell'?'downsell':selectedPlan,bump:!!bumpSelected});
+  track('checkout_click',{plan:kind==='downsell'?'downsell':selectedPlan,bump:!!bumpSelected});setLeadStatus('checkout_started');
   if(!Auth.user&&authReady()){openAuth('signup',function(){startCheckout(kind)});return}
   var c=MACRO_CFG.checkout||{};var url=kind==='downsell'?(c.downsell||c.year):c[selectedPlan];
   if(url){location.href=url+(url.indexOf('?')>-1?'&':'?')+(Auth.user?'email='+encodeURIComponent(Auth.user.email):'');return}
