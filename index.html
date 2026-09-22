@@ -19,6 +19,7 @@
 <meta property="og:image" content="https://macro-deploy-ten.vercel.app/og.jpg">
 <meta name="twitter:image" content="https://macro-deploy-ten.vercel.app/og.jpg">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"macro.","url":"https://macro-deploy-ten.vercel.app/","applicationCategory":"HealthApplication","operatingSystem":"Web","inLanguage":"fr","description":"Plan repas muscu et liste de courses calés sur ton budget, ta salle et ton magasin.","offers":[{"@type":"Offer","name":"Mensuel","price":"7.99","priceCurrency":"EUR"},{"@type":"Offer","name":"Annuel","price":"79.99","priceCurrency":"EUR"}]}</script>
+<script>(function(){try{var t=localStorage.getItem('macro_theme');if(t!=='light'&&t!=='dark'){t='light'}document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','light')}})();</script>
 </head>
 <body>
 
@@ -795,6 +796,15 @@ body:has(#legal.active){background:#161B14}
 .photo-strip{animation:none!important;will-change:transform}
 
 .hero h1{font-size:clamp(2rem,8.6vw,3.5rem)}
+
+/* Theme toggle (day/night) */
+.theme-toggle{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:var(--ink2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .2s,color .2s;padding:0}
+.theme-toggle:hover{background:var(--accent-bg);color:var(--accent)}
+.theme-toggle svg{width:18px;height:18px}
+.theme-toggle .ti-moon{display:none}
+:root[data-theme="dark"] .theme-toggle .ti-sun{display:none}
+:root[data-theme="dark"] .theme-toggle .ti-moon{display:block}
+
 </style>
 
 <!-- LANDING -->
@@ -802,6 +812,7 @@ body:has(#legal.active){background:#161B14}
 <div class="nav-w"><nav class="nav">
   <div class="nav-pill">
     <div class="logo" onclick="showPage('landing')">macro<span>.</span></div>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Changer de thème"><svg class="ti-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg><svg class="ti-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg></button>
     <button class="btn btn-p" onclick="startOnboarding()">Commencer</button>
   </div>
 </nav></div>
@@ -918,7 +929,7 @@ body:has(#legal.active){background:#161B14}
 
 <!-- RESULT -->
 <div id="result" class="page">
-<div class="nav-w"><nav class="nav"><div class="nav-pill"><div class="logo" onclick="showPage('landing')">macro<span>.</span></div><button class="btn btn-p" onclick="showPage('landing')">Nouveau plan</button></div></nav></div>
+<div class="nav-w"><nav class="nav"><div class="nav-pill"><div class="logo" onclick="showPage('landing')">macro<span>.</span></div><button class="theme-toggle" onclick="toggleTheme()" aria-label="Changer de thème"><svg class="ti-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg><svg class="ti-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg></button><button class="btn btn-p" onclick="showPage('landing')">Nouveau plan</button></div></nav></div>
 <div id="res-content"></div>
 <div class="photo-strip-wrap" style="margin-top:1.5rem;opacity:.6"><div class="photo-strip" aria-hidden="true" id="res-gym-strip"></div></div>
 
@@ -997,7 +1008,7 @@ h+='<div class="macro-row"><div class="macro-label">Prot\u00e9ines</div><div cla
 h+='<div class="macro-row"><div class="macro-label">Glucides</div><div class="macro-bar"><div class="macro-fill carb" style="width:0" data-w="'+carbPct+'%">'+carbG+'g</div></div></div>';
 h+='<div class="macro-row"><div class="macro-label">Lipides</div><div class="macro-bar"><div class="macro-fill fat" style="width:0" data-w="'+fatPct+'%">'+fatG+'g</div></div></div></div></div>';
 h+=renderMealPlan(null,protG,carbG,fatG,cal,b,m);h+='<div class="res-sticky"><button class="btn btn-p btn-lg btn-full" onclick="showPaywall()">\u{1F513} D\u00e9bloquer mon plan complet</button></div>';
-document.getElementById('res-content').innerHTML=h;window._pwAuto=!!window._holdPaywall;showPage('result');track('result_view');setTimeout(function(){if(!window._pwAuto&&document.getElementById('result').classList.contains('active'))showPaywall()},2800);
+document.getElementById('res-content').innerHTML=h;showPage('result');track('result_view');
 setTimeout(function(){document.querySelectorAll('.macro-fill').forEach(function(el){el.style.width=el.getAttribute('data-w')})},100)}
 function finishWithLoading(){if(!selGender)pickG("Homme");D.gender=selGender||"Homme";D.age=document.getElementById("r-age").value;showLoading(function(){gateThenResult()})}
 function initReveal(){var delay=0;var lastTop=-1;var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var d=parseFloat(e.target.getAttribute('data-rv-d'))||0;setTimeout(function(){e.target.classList.add('vis')},d);obs.unobserve(e.target)}})},{threshold:0.01,rootMargin:'0px 0px 0px 0px'});document.querySelectorAll('.rv').forEach(function(el,i){el.classList.remove('vis');var t=el.getBoundingClientRect().top;if(Math.abs(t-lastTop)<30){delay+=80}else{delay=0}lastTop=t;el.setAttribute('data-rv-d',delay);obs.observe(el)})}
@@ -1480,6 +1491,7 @@ function initMarquee(){
 }
 
 initMarquee();
+function toggleTheme(){var cur=document.documentElement.getAttribute('data-theme');var next=cur==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('macro_theme',next)}catch(e){}}
 </script>
 </body>
 </html>
