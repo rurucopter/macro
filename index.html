@@ -826,6 +826,29 @@ body:has(#legal.active){background:#161B14}
 .res-unlocked-badge{display:inline-flex;align-items:center;gap:.375rem;background:var(--accent-bg);border:1px solid rgba(52,211,153,.25);color:var(--accent-text);padding:.5rem 1rem;border-radius:99px;font-size:.8125rem;font-weight:700;margin:0 auto 1rem;justify-content:center}
 :root[data-theme="dark"] .res-unlocked-badge{color:var(--accent)}
 
+
+/* Dashboard */
+body:has(#dashboard.active){background:var(--bg)}
+.dash-wrap{max-width:var(--max-w);margin-inline:auto;padding:0 var(--g) 6rem}
+.dash-greet{padding:2rem 0 .25rem}
+.dash-greet h1{font-family:var(--font-d);font-size:1.75rem;font-weight:800;letter-spacing:-.02em;color:var(--ink)}
+.dash-greet p{color:var(--muted);font-size:.9375rem;margin-top:.25rem}
+.dash-today{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:.5rem 1.25rem 1rem;margin:1.25rem 0 1.5rem}
+.dash-today-head{display:flex;justify-content:space-between;align-items:center;padding:.875rem 0 .75rem;border-bottom:1px solid var(--border);margin-bottom:.25rem}
+.dash-today-head strong{font-size:.9375rem;color:var(--ink)}
+.dash-empty{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:2rem 1.25rem;text-align:center;margin:1.25rem 0}
+.dash-empty p{color:var(--muted);font-size:.9375rem;margin-bottom:1.25rem}
+.dash-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.75rem;margin-bottom:1.25rem}
+.dash-action{display:flex;flex-direction:column;gap:.25rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:1rem;text-align:left;cursor:pointer;font-family:var(--font);transition:transform .2s,box-shadow .2s;color:inherit}
+.dash-action:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.dash-action strong{font-size:.875rem;color:var(--ink)}
+.dash-action span{font-size:.75rem;color:var(--muted)}
+.dash-account{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;margin-top:.5rem}
+.dash-account-row{display:flex;justify-content:space-between;align-items:center;gap:1rem;font-size:.8125rem;color:var(--muted);padding:.625rem 0;border-bottom:1px solid var(--border)}
+.dash-account-row strong{color:var(--ink);font-weight:700;text-align:right;word-break:break-all}
+.dash-account-row:last-of-type{border-bottom:none}
+.dash-account .au-toggle{margin-top:.75rem;padding:0}
+
 </style>
 
 <!-- LANDING -->
@@ -934,6 +957,12 @@ body:has(#legal.active){background:#161B14}
 </div>
 </div>
 
+<!-- DASHBOARD -->
+<div id="dashboard" class="page">
+<div class="nav-w"><nav class="nav"><div class="nav-pill"><div class="logo" onclick="showPage('landing')">macro<span>.</span></div><button class="btn btn-p" onclick="showResult()">Plan complet</button></div></nav></div>
+<div id="dash-content"></div>
+</div>
+
 <!-- LEGAL -->
 <div id="legal" class="page">
 <div class="lg-head"><button class="ob-backbtn" onclick="showPage('landing')" aria-label="Retour"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button><div class="ob-brand">macro<span>.</span></div><button class="theme-toggle" onclick="toggleTheme()" aria-label="Changer de thème"><svg class="ti-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg><svg class="ti-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg></button></div>
@@ -1012,23 +1041,58 @@ function pickG(g){selGender=g;document.getElementById('g-h').className='ob-opt'+
 function stepMeals(d){var s=S[step];var el=document.getElementById('stepper-n');var v=parseInt(el.textContent)+d;if(v<s.min)v=s.min;if(v>s.max)v=s.max;el.textContent=v;updPresets(v)}
 function setMeals(v){document.getElementById('stepper-n').textContent=v;updPresets(v)}
 function updPresets(v){var btns=document.querySelectorAll('.ob-preset');btns.forEach(function(b){var bv=parseInt(b.textContent);b.className=bv===v?'ob-preset active':'ob-preset'})}function finish(){if(!selGender)pickG('Homme');D.gender=selGender||'Homme';D.age=document.getElementById('r-age').value;showResult()}
-function showResult(){
+function computeMacros(){
 var p=parseInt(D.poids)||75,t=parseInt(D.taille)||175,a=parseInt(D.age)||22,b=parseInt(D.budget)||30,m=parseInt(D.meals)||14,g=D.gender||'Homme',go=D.goal||'Prise de masse';
 var bmr=g==='Homme'?10*p+6.25*t-5*a+5:10*p+6.25*t-5*a-161;var tdee=Math.round(bmr*1.55);
-var cal=go==='Prise de masse'?Math.round(tdee*1.15):go==='S\u00e8che'?Math.round(tdee*0.8):tdee;
+var cal=go==='Prise de masse'?Math.round(tdee*1.15):go==='Sèche'?Math.round(tdee*0.8):tdee;
 var protG=Math.round(p*1.8),protC=protG*4,fatC=Math.round(cal*0.25),fatG=Math.round(fatC/9),carbC=cal-protC-fatC,carbG=Math.round(carbC/4);
-var ppm=(b/m).toFixed(2).replace('.',',');var protPct=Math.min(Math.round(protC/cal*100),100),carbPct=Math.min(Math.round(carbC/cal*100),100),fatPct=Math.min(Math.round(fatC/cal*100),100);
-var protM=Math.round(protG/(m/7));var gLabel=go==='Prise de masse'?'construire du muscle':go==='S\u00e8che'?'perdre du gras':'maintenir ta composition';
-var h='<div class="res-hero"><div class="res-badge">&#10003; Calcul&#233; pour toi</div><h1>Ton plan macro.</h1><p>Pour '+gLabel+' : <strong>'+cal+' kcal/jour</strong>, <strong>'+protM+'g de prot par repas</strong>. Budget : '+b+' \u20AC/sem soit '+ppm+' \u20AC/repas.</p></div>';
-h+='<div class="res-cards"><div class="res-card"><div class="res-card-n">'+cal+'</div><div class="res-card-u">kcal/jour</div><div class="res-card-l">Calories</div></div>';
-h+='<div class="res-card"><div class="res-card-n">'+protG+'</div><div class="res-card-u">g/jour</div><div class="res-card-l">Prot\u00e9ines</div></div>';
-h+='<div class="res-card"><div class="res-card-n">'+protM+'</div><div class="res-card-u">g/repas</div><div class="res-card-l">Par repas</div></div>';
-h+='<div class="res-card"><div class="res-card-n">'+m+'</div><div class="res-card-u">repas/sem</div><div class="res-card-l">Planifi\u00e9s</div></div></div>';
-h+='<div class="res-macros"><h3>R\u00e9partition des macros</h3><div class="macro-bars">';
-h+='<div class="macro-row"><div class="macro-label">Prot\u00e9ines</div><div class="macro-bar"><div class="macro-fill prot" style="width:0" data-w="'+protPct+'%">'+protG+'g</div></div></div>';
-h+='<div class="macro-row"><div class="macro-label">Glucides</div><div class="macro-bar"><div class="macro-fill carb" style="width:0" data-w="'+carbPct+'%">'+carbG+'g</div></div></div>';
-h+='<div class="macro-row"><div class="macro-label">Lipides</div><div class="macro-bar"><div class="macro-fill fat" style="width:0" data-w="'+fatPct+'%">'+fatG+'g</div></div></div></div></div>';
-h+=renderMealPlan(null,protG,carbG,fatG,cal,b,m);h+=isUnlocked()?'<div class="res-unlocked-badge">&#10003; Plan complet d\u00e9bloqu\u00e9</div>':'<div class="res-sticky"><button class="btn btn-p btn-lg btn-full" onclick="showPaywall()">\u{1F513} D\u00e9bloquer mon plan complet</button></div>';
+var protM=Math.round(protG/(m/7));
+return{p:p,t:t,a:a,b:b,m:m,g:g,go:go,cal:cal,protG:protG,protC:protC,fatC:fatC,fatG:fatG,carbC:carbC,carbG:carbG,protM:protM};
+}
+function hasProfile(){return !!(D&&D.poids&&D.taille)}
+function todayIndex(){var d=new Date().getDay();return d===0?6:d-1}
+function editProfile(){closeMenu();track('edit_profile');step=0;showPage('onboarding');renderStep()}
+function showDashboard(){
+if(!hasProfile()){startOnboarding();return}
+var mc=computeMacros();
+var gen=generatePlan(mc.cal,mc.protG,mc.carbG,mc.fatG,mc.m,mc.b);
+window._plan=gen.plan;
+var ti=todayIndex();
+var today=gen.plan[ti];
+var dayNames=['lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche'];
+var name=Auth.user?(Auth.user.name||Auth.user.email.split('@')[0]):'';
+var unlocked=isUnlocked();
+var h='<div class="dash-wrap">';
+h+='<div class="dash-greet"><h1>Salut'+(name?' '+escH(name):'')+' \u{1F44B}</h1><p>Aujourd\'hui, '+(dayNames[ti].charAt(0).toUpperCase()+dayNames[ti].slice(1))+' · '+mc.cal+' kcal visées</p></div>';
+h+='<div class="dash-today"><div class="dash-today-head"><strong>\u{1F4C5} Tes repas du jour</strong><span class="mp-day-macros">'+today.totals.cal+' kcal · '+today.totals.p+'g P</span></div>';
+today.meals.forEach(function(m,mi){
+h+='<div class="mp-meal" onclick="showMealDetail('+ti+','+mi+')"><span class="mp-emoji">'+m.emoji+'</span><div class="mp-info"><div class="mp-name">'+m.n+'</div><div class="mp-macros">'+m.cal+' kcal · '+m.p+'g P · '+m.g+'g G · '+m.l+'g L</div></div><span class="mp-price">'+m.price.toFixed(2).replace('.',',')+' €</span></div>';
+});
+h+='</div>';
+h+='<div class="dash-actions">';
+h+='<button class="dash-action" onclick="showResult()"><strong>\u{1F4CB} Plan complet</strong><span>Les 7 jours + liste de courses</span></button>';
+h+='<button class="dash-action" onclick="editProfile()"><strong>⚙️ Mes préférences</strong><span>Budget, salle, objectif…</span></button>';
+h+='</div>';
+if(!unlocked)h+='<button class="btn btn-p btn-lg btn-full" onclick="showPaywall()" style="margin-bottom:1.5rem">\u{1F513} Débloquer mon plan complet</button>';
+h+='<div class="dash-account"><div class="dash-account-row"><span>Compte</span><strong>'+escH(Auth.user?Auth.user.email:'')+'</strong></div><div class="dash-account-row"><span>Statut</span><strong>'+(unlocked?'Plan complet':'Aperçu gratuit')+'</strong></div><button class="au-toggle" onclick="signOut()">Se déconnecter</button></div>';
+h+='</div>';
+document.getElementById('dash-content').innerHTML=h;
+showPage('dashboard');track('dashboard_view');
+}
+function showResult(){
+var mc=computeMacros();
+var ppm=(mc.b/mc.m).toFixed(2).replace('.',',');var protPct=Math.min(Math.round(mc.protC/mc.cal*100),100),carbPct=Math.min(Math.round(mc.carbC/mc.cal*100),100),fatPct=Math.min(Math.round(mc.fatC/mc.cal*100),100);
+var gLabel=mc.go==='Prise de masse'?'construire du muscle':mc.go==='Sèche'?'perdre du gras':'maintenir ta composition';
+var h='<div class="res-hero"><div class="res-badge">&#10003; Calculé pour toi</div><h1>Ton plan macro.</h1><p>Pour '+gLabel+' : <strong>'+mc.cal+' kcal/jour</strong>, <strong>'+mc.protM+'g de prot par repas</strong>. Budget : '+mc.b+' €/sem soit '+ppm+' €/repas.</p></div>';
+h+='<div class="res-cards"><div class="res-card"><div class="res-card-n">'+mc.cal+'</div><div class="res-card-u">kcal/jour</div><div class="res-card-l">Calories</div></div>';
+h+='<div class="res-card"><div class="res-card-n">'+mc.protG+'</div><div class="res-card-u">g/jour</div><div class="res-card-l">Protéines</div></div>';
+h+='<div class="res-card"><div class="res-card-n">'+mc.protM+'</div><div class="res-card-u">g/repas</div><div class="res-card-l">Par repas</div></div>';
+h+='<div class="res-card"><div class="res-card-n">'+mc.m+'</div><div class="res-card-u">repas/sem</div><div class="res-card-l">Planifiés</div></div></div>';
+h+='<div class="res-macros"><h3>Répartition des macros</h3><div class="macro-bars">';
+h+='<div class="macro-row"><div class="macro-label">Protéines</div><div class="macro-bar"><div class="macro-fill prot" style="width:0" data-w="'+protPct+'%">'+mc.protG+'g</div></div></div>';
+h+='<div class="macro-row"><div class="macro-label">Glucides</div><div class="macro-bar"><div class="macro-fill carb" style="width:0" data-w="'+carbPct+'%">'+mc.carbG+'g</div></div></div>';
+h+='<div class="macro-row"><div class="macro-label">Lipides</div><div class="macro-bar"><div class="macro-fill fat" style="width:0" data-w="'+fatPct+'%">'+mc.fatG+'g</div></div></div></div></div>';
+h+=renderMealPlan(null,mc.protG,mc.carbG,mc.fatG,mc.cal,mc.b,mc.m);h+=isUnlocked()?'<div class="res-unlocked-badge">&#10003; Plan complet débloqué</div>':'<div class="res-sticky"><button class="btn btn-p btn-lg btn-full" onclick="showPaywall()">\u{1F513} Débloquer mon plan complet</button></div>';
 document.getElementById('res-content').innerHTML=h;showPage('result');track('result_view');
 setTimeout(function(){document.querySelectorAll('.macro-fill').forEach(function(el){el.style.width=el.getAttribute('data-w')})},100)}
 function finishWithLoading(){if(!selGender)pickG("Homme");D.gender=selGender||"Homme";D.age=document.getElementById("r-age").value;showLoading(function(){gateThenResult()})}
@@ -1274,8 +1338,8 @@ function sbUser(sess){
 function afterLogin(fromRedirect){track('login');if(lsGet('macro_start_funnel')){lsDel('macro_start_funnel');startOnboarding();return}
   if(Auth.after){var f=Auth.after;Auth.after=null;Auth.gate=false;f();return}
   if(fromRedirect){
-    if(restoreProfile()){window._holdPaywall=false;showResult();return}
-    loadRemoteProfile(function(ok){if(ok)showResult();else toast('Connecté ! Crée ton plan pour commencer.')});
+    if(restoreProfile()){showDashboard();return}
+    loadRemoteProfile(function(ok){if(ok)showDashboard();else toast('Connecté ! Crée ton plan pour commencer.')});
   }
 }
 function initAuth(){
@@ -1290,7 +1354,7 @@ function initAuth(){
       return;
     }
   }
-  if(hash.indexOf('error_description=')>-1){history.replaceState(null,'',location.pathname+location.search);toast('Le lien de connexion a expiré. Demande-en un nouveau.')}
+  if(hash.indexOf('error=')>-1){history.replaceState(null,'',location.pathname+location.search);toast(hash.indexOf('access_denied')>-1?'Connexion annulée.':'Le lien de connexion a expiré. Demande-en un nouveau.')}
   var u=lsGet('macro_user'),s=lsGet('macro_session');
   if(u){
     Auth.user=u;Auth.session=s;
@@ -1325,8 +1389,8 @@ function closeMenu(){var m=document.getElementById('acc-menu');if(m)m.remove()}
 document.addEventListener('click',function(e){if(!(e.target.closest&&e.target.closest('#acc-menu')))closeMenu()});
 function openMyPlan(){
   closeMenu();
-  if(restoreProfile()){window._holdPaywall=false;showResult();return}
-  loadRemoteProfile(function(ok){if(ok){window._holdPaywall=false;showResult()}else startOnboarding()});
+  if(restoreProfile()){showDashboard();return}
+  loadRemoteProfile(function(ok){if(ok)showDashboard();else startOnboarding()});
 }
 
 function gateThenResult(){
@@ -1355,7 +1419,7 @@ function renderAuth(){
   '<button class="au-toggle" onclick="Auth.mode=\''+(login?'signup':'login')+'\';renderAuth()">'+(login?'Pas encore de compte ? Créer mon compte':'Déjà un compte ? Me connecter')+'</button>';
   var el=document.getElementById('au-email');if(el)setTimeout(function(){el.focus()},350);
 }
-function authGoogle(){saveProfile();track('google_click');location.href=MACRO_CFG.supabaseUrl+'/auth/v1/authorize?provider=google&redirect_to='+encodeURIComponent(redirectUrl())}
+function authGoogle(){if(!sbOn()){toast('La connexion Google arrive tr\u00e8s bient\u00f4t.');return}saveProfile();track('google_click');location.href=MACRO_CFG.supabaseUrl+'/auth/v1/authorize?provider=google&redirect_to='+encodeURIComponent(redirectUrl())}
 function authEmail(e){
   e.preventDefault();
   var em=document.getElementById('au-email').value.trim().toLowerCase(),err=document.getElementById('au-err'),btn=document.getElementById('au-go');
