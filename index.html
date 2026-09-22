@@ -805,6 +805,27 @@ body:has(#legal.active){background:#161B14}
 :root[data-theme="dark"] .theme-toggle .ti-sun{display:none}
 :root[data-theme="dark"] .theme-toggle .ti-moon{display:block}
 
+
+/* Recipe detail sheet */
+.mp-meal{cursor:pointer}
+.mp-meal:hover{background:var(--accent-bg)}
+.rc-sheet{text-align:center}
+.rc-emoji{font-size:2.5rem;margin-bottom:.5rem}
+.rc-title{font-family:var(--font-d);font-size:1.375rem;font-weight:800;letter-spacing:-.02em;color:var(--ink);margin-bottom:.75rem}
+.rc-macros{display:flex;flex-wrap:wrap;justify-content:center;gap:.625rem 1rem;font-size:.8125rem;color:var(--muted);margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border)}
+.rc-macros strong{color:var(--ink);font-variant-numeric:tabular-nums}
+.rc-price{color:var(--accent);font-weight:700}
+.rc-h{text-align:left;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:1rem 0 .5rem}
+.rc-ing{text-align:left;list-style:none;display:flex;flex-direction:column;gap:.375rem}
+.rc-ing li{font-size:.875rem;color:var(--ink2);padding-left:1.1rem;position:relative}
+.rc-ing li::before{content:"";position:absolute;left:0;top:.5em;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.rc-steps{text-align:left;list-style:none;display:flex;flex-direction:column;gap:.625rem}
+.rc-steps li{display:flex;align-items:flex-start;gap:.625rem;font-size:.875rem;color:var(--ink2);line-height:1.5}
+.rc-stepn{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--accent-bg);color:var(--accent-text);font-size:.75rem;font-weight:800;display:flex;align-items:center;justify-content:center}
+:root[data-theme="dark"] .rc-stepn{color:var(--accent)}
+.res-unlocked-badge{display:inline-flex;align-items:center;gap:.375rem;background:var(--accent-bg);border:1px solid rgba(52,211,153,.25);color:var(--accent-text);padding:.5rem 1rem;border-radius:99px;font-size:.8125rem;font-weight:700;margin:0 auto 1rem;justify-content:center}
+:root[data-theme="dark"] .res-unlocked-badge{color:var(--accent)}
+
 </style>
 
 <!-- LANDING -->
@@ -915,7 +936,7 @@ body:has(#legal.active){background:#161B14}
 
 <!-- LEGAL -->
 <div id="legal" class="page">
-<div class="lg-head"><button class="ob-backbtn" onclick="showPage('landing')" aria-label="Retour"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button><div class="ob-brand">macro<span>.</span></div></div>
+<div class="lg-head"><button class="ob-backbtn" onclick="showPage('landing')" aria-label="Retour"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button><div class="ob-brand">macro<span>.</span></div><button class="theme-toggle" onclick="toggleTheme()" aria-label="Changer de thème"><svg class="ti-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg><svg class="ti-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg></button></div>
 <div class="lg-tabs"><button class="lg-tab" data-k="mentions" onclick="showLegal('mentions')">Mentions légales</button><button class="lg-tab" data-k="cgu" onclick="showLegal('cgu')">CGU / CGV</button><button class="lg-tab" data-k="privacy" onclick="showLegal('privacy')">Confidentialité</button></div>
 <div class="lg-body" id="legal-body"></div>
 </div>
@@ -923,7 +944,7 @@ body:has(#legal.active){background:#161B14}
 <!-- ONBOARDING -->
 <div id="onboarding" class="page">
 <div class="ob-page-bg" id="ob-bg" aria-hidden="true"></div>
-<div class="ob-head"><div class="ob-top"><button class="ob-backbtn" onclick="obBack()" aria-label="Retour"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button><div class="ob-brand">macro<span>.</span></div><span class="ob-pct" id="ob-pct"></span></div><div class="ob-bar" id="ob-bar"></div><div class="ob-counter" id="ob-counter"></div></div>
+<div class="ob-head"><div class="ob-top"><button class="ob-backbtn" onclick="obBack()" aria-label="Retour"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button><div class="ob-brand">macro<span>.</span></div><button class="theme-toggle" onclick="toggleTheme()" aria-label="Changer de thème"><svg class="ti-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg><svg class="ti-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg></button><span class="ob-pct" id="ob-pct"></span></div><div class="ob-bar" id="ob-bar"></div><div class="ob-counter" id="ob-counter"></div></div>
 <div class="ob-main" id="ob-main"></div>
 </div>
 
@@ -1007,7 +1028,7 @@ h+='<div class="res-macros"><h3>R\u00e9partition des macros</h3><div class="macr
 h+='<div class="macro-row"><div class="macro-label">Prot\u00e9ines</div><div class="macro-bar"><div class="macro-fill prot" style="width:0" data-w="'+protPct+'%">'+protG+'g</div></div></div>';
 h+='<div class="macro-row"><div class="macro-label">Glucides</div><div class="macro-bar"><div class="macro-fill carb" style="width:0" data-w="'+carbPct+'%">'+carbG+'g</div></div></div>';
 h+='<div class="macro-row"><div class="macro-label">Lipides</div><div class="macro-bar"><div class="macro-fill fat" style="width:0" data-w="'+fatPct+'%">'+fatG+'g</div></div></div></div></div>';
-h+=renderMealPlan(null,protG,carbG,fatG,cal,b,m);h+='<div class="res-sticky"><button class="btn btn-p btn-lg btn-full" onclick="showPaywall()">\u{1F513} D\u00e9bloquer mon plan complet</button></div>';
+h+=renderMealPlan(null,protG,carbG,fatG,cal,b,m);h+=isUnlocked()?'<div class="res-unlocked-badge">&#10003; Plan complet d\u00e9bloqu\u00e9</div>':'<div class="res-sticky"><button class="btn btn-p btn-lg btn-full" onclick="showPaywall()">\u{1F513} D\u00e9bloquer mon plan complet</button></div>';
 document.getElementById('res-content').innerHTML=h;showPage('result');track('result_view');
 setTimeout(function(){document.querySelectorAll('.macro-fill').forEach(function(el){el.style.width=el.getAttribute('data-w')})},100)}
 function finishWithLoading(){if(!selGender)pickG("Homme");D.gender=selGender||"Homme";D.age=document.getElementById("r-age").value;showLoading(function(){gateThenResult()})}
@@ -1400,24 +1421,24 @@ function showLegal(which){
 }
 
 var MEALS=[
-{n:'Poulet grillé + riz basmati',p:42,g:55,l:8,cal:462,price:2.1,cat:'dejeuner',emoji:'\u{1F357}'},
-{n:'Omelette 4 œufs + flocons avoine',p:28,g:40,l:18,cal:430,price:1.2,cat:'petit-dej',emoji:'\u{1F373}'},
-{n:'Thon conserve + pâtes complètes',p:35,g:60,l:6,cal:434,price:1.5,cat:'dejeuner',emoji:'\u{1F35D}'},
-{n:'Lentilles corail + riz + poulet',p:38,g:52,l:7,cal:423,price:1.8,cat:'dejeuner',emoji:'\u{1F35B}'},
-{n:'Wrap poulet + crudités',p:32,g:35,l:10,cal:358,price:1.6,cat:'dejeuner',emoji:'\u{1F32F}'},
-{n:'Bolo maison (bœuf haché + pâtes)',p:34,g:58,l:14,cal:494,price:2.0,cat:'diner',emoji:'\u{1F35C}'},
-{n:'Pancakes protéinés + banane',p:30,g:45,l:8,cal:372,price:1.0,cat:'petit-dej',emoji:'\u{1F95E}'},
-{n:'Salade thon + riz froid + légumes',p:30,g:42,l:8,cal:360,price:1.4,cat:'dejeuner',emoji:'\u{1F957}'},
-{n:'Steak haché 5% + purée maison',p:28,g:35,l:10,cal:342,price:2.2,cat:'diner',emoji:'\u{1F969}'},
-{n:'Bowl quinoa + poulet + brocoli',p:36,g:48,l:9,cal:417,price:2.3,cat:'dejeuner',emoji:'\u{1F961}'},
-{n:'Tartines complètes + œufs + fromage blanc',p:26,g:38,l:10,cal:346,price:0.9,cat:'petit-dej',emoji:'\u{1F35E}'},
-{n:'Saumon + légumes vapeur + riz',p:34,g:45,l:14,cal:442,price:2.8,cat:'diner',emoji:'\u{1F363}'},
-{n:'Chili con carne maison',p:32,g:40,l:10,cal:378,price:1.7,cat:'diner',emoji:'\u{1F336}'},
-{n:'Smoothie protéiné + flocons',p:30,g:50,l:6,cal:374,price:1.3,cat:'petit-dej',emoji:'\u{1F964}'},
-{n:'Riz + dinde + courgettes',p:36,g:50,l:6,cal:398,price:2.0,cat:'dejeuner',emoji:'\u{1F35A}'},
-{n:'Pâtes + thon + sauce tomate maison',p:30,g:55,l:5,cal:385,price:1.2,cat:'diner',emoji:'\u{1F345}'},
-{n:'Cottage cheese + muesli + fruits',p:24,g:42,l:4,cal:300,price:1.1,cat:'petit-dej',emoji:'\u{1F34E}'},
-{n:'Curry poulet + riz basmati',p:34,g:52,l:10,cal:434,price:1.9,cat:'diner',emoji:'\u{1F35B}'}
+{n:'Poulet grillé + riz basmati',p:42,g:55,l:8,cal:462,price:2.1,cat:'dejeuner',emoji:'\u{1F357}',ing:['Filet de poulet','Riz basmati',"Huile d'olive",'Ail','Paprika'],st:['Assaisonner le poulet (paprika, ail, sel).','Cuire à la poêle 6-7 min par face.','Cuire le riz selon le paquet.','Servir ensemble.']},
+{n:'Omelette 4 œufs + flocons avoine',p:28,g:40,l:18,cal:430,price:1.2,cat:'petit-dej',emoji:'\u{1F373}',ing:['Œufs (x4)',"Flocons d'avoine",'Lait','Sel, poivre'],st:['Battre les œufs, cuire à la poêle 3-4 min.','Chauffer les flocons avec le lait (2 min).','Servir chaud.']},
+{n:'Thon conserve + pâtes complètes',p:35,g:60,l:6,cal:434,price:1.5,cat:'dejeuner',emoji:'\u{1F35D}',ing:['Pâtes complètes','Thon au naturel',"Huile d'olive",'Citron'],st:['Cuire les pâtes al dente.','Égoutter le thon, mélanger avec huile et citron.','Mélanger le tout.']},
+{n:'Lentilles corail + riz + poulet',p:38,g:52,l:7,cal:423,price:1.8,cat:'dejeuner',emoji:'\u{1F35B}',ing:['Lentilles corail','Riz','Filet de poulet','Cumin'],st:['Cuire les lentilles 12 min avec le cumin.','Cuire le riz et le poulet en parallèle.','Mélanger.']},
+{n:'Wrap poulet + crudités',p:32,g:35,l:10,cal:358,price:1.6,cat:'dejeuner',emoji:'\u{1F32F}',ing:['Tortilla','Filet de poulet','Salade','Tomate','Sauce yaourt'],st:['Cuire le poulet en lamelles.','Garnir la tortilla (salade, tomate, poulet, sauce).','Rouler.']},
+{n:'Bolo maison (bœuf haché + pâtes)',p:34,g:58,l:14,cal:494,price:2.0,cat:'diner',emoji:'\u{1F35C}',ing:['Bœuf haché 5%','Pâtes','Sauce tomate','Oignon'],st:["Faire revenir l'oignon puis la viande.",'Ajouter la sauce tomate, mijoter 10 min.','Servir sur les pâtes cuites.']},
+{n:'Pancakes protéinés + banane',p:30,g:45,l:8,cal:372,price:1.0,cat:'petit-dej',emoji:'\u{1F95E}',ing:["Flocons d'avoine mixés",'Œufs','Banane','Levure'],st:['Mixer tous les ingrédients.','Cuire des petits pancakes 2 min par face.']},
+{n:'Salade thon + riz froid + légumes',p:30,g:42,l:8,cal:360,price:1.4,cat:'dejeuner',emoji:'\u{1F957}',ing:['Riz','Thon','Maïs','Tomate','Vinaigrette'],st:['Cuire le riz, laisser refroidir.','Mélanger avec thon, maïs, tomate, vinaigrette.']},
+{n:'Steak haché 5% + purée maison',p:28,g:35,l:10,cal:342,price:2.2,cat:'diner',emoji:'\u{1F969}',ing:['Steak haché 5%','Pommes de terre','Lait','Beurre'],st:["Cuire les pommes de terre à l'eau, écraser avec lait et beurre.",'Cuire le steak 2-3 min par face.']},
+{n:'Bowl quinoa + poulet + brocoli',p:36,g:48,l:9,cal:417,price:2.3,cat:'dejeuner',emoji:'\u{1F961}',ing:['Quinoa','Filet de poulet','Brocoli','Sauce soja'],st:['Cuire le quinoa.','Cuire le poulet et le brocoli vapeur.','Assembler en bowl, sauce soja.']},
+{n:'Tartines complètes + œufs + fromage blanc',p:26,g:38,l:10,cal:346,price:0.9,cat:'petit-dej',emoji:'\u{1F35E}',ing:['Pain complet','Œufs','Fromage blanc','Miel'],st:['Faire des œufs brouillés.','Tartiner le pain de fromage blanc.','Servir avec un filet de miel.']},
+{n:'Saumon + légumes vapeur + riz',p:34,g:45,l:14,cal:442,price:2.8,cat:'diner',emoji:'\u{1F363}',ing:['Pavé de saumon','Riz','Légumes vapeur','Citron'],st:['Cuire le saumon à la poêle 4 min par face.','Cuire le riz et les légumes vapeur.','Assembler, citron.']},
+{n:'Chili con carne maison',p:32,g:40,l:10,cal:378,price:1.7,cat:'diner',emoji:'\u{1F336}',ing:['Bœuf haché','Haricots rouges','Tomate concassée','Épices'],st:['Faire revenir la viande.','Ajouter haricots, tomate, épices.','Mijoter 15 min.']},
+{n:'Smoothie protéiné + flocons',p:30,g:50,l:6,cal:374,price:1.3,cat:'petit-dej',emoji:'\u{1F964}',ing:['Lait',"Flocons d'avoine",'Banane','Beurre de cacahuète'],st:['Mixer tous les ingrédients avec des glaçons.','Servir immédiatement.']},
+{n:'Riz + dinde + courgettes',p:36,g:50,l:6,cal:398,price:2.0,cat:'dejeuner',emoji:'\u{1F35A}',ing:['Escalope de dinde','Riz','Courgette','Herbes de Provence'],st:['Cuire la dinde à la poêle avec les herbes.','Cuire le riz et la courgette.','Assembler.']},
+{n:'Pâtes + thon + sauce tomate maison',p:30,g:55,l:5,cal:385,price:1.2,cat:'diner',emoji:'\u{1F345}',ing:['Pâtes','Thon','Sauce tomate','Basilic'],st:['Cuire les pâtes.','Chauffer la sauce tomate avec le thon émietté.','Mélanger, basilic.']},
+{n:'Cottage cheese + muesli + fruits',p:24,g:42,l:4,cal:300,price:1.1,cat:'petit-dej',emoji:'\u{1F34E}',ing:['Cottage cheese','Muesli','Fruits de saison'],st:['Verser le cottage cheese dans un bol.','Ajouter le muesli et les fruits coupés.']},
+{n:'Curry poulet + riz basmati',p:34,g:52,l:10,cal:434,price:1.9,cat:'diner',emoji:'\u{1F35B}',ing:['Filet de poulet','Riz basmati','Lait de coco','Curry'],st:['Cuire le poulet, ajouter curry et lait de coco.','Mijoter 10 min.','Servir sur riz.']}
 ];
 var DAYS=['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
 function generatePlan(cal,protG,carbG,fatG,mealsPerWeek,budget){
@@ -1432,21 +1453,45 @@ var pool=MEALS.filter(function(m){return m.cat===cat});
 if(pool.length===0)pool=MEALS;
 var pick=pool[Math.floor(Math.random()*pool.length)];
 var scale=calPerMeal/pick.cal;
-var scaled={n:pick.n,emoji:pick.emoji,p:Math.round(pick.p*scale),g:Math.round(pick.g*scale),l:Math.round(pick.l*scale),cal:Math.round(pick.cal*scale),price:Math.round(pick.price*scale*100)/100};
+var scaled={n:pick.n,emoji:pick.emoji,p:Math.round(pick.p*scale),g:Math.round(pick.g*scale),l:Math.round(pick.l*scale),cal:Math.round(pick.cal*scale),price:Math.round(pick.price*scale*100)/100,ing:pick.ing,st:pick.st};
 dayMeals.push(scaled);dayP+=scaled.p;dayG+=scaled.g;dayL+=scaled.l;dayCal+=scaled.cal;totalCost+=scaled.price}
 plan.push({day:DAYS[d],meals:dayMeals,totals:{p:dayP,g:dayG,l:dayL,cal:dayCal}})}
 var f=(budget>0&&totalCost>budget)?(budget*0.96/totalCost):1;if(f<1){plan.forEach(function(d){d.meals.forEach(function(m){m.price=Math.round(m.price*f*100)/100})});totalCost=totalCost*f}return{plan:plan,weekCost:Math.round(totalCost*100)/100}}
+function isUnlocked(){
+if(/[?&]preview=unlocked/.test(location.search))return true;
+return !!(Auth.user&&Auth.user.unlocked);
+}
+function showMealDetail(di,mi){
+var day=window._plan&&window._plan[di];var m=day&&day.meals[mi];
+if(!m)return;
+var ing=(m.ing||[]).map(function(i){return '<li>'+i+'</li>'}).join('');
+var st=(m.st||[]).map(function(s,i){return '<li><span class="rc-stepn">'+(i+1)+'</span>'+s+'</li>'}).join('');
+var el=document.createElement('div');el.className='pw-modal';el.id='meal-modal';
+el.innerHTML='<div class="pw-sheet rc-sheet"><button class="pw-x" onclick="closeMealDetail()" aria-label="Fermer">&times;</button>'+
+'<div class="rc-emoji">'+m.emoji+'</div><h2 class="rc-title">'+m.n+'</h2>'+
+'<div class="rc-macros"><span><strong>'+m.cal+'</strong> kcal</span><span><strong>'+m.p+'g</strong> P</span><span><strong>'+m.g+'g</strong> G</span><span><strong>'+m.l+'g</strong> L</span><span class="rc-price">'+m.price.toFixed(2).replace('.',',')+' €</span></div>'+
+(ing?'<h3 class="rc-h">Ingrédients</h3><ul class="rc-ing">'+ing+'</ul>':'')+
+(st?'<h3 class="rc-h">Préparation</h3><ol class="rc-steps">'+st+'</ol>':'')+
+'</div>';
+document.body.appendChild(el);
+requestAnimationFrame(function(){el.classList.add('open')});
+}
+function closeMealDetail(){var el=document.getElementById('meal-modal');if(el)el.remove()}
 function renderMealPlan(result,protG,carbG,fatG,cal,budget,mealsPerWeek){
 var gen=generatePlan(cal,protG,carbG,fatG,mealsPerWeek,budget);
+window._plan=gen.plan;
+var unlocked=isUnlocked();
 var h='<div class="meal-plan">';
 h+='<div class="mp-header"><h2>\u{1F4CB} Ton plan repas de la semaine</h2><p>'+mealsPerWeek+' repas · '+gen.weekCost.toFixed(2).replace('.',',')+' €/semaine</p></div>';
 h+='<div class="mp-days">';
-gen.plan.forEach(function(day,di){h+='<div class="mp-day'+(di>0?' locked':'')+'"'+(di>0?' onclick="showPaywall()"':'')+'><div class="mp-day-head"><strong>'+day.day+'</strong><span class="mp-day-macros">'+day.totals.cal+' kcal · '+day.totals.p+'g P</span></div>';
-day.meals.forEach(function(m){
-h+='<div class="mp-meal"><span class="mp-emoji">'+m.emoji+'</span><div class="mp-info"><div class="mp-name">'+m.n+'</div><div class="mp-macros">'+m.cal+' kcal · '+m.p+'g P · '+m.g+'g G · '+m.l+'g L</div></div><span class="mp-price">'+m.price.toFixed(2).replace('.',',')+' €</span></div>'});
+gen.plan.forEach(function(day,di){
+var lock=!unlocked&&di>0;
+h+='<div class="mp-day'+(lock?' locked':'')+'"'+(lock?' onclick="showPaywall()"':'')+'><div class="mp-day-head"><strong>'+day.day+'</strong><span class="mp-day-macros">'+day.totals.cal+' kcal · '+day.totals.p+'g P</span></div>';
+day.meals.forEach(function(m,mi){
+h+='<div class="mp-meal" onclick="showMealDetail('+di+','+mi+')"><span class="mp-emoji">'+m.emoji+'</span><div class="mp-info"><div class="mp-name">'+m.n+'</div><div class="mp-macros">'+m.cal+' kcal · '+m.p+'g P · '+m.g+'g G · '+m.l+'g L</div></div><span class="mp-price">'+m.price.toFixed(2).replace('.',',')+' €</span></div>'});
 h+='</div>'});
 h+='</div>';
-h+='<div class="mp-shopping locked" onclick="showPaywall()"><h3>\u{1F6D2} Liste de courses estimée</h3><div class="mp-shop-list">';
+h+='<div class="mp-shopping'+(unlocked?'':' locked')+'"'+(unlocked?'':' onclick="showPaywall()"')+'><h3>\u{1F6D2} Liste de courses estimée</h3><div class="mp-shop-list">';
 var items=[
 {n:'Filets de poulet',q:'1,5 kg',p:'6,90 €',emoji:'\u{1F414}'},
 {n:'Riz basmati',q:'1 kg',p:'1,49 €',emoji:'\u{1F35A}'},
