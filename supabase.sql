@@ -39,6 +39,20 @@ create table if not exists public.subscriptions (
 alter table public.subscriptions enable row level security;
 create policy "subscriptions_select_own" on public.subscriptions for select using (auth.uid() = user_id);
 
+-- Plan fondateur a vie (20 places) : la Edge Function marque founder = true.
+-- get_founder_count() ne renvoie qu'un nombre (aucune donnee perso), appelable sans
+-- connexion pour afficher le compteur reel "X/20 places prises" dans le paywall.
+alter table public.subscriptions add column if not exists founder boolean not null default false;
+create or replace function public.get_founder_count()
+returns integer
+language sql
+security definer
+set search_path = public
+as $$
+  select count(*)::integer from public.subscriptions where founder = true;
+$$;
+grant execute on function public.get_founder_count() to anon, authenticated;
+
 -- Fonction utilisee par la Edge Function whop-webhook pour retrouver le user_id
 -- Supabase Auth a partir de l'email envoye par Whop (auth.users n'est pas requetable
 -- directement via l'API REST). security definer = s'execute avec les droits du

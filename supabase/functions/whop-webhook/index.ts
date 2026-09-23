@@ -107,12 +107,25 @@ Deno.serve(async (req) => {
     return new Response("No matching user", { status: 200 });
   }
 
+  // Founder (lifetime) purchase: matched on the Whop plan id when FOUNDER_PLAN_ID is set
+  // (preferred), otherwise on the one-time 59.99 EUR amount. Whop's own stock limit (20)
+  // is what actually stops sales past 20; this flag only feeds the public X/20 counter.
+  const founderPlanId = Deno.env.get("FOUNDER_PLAN_ID");
+  const total = Number(event.data?.total ?? event.data?.usd_total ?? NaN);
+  const isFounder = founderPlanId ? planId === founderPlanId : total === 59.99;
+
+  const row: Record<string, unknown> = {
+    user_id: userId,
+    unlocked: true,
+    plan: planId ?? null,
+    whop_payment_id: paymentId ?? null,
+    updated_at: new Date().toISOString(),
+  };
+  if (isFounder) row.founder = true;
+
   const { error: upsertError } = await supabase
     .from("subscriptions")
-    .upsert(
-      { user_id: userId, unlocked: true, plan: planId ?? null, whop_payment_id: paymentId ?? null, updated_at: new Date().toISOString() },
-      { onConflict: "user_id" },
-    );
+    .upsert(row, { onConflict: "user_id" });
 
   if (upsertError) {
     console.error("Failed to upsert subscription", upsertError);

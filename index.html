@@ -180,6 +180,9 @@ img{max-width:100%}
 .ssi-name{flex:1;color:var(--ink)}
 .step-shop-item.done .ssi-name{color:var(--muted);text-decoration:line-through}
 .ssi-tag{font-size:.6875rem;color:var(--muted)}
+.step-shop-total{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--border);margin-top:.375rem;padding-top:.625rem;font-size:.8125rem;color:var(--muted)}
+.step-shop-total strong{font-size:1.125rem;color:var(--ink);font-variant-numeric:tabular-nums}
+.step-shop-ok{margin-top:.5rem;font-size:.75rem;font-weight:700;color:var(--accent-text,var(--accent))}
 .hero-logos-w{margin-top:.125rem;overflow:hidden;width:100%;max-width:440px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
 .hero-logos-track{display:flex;gap:.5rem;animation:marquee 26s linear infinite;width:max-content}
 .hero-logos-track .logo-chip{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18);color:rgba(255,255,255,.78);padding:.3rem .625rem .3rem .4375rem;font-size:.625rem;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
@@ -528,6 +531,16 @@ img{max-width:100%}
 .paywall-plan .pp-price{font-size:1.25rem;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
 .paywall-plan .pp-price small{font-size:.6875rem;font-weight:500;color:var(--muted)}
 .paywall-plan .pp-sub{font-size:.6875rem;color:var(--accent);font-weight:600;margin-top:.25rem}
+.paywall-plan.pp-founder{grid-column:1/-1;text-align:left;padding:1.125rem 1rem .875rem;border-style:dashed}
+.paywall-plan.pp-founder.active{border-style:solid}
+.pp-founder-row{display:flex;justify-content:space-between;align-items:flex-end;gap:.75rem}
+.pp-founder-note{font-size:.6875rem;line-height:1.35;color:var(--muted);text-align:right}
+.pp-badge-f{background:var(--ink);left:1rem;transform:none}
+.pp-meter{margin-top:.75rem}
+.pp-meter-txt{font-size:.6875rem;font-weight:700;color:var(--ink);margin-bottom:.3125rem;font-variant-numeric:tabular-nums}
+.pp-meter-bar{height:6px;border-radius:99px;background:var(--border);overflow:hidden}
+.pp-meter-fill{height:100%;border-radius:99px;background:var(--accent);transition:width .8s cubic-bezier(.22,1,.36,1)}
+.paywall-plan.sold-out{opacity:.55;cursor:not-allowed}
 .pp-badge{position:absolute;top:-.5rem;left:50%;transform:translateX(-50%);background:var(--grad);color:#fff;font-size:.5625rem;font-weight:700;padding:.1875rem .5rem;border-radius:var(--r-pill);white-space:nowrap;text-transform:uppercase;letter-spacing:.02em}
 .paywall-proof{font-size:.6875rem;color:var(--accent);font-weight:600;margin-top:.75rem;text-align:center}
 
@@ -970,7 +983,7 @@ body:has(#dashboard.active){background:var(--bg)}
   <div class="steps">
     <div class="step rv"><div class="step-num">1</div><div><div class="step-t">Tu fixes ton budget</div><div class="step-d">Objectif, poids, repas par semaine.</div></div></div>
     <div class="step rv"><div class="step-num">2</div><div><div class="step-t">Le plan se construit</div><div class="step-d">Tes protéines au meilleur prix, dans ton magasin.</div></div></div>
-    <div class="step rv"><div class="step-num">3</div><div><div class="step-t">Tu fais tes courses</div><div class="step-d">Liste par rayon, quantités et prix.</div><div class="step-shop"><div class="step-shop-bar-row"><span>Budget de la semaine</span><strong>24,35 €<small> / 25 €</small></strong></div><div class="step-shop-bar"><div class="step-shop-fill" style="width:97%"></div></div><div class="step-shop-item done"><span class="ssi-check">&#10003;</span><span class="ssi-name">Riz basmati</span><span class="ssi-tag">2 repas</span></div><div class="step-shop-item"><span class="ssi-check"></span><span class="ssi-name">Filets de poulet</span><span class="ssi-tag">3 repas</span></div><div class="step-shop-item"><span class="ssi-check"></span><span class="ssi-name">Brocoli</span><span class="ssi-tag">2 repas</span></div></div></div></div>
+    <div class="step rv"><div class="step-num">3</div><div><div class="step-t">Tu vas au magasin avec ta liste</div><div class="step-d">Tout ce qu'il faut acheter, déjà trié. Tu coches au fur et à mesure.</div><div class="step-shop"><div class="step-shop-item done"><span class="ssi-check">&#10003;</span><span class="ssi-name">Riz</span></div><div class="step-shop-item"><span class="ssi-check"></span><span class="ssi-name">Poulet</span></div><div class="step-shop-item"><span class="ssi-check"></span><span class="ssi-name">Brocoli</span></div><div class="step-shop-total"><span>Total de tes courses</span><strong>24 €</strong></div><div class="step-shop-ok">&#10003; Dans ton budget de 25 €</div></div></div></div>
   </div>
 </section>
 
@@ -1263,6 +1276,7 @@ return '<div class="paywall-card" id="unlock-card"><div style="font-size:2rem;ma
 '<div class="paywall-plans">'+
 '<button class="paywall-plan" id="plan-month" onclick="selectPlan(\'month\')"><div class="pp-name">Mensuel</div><div class="pp-price">9,99€<small>/mois</small></div></button>'+
 '<button class="paywall-plan active" id="plan-year" onclick="selectPlan(\'year\')"><span class="pp-badge">2 mois offerts</span><div class="pp-name">Annuel</div><div class="pp-price">99€<small>/an</small></div><div class="pp-sub">soit 8,25€/mois</div></button>'+
+'<button class="paywall-plan pp-founder" id="plan-life" onclick="selectPlan(\'life\')"><span class="pp-badge pp-badge-f">Offre fondateur</span><div class="pp-founder-row"><div><div class="pp-name">À vie · paiement unique</div><div class="pp-price">59,99€</div></div><div class="pp-founder-note">Tu paies une fois,<br>tu gardes tout à vie</div></div><div class="pp-meter" id="founder-meter"><div class="pp-meter-txt" id="founder-txt">20 places seulement</div><div class="pp-meter-bar"><div class="pp-meter-fill" id="founder-fill" style="width:0"></div></div></div></button>'+
 '</div>'+
 '<div class="paywall-features"><div class="paywall-feat">'+chk+'Plan repas personnalisé chaque semaine</div><div class="paywall-feat">'+chk+'Liste de courses par rayon</div><div class="paywall-feat">'+chk+'Recettes muscu adaptées à ton budget</div><div class="paywall-feat">'+chk+'Macros calculées automatiquement</div></div>'+
 '<label class="paywall-bump" onclick="event.preventDefault();var bc=document.getElementById(\'bump-check\');bc.checked=!bc.checked;toggleBump()"><input type="checkbox" id="bump-check" tabindex="-1"><span class="bump-check-visual"></span><span class="bump-text"><strong>+ Pack 30 recettes batch cooking</strong><br>Prépare ta semaine en 1h. <s>14,99€</s> 4,99€ (une fois)</span></label>'+
@@ -1277,13 +1291,26 @@ var m=document.createElement('div');m.id='pw-modal';m.className='pw-modal';
 m.innerHTML='<div class="pw-sheet"><button class="pw-x" onclick="closePaywall()" aria-label="Fermer">&times;</button>'+unlockCardHtml()+'</div>';
 document.body.appendChild(m);
 requestAnimationFrame(function(){m.classList.add('open')});
+renderFounder();loadFounderCount();
 }
 
 function selectPlan(p){
 selectedPlan=p;
-var m=document.getElementById('plan-month'),y=document.getElementById('plan-year');
-if(m)m.className='paywall-plan'+(p==='month'?' active':'');
-if(y)y.className='paywall-plan'+(p==='year'?' active':'');
+['month','year','life'].forEach(function(k){var el=document.getElementById('plan-'+k);if(el)el.className='paywall-plan'+(k==='life'?' pp-founder':'')+(p===k?' active':'')});
+}
+var founderCount=null,FOUNDER_MAX=20;
+function renderFounder(){
+var t=document.getElementById('founder-txt'),fl=document.getElementById('founder-fill'),card=document.getElementById('plan-life');
+if(!t||!card)return;
+if(founderCount===null){t.textContent=FOUNDER_MAX+' places seulement';if(fl)fl.style.width='0';return}
+var left=Math.max(0,FOUNDER_MAX-founderCount);
+if(fl)fl.style.width=Math.min(100,Math.round(founderCount/FOUNDER_MAX*100))+'%';
+if(left===0){t.textContent='Complet : '+FOUNDER_MAX+'/'+FOUNDER_MAX+' places prises';card.classList.add('sold-out');card.disabled=true;if(selectedPlan==='life')selectPlan('year')}
+else t.textContent=founderCount+'/'+FOUNDER_MAX+' places prises · plus que '+left;
+}
+function loadFounderCount(){
+if(!sbOn())return;
+sbFetch('/rest/v1/rpc/get_founder_count',{method:'POST',body:'{}'}).then(function(r){return r.ok?r.json():null}).then(function(n){if(typeof n==='number'){founderCount=n;renderFounder()}}).catch(function(){});
 }
 var selectedPlan='year';
 
@@ -1505,7 +1532,7 @@ function authEmail(e){
 function startCheckout(kind){
   track('checkout_click',{plan:kind==='downsell'?'downsell':selectedPlan,bump:!!bumpSelected});setLeadStatus('checkout_started');
   if(!Auth.user&&authReady()){openAuth('signup',function(){startCheckout(kind)});return}
-  var c=MACRO_CFG.checkout||{};var url=kind==='downsell'?(c.downsell||c.year):c[selectedPlan];
+  var c=MACRO_CFG.checkout||{};var url=kind==='downsell'?(c.downsell||c.year):c[selectedPlan==='life'?'lifetime':selectedPlan];
   if(url){location.href=url+(url.indexOf('?')>-1?'&':'?')+(Auth.user?'email='+encodeURIComponent(Auth.user.email):'');return}
   toast('Le paiement ouvre très bientôt. Ton plan est sauvegardé, on te prévient par e-mail.');
 }
