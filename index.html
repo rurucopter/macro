@@ -167,6 +167,23 @@ img{max-width:100%}
 .logos-track:hover{animation-play-state:paused}
 .logo-chip{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1rem .5rem .625rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-pill);font-size:.8125rem;font-weight:600;color:var(--ink2);white-space:nowrap;flex-shrink:0}
 .logo-chip img{width:22px;height:22px;border-radius:4px;object-fit:contain}
+.step-shop{margin-top:1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:.875rem 1rem;max-width:320px;box-shadow:var(--shadow)}
+.step-shop-bar-row{display:flex;justify-content:space-between;align-items:baseline;font-size:.75rem;color:var(--muted);margin-bottom:.375rem}
+.step-shop-bar-row strong{color:var(--ink);font-variant-numeric:tabular-nums}
+.step-shop-bar-row strong small{color:var(--muted);font-weight:400}
+.step-shop-bar{height:6px;background:var(--bg2);border-radius:99px;overflow:hidden;margin-bottom:.75rem}
+.step-shop-fill{height:100%;background:var(--accent);border-radius:99px}
+.step-shop-item{display:flex;align-items:center;gap:.5rem;padding:.375rem 0;font-size:.8125rem;border-top:1px solid var(--border)}
+.step-shop-item:first-of-type{border-top:none}
+.ssi-check{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.625rem;color:#fff}
+.step-shop-item.done .ssi-check{background:var(--accent);border-color:var(--accent)}
+.ssi-name{flex:1;color:var(--ink)}
+.step-shop-item.done .ssi-name{color:var(--muted);text-decoration:line-through}
+.ssi-tag{font-size:.6875rem;color:var(--muted)}
+.hero-logos-w{margin-top:.125rem;overflow:hidden;width:100%;max-width:440px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.hero-logos-track{display:flex;gap:.5rem;animation:marquee 26s linear infinite;width:max-content}
+.hero-logos-track .logo-chip{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18);color:rgba(255,255,255,.78);padding:.3rem .625rem .3rem .4375rem;font-size:.625rem;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.hero-logos-track .logo-chip img{width:15px;height:15px}
 @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
 .sec{padding:4rem var(--g);max-width:var(--max-w);margin-inline:auto}
@@ -468,6 +485,22 @@ img{max-width:100%}
 .mp-shopping{margin-top:2rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:1.25rem}
 .mp-shopping h3{font-family:var(--font-d);font-size:1.125rem;font-weight:700;color:var(--ink);margin-bottom:1rem}
 .mp-shop-list{display:flex;flex-direction:column;gap:.5rem}
+.mp-shop-budget-row{display:flex;justify-content:space-between;align-items:baseline;font-size:.8125rem;color:var(--muted);margin-bottom:.5rem}
+.mp-shop-budget-row strong{color:var(--ink);font-variant-numeric:tabular-nums}
+.mp-shop-budget-row strong small{color:var(--muted);font-weight:400}
+.mp-shop-bar{height:7px;background:var(--bg2);border-radius:99px;overflow:hidden;margin-bottom:1.125rem}
+.mp-shop-fill{height:100%;background:var(--accent);border-radius:99px;transition:width .6s ease}
+.mp-shop-cat{margin-bottom:.875rem}
+.mp-shop-cat:last-child{margin-bottom:0}
+.mp-shop-cat-label{font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:.375rem}
+.mp-shop-item{display:flex;align-items:center;gap:.625rem;padding:.5rem 0;border-top:1px solid var(--border);cursor:pointer}
+.mp-shop-cat .mp-shop-item:first-of-type{border-top:none}
+.mp-shop-check{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0}
+.mp-shop-item.checked .mp-shop-check{background:var(--accent);border-color:var(--accent);position:relative}
+.mp-shop-item.checked .mp-shop-check::after{content:"";position:absolute;left:5px;top:1px;width:5px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.mp-shop-name{flex:1;font-size:.875rem;color:var(--ink)}
+.mp-shop-item.checked .mp-shop-name{color:var(--muted);text-decoration:line-through}
+.mp-shop-qty{font-size:.75rem;color:var(--muted);white-space:nowrap}
 .mp-shop-item{display:grid;grid-template-columns:2rem 1fr auto auto;gap:.5rem;align-items:center;padding:.5rem .75rem;background:var(--bg2);border-radius:var(--r-sm);font-size:.8125rem;transition:background .2s}
 .mp-shop-item:hover{background:var(--accent-bg)}
 .mp-shop-name{font-weight:600;color:var(--ink)}
@@ -600,6 +633,7 @@ body:has(#onboarding.active),body:has(#result.active){background:#2E2C28}
 .ld-prices{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
 .ld-track{display:flex;gap:.75rem;width:max-content;animation:marquee 14s linear infinite}
 .ld-tile{width:76px;flex-shrink:0}
+.ld-photo{width:76px;height:76px;object-fit:cover;border-radius:14px;box-shadow:0 6px 16px rgba(0,0,0,.18)}
 .ld-emo{height:64px;border-radius:18px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.9rem;box-shadow:var(--shadow)}
 .ld-price{margin-top:.375rem;font-size:.6875rem;font-weight:700;color:#C4553B;background:rgba(196,85,59,.12);border-radius:99px;padding:.15rem .4rem}
 .ld-cap{font-size:.75rem;color:var(--muted);margin:.75rem 0 1.5rem}
@@ -865,7 +899,7 @@ body:has(#dashboard.active){background:var(--bg)}
 <div class="hero-wrap">
 <div class="hero-bg" aria-hidden="true" id="hero-bg"></div>
 <div class="hero">
-  <h1>Manger pas cher,<br><em>pour un physique meilleur.</em></h1><p class="hero-sub">Dès 25 € par semaine : tes repas de la semaine et ta liste de courses, sans calcul, prêts en 2 minutes.</p><div class="hero-cta"><div class="hero-btns"><button class="btn btn-p btn-lg" onclick="startOnboarding()">Créer mon plan repas &#x2192;</button><span id="hero-google"></span></div><div class="hero-small"><span>Sans carte bancaire</span><span>Résultat immédiat</span></div></div>
+  <h1>Manger pas cher,<br><em>pour un physique meilleur.</em></h1><p class="hero-sub">Dès 25 € par semaine : tes repas de la semaine et ta liste de courses, sans calcul, prêts en 2 minutes.</p><div class="hero-cta"><div class="hero-btns"><button class="btn btn-p btn-lg" onclick="startOnboarding()">Créer mon plan repas &#x2192;</button><span id="hero-google"></span></div><div class="hero-small"><span>Sans carte bancaire</span><span>Résultat immédiat</span></div><div class="hero-logos-w"><div class="hero-logos-track" id="hero-logo-strip"></div></div></div>
 
   <div class="preview-w">
     <div class="preview-top">
@@ -934,7 +968,7 @@ body:has(#dashboard.active){background:var(--bg)}
   <div class="steps">
     <div class="step rv"><div class="step-num">1</div><div><div class="step-t">Tu fixes ton budget</div><div class="step-d">Objectif, poids, repas par semaine.</div></div></div>
     <div class="step rv"><div class="step-num">2</div><div><div class="step-t">Le plan se construit</div><div class="step-d">Tes protéines au meilleur prix, dans ton magasin.</div></div></div>
-    <div class="step rv"><div class="step-num">3</div><div><div class="step-t">Tu fais tes courses</div><div class="step-d">Liste par rayon, quantités et prix.</div></div></div>
+    <div class="step rv"><div class="step-num">3</div><div><div class="step-t">Tu fais tes courses</div><div class="step-d">Liste par rayon, quantités et prix.</div><div class="step-shop"><div class="step-shop-bar-row"><span>Budget de la semaine</span><strong>24,35 €<small> / 25 €</small></strong></div><div class="step-shop-bar"><div class="step-shop-fill" style="width:97%"></div></div><div class="step-shop-item done"><span class="ssi-check">&#10003;</span><span class="ssi-name">Riz basmati</span><span class="ssi-tag">2 repas</span></div><div class="step-shop-item"><span class="ssi-check"></span><span class="ssi-name">Filets de poulet</span><span class="ssi-tag">3 repas</span></div><div class="step-shop-item"><span class="ssi-check"></span><span class="ssi-name">Brocoli</span><span class="ssi-tag">2 repas</span></div></div></div></div>
   </div>
 </section>
 
@@ -1099,7 +1133,7 @@ setTimeout(function(){document.querySelectorAll('.macro-fill').forEach(function(
 function finishWithLoading(){if(!selGender)pickG("Homme");D.gender=selGender||"Homme";D.age=document.getElementById("r-age").value;showLoading(function(){afterOnboarding()})}
 function initReveal(){var delay=0;var lastTop=-1;var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var d=parseFloat(e.target.getAttribute('data-rv-d'))||0;setTimeout(function(){e.target.classList.add('vis')},d);obs.unobserve(e.target)}})},{threshold:0.01,rootMargin:'0px 0px 0px 0px'});document.querySelectorAll('.rv').forEach(function(el,i){el.classList.remove('vis');var t=el.getBoundingClientRect().top;if(Math.abs(t-lastTop)<30){delay+=80}else{delay=0}lastTop=t;el.setAttribute('data-rv-d',delay);obs.observe(el)})}
 initReveal();
-(function(){var t=document.getElementById('logo-strip');if(t){var kids=t.children;var n=kids.length;for(var i=0;i<n;i++){t.appendChild(kids[i].cloneNode(true))}}})();
+(function(){var t=document.getElementById('logo-strip');if(t){var kids=t.children;var n=kids.length;for(var i=0;i<n;i++){t.appendChild(kids[i].cloneNode(true))}var h=document.getElementById('hero-logo-strip');if(h)h.innerHTML=t.innerHTML}})();
 
 (function(){
   var photos=[
@@ -1199,12 +1233,12 @@ c.innerHTML='<span class="ob-avs">'+avatarsHtml()+'</span><span>'+t+'</span>';c.
 
 function showLoading(cb){
 var store=D.store||'ton magasin';
-var items=[['\u{1F95A}','0,24 €/u'],['\u{1F357}','5,49 €/kg'],['\u{1F35A}','1,69 €/kg'],['\u{1F966}','1,99 €/kg'],['\u{1F95B}','1,05 €/L'],['\u{1F35D}','1,19 €/kg'],['\u{1F9C0}','2,49 €/u'],['\u{1F34C}','1,29 €/kg']];
-var tiles=items.concat(items).map(function(it){return '<div class="ld-tile"><div class="ld-emo">'+it[0]+'</div><div class="ld-price">'+it[1]+'</div></div>'}).join('');
+var photoIds=['img-chicken','img-lentil','img-wrap','img-pasta','img-bolo','img-pancakes','img-omelette2','img-tunapasta','img-ricesalad2','img-quinoabowl','img-eggstoast','img-chili2meal','img-smoothie2meal'];
+var tiles=photoIds.concat(photoIds).map(function(id){var el=document.getElementById(id);return el?'<div class="ld-tile"><img class="ld-photo" src="'+el.src+'" alt=""></div>':''}).join('');
 var labels=['Calcul de tes macros','Sélection de tes repas','Optimisation pour ton budget chez '+store];
 var steps=labels.map(function(l,i){return '<div class="ld-step'+(i===0?' active':'')+'" id="ls-'+i+'"><span class="ls-icon"></span>'+l+'</div>'}).join('');
 var el=document.createElement('div');el.className='loading-overlay';el.id='loading-screen';
-el.innerHTML='<div class="ld-card"><div class="ld-brand">mangereco<span>.</span></div><div class="ld-prices"><div class="ld-track">'+tiles+'</div></div><div class="ld-cap">Prix estimés chez '+store+'</div><h2>mangereco. compose ta semaine…</h2><div class="ld-steps">'+steps+'</div><div class="ld-bar"><div class="ld-fill" id="ld-fill"></div></div><div class="ld-pct" id="ld-pct">0 %</div></div>';
+el.innerHTML='<div class="ld-card"><div class="ld-brand">mangereco<span>.</span></div><div class="ld-prices"><div class="ld-track">'+tiles+'</div></div><div class="ld-cap">Des repas qui donnent envie, calés sur ton budget</div><h2>mangereco. compose ta semaine…</h2><div class="ld-steps">'+steps+'</div><div class="ld-bar"><div class="ld-fill" id="ld-fill"></div></div><div class="ld-pct" id="ld-pct">0 %</div></div>';
 document.body.appendChild(el);
 var p=0,cur=0;
 var iv=setInterval(function(){
@@ -1568,6 +1602,14 @@ document.body.appendChild(el);
 requestAnimationFrame(function(){el.classList.add('open')});
 }
 function closeMealDetail(){var el=document.getElementById('meal-modal');if(el)el.remove()}
+function shopCategory(name){
+var s=name.toLowerCase();
+if(/poulet|œuf|oeuf|thon|bœuf|boeuf|steak|saumon|dinde|cottage/.test(s))return{l:'Protéines',e:'\u{1F357}'};
+if(/riz|pâtes|patate|pomme de terre|pain|avoine|quinoa|lentille|tortilla|muesli/.test(s))return{l:'Féculents',e:'\u{1F35A}'};
+if(/tomate|oignon|ail|brocoli|courgette|salade|banane|citron|légume|haricot|maïs|fruit|basilic|herbe/.test(s))return{l:'Fruits & légumes',e:'\u{1F966}'};
+if(/lait|beurre|fromage/.test(s))return{l:'Produits laitiers',e:'\u{1F95B}'};
+return{l:'Épicerie',e:'\u{1F6D2}'};
+}
 function renderMealPlan(result,protG,carbG,fatG,cal,budget,mealsPerWeek){
 var gen=generatePlan(cal,protG,carbG,fatG,mealsPerWeek,budget);
 window._plan=gen.plan;
@@ -1582,21 +1624,25 @@ day.meals.forEach(function(m,mi){
 h+='<div class="mp-meal" onclick="showMealDetail('+di+','+mi+')"><span class="mp-emoji">'+m.emoji+'</span><div class="mp-info"><div class="mp-name">'+m.n+'</div><div class="mp-macros">'+m.cal+' kcal · '+m.p+'g P · '+m.g+'g G · '+m.l+'g L</div></div><span class="mp-price">'+m.price.toFixed(2).replace('.',',')+' €</span></div>'});
 h+='</div>'});
 h+='</div>';
-h+='<div class="mp-shopping'+(unlocked?'':' locked')+'"'+(unlocked?'':' onclick="showPaywall()"')+'><h3>\u{1F6D2} Liste de courses estimée</h3><div class="mp-shop-list">';
-var items=[
-{n:'Filets de poulet',q:'1,5 kg',p:'6,90 €',emoji:'\u{1F414}'},
-{n:'Riz basmati',q:'1 kg',p:'1,49 €',emoji:'\u{1F35A}'},
-{n:'Œufs x30',q:'1 boîte',p:'4,29 €',emoji:'\u{1F95A}'},
-{n:'Thon conserve',q:'6 boîtes',p:'5,40 €',emoji:'\u{1F41F}'},
-{n:'Pâtes complètes',q:'1 kg',p:'1,19 €',emoji:'\u{1F35D}'},
-{n:'Lentilles corail',q:'500g',p:'1,79 €',emoji:'\u{1F330}'},
-{n:'Flocons d\'avoine',q:'500g',p:'1,09 €',emoji:'\u{1F33E}'},
-{n:'Brocoli',q:'1 kg',p:'1,99 €',emoji:'\u{1F966}'},
-{n:'Fromage blanc 0%',q:'1 kg',p:'1,69 €',emoji:'\u{1F95B}'},
-{n:'Bananes',q:'1 kg',p:'1,29 €',emoji:'\u{1F34C}'}
-];
-items.forEach(function(it){h+='<div class="mp-shop-item"><span>'+it.emoji+'</span><span class="mp-shop-name">'+it.n+'</span><span class="mp-shop-qty">'+it.q+'</span><span class="mp-shop-price">'+it.p+'</span></div>'});
-h+='</div></div></div>';
+var shopMap={};
+gen.plan.forEach(function(day){day.meals.forEach(function(m){(m.ing||[]).forEach(function(ing){shopMap[ing]=(shopMap[ing]||0)+1})})});
+var shopByCat={},shopOrder=['Protéines','Féculents','Fruits & légumes','Produits laitiers','Épicerie'];
+Object.keys(shopMap).forEach(function(name){var c=shopCategory(name);if(!shopByCat[c.l])shopByCat[c.l]={emoji:c.e,items:[]};shopByCat[c.l].items.push({n:name,count:shopMap[name]})});
+var budgetPct=Math.min(100,Math.round(gen.weekCost/budget*100));
+h+='<div class="mp-shopping'+(unlocked?'':' locked')+'"'+(unlocked?'':' onclick="showPaywall()"')+'>';
+h+='<h3>\u{1F6D2} Liste de courses</h3>';
+h+='<div class="mp-shop-budget-row"><span>Budget de la semaine</span><strong>'+gen.weekCost.toFixed(2).replace('.',',')+' €<small> / '+budget+' €</small></strong></div>';
+h+='<div class="mp-shop-bar"><div class="mp-shop-fill" style="width:'+budgetPct+'%"></div></div>';
+shopOrder.forEach(function(catLabel){
+var cat=shopByCat[catLabel];
+if(!cat)return;
+h+='<div class="mp-shop-cat"><div class="mp-shop-cat-label">'+cat.emoji+' '+catLabel+'</div>';
+cat.items.forEach(function(it){
+h+='<div class="mp-shop-item" onclick="this.classList.toggle(\'checked\')"><span class="mp-shop-check"></span><span class="mp-shop-name">'+it.n+'</span><span class="mp-shop-qty">×'+it.count+' repas</span></div>';
+});
+h+='</div>'
+});
+h+='</div></div>';
 return h}
 
 initAuth();
