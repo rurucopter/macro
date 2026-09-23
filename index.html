@@ -1428,7 +1428,7 @@ function initAuth(){
       return;
     }
   }
-  if(hash.indexOf('error=')>-1){history.replaceState(null,'',location.pathname+location.search);toast(hash.indexOf('access_denied')>-1?'Connexion annulée.':'Le lien de connexion a expiré. Demande-en un nouveau.')}
+  if(hash.indexOf('error=')>-1){var _q={};hash.replace(/^#/,'').split('&').forEach(function(kv){var i=kv.indexOf('=');if(i>0)_q[kv.slice(0,i)]=decodeURIComponent(kv.slice(i+1).replace(/\+/g,' '))});history.replaceState(null,'',location.pathname+location.search);console.error('auth error',_q);toast(_q.error==='access_denied'?'Connexion annul\u00e9e.':'Connexion impossible : '+(_q.error_description||_q.error||'erreur inconnue'))}
   var u=lsGet('macro_user'),s=lsGet('macro_session');
   if(u){
     Auth.user=u;Auth.session=s;
