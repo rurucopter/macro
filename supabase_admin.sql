@@ -62,8 +62,7 @@ begin
       select coalesce(data->'D'->>'gym', '?') as k, count(*) as n from profiles group by 1 order by n desc limit 10) x),
     'stores', (select coalesce(jsonb_agg(x), '[]'::jsonb) from (
       select coalesce(data->'D'->>'store', '?') as k, count(*) as n from profiles group by 1 order by n desc limit 10) x),
-    'budget_avg', (select round(avg((data->'D'->>'budget')::numeric), 1) from profiles
-                   where data->'D'->>'budget' ~ '^[0-9]{1,4}$'),
+    'budget_avg', (select round(avg(case when data->'D'->>'budget' ~ '^[0-9]{1,4}$' then (data->'D'->>'budget')::numeric end), 1) from profiles),
     'recent', (select coalesce(jsonb_agg(x), '[]'::jsonb) from (
       select email, created_at, data->>'status' as status, data->'D'->>'prenom' as prenom,
              data->'D'->>'goal' as goal, data->'D'->>'budget' as budget,
