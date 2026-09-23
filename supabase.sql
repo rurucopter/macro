@@ -65,6 +65,10 @@ set search_path = public
 as $$
   select id from auth.users where email = p_email limit 1;
 $$;
+-- Par defaut toute fonction est appelable par tout le monde via l'API : on verrouille,
+-- sinon n'importe qui pourrait tester quelles adresses e-mail ont un compte.
+revoke execute on function public.get_user_id_by_email(text) from public, anon, authenticated;
+grant execute on function public.get_user_id_by_email(text) to service_role;
 
 -- Reglages a faire dans le dashboard :
 --  Authentication > Providers > Google : activer et renseigner Client ID / Secret (Google Cloud Console)
