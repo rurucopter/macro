@@ -1102,28 +1102,36 @@ return{p:p,t:t,a:a,b:b,m:m,g:g,go:go,cal:cal,protG:protG,protC:protC,fatC:fatC,f
 function hasProfile(){return !!(D&&D.poids&&D.taille)}
 function todayIndex(){var d=new Date().getDay();return d===0?6:d-1}
 function editProfile(){closeMenu();track('edit_profile');step=0;showPage('onboarding');renderStep()}
+function getWeekPlan(cal,p,c,f,m,b){
+var sig=[cal,p,c,f,m,b].join('|'),wk=Math.floor((Date.now()/86400000+3)/7);
+var s=lsGet('macro_plan');
+if(s&&s.sig===sig&&s.wk===wk&&s.gen&&s.gen.plan)return s.gen;
+var gen=generatePlan(cal,p,c,f,m,b);
+lsSet('macro_plan',{sig:sig,wk:wk,gen:gen});
+return gen}
 function showDashboard(){
 if(!hasProfile()){startOnboarding();return}
 var mc=computeMacros();
-var gen=generatePlan(mc.cal,mc.protG,mc.carbG,mc.fatG,mc.m,mc.b);
+var gen=getWeekPlan(mc.cal,mc.protG,mc.carbG,mc.fatG,mc.m,mc.b);
 window._plan=gen.plan;
 var ti=todayIndex();
 var today=gen.plan[ti];
 var dayNames=['lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche'];
-var name=D.prenom||(Auth.user?(Auth.user.name||Auth.user.email.split('@')[0]):'');
+var name=String(D.prenom||(Auth.user?(Auth.user.name||Auth.user.email.split('@')[0]):'')).trim().split(/\s+/)[0];if(name)name=name.charAt(0).toUpperCase()+name.slice(1);
 var unlocked=isUnlocked();
 var h='<div class="dash-wrap">';
-h+='<div class="dash-greet"><h1>Salut'+(name?' '+escH(name):'')+' \u{1F44B}</h1><p>Aujourd\'hui, '+(dayNames[ti].charAt(0).toUpperCase()+dayNames[ti].slice(1))+' · '+mc.cal+' kcal visées</p></div>';
+h+='<div class="dash-greet"><h1>Bonjour'+(name?' '+escH(name):'')+'</h1><p>Aujourd\'hui, '+(dayNames[ti].charAt(0).toUpperCase()+dayNames[ti].slice(1))+' · '+mc.cal+' kcal visées</p></div>';
 h+='<div class="dash-today"><div class="dash-today-head"><strong>\u{1F4C5} Tes repas du jour</strong><span class="mp-day-macros">'+today.totals.cal+' kcal · '+today.totals.p+'g P</span></div>';
 today.meals.forEach(function(m,mi){
 h+='<div class="mp-meal" onclick="showMealDetail('+ti+','+mi+')"><span class="mp-emoji">'+m.emoji+'</span><div class="mp-info"><div class="mp-name">'+m.n+'</div><div class="mp-macros">'+m.cal+' kcal · '+m.p+'g P · '+m.g+'g G · '+m.l+'g L</div></div><span class="mp-price">'+m.price.toFixed(2).replace('.',',')+' €</span></div>';
 });
 h+='</div>';
 h+='<div class="dash-actions">';
-h+='<button class="dash-action" onclick="showResult()"><strong>\u{1F4CB} Plan complet</strong><span>Les 7 jours + liste de courses</span></button>';
+h+='<button class="dash-action" onclick="showResult()"><strong>\u{1F4CA} Mes macros</strong><span>Calories, protéines, glucides, lipides</span></button>';
 h+='<button class="dash-action" onclick="editProfile()"><strong>⚙️ Mes préférences</strong><span>Budget, salle, objectif…</span></button>';
 h+='</div>';
 if(!unlocked)h+='<button class="btn btn-p btn-lg btn-full" onclick="showPaywall()" style="margin-bottom:1.5rem">\u{1F513} Débloquer mon plan complet</button>';
+h+=renderMealPlan(null,mc.protG,mc.carbG,mc.fatG,mc.cal,mc.b,mc.m);
 h+='<div class="dash-account"><div class="dash-account-row"><span>Compte</span><strong>'+escH(Auth.user?Auth.user.email:'')+'</strong></div><div class="dash-account-row"><span>Statut</span><strong>'+(unlocked?'Plan complet':'Aperçu gratuit')+'</strong></div><button class="au-toggle" onclick="signOut()">Se déconnecter</button></div>';
 h+='</div>';
 document.getElementById('dash-content').innerHTML=h;
@@ -1408,7 +1416,7 @@ function sbUser(sess){
   }).catch(function(){return null});
 }
 function afterLogin(fromRedirect){track('login');
-  if(lsGet('macro_gate_pending')){lsDel('macro_gate_pending');track('signup_completed',{provider:Auth.user?Auth.user.provider:''});setLeadStatus('signed_up');if(!restoreProfile())restoreProfile();showResult();return}
+  if(lsGet('macro_gate_pending')){lsDel('macro_gate_pending');track('signup_completed',{provider:Auth.user?Auth.user.provider:''});setLeadStatus('signed_up');restoreProfile();showDashboard();return}
   if(lsGet('macro_start_funnel')){lsDel('macro_start_funnel');startOnboarding();return}
   if(Auth.after){var f=Auth.after;Auth.after=null;Auth.gate=false;f();return}
   if(fromRedirect){
@@ -1640,7 +1648,7 @@ if(/lait|beurre|fromage/.test(s))return{l:'Produits laitiers',e:'\u{1F95B}'};
 return{l:'Épicerie',e:'\u{1F6D2}'};
 }
 function renderMealPlan(result,protG,carbG,fatG,cal,budget,mealsPerWeek){
-var gen=generatePlan(cal,protG,carbG,fatG,mealsPerWeek,budget);
+var gen=getWeekPlan(cal,protG,carbG,fatG,mealsPerWeek,budget);
 window._plan=gen.plan;
 var unlocked=isUnlocked();
 var h='<div class="meal-plan">';
