@@ -1330,6 +1330,14 @@ function deleteMyData(){
   ['macro_profile','macro_events','macro_users'].forEach(lsDel);
   signOut();toast('Tes données ont été supprimées.');
 }
+function syncUnlockStatus(cb){
+  if(!(sbOn()&&Auth.user&&Auth.session)){if(cb)cb();return}
+  sbFetch('/rest/v1/subscriptions?user_id=eq.'+Auth.user.id+'&select=unlocked',{},Auth.session.access_token).then(function(r){return r.ok?r.json():[]}).then(function(a){
+    Auth.user.unlocked=!!(a&&a[0]&&a[0].unlocked);
+    lsSet('macro_user',Auth.user);
+    if(cb)cb();
+  }).catch(function(){if(cb)cb()});
+}
 function sbUser(sess){
   return sbFetch('/auth/v1/user',{},sess.access_token).then(function(r){return r.ok?r.json():null}).then(function(j){
     if(!j||!j.email)return null;var m=j.user_metadata||{};
@@ -1353,7 +1361,7 @@ function initAuth(){
     history.replaceState(null,'',location.pathname+location.search);
     if(q.access_token){
       var sess={access_token:q.access_token,refresh_token:q.refresh_token,exp:Date.now()+(parseInt(q.expires_in,10)||3600)*1000};
-      sbUser(sess).then(function(u){if(u){setUser(u,sess);track('signup',{provider:u.provider});pushLead(u,u.provider);afterLogin(true)}else toast('Connexion impossible. Réessaie.')});
+      sbUser(sess).then(function(u){if(u){setUser(u,sess);track('signup',{provider:u.provider});pushLead(u,u.provider);syncUnlockStatus(function(){afterLogin(true)})}else toast('Connexion impossible. Réessaie.')});
       return;
     }
   }
@@ -1361,6 +1369,7 @@ function initAuth(){
   var u=lsGet('macro_user'),s=lsGet('macro_session');
   if(u){
     Auth.user=u;Auth.session=s;
+    syncUnlockStatus(refreshNav);
     if(s&&sbOn()&&s.exp<Date.now()+60000&&s.refresh_token){
       sbFetch('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:JSON.stringify({refresh_token:s.refresh_token})}).then(function(r){return r.ok?r.json():null}).then(function(j){
         if(j&&j.access_token){var ns={access_token:j.access_token,refresh_token:j.refresh_token,exp:Date.now()+(j.expires_in||3600)*1000};Auth.session=ns;lsSet('macro_session',ns)}
