@@ -18,7 +18,7 @@
 <meta name="robots" content="index,follow">
 <meta property="og:image" content="https://mangereco.com/og.jpg">
 <meta name="twitter:image" content="https://mangereco.com/og.jpg">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"mangereco.","url":"https://mangereco.com/","applicationCategory":"HealthApplication","operatingSystem":"Web","inLanguage":"fr","description":"Plan repas muscu et liste de courses calés sur ton budget, ta salle et ton magasin.","offers":[{"@type":"Offer","name":"Mensuel","price":"7.99","priceCurrency":"EUR"},{"@type":"Offer","name":"Annuel","price":"79.99","priceCurrency":"EUR"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"mangereco.","url":"https://mangereco.com/","applicationCategory":"HealthApplication","operatingSystem":"Web","inLanguage":"fr","description":"Plan repas muscu et liste de courses calés sur ton budget, ta salle et ton magasin.","offers":[{"@type":"Offer","name":"Mensuel","price":"9.99","priceCurrency":"EUR"},{"@type":"Offer","name":"Annuel","price":"99","priceCurrency":"EUR"}]}</script>
 <script>(function(){try{var t=localStorage.getItem('macro_theme');if(t!=='light'&&t!=='dark'){t='light'}document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','light')}})();</script>
 </head>
 <body>
@@ -1225,8 +1225,8 @@ var personaLine='On a vu que tu t\'entraînes'+gymTxt+' et que tu fais tes cours
 var chk='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>';
 return '<div class="paywall-card" id="unlock-card"><div style="font-size:2rem;margin-bottom:.5rem">\u{1F512}</div><h2>Débloque ton plan</h2><p class="paywall-persona">'+personaLine+'</p>'+
 '<div class="paywall-plans">'+
-'<button class="paywall-plan" id="plan-month" onclick="selectPlan(\'month\')"><div class="pp-name">Mensuel</div><div class="pp-price">7,99€<small>/mois</small></div></button>'+
-'<button class="paywall-plan active" id="plan-year" onclick="selectPlan(\'year\')"><span class="pp-badge">2 mois offerts</span><div class="pp-name">Annuel</div><div class="pp-price">79,99€<small>/an</small></div><div class="pp-sub">soit 6,67€/mois</div></button>'+
+'<button class="paywall-plan" id="plan-month" onclick="selectPlan(\'month\')"><div class="pp-name">Mensuel</div><div class="pp-price">9,99€<small>/mois</small></div></button>'+
+'<button class="paywall-plan active" id="plan-year" onclick="selectPlan(\'year\')"><span class="pp-badge">2 mois offerts</span><div class="pp-name">Annuel</div><div class="pp-price">99€<small>/an</small></div><div class="pp-sub">soit 8,25€/mois</div></button>'+
 '</div>'+
 '<div class="paywall-features"><div class="paywall-feat">'+chk+'Plan repas personnalisé chaque semaine</div><div class="paywall-feat">'+chk+'Liste de courses par rayon</div><div class="paywall-feat">'+chk+'Recettes muscu adaptées à ton budget</div><div class="paywall-feat">'+chk+'Macros calculées automatiquement</div></div>'+
 '<label class="paywall-bump" onclick="event.preventDefault();var bc=document.getElementById(\'bump-check\');bc.checked=!bc.checked;toggleBump()"><input type="checkbox" id="bump-check" tabindex="-1"><span class="bump-check-visual"></span><span class="bump-text"><strong>+ Pack 30 recettes batch cooking</strong><br>Prépare ta semaine en 1h. <s>14,99€</s> 4,99€ (une fois)</span></label>'+
@@ -1259,8 +1259,8 @@ el.innerHTML='<div class="downsell-card">'+
 '<div style="font-size:2rem;margin-bottom:.5rem">\u{1F381}</div>'+
 '<h2>Attends !</h2>'+
 '<p>Juste pour toi : <strong>-50% sur l\'annuel</strong>, une seule fois.</p>'+
-'<div class="downsell-price"><span class="downsell-old">79,99€</span> 39,99€ <small>/ an</small></div>'+
-'<div class="downsell-sub">Soit 3,33€/mois — offre valable maintenant seulement</div>'+
+'<div class="downsell-price"><span class="downsell-old">99€</span> 49,99€ <small>/ an</small></div>'+
+'<div class="downsell-sub">Soit 4,17€/mois — offre valable maintenant seulement</div>'+
 '<button class="btn btn-p btn-lg btn-full" onclick="acceptDownsell()">Profiter de l\'offre →</button>'+
 '<button class="downsell-decline" onclick="declineDownsell()">Non merci, continuer sans plan</button>'+
 '</div>';
