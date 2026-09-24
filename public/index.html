@@ -1412,7 +1412,7 @@ window._dashDay=di;
 document.querySelectorAll('.dd-tab').forEach(function(b,i){b.className='dd-tab'+(i===di?' on':'')+(i===todayIndex()?' today':'')});
 var el=document.getElementById('dash-day');if(el)el.innerHTML=dayHtml(di)}
 function showDashboard(){
-if(!hasProfile()&&!restoreProfile()){startOnboarding();return}
+if(!hasProfile()&&!restoreProfile()){beginFunnel();return}
 var mc=computeMacros();
 var gen=getWeekPlan(mc.cal,mc.protG,mc.carbG,mc.fatG,mc.m,mc.b);
 window._gen=gen;window._plan=gen.plan;
@@ -1673,7 +1673,7 @@ function devType(){return /Mobi|Android|iPhone/i.test(navigator.userAgent)?'mobi
 function utmSrc(){var m=/[?&]utm_source=([^&]+)/.exec(location.search);return m?decodeURIComponent(m[1]):''}
 function track(ev,p){if(isAdmin())return;p=p||{};p.vid=vid();p.sid=sid();var q=lsGet('macro_events')||[];q.push({ev:ev,t:Date.now(),p:p});if(q.length>100)q.shift();lsSet('macro_events',q);if(sbOn())sbFetch('/rest/v1/events',{method:'POST',headers:{Prefer:'return=minimal'},body:JSON.stringify({name:ev,props:p,user_email:null})}).catch(function(){})}
 
-function saveProfile(){
+function saveProfile(){if(!hasProfile())return;
   lsSet('macro_profile',{D:D,g:selGender||null,ts:Date.now()});
   if(Auth.user&&Auth.session&&sbOn())sbFetch('/rest/v1/profiles?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:Auth.user.id,email:Auth.user.email,data:{D:D,g:selGender||null},updated_at:new Date().toISOString()})},Auth.session.access_token).catch(function(){});
 }
@@ -1683,7 +1683,7 @@ function loadRemoteProfile(cb){/*rp-guard*/var _done=false,_cb=cb;cb=function(v)
   freshToken(function(tok){
     if(!tok){cb(false);return}
     sbFetch('/rest/v1/profiles?user_id=eq.'+Auth.user.id+'&select=data',{},tok).then(function(r){return r.ok?r.json():[]}).then(function(a){
-      if(a&&a[0]&&a[0].data&&a[0].data.D){D=a[0].data.D;selGender=a[0].data.g;lsSet('macro_profile',{D:D,g:selGender,ts:Date.now()});cb(true)}else cb(false)
+      if(a&&a[0]&&a[0].data&&a[0].data.D&&a[0].data.D.taille&&a[0].data.D.poids){D=a[0].data.D;selGender=a[0].data.g;lsSet('macro_profile',{D:D,g:selGender,ts:Date.now()});cb(true)}else cb(false)
     }).catch(function(){cb(false)});
   });
 }
@@ -1788,7 +1788,7 @@ function openMyPlan(){
   loadRemoteProfile(function(ok){if(ok)showDashboard();else startOnboarding()});
 }
 
-function setLeadStatus(status){
+function setLeadStatus(status){if(!hasProfile())return;
   if(!(Auth.user&&Auth.session&&sbOn()))return;
   sbFetch('/rest/v1/profiles?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:Auth.user.id,email:Auth.user.email,data:{D:D,g:selGender||null,status:status},updated_at:new Date().toISOString()})},Auth.session.access_token).catch(function(){});
 }
