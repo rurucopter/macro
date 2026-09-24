@@ -1678,7 +1678,7 @@ function saveProfile(){
   if(Auth.user&&Auth.session&&sbOn())sbFetch('/rest/v1/profiles?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:Auth.user.id,email:Auth.user.email,data:{D:D,g:selGender||null},updated_at:new Date().toISOString()})},Auth.session.access_token).catch(function(){});
 }
 function restoreProfile(){var p=lsGet('macro_profile');if(!p||!p.D||!p.D.taille||!p.D.poids)return false;D=p.D;selGender=p.g;return true}
-function loadRemoteProfile(cb){
+function loadRemoteProfile(cb){/*rp-guard*/var _done=false,_cb=cb;cb=function(v){if(_done)return;_done=true;_cb(v)};setTimeout(function(){cb(false)},6000);
   if(!(sbOn()&&Auth.session&&Auth.user)){cb(false);return}
   freshToken(function(tok){
     if(!tok){cb(false);return}
@@ -2015,6 +2015,9 @@ function toggleTheme(){var cur=document.documentElement.getAttribute('data-theme
 try{_sd.apply(this,arguments)}catch(e){
 console.error('dashboard error',e);lsDel('macro_plan');
 try{_sd.apply(this,arguments)}catch(e2){console.error('dashboard error (retry)',e2);toast('Erreur : '+String(e2&&e2.message||e2).slice(0,140))}}}})();
+/*err-toast*/
+window.addEventListener('error',function(e){if(!e.message||/^Script error|ResizeObserver/.test(e.message))return;try{toast('Erreur : '+String(e.message||'inconnue').slice(0,140))}catch(x){}});
+window.addEventListener('unhandledrejection',function(e){try{toast('Erreur : '+String(e.reason&&e.reason.message||e.reason||'inconnue').slice(0,140))}catch(x){}});
 </script>
 </body>
 </html>
