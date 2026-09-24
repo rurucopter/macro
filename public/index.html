@@ -2018,6 +2018,19 @@ try{_sd.apply(this,arguments)}catch(e2){console.error('dashboard error (retry)',
 /*err-toast*/
 window.addEventListener('error',function(e){if(!e.message||/^Script error|ResizeObserver/.test(e.message))return;try{toast('Erreur : '+String(e.message||'inconnue').slice(0,140))}catch(x){}});
 window.addEventListener('unhandledrejection',function(e){try{toast('Erreur : '+String(e.reason&&e.reason.message||e.reason||'inconnue').slice(0,140))}catch(x){}});
+/*debug-panel*/
+(function(){if(!/[?&]debug(=|&|$)/.test(location.search))return;
+var errs=[];window.addEventListener('error',function(e){errs.push('erreur: '+e.message+' ('+(e.lineno||'?')+')')});
+window.addEventListener('unhandledrejection',function(e){errs.push('promesse: '+String(e.reason&&e.reason.message||e.reason))});
+function state(){var p=lsGet('macro_profile'),u=lsGet('macro_user'),s=lsGet('macro_session');
+return ['Connecte: '+(u?u.email:'non'),'Debloque: '+(u?!!u.unlocked:'-'),'Profil local: '+(p&&p.D?'oui (taille '+p.D.taille+', poids '+p.D.poids+')':'non'),'Session: '+(s?(s.exp>Date.now()?'valide':'expiree'):'aucune'),'Page active: '+(document.querySelector('.page.active')||{}).id,'Erreurs: '+(errs.length?errs.join(' | '):'aucune')].join('\n')}
+var box=document.createElement('div');box.style.cssText='position:fixed;z-index:99999;left:8px;right:8px;bottom:8px;background:#000;color:#0f0;font:12px/1.4 monospace;padding:10px;border-radius:8px;white-space:pre-wrap;max-height:50vh;overflow:auto';
+var pre=document.createElement('div');var b1=document.createElement('button');b1.textContent='Tester Mon espace';b1.style.cssText='margin:8px 8px 0 0;padding:6px 10px';
+b1.onclick=function(){try{showDashboard();errs.push('showDashboard OK')}catch(e){errs.push('showDashboard a plante: '+e.message)}pre.textContent=state()};
+var b2=document.createElement('button');b2.textContent='Rafraichir';b2.style.cssText='margin-top:8px;padding:6px 10px';b2.onclick=function(){pre.textContent=state()};
+box.appendChild(pre);box.appendChild(b1);box.appendChild(b2);
+window.addEventListener('load',function(){document.body.appendChild(box);pre.textContent=state();setTimeout(function(){pre.textContent=state()},3000)});
+})();
 </script>
 </body>
 </html>
