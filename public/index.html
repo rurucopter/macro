@@ -1269,7 +1269,7 @@ a.au-toggle{display:block;text-align:left}
 var D={},step=0,selGender=null;
 function showPage(id){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});document.getElementById(id).classList.add('active');window.scrollTo(0,0);var stk=document.getElementById('sticky-cta');if(stk)stk.classList.remove('show');if(id==='landing')initReveal();if(id!=='admin')track('page_view',{page:id})}
 function beginFunnel(){track('funnel_start');step=0;D={};showPage('onboarding');renderStep()}
-function startOnboarding(){
+function startOnboarding(){if(window._demoRun&&isAdmin()){beginFunnel();return}
 if(Auth.user){
 if(restoreProfile()){showDashboard();return}
 if(sbOn()&&Auth.session){loadRemoteProfile(function(ok){if(ok)showDashboard();else beginFunnel()});return}
@@ -1759,16 +1759,16 @@ function initAuth(){
     else if(sbOn()&&Auth.session)loadRemoteProfile(function(ok){if(ok)showDashboard()});
   }
 }
-function refreshNav(){var hg=document.getElementById('hero-google');if(hg)hg.innerHTML=(sbOn()&&!Auth.user)?'<button class="au-google hero-g" onclick="heroGoogle()">'+GSVG+'Continuer avec Google</button>':'';
+function refreshNav(){var hg=document.getElementById('hero-google');if(hg)hg.innerHTML=(sbOn()&&!viewUser())?'<button class="au-google hero-g" onclick="heroGoogle()">'+GSVG+'Continuer avec Google</button>':'';
   document.querySelectorAll('.nav-pill').forEach(function(p){
     if(p.closest('#onboarding'))return;
     var slot=p.querySelector('.nav-auth');
     if(!slot){slot=document.createElement('span');slot.className='nav-auth';p.insertBefore(slot,p.querySelector('.btn')||null)}
-    var u=Auth.user;
+    var u=viewUser();
     if(u)slot.innerHTML='<button class="nav-link" onclick="openMyPlan()">Mon plan</button><button class="nav-avatar" onclick="toggleMenu(event)" aria-label="Mon compte">'+escH((u.name||u.email).charAt(0).toUpperCase())+'</button>';
     else slot.innerHTML=authReady()?'<button class="nav-link" onclick="openAuth(\'login\')">Connexion</button>':'';
   });
-  var mine=!!Auth.user;
+  var mine=!!viewUser();
   document.querySelectorAll('#landing [onclick*="startOnboarding"]').forEach(function(b){if(b.dataset.t0===undefined)b.dataset.t0=b.innerHTML;b.innerHTML=mine?(b.closest('.nav-pill')?'Mon espace':'Accéder à mon espace &#x2192;'):b.dataset.t0});
   var ll=document.querySelector('.hero-login-link');if(ll)ll.style.display=mine?'none':'';
 }
@@ -1782,7 +1782,8 @@ function toggleMenu(e){
 }
 function closeMenu(){var m=document.getElementById('acc-menu');if(m)m.remove()}
 document.addEventListener('click',function(e){if(!(e.target.closest&&e.target.closest('#acc-menu')))closeMenu()});
-function startDemoRun(){if(!isAdmin())return;closeMenu();window._demoRun=true;lsDel('macro_plan');beginFunnel()}
+function viewUser(){return window._demoRun?null:Auth.user}
+function startDemoRun(){if(!isAdmin())return;closeMenu();window._demoRun=true;lsDel('macro_plan');refreshNav();showPage('landing')}
 function openMyPlan(){
   closeMenu();
   if(restoreProfile()){showDashboard();return}
@@ -1803,7 +1804,7 @@ function renderSignupGate(){
   setSegs(S.length);document.getElementById('ob-pct').textContent='';document.getElementById('ob-counter').innerHTML='';
   var nm=firstName(),mc=computeMacros();
   document.getElementById('ob-main').innerHTML='<div class="au-ico">🔓</div><h2 class="au-t">'+(nm?escH(nm)+', ton':'Ton')+' plan est prêt</h2><p class="au-s">'+mc.m+' repas par semaine pour '+(mc.go==='Prise de masse'?'ta prise de masse':mc.go==='Sèche'?'ta sèche':'ton maintien')+', avec '+mc.b+' € chez '+escH(D.store||'ton magasin')+'. Connecte-toi pour le voir, ça prend 10 secondes.</p>'+answerChips()+'<button class="au-google" onclick="gateGoogle()">'+GSVG+'Continuer avec Google</button>';
-  if(window._demoRun&&isAdmin())document.getElementById('ob-main').insertAdjacentHTML('beforeend','<button class="au-toggle" onclick="window._demoRun=false;showResult()">Continuer sans reconnecter (mode vidéo) →</button>');window.scrollTo(0,0);track('signup_gate_view');
+  if(window._demoRun&&isAdmin())document.getElementById('ob-main').insertAdjacentHTML('beforeend','<button class="au-toggle" onclick="window._demoRun=false;refreshNav();showResult()">Continuer sans reconnecter (mode vidéo) →</button>');window.scrollTo(0,0);track('signup_gate_view');
 }
 function gateGoogle(){
   if(!sbOn()){toast('La connexion Google arrive très bientôt.');return}
