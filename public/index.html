@@ -1797,6 +1797,7 @@ function setLeadStatus(status){if(!hasProfile())return;
   sbFetch('/rest/v1/profiles?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:Auth.user.id,email:Auth.user.email,data:{D:D,g:selGender||null,status:status},updated_at:new Date().toISOString()})},Auth.session.access_token).catch(function(){});
 }
 function afterOnboarding(){track('onboarding_done');
+  if(window._demoRun&&isAdmin()){window._demoRun=false;saveProfile();refreshNav();showResult();return}
   saveProfile();
   if((Auth.user&&!(window._demoRun&&isAdmin()))||!authReady()){showDashboard();return}
   renderSignupGate();
