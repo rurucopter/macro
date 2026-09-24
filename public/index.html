@@ -1426,7 +1426,7 @@ h+='<h2 class="dash-h">Ta semaine</h2><div class="dd-tabs">';
 for(var i=0;i<7;i++)h+='<button class="dd-tab'+(i===ti?' on today':'')+'" onclick="dashDay('+i+')">'+DAYS_SHORT[i]+'</button>';
 h+='</div><div id="dash-day" class="dd-day">'+dayHtml(ti)+'</div>';
 h+='<h2 class="dash-h">Ta liste de courses</h2><div id="dash-shop">'+shopListHtml(gen,mc.b,u)+'</div>';
-h+='<div class="dash-actions"><button class="dash-action" onclick="showResult()"><strong>📊 Mes macros</strong><span>Calories, protéines, glucides, lipides</span></button><button class="dash-action" onclick="editProfile()"><strong>⚙️ Mes réponses</strong><span>Budget, salle, objectif…</span></button>'+(u?'<button class="dash-action" onclick="regenWeek()"><strong>🔄 Nouvelle semaine</strong><span>Un autre plan avec les mêmes réponses</span></button>':'')+'</div>';
+h+='<div class="dash-actions"><button class="dash-action" onclick="showResult()"><strong>📊 Mes macros</strong><span>Calories, protéines, glucides, lipides</span></button><button class="dash-action" onclick="editProfile()"><strong>⚙️ Mes réponses</strong><span>Budget, salle, objectif…</span></button>'+(u?'<button class="dash-action" onclick="regenWeek()"><strong>🔄 Nouvelle semaine</strong><span>Un autre plan avec les mêmes réponses</span></button>':'')+(isAdmin()?'<button class="dash-action" onclick="startDemoRun()"><strong>🎬 Refaire le parcours</strong><span>Mode vidéo : repars de zéro</span></button>':'')+'</div>';
 h+='<div class="dash-account"><div class="dash-account-row"><span>Compte</span><strong>'+escH(Auth.user?Auth.user.email:'')+'</strong></div><div class="dash-account-row"><span>Statut</span><strong>'+(u?'Plan complet':'Aperçu gratuit')+'</strong></div>'+(u?'<a class="au-toggle" href="mailto:'+MACRO_CFG.contact+'?subject=Mon%20abonnement%20mangereco">Gérer ou résilier mon abonnement</a>':'')+(isAdmin()?'<button class="au-toggle" onclick="showAdmin()">📈 Statistiques du site</button>':'')+'<button class="au-toggle" onclick="signOut()">Se déconnecter</button><button class="au-toggle" onclick="deleteMyData()">Supprimer mes données</button></div>';
 h+='</div>';
 document.getElementById('dash-content').innerHTML=h;
@@ -1777,11 +1777,12 @@ function toggleMenu(e){
   e.stopPropagation();var m=document.getElementById('acc-menu');if(m){m.remove();return}
   m=document.createElement('div');m.id='acc-menu';m.className='acc-menu';
   var r=e.currentTarget.getBoundingClientRect();m.style.top=(r.bottom+8)+'px';m.style.right=Math.max(12,innerWidth-r.right)+'px';
-  m.innerHTML='<div class="acc-mail">'+escH(Auth.user.email)+'</div><button onclick="openMyPlan()">Mon plan</button>'+(isAdmin()?'<button onclick="closeMenu();showAdmin()">Statistiques</button>':'')+'<button onclick="signOut()">Se déconnecter</button><button class="danger" onclick="deleteMyData()">Supprimer mes données</button>';
+  m.innerHTML='<div class="acc-mail">'+escH(Auth.user.email)+'</div><button onclick="openMyPlan()">Mon plan</button>'+(isAdmin()?'<button onclick="closeMenu();showAdmin()">Statistiques</button><button onclick="startDemoRun()">🎬 Refaire le parcours</button>':'')+'<button onclick="signOut()">Se déconnecter</button><button class="danger" onclick="deleteMyData()">Supprimer mes données</button>';
   document.body.appendChild(m);
 }
 function closeMenu(){var m=document.getElementById('acc-menu');if(m)m.remove()}
 document.addEventListener('click',function(e){if(!(e.target.closest&&e.target.closest('#acc-menu')))closeMenu()});
+function startDemoRun(){if(!isAdmin())return;closeMenu();window._demoRun=true;lsDel('macro_plan');beginFunnel()}
 function openMyPlan(){
   closeMenu();
   if(restoreProfile()){showDashboard();return}
@@ -1794,7 +1795,7 @@ function setLeadStatus(status){if(!hasProfile())return;
 }
 function afterOnboarding(){track('onboarding_done');
   saveProfile();
-  if(Auth.user||!authReady()){showDashboard();return}
+  if((Auth.user&&!(window._demoRun&&isAdmin()))||!authReady()){showDashboard();return}
   renderSignupGate();
 }
 function renderSignupGate(){
@@ -1802,7 +1803,7 @@ function renderSignupGate(){
   setSegs(S.length);document.getElementById('ob-pct').textContent='';document.getElementById('ob-counter').innerHTML='';
   var nm=firstName(),mc=computeMacros();
   document.getElementById('ob-main').innerHTML='<div class="au-ico">🔓</div><h2 class="au-t">'+(nm?escH(nm)+', ton':'Ton')+' plan est prêt</h2><p class="au-s">'+mc.m+' repas par semaine pour '+(mc.go==='Prise de masse'?'ta prise de masse':mc.go==='Sèche'?'ta sèche':'ton maintien')+', avec '+mc.b+' € chez '+escH(D.store||'ton magasin')+'. Connecte-toi pour le voir, ça prend 10 secondes.</p>'+answerChips()+'<button class="au-google" onclick="gateGoogle()">'+GSVG+'Continuer avec Google</button>';
-  window.scrollTo(0,0);track('signup_gate_view');
+  if(window._demoRun&&isAdmin())document.getElementById('ob-main').insertAdjacentHTML('beforeend','<button class="au-toggle" onclick="window._demoRun=false;showResult()">Continuer sans reconnecter (mode vidéo) →</button>');window.scrollTo(0,0);track('signup_gate_view');
 }
 function gateGoogle(){
   if(!sbOn()){toast('La connexion Google arrive très bientôt.');return}
