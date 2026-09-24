@@ -2010,6 +2010,11 @@ function initMarquee(){
 
 initMarquee();
 function toggleTheme(){var cur=document.documentElement.getAttribute('data-theme');var next=cur==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',next);try{localStorage.setItem('macro_theme',next)}catch(e){}}
+/*dash-guard*/
+(function(){var _sd=showDashboard;showDashboard=function(){
+try{_sd.apply(this,arguments)}catch(e){
+console.error('dashboard error',e);lsDel('macro_plan');
+try{_sd.apply(this,arguments)}catch(e2){console.error('dashboard error (retry)',e2);toast('Erreur : '+String(e2&&e2.message||e2).slice(0,140))}}}})();
 </script>
 </body>
 </html>

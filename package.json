@@ -1,0 +1,24 @@
+{
+  "name": "macro-deploy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rurucopter/macro.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/rurucopter/macro/issues"
+  },
+  "homepage": "https://github.com/rurucopter/macro#readme",
+  "devDependencies": {
+    "vercel": "^59.23.2"
+  }
+}
