@@ -1072,6 +1072,18 @@ a.au-toggle{display:block;text-align:left}
 
 .dd-tabs{scrollbar-width:none;-ms-overflow-style:none}
 .dd-tabs::-webkit-scrollbar{display:none}
+.au-optin{display:flex;gap:.5rem;align-items:flex-start;font-size:.8125rem;line-height:1.4;text-align:left;margin:0 0 .75rem;cursor:pointer}
+.au-optin input{margin-top:.15rem;flex:none}
+.ad-chart{display:flex;gap:6px;align-items:flex-end;height:150px;overflow-x:auto;padding:4px 0}
+.ad-day{flex:0 0 38px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:.6875rem}
+.ad-day span{margin-top:4px;color:var(--ink2)}
+.ad-cols3{display:flex;gap:2px;align-items:flex-end;height:110px;width:100%}
+.ad-cols3 i{flex:1;border-radius:3px 3px 0 0}
+.ad-cols3 .v,.ad-legend .lv{background:#64748B}
+.ad-cols3 .s,.ad-legend .ls{background:var(--accent-strong)}
+.ad-cols3 .c,.ad-legend .lc{background:#D97706}
+.ad-legend{display:flex;flex-wrap:wrap;gap:.25rem 1rem;align-items:center;font-size:.75rem;margin:.5rem 0 1rem}
+.ad-legend span{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:-.5rem}
 </style>
 
 <!-- LANDING -->
@@ -1359,6 +1371,11 @@ if(!tok){c.innerHTML='<div class="ad-wrap"><p class="ad-err">Session expirée. D
 sbFetch('/rest/v1/rpc/admin_stats',{method:'POST',body:JSON.stringify({p_days:days})},tok).then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j}})}).then(function(o){
 if(!o.ok){var msg=(o.j&&(o.j.message||o.j.hint))||'Erreur';c.innerHTML='<div class="ad-wrap"><p class="ad-err">'+escH(msg)+(/admin_stats|schema cache/.test(msg)?'<br>Exécute le fichier supabase_admin.sql dans Supabase (SQL Editor) puis recharge.':'')+'</p></div>';return}
 c.innerHTML=renderAdmin(o.j,days);window.scrollTo(0,0)}).catch(function(){c.innerHTML='<div class="ad-wrap"><p class="ad-err">Impossible de joindre Supabase.</p></div>'})})}
+function dailyChart(days){if(!days.length)return '';var mx=1;days.forEach(function(x){if(x.visitors>mx)mx=x.visitors});
+var h='<div class="ad-chart" role="img" aria-label="Visiteurs, inscriptions et clics paiement par jour">';
+days.forEach(function(x){var dt=new Date(x.day).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'});function bar(c,v){return '<i class="'+c+'" style="height:'+(v?Math.max(4,Math.round(v/mx*100)):0)+'%"></i>'}
+h+='<div class="ad-day" title="'+dt+' : '+x.visitors+' visiteurs, '+x.signups+' inscriptions, '+x.checkouts+' clics paiement"><div class="ad-cols3">'+bar('v',x.visitors)+bar('s',x.signups)+bar('c',x.checkouts)+'</div><span>'+dt+'</span></div>'});
+return h+'</div><p class="ad-legend"><span class="lv"></span>Visiteurs <span class="ls"></span>Inscriptions <span class="lc"></span>Clics paiement</p>'}
 function renderAdmin(d,days){
 var ev={};(d.events||[]).forEach(function(e){ev[e.name]=e});
 function V(n){return ev[n]?ev[n].visitors:0}
@@ -1366,17 +1383,17 @@ var land=0;(d.pages||[]).forEach(function(p){if(p.page==='landing')land=p.visito
 var t=d.totals||{};
 var h='<div class="ad-wrap">';
 h+='<div class="ad-head"><div><h1>Statistiques</h1><p>Depuis le '+new Date(d.since).toLocaleDateString('fr-FR')+' · '+escH(Auth.user.email)+'</p></div><div class="ad-per">'+[7,30,90].map(function(n){return '<button class="'+(n===days?'on':'')+'" onclick="showAdmin('+n+')">'+n+' jours</button>'}).join('')+'</div></div>';
-h+='<div class="ad-kpis">'+kpi('Visiteurs',fmtN(t.visitors),fmtN(t.sessions)+' sessions')+kpi('Nouveaux comptes',fmtN(t.new_users),fmtN(t.users)+' au total')+kpi('Visite → compte',pctOf(t.new_users,t.visitors),'')+kpi('Clients payants',fmtN(t.unlocked),'Compte → payant : '+pctOf(t.unlocked,t.users))+kpi('Places fondateur',fmtN(t.founders)+' / 20','')+kpi('Budget moyen',d.budget_avg==null?'–':d.budget_avg+' €','par semaine, profils créés')+'</div>';
+h+='<div class="ad-kpis">'+kpi('Visiteurs',fmtN(t.visitors),fmtN(t.sessions)+' sessions')+kpi('Nouveaux comptes',fmtN(t.new_users),fmtN(t.users)+' au total')+kpi('Visite → compte',pctOf(t.new_users,t.visitors),'')+kpi('Clients payants',fmtN(t.unlocked),'Compte → payant : '+pctOf(t.unlocked,t.users))+kpi('Prospects',fmtN(Math.max(0,(t.users||0)-(t.unlocked||0))),'inscrits, pas encore payants')+kpi('Places fondateur',fmtN(t.founders)+' / 20','')+kpi('Budget moyen',d.budget_avg==null?'–':d.budget_avg+' €','par semaine, profils créés')+'</div>';
 var fun=[['Vue de la landing',land],['Début du funnel',V('funnel_start')],['Funnel terminé',V('onboarding_done')],['Écran inscription vu',V('signup_gate_view')],['Clic Google',V('google_click')],['Inscription terminée',V('signup_completed')],['Tableau de bord vu',V('dashboard_view')],['Paywall vu',V('paywall_view')],['Clic paiement',V('checkout_click')]];
 var top=fun[0][1]||1;
 h+='<section class="ad-sec"><h2>Parcours complet</h2><p class="ad-note">Visiteurs uniques (un navigateur = un visiteur) à chaque étape.</p>'+adTable(['Étape','Visiteurs','% de la landing','% de l’étape précédente'],fun.map(function(x,i){return [x[0],fmtN(x[1]),pctOf(x[1],top),i?pctOf(x[1],fun[i-1][1]):'–']}))+'</section>';
 var first=(d.steps&&d.steps[0])?d.steps[0].visitors:0;
 h+='<section class="ad-sec"><h2>Étapes du funnel (question par question)</h2>'+adTable(['#','Question','Vues','Visiteurs','% des arrivées','Perte vs précédente'],(d.steps||[]).map(function(s,i,a){return [(s.idx==null?'?':s.idx+1),STEP_LABELS[s.id]||escH(s.id||'?'),fmtN(s.views),fmtN(s.visitors),pctOf(s.visitors,first),i?pctOf(a[i-1].visitors-s.visitors,a[i-1].visitors):'–']}))+'</section>';
 h+='<section class="ad-sec"><h2>Pages</h2>'+adTable(['Page','Vues','Visiteurs'],(d.pages||[]).map(function(p){return [PAGE_LABELS[p.page]||escH(p.page||'?'),fmtN(p.views),fmtN(p.visitors)]}))+'</section>';
-h+='<section class="ad-sec"><h2>Jour par jour</h2>'+adTable(['Jour','Visiteurs','Débuts de funnel','Inscriptions','Clics paiement'],(d.daily||[]).slice().reverse().map(function(x){return [new Date(x.day).toLocaleDateString('fr-FR'),fmtN(x.visitors),fmtN(x.starts),fmtN(x.signups),fmtN(x.checkouts)]}))+'</section>';
+h+='<section class="ad-sec"><h2>Jour par jour</h2>'+dailyChart(d.daily||[])+adTable(['Jour','Visiteurs','Débuts de funnel','Inscriptions','Clics paiement'],(d.daily||[]).slice().reverse().map(function(x){return [new Date(x.day).toLocaleDateString('fr-FR'),fmtN(x.visitors),fmtN(x.starts),fmtN(x.signups),fmtN(x.checkouts)]}))+'</section>';
 h+='<div class="ad-cols"><section class="ad-sec"><h2>Sources de trafic</h2>'+adBars((d.sources||[]).map(function(x){return{k:x.source,n:x.visitors}}))+'</section><section class="ad-sec"><h2>Appareils</h2>'+adBars((d.devices||[]).map(function(x){return{k:x.device==='mobile'?'Mobile':x.device==='desktop'?'Ordinateur':x.device,n:x.visitors}}))+'</section></div>';
 h+='<div class="ad-cols"><section class="ad-sec"><h2>Objectifs</h2>'+adBars(d.goals||[])+'</section><section class="ad-sec"><h2>Salles</h2>'+adBars(d.gyms||[])+'</section><section class="ad-sec"><h2>Magasins</h2>'+adBars(d.stores||[])+'</section></div>';
-h+='<section class="ad-sec"><h2>Derniers inscrits</h2>'+adTable(['Date','E-mail','Prénom','Objectif','Budget','Salle','Magasin','Statut'],(d.recent||[]).map(function(r){return [r.created_at?new Date(r.created_at).toLocaleDateString('fr-FR'):'–',escH(r.email||''),escH(r.prenom||''),escH(r.goal||''),r.budget?escH(r.budget)+' €':'',escH(r.gym||''),escH(r.store||''),STATUS_LABELS[r.status]||'–']}))+'</section>';
+h+='<section class="ad-sec"><h2>Derniers inscrits</h2>'+adTable(['Date','E-mail','Prénom','Objectif','Budget','Salle','Magasin','Statut','Payé','Relance e-mail'],(d.recent||[]).map(function(r){return [r.created_at?new Date(r.created_at).toLocaleDateString('fr-FR'):'–',escH(r.email||''),escH(r.prenom||''),escH(r.goal||''),r.budget?escH(r.budget)+' €':'',escH(r.gym||''),escH(r.store||''),STATUS_LABELS[r.status]||'–',r.paid==null?'–':(r.paid?'Oui':'Non'),r.optin==null?'–':(r.optin?'Oui':'Non')]}))+'</section>';
 h+='<section class="ad-sec"><h2>Tous les événements</h2>'+adTable(['Événement','Occurrences','Visiteurs'],(d.events||[]).map(function(e){return [EVENT_LABELS[e.name]||escH(e.name),fmtN(e.n),fmtN(e.visitors)]}))+'</section>';
 h+='<p class="ad-note">Un visiteur = un navigateur. La même personne sur deux appareils compte deux fois. Tes propres visites (compte admin) ne sont pas comptées.</p></div>';
 return h}
@@ -1621,16 +1638,16 @@ sbFetch('/rest/v1/rpc/get_founder_count',{method:'POST',body:'{}'}).then(functio
 }
 var selectedPlan='life';
 
-function closePaywall(){var pm=document.getElementById('pw-modal');if(pm)pm.remove();var el=document.createElement('div');el.className='downsell-overlay';el.id='downsell-screen';
+function closePaywall(){var pm=document.getElementById('pw-modal');if(pm)pm.remove();if(!(MACRO_CFG.checkout&&MACRO_CFG.checkout.downsell)||isUnlocked())return;var el=document.createElement('div');el.className='downsell-overlay';el.id='downsell-screen';
 el.innerHTML='<div class="downsell-spin"></div><div class="downsell-wait">Une seconde...</div>';
 document.body.appendChild(el);
 setTimeout(function(){
 el.innerHTML='<div class="downsell-card">'+
 '<div style="font-size:2rem;margin-bottom:.5rem">\u{1F381}</div>'+
 '<h2>Attends !</h2>'+
-'<p>Juste pour toi : <strong>-50% sur l\'annuel</strong>, une seule fois.</p>'+
+'<p>Juste pour toi : <strong>-50 % sur l\'annuel</strong>.</p>'+
 '<div class="downsell-price"><span class="downsell-old">99€</span> 49,99€ <small>/ an</small></div>'+
-'<div class="downsell-sub">Soit 4,17€/mois — offre valable maintenant seulement</div>'+
+'<div class="downsell-sub">Soit 4,17 € par mois, TVA incluse</div>'+
 '<button class="btn btn-p btn-lg btn-full" onclick="acceptDownsell()">Profiter de l\'offre →</button>'+
 '<button class="downsell-decline" onclick="declineDownsell()">Non merci, continuer sans plan</button>'+
 '</div>';
@@ -1723,7 +1740,7 @@ function sbUser(sess){
 }
 function afterLogin(fromRedirect){track('login');
   if(lsGet('macro_admin_pending')){lsDel('macro_admin_pending');if(isAdmin()){showAdmin();return}}
-  if(lsGet('macro_gate_pending')){lsDel('macro_gate_pending');track('signup_completed',{provider:Auth.user?Auth.user.provider:''});setLeadStatus('signed_up');restoreProfile();showDashboard();return}
+  if(lsGet('macro_gate_pending')){lsDel('macro_gate_pending');track('signup_completed',{provider:Auth.user?Auth.user.provider:''});setLeadStatus('signed_up');saveOptin();restoreProfile();showDashboard();return}
   if(lsGet('macro_start_funnel')){lsDel('macro_start_funnel');startOnboarding();return}
   if(Auth.after){var f=Auth.after;Auth.after=null;Auth.gate=false;f();return}
   if(fromRedirect){
@@ -1792,6 +1809,7 @@ function openMyPlan(){
   loadRemoteProfile(function(ok){if(ok)showDashboard();else startOnboarding()});
 }
 
+function saveOptin(){if(!lsGet('macro_optin')||!(Auth.user&&Auth.session&&sbOn()))return;setTimeout(function(){sbFetch('/rest/v1/profiles?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:Auth.user.id,email:Auth.user.email,email_optin:true})},Auth.session.access_token).then(function(r){if(r.ok)lsDel('macro_optin')}).catch(function(){})},2500)}
 function setLeadStatus(status){if(!hasProfile())return;
   if(!(Auth.user&&Auth.session&&sbOn()))return;
   sbFetch('/rest/v1/profiles?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:Auth.user.id,email:Auth.user.email,data:{D:D,g:selGender||null,status:status},updated_at:new Date().toISOString()})},Auth.session.access_token).catch(function(){});
@@ -1806,10 +1824,10 @@ function renderSignupGate(){
   showPage('onboarding');
   setSegs(S.length);document.getElementById('ob-pct').textContent='';document.getElementById('ob-counter').innerHTML='';
   var nm=firstName(),mc=computeMacros();
-  document.getElementById('ob-main').innerHTML='<div class="au-ico">🔓</div><h2 class="au-t">'+(nm?escH(nm)+', ton':'Ton')+' plan est prêt</h2><p class="au-s">'+mc.m+' repas par semaine pour '+(mc.go==='Prise de masse'?'ta prise de masse':mc.go==='Sèche'?'ta sèche':'ton maintien')+', avec '+mc.b+' € chez '+escH(D.store||'ton magasin')+'. Connecte-toi pour le voir, ça prend 10 secondes.</p>'+answerChips()+'<button class="au-google" onclick="gateGoogle()">'+GSVG+'Continuer avec Google</button>';
+  document.getElementById('ob-main').innerHTML='<div class="au-ico">🔓</div><h2 class="au-t">'+(nm?escH(nm)+', ton':'Ton')+' plan est prêt</h2><p class="au-s">'+mc.m+' repas par semaine pour '+(mc.go==='Prise de masse'?'ta prise de masse':mc.go==='Sèche'?'ta sèche':'ton maintien')+', avec '+mc.b+' € chez '+escH(D.store||'ton magasin')+'. Connecte-toi pour le voir, ça prend 10 secondes.</p>'+answerChips()+'<label class="au-optin"><input type="checkbox" id="optin-cb"> Je veux recevoir des rappels et conseils par e-mail (désinscription en 1 clic)</label><button class="au-google" onclick="gateGoogle()">'+GSVG+'Continuer avec Google</button>';
   if(window._demoRun&&isAdmin())document.getElementById('ob-main').insertAdjacentHTML('beforeend','<button class="au-toggle" onclick="window._demoRun=false;refreshNav();showResult()">Continuer sans reconnecter (mode vidéo) →</button>');window.scrollTo(0,0);track('signup_gate_view');
 }
-function gateGoogle(){
+function gateGoogle(){try{lsSet('macro_optin',!!(document.getElementById('optin-cb')||{}).checked)}catch(e){}
   if(!sbOn()){toast('La connexion Google arrive très bientôt.');return}
   lsSet('macro_gate_pending',1);
   authGoogle();

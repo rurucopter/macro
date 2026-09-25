@@ -64,7 +64,9 @@ begin
       select coalesce(data->'D'->>'store', '?') as k, count(*) as n from profiles group by 1 order by n desc limit 10) x),
     'budget_avg', (select round(avg(case when data->'D'->>'budget' ~ '^[0-9]{1,4}$' then (data->'D'->>'budget')::numeric end), 1) from profiles),
     'recent', (select coalesce(jsonb_agg(x), '[]'::jsonb) from (
-      select email, created_at, data->>'status' as status, data->'D'->>'prenom' as prenom,
+      select email, created_at, data->>'status' as status,
+             coalesce((select bool_or(s.unlocked) from subscriptions s where s.user_id = profiles.user_id), false) as paid,
+             coalesce(email_optin, false) as optin, data->'D'->>'prenom' as prenom,
              data->'D'->>'goal' as goal, data->'D'->>'budget' as budget,
              data->'D'->>'gym' as gym, data->'D'->>'store' as store
       from profiles order by created_at desc nulls last limit 100) x)
