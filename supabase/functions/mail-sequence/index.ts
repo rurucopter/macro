@@ -9,7 +9,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
 const CRON_SECRET = Deno.env.get("CRON_SECRET") ?? "";
 const UNSUB_SECRET = Deno.env.get("UNSUB_SECRET") ?? "";
-const MAIL_FROM = Deno.env.get("MAIL_FROM") ?? "mangereco <bonjour@mangereco.com>";
+const MAIL_FROM = Deno.env.get("MAIL_FROM") ?? "mangereco <app@mangereco.com>";
 const REQUIRE_OPTIN = (Deno.env.get("REQUIRE_OPTIN") ?? "true") !== "false";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SITE = "https://www.mangereco.com";
