@@ -1487,7 +1487,7 @@ h+='<section class="ad-sec"><h2>Tous les événements</h2>'+adTable(['Événemen
 h+='<p class="ad-note">Un visiteur = un navigateur. La même personne sur deux appareils compte deux fois. Tes propres visites (compte admin) ne sont pas comptées.</p></div>';
 return h}
 function getWeekPlan(cal,p,c,f,m,b){
-var sig='v5|'+(D.diet||'')+'|'+(D.avoid||[]).join(',')+'|'+[cal,p,c,f,m,b].join('|'),wk=Math.floor((Date.now()/86400000+3)/7);
+var sig='v5|'+(D.diet||'')+'|'+(D.avoid||[]).join(',')+'|'+[cal,p,c,f,m,b].join('|'),wk=Math.floor((Date.now()/86400000+4)/7);
 var s=lsGet('macro_plan');
 if(s&&s.sig===sig&&s.wk===wk&&s.gen&&s.gen.plan)return s.gen;
 var gen=generatePlan(cal,p,c,f,m,b);
@@ -1548,7 +1548,7 @@ h+='<div class="dash-actions"><button class="dash-action" onclick="showResult()"
 h+='<div class="dash-account"><div class="dash-account-row"><span>Compte</span><strong>'+escH(Auth.user?Auth.user.email:'')+'</strong></div><div class="dash-account-row"><span>Statut</span><strong>'+(u?'Plan complet':'Aperçu gratuit')+'</strong></div>'+(u?'<a class="au-toggle" href="mailto:'+MACRO_CFG.contact+'?subject=Mon%20abonnement%20mangereco">Gérer ou résilier mon abonnement</a>':'')+(isAdmin()?'<button class="au-toggle" onclick="showAdmin()">📈 Statistiques du site</button>':'')+'<button class="au-toggle" onclick="signOut()">Se déconnecter</button><button class="au-toggle" onclick="deleteMyData()">Supprimer mes données</button></div>';
 h+='</div>';
 document.getElementById('dash-content').innerHTML=h;
-window._dashDay=ti;showPage('dashboard');track('dashboard_view');
+window._dashDay=ti;showPage('dashboard');track('dashboard_view');markOpened();
 }
 function showResult(){
 var mc=computeMacros(),nm=firstName();
@@ -1908,12 +1908,13 @@ function openMyPlan(){
   loadRemoteProfile(function(ok){if(ok)showDashboard();else startOnboarding()});
 }
 
+function markOpened(){var ts=lsGet('macro_onb_ts');if(ts&&Date.now()-ts<1800000)return;if(lsGet('macro_opened')||!(Auth.user&&Auth.session&&sbOn()&&hasProfile()))return;sbFetch('/rest/v1/profiles?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:Auth.user.id,email:Auth.user.email,plan_opened_at:new Date().toISOString()})},Auth.session.access_token).then(function(r){if(r.ok)lsSet('macro_opened',1)}).catch(function(){})}
 function saveOptin(){if(!lsGet('macro_optin')||!(Auth.user&&Auth.session&&sbOn()))return;setTimeout(function(){sbFetch('/rest/v1/profiles?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:Auth.user.id,email:Auth.user.email,email_optin:true})},Auth.session.access_token).then(function(r){if(r.ok)lsDel('macro_optin')}).catch(function(){})},2500)}
 function setLeadStatus(status){if(!hasProfile())return;
   if(!(Auth.user&&Auth.session&&sbOn()))return;
   sbFetch('/rest/v1/profiles?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:Auth.user.id,email:Auth.user.email,data:{D:D,g:selGender||null,status:status},updated_at:new Date().toISOString()})},Auth.session.access_token).catch(function(){});
 }
-function afterOnboarding(){track('onboarding_done');
+function afterOnboarding(){track('onboarding_done');lsSet('macro_onb_ts',Date.now());
   if(window._demoRun&&isAdmin()){window._demoRun=false;saveProfile();refreshNav();showResult();return}
   saveProfile();
   if((Auth.user&&!(window._demoRun&&isAdmin()))||!authReady()){showDashboard();return}
@@ -2055,7 +2056,7 @@ if(/tomate|oignon|ail|brocoli|courgette|salade|banane|citron|légume|haricot|ma�
 if(/lait|beurre|fromage|feta/.test(s))return{l:'Produits laitiers',e:'\u{1F95B}'};
 return{l:'Épicerie',e:'\u{1F6D2}'};
 }
-function weekKey(){return Math.floor((Date.now()/86400000+3)/7)}
+function weekKey(){return Math.floor((Date.now()/86400000+4)/7)}
 function qtyText(e){
 if(e.eggs>0)return e.eggs+(e.eggs>1?' œufs':' œuf');
 if(e.ml>0)return e.ml>=1000?(e.ml/1000).toFixed(1).replace('.',',')+' L':(Math.round(e.ml/10)*10)+' ml';
