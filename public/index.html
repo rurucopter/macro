@@ -1151,6 +1151,13 @@ a.au-toggle{display:block;text-align:left}
 .shop .mp-shop-name small{display:block;font-size:.6875rem;font-weight:500;color:var(--muted);margin-top:.1rem}
 .shop .mp-shop-qty{font-size:.8125rem;font-weight:800;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:.25rem .625rem;text-align:center;font-variant-numeric:tabular-nums}
 .shop .mp-shop-item.checked .mp-shop-qty{opacity:.5}
+
+.ad-today{background:var(--accent-bg,#e9f5ef);border:1.5px solid var(--accent-strong);border-radius:var(--r,16px);padding:1.125rem 1.25rem;margin-bottom:1.25rem}
+.ad-today-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:.5rem;margin-bottom:.75rem}
+.ad-today-head h2{font-size:1.0625rem;margin:0}
+.ad-today-head span{font-size:.8125rem;color:var(--muted);text-transform:capitalize}
+.ad-today-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:.625rem}
+@media(max-width:640px){.ad-today-kpis{grid-template-columns:repeat(2,1fr)}}
 </style>
 
 <!-- LANDING -->
@@ -1465,12 +1472,20 @@ var h='<div class="ad-chart" role="img" aria-label="Visiteurs, inscriptions et c
 days.forEach(function(x){var dt=new Date(x.day).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'});function bar(c,v){return '<i class="'+c+'" style="height:'+(v?Math.max(4,Math.round(v/mx*100)):0)+'%"></i>'}
 h+='<div class="ad-day" title="'+dt+' : '+x.visitors+' visiteurs, '+x.signups+' inscriptions, '+x.checkouts+' clics paiement"><div class="ad-cols3">'+bar('v',x.visitors)+bar('s',x.signups)+bar('c',x.checkouts)+'</div><span>'+dt+'</span></div>'});
 return h+'</div><p class="ad-legend"><span class="lv"></span>Visiteurs <span class="ls"></span>Inscriptions <span class="lc"></span>Clics paiement</p>'}
+function todayRow(daily){
+var iso=new Date().toISOString().slice(0,10);
+var row=(daily||[]).filter(function(x){return String(x.day).slice(0,10)===iso})[0];
+return row||{visitors:0,starts:0,signups:0,checkouts:0}}
 function renderAdmin(d,days){
 var ev={};(d.events||[]).forEach(function(e){ev[e.name]=e});
 function V(n){return ev[n]?ev[n].visitors:0}
 var land=0;(d.pages||[]).forEach(function(p){if(p.page==='landing')land=p.visitors});
 var t=d.totals||{};
 var h='<div class="ad-wrap">';
+var tod=todayRow(d.daily);
+h+='<section class="ad-today"><div class="ad-today-head"><h2>📅 Aujourd\'hui</h2><span>'+new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})+'</span></div><div class="ad-today-kpis">'+
+kpi('Visiteurs',fmtN(tod.visitors),'')+kpi('Débuts de funnel',fmtN(tod.starts),'')+kpi('Inscriptions',fmtN(tod.signups),'')+kpi('Clics paiement',fmtN(tod.checkouts),'')+
+'</div></section>';
 h+='<div class="ad-head"><div><h1>Statistiques</h1><p>Depuis le '+new Date(d.since).toLocaleDateString('fr-FR')+' · '+escH(Auth.user.email)+'</p></div><div class="ad-per">'+[7,30,90].map(function(n){return '<button class="'+(n===days?'on':'')+'" onclick="showAdmin('+n+')">'+n+' jours</button>'}).join('')+'</div></div>';
 h+='<div class="ad-kpis">'+kpi('Visiteurs',fmtN(t.visitors),fmtN(t.sessions)+' sessions')+kpi('Nouveaux comptes',fmtN(t.new_users),fmtN(t.users)+' au total')+kpi('Visite → compte',pctOf(t.new_users,t.visitors),'')+kpi('Clients payants',fmtN(t.unlocked),'Compte → payant : '+pctOf(t.unlocked,t.users))+kpi('Prospects',fmtN(Math.max(0,(t.users||0)-(t.unlocked||0))),'inscrits, pas encore payants')+kpi('Places fondateur',fmtN(t.founders)+' / 20','')+kpi('Budget moyen',d.budget_avg==null?'–':d.budget_avg+' €','par semaine, profils créés')+'</div>';
 var fun=[['Vue de la landing',land],['Début du funnel',V('funnel_start')],['Funnel terminé',V('onboarding_done')],['Écran inscription vu',V('signup_gate_view')],['Clic Google',V('google_click')],['Inscription terminée',V('signup_completed')],['Tableau de bord vu',V('dashboard_view')],['Paywall vu',V('paywall_view')],['Clic paiement',V('checkout_click')]];
