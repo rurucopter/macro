@@ -32,7 +32,8 @@ async function unsubToken(userId: string): Promise<string> {
   return [...new Uint8Array(sig)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-type V = { prenom: string; goal: string; budget: string; renouv: string; price: string };
+type V = { prenom: string; goal: string; budget: string; renouv: string; price: string; places: number };
+const FOUNDER_CAP = 20;
 type Mail = { subject: string; html: string; text: string };
 
 const link = (key: string) => `${SITE}/?utm_source=email&utm_campaign=${key}`;
@@ -63,8 +64,17 @@ function build(key: string, v: V): Mail | null {
       break;
     case "A4":
       subject = "9,99 €, c'est moins qu'un menu fast-food";
-      body = P("Sans plan, tu achètes au hasard, tu jettes et tu manques de protéines.") + P("Mangereco, c'est 9,99 €/mois, ou 99 €/an (2 mois offerts).");
+      body = P("Sans plan, tu achètes au hasard, tu jettes et tu manques de protéines.") + P("Mangereco, c'est 9,99 €/mois, ou 99 €/an (2 mois offerts).") +
+        (v.places > 0 ? P(`Ou le <b>pack fondateur</b> : 59,99 € une seule fois, accès à vie. Plus que ${v.places} place${v.places > 1 ? "s" : ""} sur ${FOUNDER_CAP}.`) : "");
       cta = "Voir l'offre";
+      break;
+    case "F1":
+      if (v.places <= 0) return null;
+      subject = `Plus que ${v.places} place${v.places > 1 ? "s" : ""} en accès à vie`;
+      body = P(hi) + P(`J'ouvre le <b>pack fondateur</b> de Mangereco aux ${FOUNDER_CAP} premiers clients :`) +
+        `<ul style="line-height:1.55;padding-left:20px;margin:0 0 12px"><li><b>59,99 € une seule fois</b>, pas d'abonnement</li><li>Accès à vie à ton plan repas + ta liste de courses avec les prix</li><li>Toutes les futures nouveautés incluses</li><li>Prix bloqué pour toujours</li></ul>` +
+        P(`Il reste ${v.places} place${v.places > 1 ? "s" : ""}. Après, ce sera 9,99 €/mois ou 99 €/an.`) + P("Une question ? Réponds à ce mail.") + sign;
+      cta = "Devenir membre fondateur";
       break;
     case "A5":
       if (!DOWNSELL_URL) return null;
@@ -138,9 +148,9 @@ Deno.serve(async (req) => {
   const test = url.searchParams.get("test");
   if (test) {
     if (test.toLowerCase() !== ADMIN) return new Response("test only to " + ADMIN, { status: 400 });
-    const v: V = { prenom: "Arthur", goal: "Prise de masse", budget: "25", renouv: fmtDate(new Date(Date.now() + 30 * DAY).toISOString()), price: "99 €" };
+    const v: V = { prenom: "Arthur", goal: "Prise de masse", budget: "25", renouv: fmtDate(new Date(Date.now() + 30 * DAY).toISOString()), price: "99 €", places: 12 };
     const fakeId = "00000000-0000-0000-0000-000000000000";
-    for (const k of ["A1", "A2", "A3", "A4", "A5", "B1", "B2", "B3", "C1"]) {
+    for (const k of ["A1", "A2", "A3", "A4", "A5", "F1", "B1", "B2", "B3", "C1"]) {
       const m = build(k, v);
       if (!m) { out.errors.push(`${k}: not sent (DOWNSELL_URL is empty)`); continue; }
       try { await deliver(ADMIN, fakeId, m, `[TEST ${k}] `); out.sent.push(k); } catch (e) { out.errors.push(`${k}: ${String(e).slice(0, 140)}`); }
@@ -151,11 +161,13 @@ Deno.serve(async (req) => {
   const sb = createClient(SUPABASE_URL, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "");
   const now = Date.now();
   let budgetLeft = MAX_PER_RUN;
+  const { count: founders } = await sb.from("subscriptions").select("user_id", { count: "exact", head: true }).or("plan_kind.eq.life,founder.eq.true");
+  const places = Math.max(0, FOUNDER_CAP - (founders ?? FOUNDER_CAP));
 
   const info = (p: any): V => {
     const D = (p && p.data && p.data.D) || {};
     const first = String(D.prenom || "").trim().split(/\s+/)[0];
-    return { prenom: first ? first.charAt(0).toUpperCase() + first.slice(1) : "", goal: D.goal || "", budget: String(D.budget || "25"), renouv: "", price: "99 €" };
+    return { prenom: first ? first.charAt(0).toUpperCase() + first.slice(1) : "", goal: D.goal || "", budget: String(D.budget || "25"), renouv: "", price: "99 €", places };
   };
   // claim (user, key) then send; the claim prevents duplicates even if two runs overlap
   async function once(p: any, key: string, v: V, claimKey = key) {
@@ -196,6 +208,22 @@ Deno.serve(async (req) => {
     if (age >= 3 * DAY && age < 5 * DAY) await once(p, "A3", v);
     if (age >= 5 * DAY && age < 7 * DAY) await once(p, "A4", v);
     if (age >= 7 * DAY && age < 9 * DAY) await once(p, "A5", v);
+  }
+
+  // ---- F1: one founder-offer mail to accounts created before SEQ_START (they never entered sequence A)
+  if (places > 0 && budgetLeft > 0) {
+    const { data: old } = await sb.from("profiles").select("user_id,email,data,email_optin,email_unsub")
+      .lte("created_at", SEQ_START).eq("email_unsub", false).order("created_at", { ascending: true }).limit(500);
+    const pool = (old ?? []).filter((p: any) => p.email && (p.email_optin === true || !REQUIRE_OPTIN));
+    const poolIds = pool.map((p: any) => p.user_id);
+    const skip = new Set<string>();
+    if (poolIds.length) {
+      const { data: subs } = await sb.from("subscriptions").select("user_id").in("user_id", poolIds).eq("unlocked", true);
+      (subs ?? []).forEach((s: any) => skip.add(s.user_id));
+      const { data: done } = await sb.from("mail_log").select("user_id").in("user_id", poolIds).eq("mail_key", "F1");
+      (done ?? []).forEach((d: any) => skip.add(d.user_id));
+    }
+    for (const p of pool) { if (!skip.has(p.user_id)) await once(p, "F1", info(p)); }
   }
 
   // ---- B1: right after payment (paid in the last 24 h)
