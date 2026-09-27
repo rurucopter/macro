@@ -1073,7 +1073,15 @@ a.au-toggle{display:block;text-align:left}
 .dd-tabs{scrollbar-width:none;-ms-overflow-style:none}
 .dd-tabs::-webkit-scrollbar{display:none}
 .au-optin{display:flex;gap:.5rem;align-items:flex-start;font-size:.8125rem;line-height:1.4;text-align:left;margin:0 0 .75rem;cursor:pointer}
-.au-optin input{margin-top:.15rem;flex:none}
+.au-optin input{margin-top:.15rem;flex:none;width:1.125rem;height:1.125rem;accent-color:var(--accent-strong)}
+.au-optin.bad{color:#B91C1C;animation:optshake .35s}
+#optin-err{color:#B91C1C}
+:root[data-theme="dark"] .au-optin.bad,:root[data-theme="dark"] #optin-err{color:#F87171}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .au-optin.bad,:root:not([data-theme="light"]) #optin-err{color:#F87171}}
+.au-optin.bad input{outline:2px solid #DC2626;outline-offset:2px}
+#optin-err:empty{display:none}
+@keyframes optshake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+@media(prefers-reduced-motion:reduce){.au-optin.bad{animation:none}}
 .ad-chart{display:flex;gap:6px;align-items:flex-end;height:150px;overflow-x:auto;padding:4px 0}
 .ad-day{flex:0 0 38px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:.6875rem}
 .ad-day span{margin-top:4px;color:var(--ink2)}
@@ -1156,7 +1164,26 @@ a.au-toggle{display:block;text-align:left}
 .ad-today-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:.5rem;margin-bottom:.75rem}
 .ad-today-head h2{font-size:1.0625rem;margin:0}
 .ad-today-head span{font-size:.8125rem;color:var(--muted);text-transform:capitalize}
-.ad-today-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:.625rem}
+.ad-today-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.625rem}
+.ad-toc{display:flex;flex-wrap:wrap;gap:.375rem;margin:0 0 1rem}
+.ad-toc a{font-size:.75rem;font-weight:700;padding:.3125rem .75rem;border-radius:99px;border:1px solid var(--border);background:var(--surface);color:var(--ink2);text-decoration:none}
+.ad-toc a:hover,.ad-toc a:focus-visible{border-color:var(--accent);color:var(--ink)}
+.ad-sec,.ad-cols{scroll-margin-top:84px}
+.ad-h3{font-size:.8125rem;font-weight:800;color:var(--ink);margin:1.125rem 0 .5rem;text-transform:uppercase;letter-spacing:.04em}
+.ad-kpis-in{margin-bottom:.5rem}
+.ad-sub{color:var(--muted);font-size:.75rem;margin-left:.25rem}
+.ad-zero{color:#DC2626;font-weight:700}
+.ad-scroll{max-height:380px;overflow:auto;border:1px solid var(--border);border-radius:var(--r-sm)}
+.ad-scroll .ad-tb th{position:sticky;top:0;background:var(--surface)}
+.ad-daytot{font-size:.625rem;color:var(--ink2);min-height:.875rem;font-variant-numeric:tabular-nums}
+.ad-stack{display:flex;flex-direction:column-reverse;height:110px;width:70%}
+.ad-stack i{display:block;width:100%;min-height:2px}
+.ad-stack i:last-child{border-radius:3px 3px 0 0}
+.ad-ins{list-style:none;padding:0;margin:0;display:grid;gap:.5rem}
+.ad-in{display:flex;gap:.75rem;align-items:baseline;padding:.625rem .75rem;border-radius:var(--r-sm);border:1px solid var(--border);font-size:.875rem;line-height:1.5;color:var(--ink)}
+.ad-in>b{flex:none;font-size:.6875rem;text-transform:uppercase;letter-spacing:.04em;padding:.125rem .5rem;border-radius:99px;color:#fff}
+.ad-in.bad>b{background:#DC2626}.ad-in.warn>b{background:#B45309}.ad-in.good>b{background:#047857}.ad-in.info>b{background:#475569}
+@media(max-width:560px){.ad-in{flex-direction:column;gap:.375rem}}
 @media(max-width:640px){.ad-today-kpis{grid-template-columns:repeat(2,1fr)}}
 </style>
 
@@ -1446,7 +1473,7 @@ function todayIndex(){var d=new Date().getDay();return d===0?6:d-1}
 function editProfile(){closeMenu();track('edit_profile');step=0;showPage('onboarding');renderStep()}
 var PAGE_LABELS={landing:'Landing page',onboarding:'Funnel (questions)',result:'Écran macros',dashboard:'Tableau de bord',legal:'Pages légales'};
 var STEP_LABELS={gym:'Salle de sport',store:'Magasin',meals:'Repas par semaine',budget:'Budget',diet:'Régime',goal:'Objectif',body:'Taille et poids',profile:'Prénom, sexe, âge',avoid:'Allergies et aliments évités'};
-var EVENT_LABELS={lp_view:'Vue landing',funnel_start:'Début du funnel',step_view:'Étape du funnel vue',onboarding_done:'Funnel terminé',signup_gate_view:'Écran inscription vu',google_click:'Clic « Continuer avec Google »',signup:'Nouveau compte',signup_completed:'Inscription terminée',login:'Connexion',dashboard_view:'Tableau de bord vu',result_view:'Écran macros vu',paywall_view:'Paywall vu',plan_select:'Plan choisi',checkout_click:'Clic paiement',meal_open:'Recette ouverte',paywall_gate:'Recette bloquée (paywall)',magic_link_sent:'Lien e-mail envoyé',edit_profile:'Profil modifié',page_view:'Page vue'};
+var EVENT_LABELS={lp_view:'Vue landing',funnel_start:'Début du funnel',step_view:'Étape du funnel vue',onboarding_done:'Funnel terminé',signup_gate_view:'Écran inscription vu',google_click:'Clic « Continuer avec Google »',signup:'Nouveau compte',signup_completed:'Inscription terminée',login:'Connexion',dashboard_view:'Tableau de bord vu',result_view:'Écran macros vu',paywall_view:'Paywall vu',plan_select:'Plan choisi',checkout_click:'Clic paiement',meal_open:'Recette ouverte',optin_blocked:'Inscription bloquée (case e-mail non cochée)',paywall_gate:'Recette bloquée (paywall)',magic_link_sent:'Lien e-mail envoyé',edit_profile:'Profil modifié',page_view:'Page vue'};
 var STATUS_LABELS={signed_up:'Inscrit',paywall_view:'Paywall vu',checkout_started:'Paiement lancé'};
 function fmtN(n){return Number(n||0).toLocaleString('fr-FR')}
 function pctOf(a,b){return b>0?Math.round(a/b*100)+' %':'–'}
@@ -1474,39 +1501,121 @@ if(!tok){c.innerHTML='<div class="ad-wrap"><p class="ad-err">Session expirée. D
 sbFetch('/rest/v1/rpc/admin_stats',{method:'POST',body:JSON.stringify({p_days:days})},tok).then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j}})}).then(function(o){
 if(!o.ok){var msg=(o.j&&(o.j.message||o.j.hint))||'Erreur';c.innerHTML='<div class="ad-wrap"><p class="ad-err">'+escH(msg)+(/admin_stats|schema cache/.test(msg)?'<br>Exécute le fichier supabase_admin.sql dans Supabase (SQL Editor) puis recharge.':'')+'</p></div>';return}
 c.innerHTML=renderAdmin(o.j,days);window.scrollTo(0,0)}).catch(function(){c.innerHTML='<div class="ad-wrap"><p class="ad-err">Impossible de joindre Supabase.</p></div>'})})}
-function dailyChart(days){if(!days.length)return '';var mx=1;days.forEach(function(x){if(x.visitors>mx)mx=x.visitors});
-var h='<div class="ad-chart" role="img" aria-label="Visiteurs, inscriptions et clics paiement par jour">';
-days.forEach(function(x){var dt=new Date(x.day).toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'});function bar(c,v){return '<i class="'+c+'" style="height:'+(v?Math.max(4,Math.round(v/mx*100)):0)+'%"></i>'}
-h+='<div class="ad-day" title="'+dt+' : '+x.visitors+' visiteurs, '+x.signups+' inscriptions, '+x.checkouts+' clics paiement"><div class="ad-cols3">'+bar('v',x.visitors)+bar('s',x.signups)+bar('c',x.checkouts)+'</div><span>'+dt+'</span></div>'});
-return h+'</div><p class="ad-legend"><span class="lv"></span>Visiteurs <span class="ls"></span>Inscriptions <span class="lc"></span>Clics paiement</p>'}
-function todayRow(daily){
-var iso=new Date().toISOString().slice(0,10);
-var row=(daily||[]).filter(function(x){return String(x.day).slice(0,10)===iso})[0];
-return row||{visitors:0,starts:0,signups:0,checkouts:0}}
+var MAIL_LABELS={A1:'Bienvenue (J0)',A2:'Relance plan pas ouvert (J+1)',A3:'Ce que 25 € achètent (J+3)',A4:'Offre 9,99 € + fondateur (J+5)',A5:'Dernier mail, offre réduite (J+7)',F1:'Pack fondateur (anciens inscrits)',B1:'Merci, prise en main (client)',B2:'Plan de la semaine (dimanche)',B3:'Rappel renouvellement annuel',C1:'Après résiliation'};
+var MAIL_COLORS=['#0F766E','#2563EB','#D97706','#DC2626','#7C3AED','#DB2777','#65A30D','#0891B2','#64748B','#CA8A04'];
+var PLAN_INFO={month:{l:'Mensuel',p:9.99,m:9.99},year:{l:'Annuel',p:99,m:99/12},life:{l:'Fondateur à vie',p:59.99,m:0},downsell:{l:'Annuel réduit',p:49.99,m:49.99/12}};
+var WD=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
+function eur(n){return Number(n||0).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'}
+function dKey(s){return String(s||'').slice(0,10)}
+function dFr(s,y){return new Date(dKey(s)+'T12:00:00').toLocaleDateString('fr-FR',y?{weekday:'short',day:'2-digit',month:'2-digit',year:'2-digit'}:{day:'2-digit',month:'2-digit'})}
+function dtFr(s){return s?new Date(s).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',timeZone:'Europe/Paris'}):'–'}
+function fmtMin(m){if(m==null)return '–';m=Number(m);return m<1?'< 1 min':m<90?Math.round(m)+' min':m<2880?Math.round(m/60)+' h':Math.round(m/1440)+' j'}
+function nP(n,base){return fmtN(n)+(base>0?' <small class="ad-sub">'+pctOf(n,base)+'</small>':'')}
+function allDays(since,today){var out=[],a=new Date(dKey(since)+'T12:00:00Z'),b=new Date(dKey(today)+'T12:00:00Z');if(isNaN(a)||isNaN(b))return out;a=new Date(a.getTime()+86400000);for(;a<=b&&out.length<400;a=new Date(a.getTime()+86400000))out.push(a.toISOString().slice(0,10));return out}
+function sumBy(list,keyF,valF){var m={};(list||[]).forEach(function(r){var k=keyF(r);m[k]=(m[k]||0)+(valF?valF(r):r.n||0)});return m}
+function dailyChart(d){
+var days=allDays(d.since,d.today);if(!days.length)return '';
+var vis=sumBy(d.daily,function(r){return dKey(r.day)},function(r){return r.visitors}),acc=sumBy(d.signups_daily,function(r){return dKey(r.day)}),chk=sumBy(d.daily,function(r){return dKey(r.day)},function(r){return r.checkouts});
+var mx=1;days.forEach(function(x){mx=Math.max(mx,vis[x]||0,acc[x]||0)});
+var h='<div class="ad-chart" role="img" aria-label="Visiteurs, comptes créés et clics paiement par jour">';
+days.forEach(function(x){function bar(c,v){return '<i class="'+c+'" style="height:'+(v?Math.max(4,Math.round(v/mx*100)):0)+'%"></i>'}
+h+='<div class="ad-day" title="'+dFr(x,1)+' : '+(vis[x]||0)+' visiteurs, '+(acc[x]||0)+' comptes créés, '+(chk[x]||0)+' clics paiement"><div class="ad-cols3">'+bar('v',vis[x])+bar('s',acc[x])+bar('c',chk[x])+'</div><span>'+dFr(x)+'</span></div>'});
+return h+'</div><p class="ad-legend"><span class="lv"></span>Visiteurs <span class="ls"></span>Comptes créés <span class="lc"></span>Clics paiement</p>'}
+function mailsChart(d){
+var keys=[],by={};(d.mails_daily||[]).forEach(function(r){var x=dKey(r.day);if(keys.indexOf(r.k)<0)keys.push(r.k);(by[x]=by[x]||{})[r.k]=(by[x][r.k]||0)+r.n});keys.sort();
+var days=allDays(d.since,d.today),mx=1;
+function tot(x){var t=0;keys.forEach(function(k){t+=(by[x]||{})[k]||0});return t}
+days.forEach(function(x){mx=Math.max(mx,tot(x))});
+function col(k){return MAIL_COLORS[keys.indexOf(k)%MAIL_COLORS.length]}
+var h='<div class="ad-chart" role="img" aria-label="E-mails envoyés par jour">';
+days.forEach(function(x){var r=by[x]||{},t=tot(x),seg='';keys.forEach(function(k){if(r[k])seg+='<i style="height:'+(r[k]/mx*100)+'%;background:'+col(k)+'"></i>'});
+h+='<div class="ad-day" title="'+dFr(x,1)+' : '+t+' e-mail'+(t>1?'s':'')+(t?' ('+keys.filter(function(k){return r[k]}).map(function(k){return k+' : '+r[k]}).join(', ')+')':'')+'"><b class="ad-daytot">'+(t||'')+'</b><div class="ad-stack">'+seg+'</div><span>'+dFr(x)+'</span></div>'});
+h+='</div><p class="ad-legend">'+(keys.length?keys.map(function(k){return '<span style="background:'+col(k)+'"></span>'+k+' '+escH(MAIL_LABELS[k]||'')}).join(' '):'Aucun e-mail envoyé sur la période.')+'</p>';
+var rows=days.slice().reverse().map(function(x){var r=by[x]||{},t=tot(x);return [dFr(x,1),t?'<b>'+t+'</b>':'<span class="ad-zero">0</span>'].concat(keys.map(function(k){return r[k]?fmtN(r[k]):''}))});
+h+='<div class="ad-scroll">'+adTable(['Jour','Total'].concat(keys),rows)+'</div>';
+return h}
+function acqBy(rows,f){var m={},C=['visitors','starts','done','signups','paywalls','checkouts'];(rows||[]).forEach(function(r){var k=f(r);if(k==null||k==='')return;var o=m[k]=m[k]||{k:k};C.forEach(function(c){o[c]=(o[c]||0)+(r[c]||0)})});return Object.keys(m).map(function(k){return m[k]}).sort(function(a,b){return b.visitors-a.visitors})}
+function acqTable(list,lab,labF){return adTable([lab,'Visiteurs','Début funnel','Funnel fini','Inscrits','Paywall vu','Clic paiement','Visite → inscrit'],list.map(function(o){return [escH(labF?labF(o.k):o.k),fmtN(o.visitors),nP(o.starts,o.visitors),nP(o.done,o.visitors),fmtN(o.signups),fmtN(o.paywalls),fmtN(o.checkouts),'<b>'+pctOf(o.signups,o.visitors)+'</b>']}))}
+function devLabel(k){return k==='mobile'?'Mobile':k==='desktop'?'Ordinateur':k}
+function adInsights(d,fun){
+var out=[],t=d.totals||{};
+function add(lvl,txt){out.push('<li class="ad-in '+lvl+'"><b>'+(lvl==='bad'?'À corriger':lvl==='warn'?'À surveiller':lvl==='good'?'Bon signal':'Info')+'</b><span>'+txt+'</span></li>')}
+var worst=null;for(var i=1;i<fun.length;i++){var a=fun[i-1][1],b=fun[i][1];if(a>=15){var loss=1-b/a;if(!worst||loss>worst.loss)worst={loss:loss,from:fun[i-1][0],to:fun[i][0],a:a,b:b}}}
+if(worst&&worst.loss>0.3)add(worst.loss>0.6?'bad':'warn','Plus grosse fuite du parcours : <b>'+escH(worst.from)+' → '+escH(worst.to)+'</b>, '+Math.round(worst.loss*100)+' % des visiteurs s’arrêtent là ('+fmtN(worst.a)+' → '+fmtN(worst.b)+').');
+var st=d.steps||[],wq=null;for(var j=1;j<st.length;j++){if(st[j-1].visitors>=15){var l=1-st[j].visitors/st[j-1].visitors;if(!wq||l>wq.l)wq={l:l,id:st[j].id,prev:st[j-1].id}}}
+if(wq&&wq.l>0.12)add(wq.l>0.25?'bad':'warn','Question qui fait le plus abandonner : après <b>'+escH(STEP_LABELS[wq.prev]||wq.prev)+'</b>, '+Math.round(wq.l*100)+' % partent avant <b>'+escH(STEP_LABELS[wq.id]||wq.id)+'</b>.');
+var dv=acqBy(d.acq,function(r){return r.dev}),mob=dv.filter(function(o){return o.k==='mobile'})[0],desk=dv.filter(function(o){return o.k==='desktop'})[0];
+if(mob&&desk&&mob.visitors>=20&&desk.visitors>=20){var rm=mob.signups/mob.visitors,rd=desk.signups/desk.visitors;if(rd>0&&rm<rd*0.6)add('warn','Le mobile convertit moins bien : '+pctOf(mob.signups,mob.visitors)+' d’inscrits contre '+pctOf(desk.signups,desk.visitors)+' sur ordinateur. Teste le parcours sur ton téléphone.');else if(rm>0&&rd<rm*0.6)add('info','L’ordinateur convertit moins bien ('+pctOf(desk.signups,desk.visitors)+') que le mobile ('+pctOf(mob.signups,mob.visitors)+').')}
+var src=acqBy(d.acq,function(r){return r.source}).filter(function(o){return o.visitors>=20});
+if(src.length>1){src.sort(function(a,b){return b.signups/b.visitors-a.signups/a.visitors});add('good','Meilleure source : <b>'+escH(src[0].k)+'</b> ('+pctOf(src[0].signups,src[0].visitors)+' d’inscrits sur '+fmtN(src[0].visitors)+' visiteurs). Pire : <b>'+escH(src[src.length-1].k)+'</b> ('+pctOf(src[src.length-1].signups,src[src.length-1].visitors)+').')}
+var pw=fun.filter(function(x){return x[0]==='Paywall vu'})[0],ck=fun.filter(function(x){return x[0]==='Clic paiement'})[0];
+if(pw&&pw[1]>=15&&ck){var r=ck[1]/pw[1];add(r<0.05?'bad':r<0.15?'warn':'good','Paywall → clic paiement : '+pctOf(ck[1],pw[1])+' ('+fmtN(ck[1])+' sur '+fmtN(pw[1])+'). '+(r<0.05?'L’offre ou le prix bloque : teste le texte, l’ordre des formules ou la mise en avant du fondateur.':''))}
+if(t.users>=10){var o=t.optin/t.users;if(o<0.5)add('warn','Seulement '+pctOf(t.optin,t.users)+' des comptes acceptent les e-mails ('+fmtN(t.optin)+' / '+fmtN(t.users)+'). Les relances A2 à A5 ne partent qu’à eux.')}
+if(t.users>=10&&t.plan_opened/t.users<0.5)add('warn','Seulement '+pctOf(t.plan_opened,t.users)+' des inscrits ont vraiment ouvert leur plan.');
+var last=(d.mails_recent||[])[0];
+if(t.users>0){if(!last)add('bad','Aucun e-mail n’a encore été envoyé. Vérifie que la fonction mail-sequence est déployée et que la tâche planifiée tourne.');else{var h=(Date.now()-new Date(last.sent_at).getTime())/3600000;if(h>48)add('bad','Dernier e-mail envoyé il y a '+Math.round(h/24)+' jours ('+dtFr(last.sent_at)+'). Si des gens se sont inscrits depuis, la tâche planifiée est peut-être arrêtée.')}}
+if((t.unsub||0)>=3&&t.mails_all>0&&t.unsub/Math.max(1,t.users)>0.1)add('warn',fmtN(t.unsub)+' désinscriptions ('+pctOf(t.unsub,t.users)+' des comptes). Espace ou raccourcis les relances.');
+if(!out.length)return '<p class="ad-empty">Pas encore assez de données pour des recommandations fiables (il faut environ 15 à 20 visiteurs par étape).</p>';
+return '<ul class="ad-ins">'+out.join('')+'</ul>'}
 function renderAdmin(d,days){
 var ev={};(d.events||[]).forEach(function(e){ev[e.name]=e});
 function V(n){return ev[n]?ev[n].visitors:0}
 var land=0;(d.pages||[]).forEach(function(p){if(p.page==='landing')land=p.visitors});
-var t=d.totals||{};
-var h='<div class="ad-wrap">';
-var tod=todayRow(d.daily);
-h+='<section class="ad-today"><div class="ad-today-head"><h2>📅 Aujourd\'hui</h2><span>'+new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})+'</span></div><div class="ad-today-kpis">'+
-kpi('Visiteurs',fmtN(tod.visitors),'')+kpi('Débuts de funnel',fmtN(tod.starts),'')+kpi('Inscriptions',fmtN(tod.signups),'')+kpi('Clics paiement',fmtN(tod.checkouts),'')+
-'</div></section>';
-h+='<div class="ad-head"><div><h1>Statistiques</h1><p>Depuis le '+new Date(d.since).toLocaleDateString('fr-FR')+' · '+escH(Auth.user.email)+'</p></div><div class="ad-per">'+[7,30,90].map(function(n){return '<button class="'+(n===days?'on':'')+'" onclick="showAdmin('+n+')">'+n+' jours</button>'}).join('')+'</div></div>';
-h+='<div class="ad-kpis">'+kpi('Visiteurs',fmtN(t.visitors),fmtN(t.sessions)+' sessions')+kpi('Nouveaux comptes',fmtN(t.new_users),fmtN(t.users)+' au total')+kpi('Visite → compte',pctOf(t.new_users,t.visitors),'')+kpi('Clients payants',fmtN(t.unlocked),'Compte → payant : '+pctOf(t.unlocked,t.users))+kpi('Prospects',fmtN(Math.max(0,(t.users||0)-(t.unlocked||0))),'inscrits, pas encore payants')+kpi('Places fondateur',fmtN(t.founders)+' / 20','')+kpi('Budget moyen',d.budget_avg==null?'–':d.budget_avg+' €','par semaine, profils créés')+'</div>';
+var t=d.totals||{},today=dKey(d.today)||new Date().toLocaleDateString('sv-SE',{timeZone:'Europe/Paris'});
+var tod=(d.daily||[]).filter(function(x){return dKey(x.day)===today})[0]||{visitors:0,starts:0,signups:0,checkouts:0};
+var paidToday=0;(d.paid_daily||[]).forEach(function(r){if(dKey(r.day)===today)paidToday+=r.n});
+var subs=d.subs||[],mrr=0,cash=0,paying=0;subs.forEach(function(s){var p=PLAN_INFO[s.kind];if(!p)return;mrr+=s.active*p.m;cash+=s.total*p.p;paying+=s.total});
 var fun=[['Vue de la landing',land],['Début du funnel',V('funnel_start')],['Funnel terminé',V('onboarding_done')],['Écran inscription vu',V('signup_gate_view')],['Clic Google',V('google_click')],['Inscription terminée',V('signup_completed')],['Tableau de bord vu',V('dashboard_view')],['Paywall vu',V('paywall_view')],['Clic paiement',V('checkout_click')]];
+var h='<div class="ad-wrap">';
+h+='<section class="ad-today"><div class="ad-today-head"><h2>Aujourd\'hui</h2><span>'+new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',timeZone:'Europe/Paris'})+'</span></div><div class="ad-today-kpis">'+
+kpi('Visiteurs',fmtN(tod.visitors),'')+kpi('Débuts de funnel',fmtN(tod.starts),'')+kpi('Comptes créés',fmtN(t.new_users_today),'')+kpi('E-mails envoyés',fmtN(t.mails_today),'')+kpi('Clics paiement',fmtN(tod.checkouts),'')+kpi('Paiements',fmtN(paidToday),'')+
+'</div></section>';
+h+='<div class="ad-head"><div><h1>Statistiques</h1><p>Depuis le '+new Date(d.since).toLocaleDateString('fr-FR')+' · '+escH(Auth.user.email)+'</p></div><div class="ad-per">'+[7,30,90,365].map(function(n){return '<button class="'+(n===days?'on':'')+'" onclick="showAdmin('+n+')">'+(n===365?'1 an':n+' jours')+'</button>'}).join('')+'</div></div>';
+h+='<nav class="ad-toc" aria-label="Sections">'+[['ad-s-prio','Priorités'],['ad-s-money','Argent'],['ad-s-mail','E-mails'],['ad-s-fun','Parcours'],['ad-s-day','Jour par jour'],['ad-s-acq','Acquisition'],['ad-s-pw','Paywall'],['ad-s-prof','Profils'],['ad-s-users','Inscrits']].map(function(x){return '<a href="#'+x[0]+'">'+x[1]+'</a>'}).join('')+'</nav>';
+h+='<div class="ad-kpis">'+
+kpi('Visiteurs',fmtN(t.visitors),fmtN(t.sessions)+' sessions · '+pctOf(t.returning,t.visitors)+' reviennent')+
+kpi('Nouveaux comptes',fmtN(t.new_users),fmtN(t.users)+' au total')+
+kpi('Visite → compte',pctOf(t.new_users,t.visitors),'sur la période')+
+kpi('Clients payants',fmtN(t.unlocked),'Compte → payant : '+pctOf(t.unlocked,t.users))+
+kpi('Revenu mensuel récurrent',eur(mrr),'mensuels + annuels ramenés au mois')+
+kpi('Encaissé (estimé)',eur(cash),fmtN(paying)+' paiement'+(paying>1?'s':'')+', hors frais Whop')+
+kpi('Places fondateur',fmtN(t.founders)+' / 20',Math.max(0,20-(t.founders||0))+' restantes')+
+kpi('Accepte les e-mails',pctOf(t.optin,t.users),fmtN(t.optin)+' comptes · '+fmtN(t.unsub)+' désinscrits')+
+kpi('Plan vraiment ouvert',pctOf(t.plan_opened,t.users),fmtN(t.plan_opened)+' comptes')+
+kpi('Temps médian du funnel',fmtMin(d.timing&&d.timing.funnel_min),'1re question → funnel fini')+
+kpi('Arrivée → inscription',fmtMin(d.timing&&d.timing.signup_min),'médiane')+
+kpi('Inscription → paiement',d.pay_delay_days==null?'–':String(d.pay_delay_days).replace('.',',')+' j','médiane')+
+'</div>';
+h+='<section class="ad-sec" id="ad-s-prio"><h2>À regarder en priorité</h2><p class="ad-note">Calculé automatiquement à partir des chiffres de la période.</p>'+adInsights(d,fun)+'</section>';
+h+='<section class="ad-sec" id="ad-s-money"><h2>Argent</h2>'+adTable(['Formule','Prix','Actifs','Nouveaux sur la période','Résiliés','Total clients','Encaissé estimé'],subs.map(function(s){var p=PLAN_INFO[s.kind]||{l:s.kind,p:0};return [escH(p.l),p.p?eur(p.p):'–',fmtN(s.active),fmtN(s.new_period),fmtN(s.canceled),fmtN(s.total),p.p?eur(s.total*p.p):'–']}))+
+'<h3 class="ad-h3">Paiements par jour</h3>'+adTable(['Jour','Formule','Paiements'],(d.paid_daily||[]).slice().reverse().map(function(r){return [dFr(r.day,1),escH((PLAN_INFO[r.kind]||{l:r.kind}).l),fmtN(r.n)]}))+
+'<p class="ad-note">Estimation : un paiement par client (les renouvellements ne sont pas comptés), avant frais Whop et impôts. Les chiffres exacts sont dans le tableau de bord Whop.</p></section>';
+var mk=d.mails_keys||[];
+h+='<section class="ad-sec" id="ad-s-mail"><h2>E-mails</h2><div class="ad-kpis ad-kpis-in">'+kpi('Sur la période',fmtN(t.mails_period),fmtN(t.mail_recipients)+' destinataires')+kpi('Aujourd\'hui',fmtN(t.mails_today),'')+kpi('Depuis le début',fmtN(t.mails_all),'')+kpi('Acceptent les e-mails',fmtN(t.optin),pctOf(t.optin,t.users)+' des comptes')+kpi('Désinscrits',fmtN(t.unsub),pctOf(t.unsub,t.users)+' des comptes')+'</div>'+
+'<h3 class="ad-h3">Envoyés par jour</h3>'+mailsChart(d)+
+'<h3 class="ad-h3">Par e-mail</h3>'+adTable(['Clé','E-mail','Envoyés (période)','Envoyés (total)','Dernier envoi','Ont payé dans les 7 j'],mk.map(function(m){return [m.k,escH(MAIL_LABELS[m.k]||''),fmtN(m.period),fmtN(m.total),dtFr(m.last),nP(m.paid_7d,m.total)]}))+
+'<h3 class="ad-h3">Derniers envois</h3><div class="ad-scroll">'+adTable(['Date','Destinataire','E-mail'],(d.mails_recent||[]).map(function(m){var k=String(m.k||'').split('-')[0];return [dtFr(m.sent_at),escH(m.email||'?'),escH(k)+' · '+escH(MAIL_LABELS[k]||m.k)]}))+'</div>'+
+'<p class="ad-note">Compte les e-mails remis à Resend. Les ouvertures et clics se voient dans le tableau de bord Resend.</p></section>';
 var top=fun[0][1]||1;
-h+='<section class="ad-sec"><h2>Parcours complet</h2><p class="ad-note">Visiteurs uniques (un navigateur = un visiteur) à chaque étape.</p>'+adTable(['Étape','Visiteurs','% de la landing','% de l’étape précédente'],fun.map(function(x,i){return [x[0],fmtN(x[1]),pctOf(x[1],top),i?pctOf(x[1],fun[i-1][1]):'–']}))+'</section>';
+h+='<section class="ad-sec" id="ad-s-fun"><h2>Parcours complet</h2><p class="ad-note">Visiteurs uniques (un navigateur = un visiteur) à chaque étape.</p>'+adTable(['Étape','Visiteurs','% de la landing','% de l’étape précédente'],fun.map(function(x,i){return [x[0],fmtN(x[1]),pctOf(x[1],top),i?pctOf(x[1],fun[i-1][1]):'–']}))+'</section>';
 var first=(d.steps&&d.steps[0])?d.steps[0].visitors:0;
 h+='<section class="ad-sec"><h2>Étapes du funnel (question par question)</h2>'+adTable(['#','Question','Vues','Visiteurs','% des arrivées','Perte vs précédente'],(d.steps||[]).map(function(s,i,a){return [(s.idx==null?'?':s.idx+1),STEP_LABELS[s.id]||escH(s.id||'?'),fmtN(s.views),fmtN(s.visitors),pctOf(s.visitors,first),i?pctOf(a[i-1].visitors-s.visitors,a[i-1].visitors):'–']}))+'</section>';
+var acc=sumBy(d.signups_daily,function(r){return dKey(r.day)}),dly={};(d.daily||[]).forEach(function(x){dly[dKey(x.day)]=x});
+h+='<section class="ad-sec" id="ad-s-day"><h2>Jour par jour</h2>'+dailyChart(d)+'<div class="ad-scroll">'+adTable(['Jour','Visiteurs','Débuts de funnel','Funnel fini','Comptes créés','Paywall vu','Clics paiement'],allDays(d.since,d.today).reverse().map(function(k){var x=dly[k]||{};return [dFr(k,1),fmtN(x.visitors),fmtN(x.starts),fmtN(x.done),fmtN(acc[k]),fmtN(x.paywalls),fmtN(x.checkouts)]}))+'</div></section>';
+var camps=acqBy(d.acq,function(r){return r.camp});
+var hrs={};(d.hours||[]).forEach(function(r){hrs[r.h]=r.visitors});var wds={};(d.weekdays||[]).forEach(function(r){wds[r.d]=r.visitors});
+h+='<section class="ad-sec" id="ad-s-acq"><h2>Acquisition : d’où viennent ceux qui s’inscrivent</h2><p class="ad-note">Chaque visiteur est rattaché à sa première arrivée sur la landing. Pour suivre une pub ou une vidéo, ajoute ?utm_source=tiktok&amp;utm_campaign=nom au lien.</p>'+
+'<h3 class="ad-h3">Par source</h3>'+acqTable(acqBy(d.acq,function(r){return r.source}),'Source')+
+'<h3 class="ad-h3">Par appareil</h3>'+acqTable(acqBy(d.acq,function(r){return r.dev}),'Appareil',devLabel)+
+(camps.length?'<h3 class="ad-h3">Par campagne (utm_campaign)</h3>'+acqTable(camps,'Campagne'):'')+
+'<div class="ad-cols"><div><h3 class="ad-h3">Heure d’arrivée</h3>'+adBars(Array.apply(null,Array(24)).map(function(_,i){return {k:i+' h',n:hrs[i]||0}}).filter(function(x,i){return (d.hours||[]).length}))+'</div><div><h3 class="ad-h3">Jour de la semaine</h3>'+adBars((d.weekdays||[]).length?WD.map(function(w,i){return {k:w,n:wds[i+1]||0}}):[])+'</div></div></section>';
+h+='<div class="ad-cols" id="ad-s-pw"><section class="ad-sec"><h2>Formule cliquée sur le paywall</h2>'+adBars(d.plan_select||[])+'</section><section class="ad-sec"><h2>Clic paiement par formule</h2>'+adBars(d.checkout_plans||[])+'</section></div>';
 h+='<section class="ad-sec"><h2>Pages</h2>'+adTable(['Page','Vues','Visiteurs'],(d.pages||[]).map(function(p){return [PAGE_LABELS[p.page]||escH(p.page||'?'),fmtN(p.views),fmtN(p.visitors)]}))+'</section>';
-h+='<section class="ad-sec"><h2>Jour par jour</h2>'+dailyChart(d.daily||[])+adTable(['Jour','Visiteurs','Débuts de funnel','Inscriptions','Clics paiement'],(d.daily||[]).slice().reverse().map(function(x){return [new Date(x.day).toLocaleDateString('fr-FR'),fmtN(x.visitors),fmtN(x.starts),fmtN(x.signups),fmtN(x.checkouts)]}))+'</section>';
-h+='<div class="ad-cols"><section class="ad-sec"><h2>Sources de trafic</h2>'+adBars((d.sources||[]).map(function(x){return{k:x.source,n:x.visitors}}))+'</section><section class="ad-sec"><h2>Appareils</h2>'+adBars((d.devices||[]).map(function(x){return{k:x.device==='mobile'?'Mobile':x.device==='desktop'?'Ordinateur':x.device,n:x.visitors}}))+'</section></div>';
-h+='<div class="ad-cols"><section class="ad-sec"><h2>Objectifs</h2>'+adBars(d.goals||[])+'</section><section class="ad-sec"><h2>Salles</h2>'+adBars(d.gyms||[])+'</section><section class="ad-sec"><h2>Magasins</h2>'+adBars(d.stores||[])+'</section></div>';
-h+='<section class="ad-sec"><h2>Derniers inscrits</h2>'+adTable(['Date','E-mail','Prénom','Objectif','Budget','Salle','Magasin','Statut','Payé','Relance e-mail'],(d.recent||[]).map(function(r){return [r.created_at?new Date(r.created_at).toLocaleDateString('fr-FR'):'–',escH(r.email||''),escH(r.prenom||''),escH(r.goal||''),r.budget?escH(r.budget)+' €':'',escH(r.gym||''),escH(r.store||''),STATUS_LABELS[r.status]||'–',r.paid==null?'–':(r.paid?'Oui':'Non'),r.optin==null?'–':(r.optin?'Oui':'Non')]}))+'</section>';
+h+='<div class="ad-cols" id="ad-s-prof"><section class="ad-sec"><h2>Objectifs</h2>'+adBars(d.goals||[])+'</section><section class="ad-sec"><h2>Budget / semaine</h2>'+adBars(d.budgets||[])+'<p class="ad-note">Moyenne : '+(d.budget_avg==null?'–':String(d.budget_avg).replace('.',',')+' €')+'</p></section><section class="ad-sec"><h2>Âge</h2>'+adBars(d.ages||[])+'</section></div>';
+h+='<div class="ad-cols"><section class="ad-sec"><h2>Sexe</h2>'+adBars(d.genders||[])+'</section><section class="ad-sec"><h2>Régime</h2>'+adBars(d.diets||[])+'</section><section class="ad-sec"><h2>Salles</h2>'+adBars(d.gyms||[])+'</section><section class="ad-sec"><h2>Magasins</h2>'+adBars(d.stores||[])+'</section></div>';
+h+='<section class="ad-sec" id="ad-s-users"><h2>Derniers inscrits</h2><div class="ad-scroll">'+adTable(['Date','E-mail','Prénom','Objectif','Budget','Magasin','Statut','Payé','Plan ouvert','E-mails OK','Mails reçus'],(d.recent||[]).map(function(r){return [r.created_at?dtFr(r.created_at):'–',escH(r.email||''),escH(r.prenom||''),escH(r.goal||''),r.budget?escH(r.budget)+' €':'',escH(r.store||''),STATUS_LABELS[r.status]||'–',r.paid?'<b>'+escH((PLAN_INFO[r.plan_kind]||{l:'Oui'}).l)+'</b>':'Non',r.opened?'Oui':'Non',r.unsub?'Désinscrit':(r.optin?'Oui':'Non'),r.mails?fmtN(r.mails)+' <small class="ad-sub">'+escH(String(r.last_mail||'').split('-')[0])+'</small>':'0']}))+'</div></section>';
 h+='<section class="ad-sec"><h2>Tous les événements</h2>'+adTable(['Événement','Occurrences','Visiteurs'],(d.events||[]).map(function(e){return [EVENT_LABELS[e.name]||escH(e.name),fmtN(e.n),fmtN(e.visitors)]}))+'</section>';
-h+='<p class="ad-note">Un visiteur = un navigateur. La même personne sur deux appareils compte deux fois. Tes propres visites (compte admin) ne sont pas comptées.</p></div>';
+h+='<p class="ad-note">Un visiteur = un navigateur. La même personne sur deux appareils compte deux fois. Tes propres visites (compte admin) ne sont pas comptées. Jours calculés à l’heure de Paris.</p></div>';
 return h}
 function getWeekPlan(cal,p,c,f,m,b){
 var sig='v5|'+(D.diet||'')+'|'+(D.avoid||[]).join(',')+'|'+[cal,p,c,f,m,b].join('|'),wk=Math.floor((Date.now()/86400000+4)/7);
@@ -1810,6 +1919,7 @@ function vid(){var v=lsGet('macro_vid');if(!v){v='v'+Math.random().toString(36).
 function sid(){try{var s=sessionStorage.getItem('macro_sid');if(!s){s='s'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);sessionStorage.setItem('macro_sid',s)}return s}catch(e){return 'nosid'}}
 function refHost(){try{var r=document.referrer;if(!r)return '';var h=new URL(r).hostname.replace(/^www\./,'');return h===location.hostname.replace(/^www\./,'')?'':h}catch(e){return ''}}
 function devType(){return /Mobi|Android|iPhone/i.test(navigator.userAgent)?'mobile':'desktop'}
+function utmCamp(){var m=/[?&]utm_campaign=([^&]+)/.exec(location.search);return m?decodeURIComponent(m[1]).slice(0,60):''}
 function utmSrc(){var m=/[?&]utm_source=([^&]+)/.exec(location.search);return m?decodeURIComponent(m[1]):''}
 function track(ev,p){if(isAdmin())return;p=p||{};p.vid=vid();p.sid=sid();var q=lsGet('macro_events')||[];q.push({ev:ev,t:Date.now(),p:p});if(q.length>100)q.shift();lsSet('macro_events',q);if(sbOn())sbFetch('/rest/v1/events',{method:'POST',headers:{Prefer:'return=minimal'},body:JSON.stringify({name:ev,props:p,user_email:null})}).catch(function(){})}
 
@@ -1870,14 +1980,14 @@ function afterLogin(fromRedirect){track('login');
   }
 }
 function initAuth(){
-  track('lp_view');track('page_view',{page:'landing',ref:utmSrc()||refHost(),dev:devType()});var yr=document.getElementById('yr');if(yr)yr.textContent=new Date().getFullYear();
+  track('lp_view');track('page_view',{page:'landing',ref:utmSrc()||refHost(),dev:devType(),camp:utmCamp()});var yr=document.getElementById('yr');if(yr)yr.textContent=new Date().getFullYear();
   var hash=location.hash||'';
   if(sbOn()&&hash.indexOf('access_token=')>-1){
     var q={};hash.replace(/^#/,'').split('&').forEach(function(kv){var i=kv.indexOf('=');if(i>0)q[kv.slice(0,i)]=decodeURIComponent(kv.slice(i+1))});
     history.replaceState(null,'',location.pathname+location.search);
     if(q.access_token){
       var sess={access_token:q.access_token,refresh_token:q.refresh_token,exp:Date.now()+(parseInt(q.expires_in,10)||3600)*1000};
-      sbUser(sess).then(function(u){if(u){setUser(u,sess);track('signup',{provider:u.provider});pushLead(u,u.provider);syncUnlockStatus(function(){afterLogin(true)})}else toast('Connexion impossible. Réessaie.')});
+      sbUser(sess).then(function(u){if(u){setUser(u,sess);track('signup',{provider:u.provider});pushLead(u,u.provider);saveOptin();syncUnlockStatus(function(){afterLogin(true)})}else toast('Connexion impossible. Réessaie.')});
       return;
     }
   }
@@ -1946,10 +2056,14 @@ function renderSignupGate(){
   showPage('onboarding');
   setSegs(S.length);document.getElementById('ob-pct').textContent='';document.getElementById('ob-counter').innerHTML='';
   var nm=firstName(),mc=computeMacros();
-  document.getElementById('ob-main').innerHTML='<div class="au-ico">🔓</div><h2 class="au-t">'+(nm?escH(nm)+', ton':'Ton')+' plan est prêt</h2><p class="au-s">'+mc.m+' repas par semaine pour '+(mc.go==='Prise de masse'?'ta prise de masse':mc.go==='Sèche'?'ta sèche':'ton maintien')+', avec '+mc.b+' € chez '+escH(D.store||'ton magasin')+'. Connecte-toi pour le voir, ça prend 10 secondes.</p>'+answerChips()+'<label class="au-optin"><input type="checkbox" id="optin-cb"> Je veux recevoir des rappels et conseils par e-mail (désinscription en 1 clic)</label><button class="au-google" onclick="gateGoogle()">'+GSVG+'Continuer avec Google</button>';
+  document.getElementById('ob-main').innerHTML='<div class="au-ico">🔓</div><h2 class="au-t">'+(nm?escH(nm)+', ton':'Ton')+' plan est prêt</h2><p class="au-s">'+mc.m+' repas par semaine pour '+(mc.go==='Prise de masse'?'ta prise de masse':mc.go==='Sèche'?'ta sèche':'ton maintien')+', avec '+mc.b+' € chez '+escH(D.store||'ton magasin')+'. Connecte-toi pour le voir, ça prend 10 secondes.</p>'+answerChips()+'<label class="au-optin" id="optin-lbl"><input type="checkbox" id="optin-cb" onchange="optinOk()"> J\'accepte de recevoir les e-mails de mangereco (mon plan, des rappels, des conseils et des offres). Désinscription en 1 clic.</label><div class="au-err" id="optin-err" role="alert"></div><button class="au-google" onclick="gateGoogle()">'+GSVG+'Continuer avec Google</button>';
   if(window._demoRun&&isAdmin())document.getElementById('ob-main').insertAdjacentHTML('beforeend','<button class="au-toggle" onclick="window._demoRun=false;refreshNav();showResult()">Continuer sans reconnecter (mode vidéo) →</button>');window.scrollTo(0,0);track('signup_gate_view');
 }
-function gateGoogle(){try{lsSet('macro_optin',!!(document.getElementById('optin-cb')||{}).checked)}catch(e){}
+function optinEl(id){var m=document.getElementById('auth-modal');return (m&&m.querySelector('#'+id))||document.getElementById(id)}
+function optinOk(){var l=optinEl('optin-lbl'),e=optinEl('optin-err');if(l)l.classList.remove('bad');if(e)e.textContent=''}
+function optinCheck(){var cb=optinEl('optin-cb');if(!cb||cb.checked){lsSet('macro_optin',true);return true}
+  var l=optinEl('optin-lbl'),e=optinEl('optin-err');if(l){l.classList.remove('bad');void l.offsetWidth;l.classList.add('bad')}if(e)e.textContent='Coche la case pour créer ton compte : ton plan et tes rappels arrivent par e-mail.';cb.focus();track('optin_blocked');return false}
+function gateGoogle(){if(!optinCheck())return;
   if(!sbOn()){toast('La connexion Google arrive très bientôt.');return}
   lsSet('macro_gate_pending',1);
   authGoogle();
@@ -1967,9 +2081,10 @@ function closeAuth(byUser){
 function renderAuth(){
   var b=document.getElementById('au-body');if(!b)return;
   var login=Auth.mode==='login';
-  var g=sbOn()?'<button class="au-google" onclick="authGoogle()">'+GSVG+'Continuer avec Google</button><div class="au-sep"><span>ou</span></div>':'';
+  var ok=login?'':'<label class="au-optin" id="optin-lbl"><input type="checkbox" id="optin-cb" onchange="optinOk()"> J\'accepte de recevoir les e-mails de mangereco (mon plan, des rappels, des conseils et des offres). Désinscription en 1 clic.</label><div class="au-err" id="optin-err" role="alert"></div>';
+  var g=sbOn()?ok+'<button class="au-google" onclick="if(optinCheck())authGoogle()">'+GSVG+'Continuer avec Google</button><div class="au-sep"><span>ou</span></div>':'';
   b.innerHTML='<div class="au-ico">'+(login?'\u{1F44B}':'\u{1F513}')+'</div><h2 class="au-t">'+(login?'Content de te revoir':'Ton plan est prêt')+'</h2><p class="au-s">'+(login?'Connecte-toi pour retrouver ton plan.':'Crée ton compte gratuit pour voir ton plan et le retrouver quand tu veux. 30 secondes.')+'</p>'+g+
-  '<form onsubmit="return authEmail(event)"><input class="au-input" id="au-email" type="email" inputmode="email" autocomplete="email" placeholder="ton@email.fr" required><div class="au-err" id="au-err"></div><button class="btn btn-p btn-lg btn-full" id="au-go" type="submit">'+(login?'Me connecter':'Voir mon plan')+' →</button></form>'+
+  (sbOn()?'':ok)+'<form onsubmit="return authEmail(event)"><input class="au-input" id="au-email" type="email" inputmode="email" autocomplete="email" placeholder="ton@email.fr" required><div class="au-err" id="au-err"></div><button class="btn btn-p btn-lg btn-full" id="au-go" type="submit">'+(login?'Me connecter':'Voir mon plan')+' →</button></form>'+
   '<div class="au-legal">En continuant, tu acceptes les <a href="/cgu" target="_blank" rel="noopener">CGU</a> et la <a href="/confidentialite" target="_blank" rel="noopener">politique de confidentialité</a>.</div>'+
   '<button class="au-toggle" onclick="Auth.mode=\''+(login?'signup':'login')+'\';renderAuth()">'+(login?'Pas encore de compte ? Créer mon compte':'Déjà un compte ? Me connecter')+'</button>';
   var el=document.getElementById('au-email');if(el)setTimeout(function(){el.focus()},350);
@@ -1977,6 +2092,7 @@ function renderAuth(){
 function authGoogle(){if(!sbOn()){toast('La connexion Google arrive tr\u00e8s bient\u00f4t.');return}saveProfile();track('google_click');location.href=MACRO_CFG.supabaseUrl+'/auth/v1/authorize?provider=google&redirect_to='+encodeURIComponent(redirectUrl())}
 function authEmail(e){
   e.preventDefault();
+  if(Auth.mode!=='login'&&!optinCheck())return false;
   var em=document.getElementById('au-email').value.trim().toLowerCase(),err=document.getElementById('au-err'),btn=document.getElementById('au-go');
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)){err.textContent='Adresse e-mail invalide.';return false}
   err.textContent='';btn.disabled=true;btn.textContent='…';
