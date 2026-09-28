@@ -1503,7 +1503,7 @@ if(!tok){c.innerHTML='<div class="ad-wrap"><p class="ad-err">Session expirée. D
 sbFetch('/rest/v1/rpc/admin_stats',{method:'POST',body:JSON.stringify({p_days:days})},tok).then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j}})}).then(function(o){
 if(!o.ok){var msg=(o.j&&(o.j.message||o.j.hint))||'Erreur';c.innerHTML='<div class="ad-wrap"><p class="ad-err">'+escH(msg)+(/admin_stats|schema cache/.test(msg)?'<br>Exécute le fichier supabase_admin.sql dans Supabase (SQL Editor) puis recharge.':'')+'</p></div>';return}
 c.innerHTML=renderAdmin(o.j,days);window.scrollTo(0,0)}).catch(function(){c.innerHTML='<div class="ad-wrap"><p class="ad-err">Impossible de joindre Supabase.</p></div>'})})}
-var MAIL_LABELS={A1:'Bienvenue (J0)',A2:'Relance plan pas ouvert (J+1)',A3:'Ce que 25 € achètent (J+3)',A4:'Offre 9,99 € + fondateur (J+5)',A5:'Dernier mail, offre réduite (J+7)',F1:'Pack fondateur (anciens inscrits)',B1:'Merci, prise en main (client)',B2:'Plan de la semaine (dimanche)',B3:'Rappel renouvellement annuel',C1:'Après résiliation'};
+var MAIL_LABELS={A1:'Bienvenue (J0)',A2:'Pitch pack fondateur (J+1)',A3:'Ce que 25 € achètent + fondateur (J+3)',A4:'Le calcul fondateur vs abo (J+5)',A5:'Dernier mail fondateur (J+7)',F1:'Pack fondateur (anciens inscrits)',B1:'Merci, prise en main (client)',B2:'Plan de la semaine (dimanche)',B3:'Rappel renouvellement annuel',C1:'Après résiliation'};
 var MAIL_COLORS=['#0F766E','#2563EB','#D97706','#DC2626','#7C3AED','#DB2777','#65A30D','#0891B2','#64748B','#CA8A04'];
 var PLAN_INFO={month:{l:'Mensuel',p:9.99,m:9.99},year:{l:'Annuel',p:99,m:99/12},life:{l:'Fondateur à vie',p:59.99,m:0},downsell:{l:'Annuel réduit',p:49.99,m:49.99/12}};
 var WD=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
@@ -1971,7 +1971,9 @@ function sbUser(sess){
     return{id:j.id,email:j.email,name:m.full_name||m.name||'',provider:(j.app_metadata&&j.app_metadata.provider)||'email'};
   }).catch(function(){return null});
 }
+function founderOffer(){if(!lsGet('macro_offer_pending')||!Auth.user)return;if(isUnlocked()){lsDel('macro_offer_pending');return}if(!hasProfile()&&!restoreProfile())return;lsDel('macro_offer_pending');track('offer_link',{offer:'fondateur'});setTimeout(function(){showPaywall();selectPlan('life')},250)}
 function afterLogin(fromRedirect){track('login');
+  if(lsGet('macro_offer_pending')){if(restoreProfile()){showDashboard();founderOffer();return}if(sbOn()&&Auth.session){loadRemoteProfile(function(ok){if(ok){showDashboard();founderOffer()}else{lsDel('macro_offer_pending');toast('Connecté ! Crée ton plan pour commencer.')}});return}}
   if(lsGet('macro_admin_pending')){lsDel('macro_admin_pending');if(isAdmin()){showAdmin();return}}
   if(lsGet('macro_gate_pending')){lsDel('macro_gate_pending');track('signup_completed',{provider:Auth.user?Auth.user.provider:''});setLeadStatus('signed_up');saveOptin();restoreProfile();showDashboard();return}
   if(lsGet('macro_start_funnel')){lsDel('macro_start_funnel');startOnboarding();return}
@@ -1997,7 +1999,7 @@ function initAuth(){
   var u=lsGet('macro_user'),s=lsGet('macro_session');
   if(u){
     Auth.user=u;Auth.session=s;
-    syncUnlockStatus(refreshNav);
+    syncUnlockStatus(function(){refreshNav();founderOffer()});
     if(s&&sbOn()&&s.exp<Date.now()+60000&&s.refresh_token){
       sbFetch('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:JSON.stringify({refresh_token:s.refresh_token})}).then(function(r){return r.ok?r.json():null}).then(function(j){
         if(j&&j.access_token){var ns={access_token:j.access_token,refresh_token:j.refresh_token,exp:Date.now()+(j.expires_in||3600)*1000};Auth.session=ns;lsSet('macro_session',ns)}
@@ -2005,10 +2007,11 @@ function initAuth(){
     }
   }
   refreshNav();
+  if(/[?&]offre=fondateur(&|$)/.test(location.search)){lsSet('macro_offer_pending',1);history.replaceState(null,'',location.pathname);if(!Auth.user){if(sbOn())openAuth('login');else lsDel('macro_offer_pending')}}
   if(/[?&]admin(=|&|$)/.test(location.search)){if(isAdmin())setTimeout(function(){showAdmin()},0);else{lsSet('macro_admin_pending',1);if(!Auth.user)openAuth('login')}}
   if(Auth.user&&!/[?&](admin|home)(=|&|$)/.test(location.search)&&!location.hash){
-    if(restoreProfile())showDashboard();
-    else if(sbOn()&&Auth.session)loadRemoteProfile(function(ok){if(ok)showDashboard()});
+    if(restoreProfile()){showDashboard();if(!Auth.session)founderOffer()}
+    else if(sbOn()&&Auth.session)loadRemoteProfile(function(ok){if(ok){showDashboard();founderOffer()}});
   }
 }
 function refreshNav(){var hg=document.getElementById('hero-google');if(hg)hg.innerHTML=(sbOn()&&!viewUser())?'<button class="au-google hero-g" onclick="heroGoogle()">'+GSVG+'Continuer avec Google</button>':'';

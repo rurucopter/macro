@@ -37,46 +37,82 @@ const FOUNDER_CAP = 20;
 type Mail = { subject: string; html: string; text: string };
 
 const link = (key: string) => `${SITE}/?utm_source=email&utm_campaign=${key}`;
+// Opens the paywall with the founder pack selected (logs the user in first if needed)
+const offerLink = (key: string) => `${SITE}/?offre=fondateur&utm_source=email&utm_campaign=${key}`;
 const goalTxt = (g: string) => (g === "Sèche" ? "perdre du gras en gardant ton muscle" : g === "Maintien" ? "rester en forme" : "prendre du muscle");
+const pl = (n: number) => `${n} place${n > 1 ? "s" : ""}`;
 
 function build(key: string, v: V): Mail | null {
   const hi = v.prenom ? `Salut ${esc(v.prenom)},` : "Salut,";
   const P = (h: string) => `<p style="line-height:1.55;margin:0 0 12px">${h}</p>`;
+  const UL = (items: string[]) => `<ul style="line-height:1.55;padding-left:20px;margin:0 0 12px">${items.map((i) => `<li>${i}</li>`).join("")}</ul>`;
   const sign = P("Arthur");
+  const F = v.places > 0; // founder pack still open
+  const left = P(`Il reste <b>${pl(v.places)} sur ${FOUNDER_CAP}</b>. Quand elles sont parties, l'offre ferme : ce sera 9,99 €/mois ou 99 €/an.`);
   let subject = "", body = "", cta = "", url = link(key), txt = "";
   switch (key) {
     case "A1":
       subject = "Ton plan de la semaine est prêt 💪";
-      body = P(hi) + P("Ton plan repas + ta liste de courses avec les prix sont prêts.") + P(`Objectif : ${goalTxt(v.goal)} sans dépasser ~${esc(v.budget)} € de courses par semaine.`) + P("Une question ? Réponds à ce mail, c'est moi qui lis.") + sign;
+      body = P(hi) + P("Ton plan repas + ta liste de courses avec les prix sont prêts.") + P(`Objectif : ${goalTxt(v.goal)} sans dépasser ~${esc(v.budget)} € de courses par semaine.`) + P("Une question ? Réponds à ce mail, c'est moi qui lis.") + sign +
+        (F ? `<p style="line-height:1.55;margin:0 0 12px;font-size:14px;color:#3d4a44">P.S. Les ${FOUNDER_CAP} premiers clients ont l'accès à vie pour <b>59,99 € une seule fois</b>, sans abonnement. Il en reste ${v.places}. <a href="${offerLink(key)}" style="color:#0f8a5f">Voir le pack fondateur</a></p>` : "");
       cta = "Voir mon plan";
       break;
     case "A2":
-      subject = "Tu fais tes courses quand ?";
-      body = P(`${v.prenom ? esc(v.prenom) + ", t" : "T"}a liste est déjà faite, avec les quantités et les prix. Tu n'as plus qu'à la sortir au magasin.`);
-      cta = "Ouvrir ma liste";
+      if (!F) {
+        subject = "Tu fais tes courses quand ?";
+        body = P(`${v.prenom ? esc(v.prenom) + ", t" : "T"}a liste est déjà faite, avec les quantités et les prix. Tu n'as plus qu'à la sortir au magasin.`);
+        cta = "Ouvrir ma liste";
+        break;
+      }
+      subject = `Accès à vie : ${pl(v.places)}, pas une de plus`;
+      body = P(hi) + P(`Ton plan est prêt. Pour le débloquer, j'ai une offre réservée aux ${FOUNDER_CAP} premiers clients de mangereco : le <b>pack fondateur</b>.`) +
+        UL(["<b>59,99 € une seule fois</b>, pas d'abonnement", "Ton plan repas + ta liste de courses avec les prix, recalculés chaque semaine, <b>à vie</b>", "Toutes les futures nouveautés incluses", "Prix bloqué pour toujours"]) +
+        left + P("Une question ? Réponds à ce mail.") + sign;
+      cta = "Devenir membre fondateur";
+      url = offerLink(key);
       break;
     case "A3":
       subject = "Ce que 25 € achètent vraiment";
       body = P("Riz, œufs, poulet, flocons d'avoine, lait… Voilà à quoi ressemble une semaine à ~130 g de protéines par jour pour ~25 € de courses (profil 70-75 kg, prise de masse).") +
         (IMG_A3 ? `<p style="margin:0 0 12px"><img src="${IMG_A3}" alt="Exemple de liste de courses" style="max-width:100%;border-radius:12px"></p>` : "") +
-        P("Le plan s'adapte à ton poids, à ton objectif et à ton budget.");
-      cta = "Voir l'offre";
+        P("Le plan s'adapte à ton poids, à ton objectif et à ton budget.") +
+        (F ? P(`Avec le <b>pack fondateur</b>, tu paies 59,99 € une fois et tu as ce plan chaque semaine, à vie. Il reste ${pl(v.places)} sur ${FOUNDER_CAP}.`) : P("C'est 9,99 €/mois, ou 99 €/an (2 mois offerts)."));
+      cta = F ? "Voir le pack fondateur" : "Voir l'offre";
+      if (F) url = offerLink(key);
       break;
     case "A4":
-      subject = "9,99 €, c'est moins qu'un menu fast-food";
-      body = P("Sans plan, tu achètes au hasard, tu jettes et tu manques de protéines.") + P("Mangereco, c'est 9,99 €/mois, ou 99 €/an (2 mois offerts).") +
-        (v.places > 0 ? P(`Ou le <b>pack fondateur</b> : 59,99 € une seule fois, accès à vie. Plus que ${v.places} place${v.places > 1 ? "s" : ""} sur ${FOUNDER_CAP}.`) : "");
-      cta = "Voir l'offre";
+      if (!F) {
+        subject = "9,99 €, c'est moins qu'un menu fast-food";
+        body = P("Sans plan, tu achètes au hasard, tu jettes et tu manques de protéines.") + P("Mangereco, c'est 9,99 €/mois, ou 99 €/an (2 mois offerts).");
+        cta = "Voir l'offre";
+        break;
+      }
+      subject = "Le calcul est vite fait";
+      body = P(hi) + UL(["Abonnement : 9,99 €/mois, soit <b>120 € la première année</b>", "Pack fondateur : <b>59,99 € une seule fois</b>"]) +
+        P("Au bout de 6 mois, il est rentabilisé. Ensuite, ton plan est gratuit, à vie.") +
+        P("Et comme ce n'est pas un abonnement, tu ne risques pas d'oublier de résilier.") + left + sign;
+      cta = "Devenir membre fondateur";
+      url = offerLink(key);
       break;
     case "F1":
       if (v.places <= 0) return null;
       subject = `Plus que ${v.places} place${v.places > 1 ? "s" : ""} en accès à vie`;
       body = P(hi) + P(`J'ouvre le <b>pack fondateur</b> de Mangereco aux ${FOUNDER_CAP} premiers clients :`) +
-        `<ul style="line-height:1.55;padding-left:20px;margin:0 0 12px"><li><b>59,99 € une seule fois</b>, pas d'abonnement</li><li>Accès à vie à ton plan repas + ta liste de courses avec les prix</li><li>Toutes les futures nouveautés incluses</li><li>Prix bloqué pour toujours</li></ul>` +
-        P(`Il reste ${v.places} place${v.places > 1 ? "s" : ""}. Après, ce sera 9,99 €/mois ou 99 €/an.`) + P("Une question ? Réponds à ce mail.") + sign;
+        UL(["<b>59,99 € une seule fois</b>, pas d'abonnement", "Accès à vie à ton plan repas + ta liste de courses avec les prix", "Toutes les futures nouveautés incluses", "Prix bloqué pour toujours"]) +
+        left + P("Une question ? Réponds à ce mail.") + sign;
       cta = "Devenir membre fondateur";
+      url = offerLink(key);
       break;
     case "A5":
+      if (F) {
+        subject = "Dernier mail sur le pack fondateur";
+        body = P(hi) + P("Je ne vais pas te relancer indéfiniment : c'est mon dernier mail à ce sujet.") +
+          P(`Le pack fondateur, c'est 59,99 € une seule fois pour ton plan repas et ta liste de courses, à vie. Il reste ${pl(v.places)} sur ${FOUNDER_CAP}, et je ne le rouvrirai pas.`) +
+          P("Si quelque chose te bloque (le prix, le plan, un aliment), réponds à ce mail et dis-moi quoi.") + sign;
+        cta = "Devenir membre fondateur";
+        url = offerLink(key);
+        break;
+      }
       if (!DOWNSELL_URL) return null;
       subject = "Dernier mail de ma part";
       body = P("Je ne vais pas te relancer indéfiniment.") + P("Si le prix te bloque : 49,99 € pour l'année, soit moins d'1 € par semaine.");
@@ -204,7 +240,7 @@ Deno.serve(async (req) => {
     const consent = p.email_optin === true || !REQUIRE_OPTIN;
     await once(p, "A1", v);
     if (!consent) continue;
-    if (age >= 1 * DAY && age < 3 * DAY && !p.plan_opened_at) await once(p, "A2", v);
+    if (age >= 1 * DAY && age < 3 * DAY && (v.places > 0 || !p.plan_opened_at)) await once(p, "A2", v);
     if (age >= 3 * DAY && age < 5 * DAY) await once(p, "A3", v);
     if (age >= 5 * DAY && age < 7 * DAY) await once(p, "A4", v);
     if (age >= 7 * DAY && age < 9 * DAY) await once(p, "A5", v);
