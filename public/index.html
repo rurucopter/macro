@@ -1172,6 +1172,20 @@ a.au-toggle{display:block;text-align:left}
 .ad-h3{font-size:.8125rem;font-weight:800;color:var(--ink);margin:1.125rem 0 .5rem;text-transform:uppercase;letter-spacing:.04em}
 .ad-kpis-in{margin-bottom:.5rem}
 .ad-sub{color:var(--muted);font-size:.75rem;margin-left:.25rem}
+.ad-send{display:flex;flex-wrap:wrap;gap:.375rem;margin:0 0 .25rem}
+.ad-send button,.ad-f button{padding:.4375rem .875rem;border-radius:99px;border:1.5px solid var(--border);background:var(--surface);color:var(--ink2);font-family:var(--font);font-weight:700;font-size:.75rem;cursor:pointer}
+.ad-send button:hover,.ad-send button:focus-visible,.ad-f button:hover,.ad-f button:focus-visible{border-color:var(--accent);color:var(--ink)}
+.ad-send button:disabled,.ad-f button:disabled{opacity:.5;cursor:wait}
+.ad-f{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.625rem}
+.ad-f label{min-width:0;display:flex;flex-direction:column;gap:.25rem;font-size:.75rem;font-weight:700;color:var(--ink2)}
+.ad-f .full,.ad-f-row{grid-column:1/-1}
+.ad-f input,.ad-f textarea,.ad-f select{font-family:var(--font);font-weight:400;font-size:1rem;padding:.5rem .625rem;border-radius:10px;border:1px solid var(--border);background:var(--bg);color:var(--ink);min-width:0;width:100%;box-sizing:border-box}
+.ad-f textarea{min-height:7rem;resize:vertical}
+.ad-f-row{display:flex;flex-wrap:wrap;gap:.5rem}
+.ad-f button.go{background:var(--accent-strong);border-color:var(--accent);color:var(--on-accent)}
+.ad-out{font-size:.8125rem;color:var(--ink2);margin:.5rem 0 0;white-space:pre-wrap}
+.ad-bad{color:#dc2626;font-weight:700}
+@media(max-width:560px){.ad-f{grid-template-columns:minmax(0,1fr)}}
 .ad-zero{color:#DC2626;font-weight:700}
 .ad-scroll{max-height:380px;overflow:auto;border:1px solid var(--border);border-radius:var(--r-sm)}
 .ad-scroll .ad-tb th{position:sticky;top:0;background:var(--surface)}
@@ -1475,7 +1489,7 @@ function todayIndex(){var d=new Date().getDay();return d===0?6:d-1}
 function editProfile(){closeMenu();track('edit_profile');step=0;showPage('onboarding');renderStep()}
 var PAGE_LABELS={landing:'Landing page',onboarding:'Funnel (questions)',result:'Écran macros',dashboard:'Tableau de bord',legal:'Pages légales'};
 var STEP_LABELS={gym:'Salle de sport',store:'Magasin',meals:'Repas par semaine',budget:'Budget',diet:'Régime',goal:'Objectif',body:'Taille et poids',profile:'Prénom, sexe, âge',avoid:'Allergies et aliments évités'};
-var EVENT_LABELS={lp_view:'Vue landing',funnel_start:'Début du funnel',step_view:'Étape du funnel vue',onboarding_done:'Funnel terminé',signup_gate_view:'Écran inscription vu',google_click:'Clic « Continuer avec Google »',signup:'Nouveau compte',signup_completed:'Inscription terminée',login:'Connexion',dashboard_view:'Tableau de bord vu',result_view:'Écran macros vu',paywall_view:'Paywall vu',plan_select:'Plan choisi',checkout_click:'Clic paiement',meal_open:'Recette ouverte',optin_blocked:'Inscription bloquée (case e-mail non cochée)',paywall_gate:'Recette bloquée (paywall)',magic_link_sent:'Lien e-mail envoyé',edit_profile:'Profil modifié',page_view:'Page vue'};
+var EVENT_LABELS={mail_link:'Lien « voir ma liste » d’un mail',offer_link:'Lien d’offre d’un mail',lp_view:'Vue landing',funnel_start:'Début du funnel',step_view:'Étape du funnel vue',onboarding_done:'Funnel terminé',signup_gate_view:'Écran inscription vu',google_click:'Clic « Continuer avec Google »',signup:'Nouveau compte',signup_completed:'Inscription terminée',login:'Connexion',dashboard_view:'Tableau de bord vu',result_view:'Écran macros vu',paywall_view:'Paywall vu',plan_select:'Plan choisi',checkout_click:'Clic paiement',meal_open:'Recette ouverte',optin_blocked:'Inscription bloquée (case e-mail non cochée)',paywall_gate:'Recette bloquée (paywall)',magic_link_sent:'Lien e-mail envoyé',edit_profile:'Profil modifié',page_view:'Page vue'};
 var STATUS_LABELS={signed_up:'Inscrit',paywall_view:'Paywall vu',checkout_started:'Paiement lancé'};
 function fmtN(n){return Number(n||0).toLocaleString('fr-FR')}
 function pctOf(a,b){return b>0?Math.round(a/b*100)+' %':'–'}
@@ -1503,7 +1517,33 @@ if(!tok){c.innerHTML='<div class="ad-wrap"><p class="ad-err">Session expirée. D
 sbFetch('/rest/v1/rpc/admin_stats',{method:'POST',body:JSON.stringify({p_days:days})},tok).then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j}})}).then(function(o){
 if(!o.ok){var msg=(o.j&&(o.j.message||o.j.hint))||'Erreur';c.innerHTML='<div class="ad-wrap"><p class="ad-err">'+escH(msg)+(/admin_stats|schema cache/.test(msg)?'<br>Exécute le fichier supabase_admin.sql dans Supabase (SQL Editor) puis recharge.':'')+'</p></div>';return}
 c.innerHTML=renderAdmin(o.j,days);window.scrollTo(0,0)}).catch(function(){c.innerHTML='<div class="ad-wrap"><p class="ad-err">Impossible de joindre Supabase.</p></div>'})})}
-var MAIL_LABELS={A1:'Bienvenue (J0)',M10:'Pack fondateur (+10 min)',A2:'Pitch pack fondateur (J+1)',A3:'Ce que 25 € achètent + fondateur (J+3)',A4:'Le calcul fondateur vs abo (J+5)',A5:'Dernier mail fondateur (J+7)',F1:'Pack fondateur (anciens inscrits)',B1:'Merci, prise en main (client)',B2:'Plan de la semaine (dimanche)',B3:'Rappel renouvellement annuel',C1:'Après résiliation'};
+var MAIL_LABELS={A1:'Pack fondateur (+10 min après paywall)',A2:'Liste de courses floutée (J+1)',A3:'Dernier rappel fondateur (J+3)',A4:'Teaser recettes (samedi, 4 max)',F1:'Pack fondateur (anciens inscrits)',B1:'Plan prêt, fais tes courses',B2:'Liste pas ouverte (48 h)',B3:'Plan de la semaine (samedi 18 h)',B4:'Rappel renouvellement',B5:'Nouveauté (manuel)',C1:'Après résiliation',M10:'Pack fondateur +10 min (ancien)',A5:'Dernier mail fondateur (ancien)'};
+var MAIL_TEST_KEYS=['A1','A2','A3','A4','F1','B1','B2','B3','B4','C1'];
+function mailName(k){var p=String(k||'').split('-'),t=p[0]==='T',c=t?p[1]:p[0];return (t?'<b>Test</b> · ':'')+escH(c)+' · '+escH(MAIL_LABELS[c]||k)+(c==='B5'&&!t&&p.length>1?' <small class="ad-sub">'+escH(p.slice(1).join('-'))+'</small>':'')}
+function mailStatus(m){if(m.status==='failed')return '<span class="ad-bad">Échec ('+(m.attempts||1)+'/3)</span>'+(m.last_error?' <small class="ad-sub">'+escH(String(m.last_error).slice(0,90))+'</small>':'');return m.status==='pending'?'En cours':'Envoyé'}
+function adSendHtml(){
+return '<section class="ad-sec" id="ad-s-send"><h2>Envoyer un e-mail</h2><p class="ad-note">Les tests partent seulement sur '+escH(ADMIN_EMAIL)+', avec [TEST] dans l’objet et tes vraies réponses. Ils ne comptent pas dans les stats, mais leurs clics sont enregistrés : clique un bouton du mail pour vérifier le suivi.</p>'+
+'<div class="ad-send">'+MAIL_TEST_KEYS.map(function(k){return '<button type="button" title="'+escH(MAIL_LABELS[k])+'" onclick="adTestMail(\''+k+'\',this)">'+k+'</button>'}).join('')+'<button type="button" onclick="adTestMail(\'\',this)">Les 10</button></div><p class="ad-out" id="ad-test-out" aria-live="polite"></p>'+
+'<h3 class="ad-h3">B5 · Nouveauté</h3><p class="ad-note">Un mail ponctuel (environ 1 par mois). Envoie-toi d’abord un test. Un même identifiant ne part jamais deux fois à la même personne.</p>'+
+'<form class="ad-f" onsubmit="return false"><label>Identifiant<input id="b5-slug" maxlength="40" autocomplete="off" placeholder="recettes-octobre"></label><label>Destinataires<select id="b5-aud"><option value="abonnes">Abonnés actifs</option><option value="inscrits">Tous les inscrits qui acceptent les e-mails</option></select></label>'+
+'<label class="full">Objet<input id="b5-subject" maxlength="120" placeholder="Nouveau : 10 recettes à moins de 2 €"></label><label class="full">Texte (ligne vide = nouveau paragraphe)<textarea id="b5-text" maxlength="4000"></textarea></label>'+
+'<label>Texte du bouton<input id="b5-cta" maxlength="40" placeholder="Voir mon plan"></label><label>Le bouton ouvre<select id="b5-to"><option value="/">Le plan</option><option value="/?voir=liste">La liste de courses</option><option value="/?offre=fondateur">Le paiement, pack fondateur</option><option value="/?offre=plan">Le paiement, formules</option></select></label>'+
+'<div class="ad-f-row"><button type="button" onclick="adB5(true,this)">M’envoyer un test</button><button type="button" class="go" onclick="adB5(false,this)">Envoyer pour de vrai</button></div></form><p class="ad-out" id="b5-out" aria-live="polite"></p></section>'}
+function mailFn(q,body,cb){freshToken(function(tok){if(!tok){cb('session expirée, reconnecte-toi.');return}
+fetch(MACRO_CFG.supabaseUrl+'/functions/v1/mail-sequence?'+q,{method:'POST',headers:{Authorization:'Bearer '+tok,apikey:MACRO_CFG.supabaseKey,'Content-Type':'application/json'},body:JSON.stringify(body||{})}).then(function(r){return r.text().then(function(t){var j=null;try{j=JSON.parse(t)}catch(e){}if(r.ok&&j)cb(null,j);else cb(t||('erreur '+r.status))})}).catch(function(e){cb('réseau ('+e.message+')')})})}
+function adTestMail(k,btn){var o=document.getElementById('ad-test-out');btn.disabled=true;o.textContent='Envoi en cours…';
+mailFn('test=1'+(k?'&only='+k:''),null,function(err,j){btn.disabled=false;if(err){o.textContent='Erreur : '+err;return}
+o.textContent=(j.sent.length?'Envoyé : '+j.sent.join(', ')+'. Regarde ta boîte mail (et les spams).':'Rien envoyé.')+(j.errors.length?'\nErreurs : '+j.errors.join(' | '):'')})}
+function adB5(test,btn){var v=function(id){return String(document.getElementById(id).value||'').trim()},o=document.getElementById('b5-out');
+var b={slug:v('b5-slug').toLowerCase(),subject:v('b5-subject'),text:v('b5-text'),cta:v('b5-cta'),to:v('b5-to'),audience:v('b5-aud'),test:test};
+if(!/^[a-z0-9-]{3,40}$/.test(b.slug)){o.textContent='Identifiant : 3 à 40 caractères, minuscules, chiffres et tirets (ex. recettes-octobre).';return}
+if(!b.subject||!b.text){o.textContent='L’objet et le texte sont obligatoires.';return}
+if(!test&&!confirm('Envoyer « '+b.subject+' » à '+(b.audience==='abonnes'?'tous les abonnés actifs':'tous les inscrits qui acceptent les e-mails')+' ?'))return;
+btn.disabled=true;o.textContent='Envoi en cours…';var total=0;
+(function run(){mailFn('broadcast=1',b,function(err,j){if(err){btn.disabled=false;o.textContent='Erreur : '+err;return}
+if(test){btn.disabled=false;o.textContent=j.sent.length?'Test envoyé sur '+ADMIN_EMAIL+'.':'Erreur : '+j.errors.join(' | ');return}
+total+=j.sent.length;o.textContent=total+' envoyé'+(total>1?'s':'')+(j.remaining?', il en reste '+j.remaining+'…':'. Terminé.')+(j.errors.length?'\nErreurs : '+j.errors.slice(0,5).join(' | '):'');
+if(j.remaining&&j.sent.length)run();else btn.disabled=false})})()}
 var MAIL_COLORS=['#0F766E','#2563EB','#D97706','#DC2626','#7C3AED','#DB2777','#65A30D','#0891B2','#64748B','#CA8A04'];
 var PLAN_INFO={month:{l:'Mensuel',p:9.99,m:9.99},year:{l:'Annuel',p:99,m:99/12},life:{l:'Fondateur à vie',p:59.99,m:0},downsell:{l:'Annuel réduit',p:49.99,m:49.99/12}};
 var WD=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
@@ -1573,7 +1613,7 @@ h+='<section class="ad-today"><div class="ad-today-head"><h2>Aujourd\'hui</h2><s
 kpi('Visiteurs',fmtN(tod.visitors),'')+kpi('Débuts de funnel',fmtN(tod.starts),'')+kpi('Comptes créés',fmtN(t.new_users_today),'')+kpi('E-mails envoyés',fmtN(t.mails_today),'')+kpi('Clics paiement',fmtN(tod.checkouts),'')+kpi('Paiements',fmtN(paidToday),'')+
 '</div></section>';
 h+='<div class="ad-head"><div><h1>Statistiques</h1><p>Depuis le '+new Date(d.since).toLocaleDateString('fr-FR')+' · '+escH(Auth.user.email)+'</p></div><div class="ad-per">'+[7,30,90,365].map(function(n){return '<button class="'+(n===days?'on':'')+'" onclick="showAdmin('+n+')">'+(n===365?'1 an':n+' jours')+'</button>'}).join('')+'</div></div>';
-h+='<nav class="ad-toc" aria-label="Sections">'+[['ad-s-prio','Priorités'],['ad-s-money','Argent'],['ad-s-mail','E-mails'],['ad-s-fun','Parcours'],['ad-s-day','Jour par jour'],['ad-s-acq','Acquisition'],['ad-s-pw','Paywall'],['ad-s-prof','Profils'],['ad-s-users','Inscrits']].map(function(x){return '<a href="#'+x[0]+'">'+x[1]+'</a>'}).join('')+'</nav>';
+h+='<nav class="ad-toc" aria-label="Sections">'+[['ad-s-prio','Priorités'],['ad-s-money','Argent'],['ad-s-mail','E-mails'],['ad-s-send','Envoyer'],['ad-s-fun','Parcours'],['ad-s-day','Jour par jour'],['ad-s-acq','Acquisition'],['ad-s-pw','Paywall'],['ad-s-prof','Profils'],['ad-s-users','Inscrits']].map(function(x){return '<a href="#'+x[0]+'">'+x[1]+'</a>'}).join('')+'</nav>';
 h+='<div class="ad-kpis">'+
 kpi('Visiteurs',fmtN(t.visitors),fmtN(t.sessions)+' sessions · '+pctOf(t.returning,t.visitors)+' reviennent')+
 kpi('Nouveaux comptes',fmtN(t.new_users),fmtN(t.users)+' au total')+
@@ -1593,11 +1633,11 @@ h+='<section class="ad-sec" id="ad-s-money"><h2>Argent</h2>'+adTable(['Formule',
 '<h3 class="ad-h3">Paiements par jour</h3>'+adTable(['Jour','Formule','Paiements'],(d.paid_daily||[]).slice().reverse().map(function(r){return [dFr(r.day,1),escH((PLAN_INFO[r.kind]||{l:r.kind}).l),fmtN(r.n)]}))+
 '<p class="ad-note">Estimation : un paiement par client (les renouvellements ne sont pas comptés), avant frais Whop et impôts. Les chiffres exacts sont dans le tableau de bord Whop.</p></section>';
 var mk=d.mails_keys||[];
-h+='<section class="ad-sec" id="ad-s-mail"><h2>E-mails</h2><div class="ad-kpis ad-kpis-in">'+kpi('Sur la période',fmtN(t.mails_period),fmtN(t.mail_recipients)+' destinataires')+kpi('Aujourd\'hui',fmtN(t.mails_today),'')+kpi('Depuis le début',fmtN(t.mails_all),'')+kpi('Acceptent les e-mails',fmtN(t.optin),pctOf(t.optin,t.users)+' des comptes')+kpi('Désinscrits',fmtN(t.unsub),pctOf(t.unsub,t.users)+' des comptes')+'</div>'+
+h+='<section class="ad-sec" id="ad-s-mail"><h2>E-mails</h2><div class="ad-kpis ad-kpis-in">'+kpi('Sur la période',fmtN(t.mails_period),fmtN(t.mail_recipients)+' destinataires')+kpi('Clics',fmtN(t.mails_clicked),pctOf(t.mails_clicked,t.mails_period)+' des envois de la période')+kpi('Aujourd\'hui',fmtN(t.mails_today),'')+kpi('Depuis le début',fmtN(t.mails_all),'')+kpi('En échec',fmtN(t.mails_failed),'après 3 essais, ou en attente de réessai')+kpi('Acceptent les e-mails',fmtN(t.optin),pctOf(t.optin,t.users)+' des comptes')+kpi('Désinscrits',fmtN(t.unsub),pctOf(t.unsub,t.users)+' des comptes')+kpi('Liste de courses ouverte',fmtN(t.list_opened),'comptes abonnés, au moins une fois')+'</div>'+
 '<h3 class="ad-h3">Envoyés par jour</h3>'+mailsChart(d)+
-'<h3 class="ad-h3">Par e-mail</h3>'+adTable(['Clé','E-mail','Envoyés (période)','Envoyés (total)','Dernier envoi','Ont payé dans les 7 j'],mk.map(function(m){return [m.k,escH(MAIL_LABELS[m.k]||''),fmtN(m.period),fmtN(m.total),dtFr(m.last),nP(m.paid_7d,m.total)]}))+
-'<h3 class="ad-h3">Derniers envois</h3><div class="ad-scroll">'+adTable(['Date','Destinataire','E-mail'],(d.mails_recent||[]).map(function(m){var k=String(m.k||'').split('-')[0];return [dtFr(m.sent_at),escH(m.email||'?'),escH(k)+' · '+escH(MAIL_LABELS[k]||m.k)]}))+'</div>'+
-'<p class="ad-note">Compte les e-mails remis à Resend. Les ouvertures et clics se voient dans le tableau de bord Resend.</p></section>';
+'<h3 class="ad-h3">Par e-mail</h3><div class="ad-scroll">'+adTable(['Clé','E-mail','Envoyés (période)','Envoyés (total)','Clics','Taux de clic','Paiements après clic','Ont payé dans les 7 j','Échecs','Dernier envoi'],mk.map(function(m){return [m.k,escH(MAIL_LABELS[m.k]||''),fmtN(m.period),fmtN(m.total),fmtN(m.clicked||0),pctOf(m.clicked||0,m.total),fmtN(m.paid_click||0),nP(m.paid_7d,m.total),m.failed?'<span class="ad-bad">'+fmtN(m.failed)+'</span>':'0',dtFr(m.last)]}))+'</div>'+
+'<h3 class="ad-h3">Derniers envois</h3><div class="ad-scroll">'+adTable(['Date','Destinataire','E-mail','Statut','Clic'],(d.mails_recent||[]).map(function(m){return [dtFr(m.sent_at),escH(m.email||'?'),mailName(m.k),mailStatus(m),m.clicked_at?dtFr(m.clicked_at):'–']}))+'</div>'+
+'<p class="ad-note">Clic = la personne a appuyé sur le bouton du mail. « Paiements après clic » : paiements dont le dernier mail cliqué (dans les 7 jours avant) est celui-ci. Pas de suivi des ouvertures, c’est voulu : il faudrait un consentement (CNIL) et Apple Mail fausse ces chiffres. Un antivirus de messagerie peut parfois compter un clic.</p></section>'+adSendHtml();
 var top=fun[0][1]||1;
 h+='<section class="ad-sec" id="ad-s-fun"><h2>Parcours complet</h2><p class="ad-note">Visiteurs uniques (un navigateur = un visiteur) à chaque étape.</p>'+adTable(['Étape','Visiteurs','% de la landing','% de l’étape précédente'],fun.map(function(x,i){return [x[0],fmtN(x[1]),pctOf(x[1],top),i?pctOf(x[1],fun[i-1][1]):'–']}))+'</section>';
 var first=(d.steps&&d.steps[0])?d.steps[0].visitors:0;
@@ -1620,7 +1660,7 @@ h+='<section class="ad-sec"><h2>Tous les événements</h2>'+adTable(['Événemen
 h+='<p class="ad-note">Un visiteur = un navigateur. La même personne sur deux appareils compte deux fois. Tes propres visites (compte admin) ne sont pas comptées. Jours calculés à l’heure de Paris.</p></div>';
 return h}
 function getWeekPlan(cal,p,c,f,m,b){
-var sig='v5|'+(D.diet||'')+'|'+(D.avoid||[]).join(',')+'|'+[cal,p,c,f,m,b].join('|'),wk=Math.floor((Date.now()/86400000+4)/7);
+var sig='v5|'+(D.diet||'')+'|'+(D.avoid||[]).join(',')+'|'+[cal,p,c,f,m,b].join('|'),wk=weekKey();
 var s=lsGet('macro_plan');
 if(s&&s.sig===sig&&s.wk===wk&&s.gen&&s.gen.plan)return s.gen;
 var gen=generatePlan(cal,p,c,f,m,b);
@@ -1681,7 +1721,7 @@ h+='<div class="dash-actions"><button class="dash-action" onclick="showResult()"
 h+='<div class="dash-account"><div class="dash-account-row"><span>Compte</span><strong>'+escH(Auth.user?Auth.user.email:'')+'</strong></div><div class="dash-account-row"><span>Statut</span><strong>'+(u?'Plan complet':'Aperçu gratuit')+'</strong></div>'+(u?'<a class="au-toggle" href="mailto:'+MACRO_CFG.contact+'?subject=Mon%20abonnement%20mangereco">Gérer ou résilier mon abonnement</a>':'')+(isAdmin()?'<button class="au-toggle" onclick="showAdmin()">📈 Statistiques du site</button>':'')+'<button class="au-toggle" onclick="signOut()">Se déconnecter</button><button class="au-toggle" onclick="deleteMyData()">Supprimer mes données</button></div>';
 h+='</div>';
 document.getElementById('dash-content').innerHTML=h;
-window._dashDay=ti;showPage('dashboard');track('dashboard_view');markOpened();
+window._dashDay=ti;showPage('dashboard');track('dashboard_view');markOpened();notePaywall();watchList();dashGoto();
 }
 function showResult(){
 var mc=computeMacros(),nm=firstName();
@@ -1842,7 +1882,7 @@ return '<div class="paywall-card" id="unlock-card"><div style="font-size:2rem;ma
 }
 function showPaywall(){
 if(document.getElementById('pw-modal'))return;
-window._pwAuto=true;track('paywall_view');setLeadStatus('paywall_view');
+window._pwAuto=true;track('paywall_view');setLeadStatus('paywall_view');notePaywall(true);
 var m=document.createElement('div');m.id='pw-modal';m.className='pw-modal';
 m.innerHTML='<div class="pw-sheet"><button class="pw-x" onclick="closePaywall()" aria-label="Fermer">&times;</button>'+unlockCardHtml()+'</div>';
 document.body.appendChild(m);
@@ -1971,9 +2011,10 @@ function sbUser(sess){
     return{id:j.id,email:j.email,name:m.full_name||m.name||'',provider:(j.app_metadata&&j.app_metadata.provider)||'email'};
   }).catch(function(){return null});
 }
-function founderOffer(){if(!lsGet('macro_offer_pending')||!Auth.user)return;if(isUnlocked()){lsDel('macro_offer_pending');return}if(!hasProfile()&&!restoreProfile())return;lsDel('macro_offer_pending');track('offer_link',{offer:'fondateur'});setTimeout(function(){showPaywall();selectPlan('life')},250)}
+function founderOffer(){var off=lsGet('macro_offer_pending');if(!off||!Auth.user)return;if(isUnlocked()){lsDel('macro_offer_pending');return}if(!hasProfile()&&!restoreProfile())return;lsDel('macro_offer_pending');off=off==='plan'?'plan':'fondateur';track('offer_link',{offer:off});setTimeout(function(){showPaywall();if(off==='fondateur')selectPlan('life')},250)}
 function afterLogin(fromRedirect){track('login');
   if(lsGet('macro_offer_pending')){if(restoreProfile()){showDashboard();founderOffer();return}if(sbOn()&&Auth.session){loadRemoteProfile(function(ok){if(ok){showDashboard();founderOffer()}else{lsDel('macro_offer_pending');toast('Connecté ! Crée ton plan pour commencer.')}});return}}
+  if(lsGet('macro_goto')){if(restoreProfile()){showDashboard();return}if(sbOn()&&Auth.session){loadRemoteProfile(function(ok){if(ok)showDashboard();else{lsDel('macro_goto');toast('Connecté ! Crée ton plan pour commencer.')}});return}}
   if(lsGet('macro_admin_pending')){lsDel('macro_admin_pending');if(isAdmin()){showAdmin();return}}
   if(lsGet('macro_gate_pending')){lsDel('macro_gate_pending');track('signup_completed',{provider:Auth.user?Auth.user.provider:''});setLeadStatus('signed_up');saveOptin();restoreProfile();showDashboard();return}
   if(lsGet('macro_start_funnel')){lsDel('macro_start_funnel');startOnboarding();return}
@@ -1999,7 +2040,7 @@ function initAuth(){
   var u=lsGet('macro_user'),s=lsGet('macro_session');
   if(u){
     Auth.user=u;Auth.session=s;
-    syncUnlockStatus(function(){refreshNav();founderOffer()});
+    var _wasU=isUnlocked();syncUnlockStatus(function(){refreshNav();if(isUnlocked()!==_wasU){var dp=document.getElementById('dashboard');if(dp&&dp.classList.contains('active'))showDashboard()}founderOffer()});
     if(s&&sbOn()&&s.exp<Date.now()+60000&&s.refresh_token){
       sbFetch('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:JSON.stringify({refresh_token:s.refresh_token})}).then(function(r){return r.ok?r.json():null}).then(function(j){
         if(j&&j.access_token){var ns={access_token:j.access_token,refresh_token:j.refresh_token,exp:Date.now()+(j.expires_in||3600)*1000};Auth.session=ns;lsSet('macro_session',ns)}
@@ -2007,7 +2048,8 @@ function initAuth(){
     }
   }
   refreshNav();
-  if(/[?&]offre=fondateur(&|$)/.test(location.search)){lsSet('macro_offer_pending',1);history.replaceState(null,'',location.pathname);if(!Auth.user){if(sbOn())openAuth('login');else lsDel('macro_offer_pending')}}
+  var _qs=location.search,_om=_qs.match(/[?&]offre=(fondateur|plan)(&|$)/),_vl=/[?&]voir=liste(&|$)/.test(_qs);
+  if(_om||_vl){if(_om)lsSet('macro_offer_pending',_om[1]);if(_vl)lsSet('macro_goto','liste');history.replaceState(null,'',location.pathname);if(!Auth.user){if(sbOn())openAuth('login');else{lsDel('macro_offer_pending');lsDel('macro_goto')}}}
   if(/[?&]admin(=|&|$)/.test(location.search)){if(isAdmin())setTimeout(function(){showAdmin()},0);else{lsSet('macro_admin_pending',1);if(!Auth.user)openAuth('login')}}
   if(Auth.user&&!/[?&](admin|home)(=|&|$)/.test(location.search)&&!location.hash){
     if(restoreProfile()){showDashboard();if(!Auth.session)founderOffer()}
@@ -2047,6 +2089,15 @@ function openMyPlan(){
 
 function markOpened(){var ts=lsGet('macro_onb_ts');if(ts&&Date.now()-ts<1800000)return;if(lsGet('macro_opened')||!(Auth.user&&Auth.session&&sbOn()&&hasProfile()))return;sbFetch('/rest/v1/profiles?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:Auth.user.id,email:Auth.user.email,plan_opened_at:new Date().toISOString()})},Auth.session.access_token).then(function(r){if(r.ok)lsSet('macro_opened',1)}).catch(function(){})}
 function saveOptin(){if(!lsGet('macro_optin')||!(Auth.user&&Auth.session&&sbOn()))return;setTimeout(function(){sbFetch('/rest/v1/profiles?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:Auth.user.id,email:Auth.user.email,email_optin:true})},Auth.session.access_token).then(function(r){if(r.ok)lsDel('macro_optin')}).catch(function(){})},2500)}
+function notePaywall(seen){if(isUnlocked())return;var ts=lsGet('macro_pw_ts');if(!ts&&seen){ts=Date.now();lsSet('macro_pw_ts',ts)}
+if(!ts||!(Auth.user&&Auth.session&&sbOn())||lsGet('macro_pw_sent')===Auth.user.id)return;var uid=Auth.user.id,tok=Auth.session.access_token;
+setTimeout(function(){sbFetch('/rest/v1/profiles?user_id=eq.'+encodeURIComponent(uid)+'&paywall_seen_at=is.null',{method:'PATCH',headers:{Prefer:'return=minimal'},body:JSON.stringify({paywall_seen_at:new Date(ts).toISOString()})},tok).then(function(r){if(r.ok)lsSet('macro_pw_sent',uid)}).catch(function(){})},seen?3000:0)}
+function noteList(){if(!isUnlocked()||!(Auth.user&&Auth.session&&sbOn()))return;var l=lsGet('macro_list_ts'),uid=Auth.user.id,g=window._gen;if(l&&l.u===uid&&Date.now()-l.t<21600000)return;lsSet('macro_list_ts',{u:uid,t:Date.now()});
+sbFetch('/rest/v1/profiles?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:uid,email:Auth.user.email,list_opened_at:new Date().toISOString(),week_cost:g&&g.weekCost?Math.round(g.weekCost*100)/100:null})},Auth.session.access_token).then(function(r){if(!r.ok)lsDel('macro_list_ts')}).catch(function(){lsDel('macro_list_ts')})}
+function watchList(){if(window._listObs){window._listObs.disconnect();window._listObs=null}var el=document.getElementById('dash-shop');if(!el||!isUnlocked()||!('IntersectionObserver' in window))return;
+var o=new IntersectionObserver(function(es){if(es.some(function(e){return e.isIntersecting})){o.disconnect();window._listObs=null;noteList()}},{rootMargin:'0px 0px -35% 0px'});o.observe(el);window._listObs=o}
+function dashGoto(){var go=lsGet('macro_goto');if(!go)return;lsDel('macro_goto');track('mail_link',{to:go});if(go!=='liste')return;
+setTimeout(function(){var el=document.getElementById('dash-shop');if(!el)return;var hd=el.previousElementSibling||el;window.scrollTo({top:Math.max(0,hd.getBoundingClientRect().top+window.pageYOffset-80),behavior:'smooth'})},400)}
 function setLeadStatus(status){if(!hasProfile())return;
   if(!(Auth.user&&Auth.session&&sbOn()))return;
   sbFetch('/rest/v1/profiles?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:Auth.user.id,email:Auth.user.email,data:{D:D,g:selGender||null,status:status},updated_at:new Date().toISOString()})},Auth.session.access_token).catch(function(){});
@@ -2199,7 +2250,8 @@ if(/tomate|oignon|ail|brocoli|courgette|salade|banane|citron|légume|haricot|ma�
 if(/lait|beurre|fromage|feta/.test(s))return{l:'Produits laitiers',e:'\u{1F95B}'};
 return{l:'Épicerie',e:'\u{1F6D2}'};
 }
-function weekKey(){return Math.floor((Date.now()/86400000+4)/7)}
+function parisDays(){var d=new Date();try{var p={};new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Paris',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(d).forEach(function(x){p[x.type]=x.value});var v=Date.UTC(+p.year,+p.month-1,+p.day,(+p.hour)%24,+p.minute)/86400000;if(isFinite(v))return v}catch(e){}return d.getTime()/86400000+1/12}
+function weekKey(){return Math.floor((parisDays()+4.25)/7)}
 function qtyText(e){
 if(e.eggs>0)return e.eggs+(e.eggs>1?' œufs':' œuf');
 if(e.ml>0)return e.ml>=1000?(e.ml/1000).toFixed(1).replace('.',',')+' L':(Math.round(e.ml/10)*10)+' ml';
@@ -2234,13 +2286,13 @@ function shopToggle(el){
 el.classList.toggle('checked');
 var c=lsGet('macro_checked');if(!c||c.wk!==weekKey())c={wk:weekKey(),items:{}};
 var n=el.getAttribute('data-n');if(el.classList.contains('checked'))c.items[n]=1;else delete c.items[n];
-lsSet('macro_checked',c);var pr=document.getElementById('shop-prog');if(pr){var all=document.querySelectorAll('.mp-shop-item').length,dn=document.querySelectorAll('.mp-shop-item.checked').length;pr.textContent=dn+' / '+all+' articles cochés'}}
+lsSet('macro_checked',c);var pr=document.getElementById('shop-prog');if(pr){var all=document.querySelectorAll('.mp-shop-item').length,dn=document.querySelectorAll('.mp-shop-item.checked').length;pr.textContent=dn+' / '+all+' articles cochés'}noteList()}
 function copyShop(){
 var gen=window._gen;if(!gen||!isUnlocked())return;
 var t='Ma liste de courses (mangereco.)\n';
 shopData(gen).forEach(function(c){t+='\n'+c.label.toUpperCase()+'\n';c.items.forEach(function(i){t+='- '+i.n+' : '+i.qty+'\n'})});
 t+='\nTotal estimé : '+gen.weekCost.toFixed(2).replace('.',',')+' €';
-track('copy_list');
+track('copy_list');noteList();
 if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){toast('Liste copiée !')}).catch(function(){toast('Copie impossible.')});
 else toast('Copie impossible.')}
 function refreshShop(){

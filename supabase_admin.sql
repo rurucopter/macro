@@ -2,7 +2,8 @@
 -- A executer dans Supabase > SQL Editor (projet mangereco), a chaque mise a jour de ce fichier.
 -- Le controle d'acces est ici, cote base : la fonction leve une erreur pour tout autre
 -- e-mail, meme si quelqu'un appelle l'API directement.
--- Prerequis : supabase.sql, supabase_mail_v2.sql et supabase_emails.sql deja executes.
+-- Prerequis : supabase.sql, supabase_mail_v2.sql, supabase_mail_v3.sql et supabase_emails.sql deja executes.
+-- Mails : seuls les envois reussis comptent (status = 'sent'). Les envois de test (cles T-...) sont exclus des chiffres.
 
 alter table public.profiles add column if not exists created_at timestamptz default now();
 create index if not exists events_created_idx on public.events (created_at);
@@ -39,14 +40,18 @@ begin
       'optin', (select count(*) from profiles where email_optin),
       'unsub', (select count(*) from profiles where email_unsub),
       'plan_opened', (select count(*) from profiles where plan_opened_at is not null),
+      'paywall_seen', (select count(*) from profiles where paywall_seen_at is not null),
+      'list_opened', (select count(*) from profiles where list_opened_at is not null),
       'unlocked', (select count(*) from subscriptions where unlocked),
       'founders', (select count(*) from subscriptions where founder or plan_kind = 'life'),
       'canceled', (select count(*) from subscriptions where canceled_at is not null),
       'paid_period', (select count(*) from subscriptions where paid_at >= since),
-      'mails_period', (select count(*) from mail_log where sent_at >= since),
-      'mails_today', (select count(*) from mail_log where (sent_at at time zone tz)::date = today),
-      'mails_all', (select count(*) from mail_log),
-      'mail_recipients', (select count(distinct user_id) from mail_log where sent_at >= since)
+      'mails_period', (select count(*) from mail_log where status = 'sent' and mail_key not like 'T-%' and sent_at >= since),
+      'mails_today', (select count(*) from mail_log where status = 'sent' and mail_key not like 'T-%' and (sent_at at time zone tz)::date = today),
+      'mails_all', (select count(*) from mail_log where status = 'sent' and mail_key not like 'T-%'),
+      'mail_recipients', (select count(distinct user_id) from mail_log where status = 'sent' and mail_key not like 'T-%' and sent_at >= since),
+      'mails_clicked', (select count(*) from mail_log where status = 'sent' and mail_key not like 'T-%' and clicked_at >= since),
+      'mails_failed', (select count(*) from mail_log where status = 'failed' and mail_key not like 'T-%')
     ),
 
     -- Argent : une ligne par formule. paid_at = dernier paiement connu (ecrase au renouvellement).
@@ -64,22 +69,33 @@ begin
       from subscriptions s join profiles p using (user_id)
       where s.paid_at is not null and p.created_at is not null and s.paid_at >= p.created_at),
 
-    -- E-mails (journal mail_log ; B2 est cle par semaine : B2-AAAA-MM-JJ)
+    -- E-mails (journal mail_log ; les mails hebdo sont cles par semaine : B3-w2957, A4-w2957 ; B4 par date de renouvellement)
     'mails_daily', (select coalesce(jsonb_agg(x), '[]'::jsonb) from (
       select (sent_at at time zone tz)::date as day, split_part(mail_key, '-', 1) as k, count(*) as n
-      from mail_log where sent_at >= since group by 1, 2 order by 1, 2) x),
+      from mail_log where status = 'sent' and mail_key not like 'T-%' and sent_at >= since group by 1, 2 order by 1, 2) x),
+    -- paid_click : paiements attribues a ce mail = dernier mail clique dans les 7 jours avant le paiement
     'mails_keys', (select coalesce(jsonb_agg(x), '[]'::jsonb) from (
       select split_part(m.mail_key, '-', 1) as k,
-             count(*) as total,
-             count(*) filter (where m.sent_at >= since) as period,
-             max(m.sent_at) as last,
-             count(*) filter (where s.paid_at > m.sent_at and s.paid_at <= m.sent_at + interval '7 days') as paid_7d
-      from mail_log m left join subscriptions s on s.user_id = m.user_id
+             count(*) filter (where m.status = 'sent') as total,
+             count(*) filter (where m.status = 'sent' and m.sent_at >= since) as period,
+             max(m.sent_at) filter (where m.status = 'sent') as last,
+             count(*) filter (where m.clicked_at is not null) as clicked,
+             count(*) filter (where m.status = 'failed') as failed,
+             count(*) filter (where m.status = 'sent' and s.paid_at > m.sent_at and s.paid_at <= m.sent_at + interval '7 days') as paid_7d,
+             count(*) filter (where att.mail_key = m.mail_key) as paid_click
+      from mail_log m
+      left join subscriptions s on s.user_id = m.user_id
+      left join lateral (
+        select l.mail_key from mail_log l
+        where l.user_id = m.user_id and s.paid_at is not null and l.clicked_at is not null and l.mail_key not like 'T-%'
+          and l.clicked_at <= s.paid_at and l.clicked_at > s.paid_at - interval '7 days'
+        order by l.clicked_at desc limit 1) att on true
+      where m.mail_key not like 'T-%'
       group by 1 order by 1) x),
     'mails_recent', (select coalesce(jsonb_agg(x), '[]'::jsonb) from (
-      select m.sent_at, m.mail_key as k, p.email
+      select m.sent_at, m.mail_key as k, p.email, m.status, m.clicked_at, m.attempts, m.last_error
       from mail_log m left join profiles p on p.user_id = m.user_id
-      order by m.sent_at desc limit 60) x),
+      order by coalesce(m.updated_at, m.sent_at) desc limit 60) x),
 
     -- Trafic et parcours
     'events', (select coalesce(jsonb_agg(x), '[]'::jsonb) from (
@@ -180,8 +196,8 @@ begin
              coalesce(s.unlocked, false) as paid, s.plan_kind,
              coalesce(p.email_optin, false) as optin, coalesce(p.email_unsub, false) as unsub,
              p.plan_opened_at is not null as opened,
-             (select count(*) from mail_log m where m.user_id = p.user_id) as mails,
-             (select m.mail_key from mail_log m where m.user_id = p.user_id order by m.sent_at desc limit 1) as last_mail,
+             (select count(*) from mail_log m where m.user_id = p.user_id and m.status = 'sent' and m.mail_key not like 'T-%') as mails,
+             (select m.mail_key from mail_log m where m.user_id = p.user_id and m.status = 'sent' and m.mail_key not like 'T-%' order by m.sent_at desc limit 1) as last_mail,
              p.data->'D'->>'prenom' as prenom, p.data->'D'->>'goal' as goal, p.data->'D'->>'budget' as budget,
              p.data->'D'->>'gym' as gym, p.data->'D'->>'store' as store
       from profiles p left join subscriptions s on s.user_id = p.user_id
