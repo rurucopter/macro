@@ -1,5 +1,5 @@
 // Runs every minute (Supabase Cron). Sends the e-mail sequences:
-//   A  signed-up, not paying : A1 now, A2 D+1, A3 D+3, A4 D+5, A5 D+7. While founder places remain (live count)
+//   A  signed-up, not paying : A1 now, M10 +10 min, A2 D+1, A3 D+3, A4 D+5, A5 D+7. While founder places remain (live count)
 //                              they all push the founder pack; once sold out: old offers (A2 only if plan not reopened, A5 needs DOWNSELL_URL)
 //   B  paying                : B1 right after payment, B2 every Sunday 9:00 Paris, B3 30 days before the annual renewal
 //   C  cancelled             : C1 seven days after the cancellation
@@ -57,6 +57,15 @@ function build(key: string, v: V): Mail | null {
       body = P(hi) + P("Ton plan repas + ta liste de courses avec les prix sont prêts.") + P(`Objectif : ${goalTxt(v.goal)} sans dépasser ~${esc(v.budget)} € de courses par semaine.`) + P("Une question ? Réponds à ce mail, c'est moi qui lis.") + sign +
         (F ? `<p style="line-height:1.55;margin:0 0 12px;font-size:14px;color:#3d4a44">P.S. Les ${FOUNDER_CAP} premiers clients ont l'accès à vie pour <b>59,99 € une seule fois</b>, sans abonnement. Il en reste ${v.places}. <a href="${offerLink(key)}" style="color:#0f8a5f">Voir le pack fondateur</a></p>` : "");
       cta = "Voir mon plan";
+      break;
+    case "M10":
+      subject = "Tu as vu ton plan ?";
+      body = P(hi) + P("Tu viens de créer ton plan il y a quelques minutes. Pour l'avoir en entier (tous tes repas de la semaine, ta liste de courses avec les prix, un nouveau plan chaque dimanche), il faut le débloquer.") +
+        (F ? P(`Les ${FOUNDER_CAP} premiers clients ont droit au <b>pack fondateur</b> : 59,99 € une seule fois, et c'est à vie. Pas d'abonnement, rien à résilier.`) + left
+           : P("C'est 9,99 €/mois, ou 99 €/an (2 mois offerts).")) +
+        P("Une question ? Réponds à ce mail, c'est moi qui lis.") + sign;
+      cta = F ? "Devenir membre fondateur" : "Débloquer mon plan";
+      url = F ? offerLink(key) : link(key);
       break;
     case "A2":
       if (!F) {
@@ -187,7 +196,7 @@ Deno.serve(async (req) => {
     if (test.toLowerCase() !== ADMIN) return new Response("test only to " + ADMIN, { status: 400 });
     const v: V = { prenom: "Arthur", goal: "Prise de masse", budget: "25", renouv: fmtDate(new Date(Date.now() + 30 * DAY).toISOString()), price: "99 €", places: 12 };
     const fakeId = "00000000-0000-0000-0000-000000000000";
-    for (const k of ["A1", "A2", "A3", "A4", "A5", "F1", "B1", "B2", "B3", "C1"]) {
+    for (const k of ["A1", "M10", "A2", "A3", "A4", "A5", "F1", "B1", "B2", "B3", "C1"]) {
       const m = build(k, v);
       if (!m) { out.errors.push(`${k}: not sent (DOWNSELL_URL is empty)`); continue; }
       try { await deliver(ADMIN, fakeId, m, `[TEST ${k}] `); out.sent.push(k); } catch (e) { out.errors.push(`${k}: ${String(e).slice(0, 140)}`); }
@@ -241,6 +250,7 @@ Deno.serve(async (req) => {
     const consent = p.email_optin === true || !REQUIRE_OPTIN;
     await once(p, "A1", v);
     if (!consent) continue;
+    if (age >= 10 * 60000 && age < 2 * 3600000) await once(p, "M10", v);
     if (age >= 1 * DAY && age < 3 * DAY && (v.places > 0 || !p.plan_opened_at)) await once(p, "A2", v);
     if (age >= 3 * DAY && age < 5 * DAY) await once(p, "A3", v);
     if (age >= 5 * DAY && age < 7 * DAY) await once(p, "A4", v);
