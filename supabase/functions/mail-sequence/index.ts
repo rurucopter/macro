@@ -1,5 +1,6 @@
 // Runs every minute (Supabase Cron). Sends the e-mail sequences:
-//   A  signed-up, not paying : A1 now, A2 D+1 (only if the plan was not reopened), A3 D+3, A4 D+5, A5 D+7 (downsell link required)
+//   A  signed-up, not paying : A1 now, A2 D+1, A3 D+3, A4 D+5, A5 D+7. While founder places remain (live count)
+//                              they all push the founder pack; once sold out: old offers (A2 only if plan not reopened, A5 needs DOWNSELL_URL)
 //   B  paying                : B1 right after payment, B2 every Sunday 9:00 Paris, B3 30 days before the annual renewal
 //   C  cancelled             : C1 seven days after the cancellation
 // Each (user, mail) pair is claimed in public.mail_log before sending, so a mail is never sent twice.
