@@ -32,6 +32,8 @@ const MANAGE_URL = Deno.env.get("MANAGE_URL") ?? "";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SITE = "https://www.mangereco.com";
 const IMG_LIST = `${SITE}/img/mail-liste-floue.png`;
+const IMG_LOGO = `${SITE}/img/logo-mail.png`; // 400x232, shown at 120px
+
 const ADMIN = "arthurdemortiere15@gmail.com";
 const SENDER_LINE = "mangereco. - Arthur Demortiere, entrepreneur individuel, 47 rue Vivienne, 75002 Paris";
 const MIN = 60000, HOUR = 3600000, DAY = 86400000;
@@ -208,7 +210,7 @@ function build(key: string, v: V, go: Go): Mail | null {
   }
   const url = cta ? go(to) : "";
   const btn = cta ? `<p style="margin:22px 0"><a href="${url}" style="background:#0f8a5f;color:#ffffff;text-decoration:none;padding:14px 24px;border-radius:99px;font-weight:700;display:inline-block;font-size:16px">${esc(cta)}</a></p>` : "";
-  const html = `<div style="font-family:Arial,Helvetica,sans-serif;max-width:520px;margin:0 auto;padding:20px 16px;color:#1b2420;font-size:16px">${body}${btn}__FOOT__</div>`;
+  const html = `<div style="font-family:Arial,Helvetica,sans-serif;max-width:520px;margin:0 auto;padding:20px 16px;color:#1b2420;font-size:16px"><p style="margin:0 0 20px"><img src="${IMG_LOGO}" width="120" height="70" alt="mangereco." style="display:block;width:120px;height:auto;border:0"></p>${body}${btn}__FOOT__</div>`;
   const text = body.replace(/<\/(p|li|tr)>/g, "\n").replace(/<br\s*\/?>/g, "\n").replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/\n{3,}/g, "\n\n").trim() + (cta ? `\n\n${cta} : ${url}` : "");
   return { subject, html, text, tx };
 }
