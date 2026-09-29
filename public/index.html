@@ -940,6 +940,19 @@ body:has(#dashboard.active){background:var(--bg)}
 .trk-btn{border:0;border-radius:12px;background:var(--grad-strong);color:var(--on-accent);font-family:var(--font);font-weight:700;font-size:.9375rem;padding:.6rem 1rem;cursor:pointer}
 .trk-btn.ghost{background:var(--bg2);color:var(--ink)}
 .trk-btn:focus-visible,.trk-glass:focus-visible,.trk-x:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.trk-sug{display:flex;flex-direction:column;gap:.25rem}
+.trk-sug:empty{display:none}
+.trk-sug button{display:flex;justify-content:space-between;align-items:baseline;gap:.75rem;width:100%;text-align:left;border:1px solid var(--border);background:var(--bg2);color:var(--ink);border-radius:10px;padding:.55rem .75rem;font-family:var(--font);font-size:.9rem;cursor:pointer}
+.trk-sug button span{color:var(--muted);font-size:.8rem;white-space:nowrap;font-variant-numeric:tabular-nums}
+.trk-sug button:hover,.trk-sug button:focus-visible{border-color:var(--accent)}
+.trk-sug button.new{border-style:dashed;background:transparent;color:var(--accent-text);font-weight:700}
+.trk-pick{display:flex;align-items:baseline;gap:.5rem;flex-wrap:wrap;font-size:.9rem;color:var(--ink2)}
+.trk-pick b{color:var(--ink)}
+.trk-chips{display:flex;gap:.4rem;flex-wrap:wrap}
+.trk-chip{border:1px solid var(--border);background:var(--bg2);color:var(--ink);border-radius:var(--r-pill);padding:.3rem .7rem;font-family:var(--font);font-size:.8125rem;cursor:pointer}
+.trk-chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.trk-prev{font-size:.9375rem;font-weight:700;color:var(--accent-text);font-variant-numeric:tabular-nums;min-height:1.4em}
+.trk-link{border:0;background:none;padding:0;color:var(--accent-text);font-family:var(--font);font-size:.8125rem;font-weight:700;cursor:pointer;text-decoration:underline}
 .trk-glasses{display:flex;flex-wrap:wrap;gap:.4rem}
 .trk-glass{width:24px;height:30px;border:2px solid var(--blue);border-radius:3px 3px 7px 7px;background:transparent;cursor:pointer;padding:0}
 .trk-glass.on{background:var(--blue)}
@@ -1737,6 +1750,51 @@ return h}
 function renderWeek(){var el=document.getElementById('dash-week');if(el&&window._gen)el.innerHTML=weekHtml(window._gen,isUnlocked())}
 /* ---- admin-only daily tracker (test): calories, water, steps, activities, kept on this device ---- */
 var TRK_ACTS=[['Musculation',5],['Course à pied',9.8],['Vélo',7.5],['Marche',3.5],['Natation',7],['Foot',7],['Autre',5]]; // [name, MET]
+// [name, kcal /100 g, protein g /100 g, unit label, unit grams] — usual French reference values (Ciqual order of magnitude)
+var TRK_FOODS=[
+['Poulet, blanc (cuit)',150,30,'1 blanc',130],['Poulet, blanc (cru)',110,23,'1 blanc',150],['Poulet, cuisse (cuite)',210,26,'1 cuisse',150],['Dinde, escalope (cuite)',135,29,'1 escalope',120],
+['Steak haché 5 % (cuit)',170,27,'1 steak',100],['Steak haché 15 % (cuit)',245,25,'1 steak',100],['Bœuf, steak (cuit)',180,29,'1 steak',150],['Porc, filet (cuit)',165,28],
+['Jambon blanc',115,20,'1 tranche',40],['Lardons',270,16],['Saumon (cuit)',205,25,'1 pavé',125],['Thon au naturel (égoutté)',115,26,'1 boîte',112],['Cabillaud (cuit)',105,23,'1 filet',120],
+['Sardines à l\'huile (égouttées)',210,24,'1 boîte',90],['Œuf',140,12.5,'1 œuf',50],['Blanc d\'œuf',48,11,'1 blanc',33],['Tofu',130,13],
+['Riz blanc (cuit)',130,2.7],['Riz blanc (cru)',355,7],['Riz complet (cuit)',140,3],['Pâtes (cuites)',150,5.5],['Pâtes (crues)',355,12.5],['Semoule, couscous (cuite)',120,4],['Quinoa (cuit)',120,4.4],
+['Flocons d\'avoine',375,13.5,'1 bol',50],['Muesli',370,10,'1 bol',50],['Céréales type corn flakes',380,7,'1 bol',40],['Pain, baguette',270,9,'1 tranche',30],['Pain complet',245,9,'1 tranche',35],
+['Pain de mie',265,8.5,'1 tranche',25],['Wrap, tortilla',310,8,'1 wrap',60],['Pomme de terre (cuite)',85,2],['Patate douce (cuite)',90,2],['Frites (four)',190,3],
+['Lentilles (cuites)',115,9],['Pois chiches (cuits)',140,7.5],['Haricots rouges (cuits)',115,8],['Brocoli (cuit)',30,2.5],['Haricots verts (cuits)',30,2],['Épinards (cuits)',25,3],
+['Courgette (cuite)',18,1],['Carotte',38,0.8],['Tomate',20,0.8],['Salade verte',15,1.3],['Poivron',30,1],['Oignon',40,1.2],['Champignons',25,3],['Avocat',205,1.8,'½ avocat',75],
+['Banane',90,1.1,'1 banane',120],['Pomme',53,0.3,'1 pomme',150],['Orange',45,0.9,'1 orange',150],['Kiwi',58,1,'1 kiwi',75],['Fruits rouges',45,1],
+['Lait demi-écrémé',46,3.3,'1 verre',200],['Lait entier',64,3.3,'1 verre',200],['Yaourt nature',58,4,'1 pot',125],['Skyr',60,10,'1 pot',150],['Fromage blanc 0 %',47,7.5,'1 pot',100],
+['Fromage blanc 3 %',75,7,'1 pot',100],['Cottage cheese',98,11],['Emmental, gruyère',380,28,'1 portion',30],['Mozzarella',250,18,'1 boule',125],['Feta',270,16],
+['Beurre',745,0.7,'1 noisette',10],['Huile d\'olive',900,0,'1 c. à soupe',10],['Beurre de cacahuète',600,25,'1 c. à soupe',15],['Amandes',610,23,'1 poignée',30],['Noix',700,15,'1 poignée',30],
+['Chocolat noir 70 %',580,8,'1 carré',5],['Whey (protéine en poudre)',380,78,'1 dose',30],['Miel',320,0.3,'1 c. à café',7],['Sucre',400,0,'1 morceau',5],['Confiture',250,0.4,'1 c. à café',10],
+['Houmous',300,7],['Sauce tomate',50,1.5],['Ketchup',110,1.2,'1 c. à soupe',15],['Mayonnaise',700,1,'1 c. à soupe',15],['Crème fraîche 30 %',300,2.2,'1 c. à soupe',15],
+['Pizza (surgelée)',250,10,'1 part',125],['Chips',530,6,'1 petit paquet',30],['Soda (type cola)',42,0,'1 canette',330],['Jus d\'orange',45,0.7,'1 verre',200],['Bière',43,0.4,'1 demi (25 cl)',250]
+].map(function(f){return {n:f[0],k:f[1],p:f[2],u:f[3]||'',ug:f[4]||0}});
+function trkNorm(x){return String(x).toLowerCase().replace(/œ/g,'oe').replace(/æ/g,'ae').normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
+function trkFoods(){var s=trkLoad();return TRK_FOODS.concat((s.custom||[]).map(function(f){return {n:f.n,k:f.k,p:f.p||0,u:'',ug:0,c:1}}))}
+function trkSearch(q){var w=trkNorm(q).split(/[^a-z0-9%]+/).filter(function(x){return x&&!/^(de|du|des|la|le|les|d|l|au|aux|en|a|et)$/.test(x)}).map(function(x){return x.length>3?x.replace(/[sx]$/,''):x});
+  if(!w.length)return [];var all=trkFoods(),r=[];
+  all.forEach(function(f,i){var n=trkNorm(f.n);if(w.every(function(x){return n.indexOf(x)>=0}))r.push({i:i,sc:(n.indexOf(w[0])===0?0:1)-(f.c?0.5:0)})});
+  return r.sort(function(a,b){return a.sc-b.sc||a.i-b.i}).slice(0,6).map(function(x){return x.i})}
+function trkFoodBox(){
+  var f=window._trkSel!=null?trkFoods()[window._trkSel]:null;
+  if(window._trkNew!=null)return '<form class="trk-form" onsubmit="trkNewSave();return false" style="flex-direction:column"><p class="trk-note">Nouvel aliment : indique ses valeurs pour 100 g (sur l\'emballage, ligne « Énergie »).</p><input class="au-input" id="trk-new-n" maxlength="40" value="'+escH(window._trkNew)+'" aria-label="Nom de l\'aliment"><div class="trk-form"><input class="au-input num" id="trk-new-k" type="number" inputmode="decimal" min="0" max="900" step="any" placeholder="kcal / 100 g" aria-label="Calories pour 100 g"><input class="au-input num" id="trk-new-p" type="number" inputmode="decimal" min="0" max="100" step="any" placeholder="protéines / 100 g" aria-label="Protéines pour 100 g (facultatif)"></div><div class="trk-row"><button class="trk-btn">Enregistrer l\'aliment</button><button type="button" class="trk-link" onclick="trkPick(null)">Annuler</button></div></form>';
+  if(!f)return '<input class="au-input" id="trk-food" autocomplete="off" placeholder="Cherche un aliment : poulet, riz, œuf…" oninput="trkSuggest()" aria-label="Chercher un aliment" style="padding:.6rem .75rem;font-size:.9375rem"><div class="trk-sug" id="trk-sug"></div>';
+  var h='<div class="trk-pick"><b>'+escH(f.n)+'</b><span>'+trkN(f.k)+' kcal · '+String(f.p).replace('.',',')+' g protéines / 100 g</span><button class="trk-link" onclick="trkPick(null)">Changer</button></div>';
+  if(f.ug)h+='<div class="trk-chips"><button class="trk-chip" onclick="trkUnit('+f.ug+')">+ '+escH(f.u)+' ('+f.ug+' g)</button></div>';
+  h+='<form class="trk-form" onsubmit="trkAddFood();return false"><input class="au-input num" id="trk-g" type="number" inputmode="numeric" min="1" max="3000" placeholder="grammes" oninput="trkPreview()" aria-label="Poids en grammes" style="flex:1 1 7rem"><button class="trk-btn">Ajouter</button></form><div class="trk-prev" id="trk-prev" aria-live="polite"></div>';
+  return h}
+function trkFoodRender(focusId){var el=document.getElementById('trk-food-box');if(!el)return;el.innerHTML=trkFoodBox();var i=document.getElementById(focusId);if(i)i.focus()}
+function trkSuggest(){var q=trkVal('trk-food'),el=document.getElementById('trk-sug');if(!el)return;var all=trkFoods(),ids=trkSearch(q);
+  el.innerHTML=ids.map(function(i){var f=all[i];return '<button type="button" onclick="trkPick('+i+')">'+escH(f.n)+'<span>'+trkN(f.k)+' kcal / 100 g</span></button>'}).join('')+(q.length>=2?'<button type="button" class="new" onclick="trkNewStart()">+ Ajouter « '+escH(q.slice(0,40))+' » moi-même</button>':'')}
+function trkPick(i){window._trkSel=i;window._trkNew=null;trkFoodRender(i==null?'trk-food':'trk-g')}
+function trkNewStart(){window._trkNew=trkVal('trk-food').slice(0,40);window._trkSel=null;trkFoodRender('trk-new-k')}
+function trkNewSave(){var n=trkVal('trk-new-n'),k=+trkVal('trk-new-k'),p=+(trkVal('trk-new-p')||0);if(!n){toast('Donne un nom à l\'aliment.');return}if(!(k>=0&&k<=900)||trkVal('trk-new-k')===''){toast('Indique les kcal pour 100 g (entre 0 et 900).');return}if(!(p>=0&&p<=100))p=0;
+  var s=trkLoad();s.custom=(s.custom||[]).filter(function(f){return trkNorm(f.n)!==trkNorm(n)});s.custom.push({n:n.slice(0,40),k:Math.round(k),p:Math.round(p*10)/10});trkSave(s);
+  var all=trkFoods();window._trkNew=null;window._trkSel=all.length-1;trkFoodRender('trk-g')}
+function trkUnit(g){var el=document.getElementById('trk-g');if(!el)return;el.value=(+el.value||0)+g;trkPreview()}
+function trkPreview(){var f=trkFoods()[window._trkSel],g=+trkVal('trk-g'),el=document.getElementById('trk-prev');if(!el||!f)return;el.textContent=g>0?'= '+trkN(f.k*g/100)+' kcal · '+trkN(f.p*g/100)+' g de protéines':''}
+function trkAddFood(){var f=trkFoods()[window._trkSel],g=Math.round(+trkVal('trk-g'));if(!f)return;if(!(g>0&&g<=3000)){toast('Indique le poids en grammes.');return}
+  var s=trkLoad();s.t.cal.push({n:f.n,g:g,k:Math.round(f.k*g/100),p:Math.round(f.p*g/10)/10});window._trkSel=null;trkSave(s);trkFoodRender('trk-food')}
 function trkDay(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
 function trkLoad(){var s=lsGet('macro_track');if(!s||typeof s!=='object')s={};if(!s.days)s.days={};if(!s.stepGoal)s.stepGoal=10000;var k=trkDay();if(!s.days[k])s.days[k]={cal:[],water:0,steps:0,act:[]};s.t=s.days[k];return s}
 function trkSave(s){delete s.t;var ks=Object.keys(s.days).sort();while(ks.length>14)delete s.days[ks.shift()];lsSet('macro_track',s);trkRender()}
@@ -1751,8 +1809,9 @@ function trkHtml(){
   // calories
   h+='<div class="trk-card"><h3>Calories</h3><div class="trk-big">'+trkN(eaten)+' <small>/ '+trkN(goal+burned)+' kcal</small></div>'+trkBar(eaten,goal+burned,eaten>goal+burned?'over':'');
   h+='<p class="trk-note">'+(left>=0?'Il te reste <b>'+trkN(left)+' kcal</b>':'Tu as dépassé de <b>'+trkN(-left)+' kcal</b>')+(burned?', en comptant les '+trkN(burned)+' kcal brûlées pendant ton activité':'')+'.</p>';
-  if(t.cal.length)h+='<ul class="trk-list">'+t.cal.map(function(x,i){return '<li><span>'+escH(x.n)+'</span><b>'+trkN(x.k)+' kcal</b><button class="trk-x" onclick="trkDel(\'cal\','+i+')" aria-label="Retirer '+escH(x.n)+'">×</button></li>'}).join('')+'</ul>';
-  h+='<form class="trk-form" onsubmit="trkAddCal();return false"><input class="au-input" id="trk-cal-n" placeholder="Ex. : poulet riz" maxlength="40" aria-label="Aliment ou repas"><input class="au-input num" id="trk-cal-k" type="number" inputmode="numeric" min="1" max="5000" placeholder="kcal" aria-label="Calories"><button class="trk-btn">Ajouter</button></form></div>';
+  var prot=t.cal.reduce(function(a,x){return a+(x.p||0)},0);h+='<p class="trk-note">Protéines : <b>'+trkN(prot)+' g</b> sur '+(window._trkProt||0)+' g.</p>';
+  if(t.cal.length)h+='<ul class="trk-list">'+t.cal.map(function(x,i){return '<li><span>'+escH(x.n)+(x.g?' · '+x.g+' g':'')+'</span><b>'+trkN(x.k)+' kcal</b><button class="trk-x" onclick="trkDel(\'cal\','+i+')" aria-label="Retirer '+escH(x.n)+'">×</button></li>'}).join('')+'</ul>';
+  h+='<div id="trk-food-box" style="display:flex;flex-direction:column;gap:.5rem">'+trkFoodBox()+'</div></div>';
   // water
   var n=Math.max(wGoal,t.water),g='';for(var i=0;i<n;i++)g+='<button class="trk-glass'+(i<t.water?' on':'')+'" onclick="trkWater('+(i<t.water&&i===t.water-1?i:i+1)+')" aria-label="'+(i+1)+' verre'+(i?'s':'')+'"></button>';
   h+='<div class="trk-card"><h3>Eau</h3><div class="trk-big">'+t.water+' <small>/ '+wGoal+' verres</small></div><div class="trk-glasses">'+g+'</div>';
@@ -1772,7 +1831,6 @@ function trkHtml(){
 }
 function trkRender(){var el=document.getElementById('trk');if(el)el.innerHTML=trkHtml()}
 function trkVal(id){var el=document.getElementById(id);return el?el.value.trim():''}
-function trkAddCal(){var n=trkVal('trk-cal-n')||'Repas',k=Math.round(+trkVal('trk-cal-k'));if(!(k>0&&k<=5000)){toast('Indique les calories (entre 1 et 5 000).');return}var s=trkLoad();s.t.cal.push({n:n.slice(0,40),k:k});trkSave(s);var f=document.getElementById('trk-cal-n');if(f)f.focus()}
 function trkWater(v){var s=trkLoad();s.t.water=Math.max(0,Math.min(40,v));trkSave(s)}
 function trkSteps(){var v=Math.round(+trkVal('trk-steps'));if(!(v>=0&&v<=100000)||trkVal('trk-steps')===''){toast('Indique un nombre de pas.');return}var s=trkLoad();s.t.steps=v;trkSave(s)}
 function trkGoal(){var v=Math.round(+trkVal('trk-goal'));if(!(v>=1000&&v<=50000)){toast('Choisis un objectif entre 1 000 et 50 000 pas.');return}var s=trkLoad();s.stepGoal=v;trkSave(s);toast('Objectif : '+trkN(v)+' pas.')}
@@ -1790,7 +1848,7 @@ h+='<div class="dash-greet"><h1>Bonjour'+(nm?' '+escH(nm):'')+'</h1><p>Voici ta 
 if(!u)h+='<div class="dash-lock"><div class="dl-ico">🔒</div><div class="dl-txt"><strong>Ton plan est prêt, il te manque la clé.</strong><span>Débloque toutes les recettes, les macros de chaque repas et la liste de courses.</span></div><button class="btn btn-p" onclick="showPaywall()">Débloquer</button></div>';
 if(MEALS.filter(mealOk).length===0)h+='<div class="dash-warn">Tous les repas contiennent un aliment que tu as exclu. Retire-en quelques-uns dans « Mes réponses » pour avoir un plan adapté.</div>';
 h+='<div class="dash-kpis"><div class="dk"><strong>'+mc.cal+'</strong><span>kcal / jour</span></div><div class="dk"><strong>'+mc.protG+' g</strong><span>protéines / jour</span></div><div class="dk"><strong>'+mc.m+'</strong><span>repas / semaine</span></div><div class="dk"><strong id="dk-cost">'+gen.weekCost.toFixed(0)+' €</strong><span>courses estimées</span></div></div>';
-if(isAdmin()){window._trkCal=mc.cal;h+='<div id="trk">'+trkHtml()+'</div>'}
+if(isAdmin()){window._trkCal=mc.cal;window._trkProt=mc.protG;h+='<div id="trk">'+trkHtml()+'</div>'}
 h+='<h2 class="dash-h">Ta semaine</h2><div id="dash-week">'+weekHtml(gen,u)+'</div>';
 
 
