@@ -1796,8 +1796,15 @@ function trkPreview(){var f=trkFoods()[window._trkSel],g=+trkVal('trk-g'),el=doc
 function trkAddFood(){var f=trkFoods()[window._trkSel],g=Math.round(+trkVal('trk-g'));if(!f)return;if(!(g>0&&g<=3000)){toast('Indique le poids en grammes.');return}
   var s=trkLoad();s.t.cal.push({n:f.n,g:g,k:Math.round(f.k*g/100),p:Math.round(f.p*g/10)/10});window._trkSel=null;trkSave(s);trkFoodRender('trk-food')}
 function trkDay(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
-function trkLoad(){var s=lsGet('macro_track');if(!s||typeof s!=='object')s={};if(!s.days)s.days={};if(!s.stepGoal)s.stepGoal=10000;var k=trkDay();if(!s.days[k])s.days[k]={cal:[],water:0,steps:0,act:[]};s.t=s.days[k];return s}
-function trkSave(s){delete s.t;var ks=Object.keys(s.days).sort();while(ks.length>14)delete s.days[ks.shift()];lsSet('macro_track',s);trkRender()}
+// recommended daily steps for the plan's goal: bulk = move for health without burning the surplus,
+// cut = extra burn for the deficit, maintain = where health benefits level off (lower from 60 y.o.)
+function trkStepRec(){var go=D.goal||'Prise de masse',old=(parseInt(D.age)||22)>=60,kg=trkKg();
+  if(go==='Sèche'){var v=old?9000:12000;return {v:v,why:'Pour ta sèche : ces pas brûlent environ <b>'+trkN(trkStepKcal(v))+' kcal</b> par jour, ce qui aide ton déficit sans fatiguer ta muscu.'}}
+  if(go==='Prise de masse')return {v:old?7000:8000,why:'Pour ta prise de masse : assez pour ta santé et ta récup, sans brûler le surplus de calories qui te fait prendre du muscle.'};
+  return {v:old?7500:10000,why:'Pour ton maintien : c\'est le niveau où les bienfaits pour la santé sont les plus nets.'}}
+function trkStepKcal(n){return n*trkKg()*0.0005} // ≈ 0.5 kcal per kg per 1 000 steps
+function trkLoad(){var s=lsGet('macro_track');if(!s||typeof s!=='object')s={};if(!s.days)s.days={};s.rec=trkStepRec();s.stepGoal=s.stepMine||s.rec.v;var k=trkDay();if(!s.days[k])s.days[k]={cal:[],water:0,steps:0,act:[]};s.t=s.days[k];return s}
+function trkSave(s){delete s.t;delete s.rec;delete s.stepGoal;var ks=Object.keys(s.days).sort();while(ks.length>14)delete s.days[ks.shift()];lsSet('macro_track',s);trkRender()}
 function trkKg(){return +D.poids||70}
 function trkN(n){return Math.round(n).toLocaleString('fr-FR')}
 function trkBar(v,goal,cls){var p=goal>0?Math.min(100,Math.round(v/goal*100)):0;return '<div class="trk-bar'+(cls?' '+cls:'')+'" role="progressbar" aria-valuemin="0" aria-valuemax="'+goal+'" aria-valuenow="'+Math.round(v)+'"><i style="width:'+p+'%"></i></div>'}
@@ -1819,7 +1826,8 @@ function trkHtml(){
   h+='<p class="trk-note">'+wGoal+' verres de 25 cl, soit '+String(+(wGoal*0.25).toFixed(2)).replace('.',',')+' L : 35 ml par kilo ('+trkKg()+' kg)'+(mins?', plus 1 verre par 30 min de sport':'')+'.</p></div>';
   // steps
   h+='<div class="trk-card"><h3>Pas</h3><div class="trk-big">'+trkN(t.steps)+' <small>/ '+trkN(s.stepGoal)+' pas</small></div>'+trkBar(t.steps,s.stepGoal,'blue');
-  h+='<p class="trk-note">'+(t.steps>=s.stepGoal?'Objectif atteint ✓':'Encore <b>'+trkN(s.stepGoal-t.steps)+' pas</b> pour ton objectif.')+'</p>';
+  h+='<p class="trk-note">'+(t.steps>=s.stepGoal?'Objectif atteint ✓':'Encore <b>'+trkN(s.stepGoal-t.steps)+' pas</b> pour ton objectif.')+(t.steps?' Tes pas du jour ≈ '+trkN(trkStepKcal(t.steps))+' kcal.':'')+'</p>';
+  h+=s.stepMine?'<p class="trk-note">Objectif choisi par toi. Objectif calculé pour toi : '+trkN(s.rec.v)+' pas. <button class="trk-link" onclick="trkGoalReset()">Revenir à '+trkN(s.rec.v)+' pas</button></p>':'<p class="trk-note">'+s.rec.why+'</p>';
   h+='<form class="trk-form" onsubmit="trkSteps();return false"><input class="au-input" id="trk-steps" type="number" inputmode="numeric" min="0" max="100000" placeholder="Pas du jour" aria-label="Pas faits aujourd\'hui"><button class="trk-btn">Enregistrer</button></form>';
   h+='<form class="trk-form" onsubmit="trkGoal();return false"><input class="au-input" id="trk-goal" type="number" inputmode="numeric" min="1000" max="50000" step="500" value="'+s.stepGoal+'" aria-label="Objectif de pas"><button class="trk-btn ghost">Changer l\'objectif</button></form></div>';
   // activities
@@ -1833,7 +1841,8 @@ function trkRender(){var el=document.getElementById('trk');if(el)el.innerHTML=tr
 function trkVal(id){var el=document.getElementById(id);return el?el.value.trim():''}
 function trkWater(v){var s=trkLoad();s.t.water=Math.max(0,Math.min(40,v));trkSave(s)}
 function trkSteps(){var v=Math.round(+trkVal('trk-steps'));if(!(v>=0&&v<=100000)||trkVal('trk-steps')===''){toast('Indique un nombre de pas.');return}var s=trkLoad();s.t.steps=v;trkSave(s)}
-function trkGoal(){var v=Math.round(+trkVal('trk-goal'));if(!(v>=1000&&v<=50000)){toast('Choisis un objectif entre 1 000 et 50 000 pas.');return}var s=trkLoad();s.stepGoal=v;trkSave(s);toast('Objectif : '+trkN(v)+' pas.')}
+function trkGoal(){var v=Math.round(+trkVal('trk-goal'));if(!(v>=1000&&v<=50000)){toast('Choisis un objectif entre 1 000 et 50 000 pas.');return}var s=trkLoad();s.stepMine=v===s.rec.v?0:v;trkSave(s);toast('Objectif : '+trkN(v)+' pas.')}
+function trkGoalReset(){var s=trkLoad();s.stepMine=0;trkSave(s)}
 function trkAddAct(){var t=trkVal('trk-act-t'),m=Math.round(+trkVal('trk-act-m'));if(!(m>0&&m<=600)){toast('Indique la durée en minutes.');return}var met=(TRK_ACTS.filter(function(a){return a[0]===t})[0]||['',5])[1];var s=trkLoad();s.t.act.push({t:t,min:m,k:Math.round(met*trkKg()*m/60)});trkSave(s)}
 function trkDel(kind,i){var s=trkLoad();s.t[kind].splice(i,1);trkSave(s)}
 function showDashboard(){
