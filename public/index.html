@@ -913,6 +913,38 @@ body:has(#dashboard.active){background:var(--bg)}
 .dash-today-head strong{font-size:.9375rem;color:var(--ink)}
 .dash-empty{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:2rem 1.25rem;text-align:center;margin:1.25rem 0}
 .dash-empty p{color:var(--muted);font-size:.9375rem;margin-bottom:1.25rem}
+.trk{margin:1.75rem 0 .5rem}
+.trk-head{display:flex;align-items:baseline;justify-content:space-between;gap:.75rem;flex-wrap:wrap;margin-bottom:.75rem}
+.trk-head .dash-h{margin:0}
+.trk-tag{font-size:.75rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--accent-text);background:var(--accent-bg);border-radius:var(--r-pill);padding:.25rem .65rem}
+.trk-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}
+.trk-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:1rem;display:flex;flex-direction:column;gap:.65rem;min-width:0}
+.trk-card h3{font-size:.8125rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:0}
+.trk-big{font-size:1.5rem;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.2}
+.trk-big small{font-size:.875rem;font-weight:600;color:var(--muted)}
+.trk-bar{height:8px;border-radius:99px;background:var(--bg2);overflow:hidden}
+.trk-bar i{display:block;height:100%;border-radius:99px;background:var(--accent);transition:width .3s}
+.trk-bar.over i{background:var(--yellow)}
+.trk-bar.blue i{background:var(--blue)}
+.trk-note{font-size:.8125rem;color:var(--muted);margin:0;line-height:1.45}
+.trk-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.35rem}
+.trk-list li{display:flex;align-items:center;gap:.5rem;font-size:.875rem;color:var(--ink2)}
+.trk-list li span{flex:1;min-width:0;overflow-wrap:anywhere}
+.trk-list li b{font-variant-numeric:tabular-nums;color:var(--ink)}
+.trk-x{border:0;background:none;color:var(--muted);font-size:1.1rem;line-height:1;cursor:pointer;padding:.15rem .35rem;border-radius:6px}
+.trk-x:hover,.trk-x:focus-visible{color:var(--ink);background:var(--bg2)}
+.trk-form{display:flex;gap:.5rem;flex-wrap:wrap}
+.trk-form .au-input{flex:1 1 7rem;width:auto;min-width:0;padding:.6rem .75rem;font-size:.9375rem}
+.trk-form .au-input.num{flex:0 1 6.5rem}
+.trk-form select.au-input{flex:1 1 8rem}
+.trk-btn{border:0;border-radius:12px;background:var(--grad-strong);color:var(--on-accent);font-family:var(--font);font-weight:700;font-size:.9375rem;padding:.6rem 1rem;cursor:pointer}
+.trk-btn.ghost{background:var(--bg2);color:var(--ink)}
+.trk-btn:focus-visible,.trk-glass:focus-visible,.trk-x:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.trk-glasses{display:flex;flex-wrap:wrap;gap:.4rem}
+.trk-glass{width:24px;height:30px;border:2px solid var(--blue);border-radius:3px 3px 7px 7px;background:transparent;cursor:pointer;padding:0}
+.trk-glass.on{background:var(--blue)}
+.trk-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+@media(max-width:640px){.trk-grid{grid-template-columns:1fr}}
 .dash-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.75rem;margin-bottom:1.25rem}
 .dash-action{display:flex;flex-direction:column;gap:.25rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:1rem;text-align:left;cursor:pointer;font-family:var(--font);transition:transform .2s,box-shadow .2s;color:inherit}
 .dash-action:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
@@ -1703,6 +1735,49 @@ h+='</div></section>'});
 if(!u)h+='<button class="dd-unlock" onclick="showPaywall()">🔒 Débloquer les recettes, les macros et les quantités</button>';
 return h}
 function renderWeek(){var el=document.getElementById('dash-week');if(el&&window._gen)el.innerHTML=weekHtml(window._gen,isUnlocked())}
+/* ---- admin-only daily tracker (test): calories, water, steps, activities, kept on this device ---- */
+var TRK_ACTS=[['Musculation',5],['Course à pied',9.8],['Vélo',7.5],['Marche',3.5],['Natation',7],['Foot',7],['Autre',5]]; // [name, MET]
+function trkDay(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+function trkLoad(){var s=lsGet('macro_track');if(!s||typeof s!=='object')s={};if(!s.days)s.days={};if(!s.stepGoal)s.stepGoal=10000;var k=trkDay();if(!s.days[k])s.days[k]={cal:[],water:0,steps:0,act:[]};s.t=s.days[k];return s}
+function trkSave(s){delete s.t;var ks=Object.keys(s.days).sort();while(ks.length>14)delete s.days[ks.shift()];lsSet('macro_track',s);trkRender()}
+function trkKg(){return +D.poids||70}
+function trkN(n){return Math.round(n).toLocaleString('fr-FR')}
+function trkBar(v,goal,cls){var p=goal>0?Math.min(100,Math.round(v/goal*100)):0;return '<div class="trk-bar'+(cls?' '+cls:'')+'" role="progressbar" aria-valuemin="0" aria-valuemax="'+goal+'" aria-valuenow="'+Math.round(v)+'"><i style="width:'+p+'%"></i></div>'}
+function trkHtml(){
+  var s=trkLoad(),t=s.t,goal=window._trkCal||2000;
+  var eaten=t.cal.reduce(function(a,x){return a+x.k},0),burned=t.act.reduce(function(a,x){return a+x.k},0),mins=t.act.reduce(function(a,x){return a+x.min},0);
+  var left=goal+burned-eaten,wGoal=Math.round(trkKg()*35/250)+Math.round(mins/30);
+  var h='<section class="trk" aria-label="Mon suivi du jour"><div class="trk-head"><h2 class="dash-h">Mon suivi du jour</h2><span class="trk-tag">Test · visible par toi seul</span></div><div class="trk-grid">';
+  // calories
+  h+='<div class="trk-card"><h3>Calories</h3><div class="trk-big">'+trkN(eaten)+' <small>/ '+trkN(goal+burned)+' kcal</small></div>'+trkBar(eaten,goal+burned,eaten>goal+burned?'over':'');
+  h+='<p class="trk-note">'+(left>=0?'Il te reste <b>'+trkN(left)+' kcal</b>':'Tu as dépassé de <b>'+trkN(-left)+' kcal</b>')+(burned?', en comptant les '+trkN(burned)+' kcal brûlées pendant ton activité':'')+'.</p>';
+  if(t.cal.length)h+='<ul class="trk-list">'+t.cal.map(function(x,i){return '<li><span>'+escH(x.n)+'</span><b>'+trkN(x.k)+' kcal</b><button class="trk-x" onclick="trkDel(\'cal\','+i+')" aria-label="Retirer '+escH(x.n)+'">×</button></li>'}).join('')+'</ul>';
+  h+='<form class="trk-form" onsubmit="trkAddCal();return false"><input class="au-input" id="trk-cal-n" placeholder="Ex. : poulet riz" maxlength="40" aria-label="Aliment ou repas"><input class="au-input num" id="trk-cal-k" type="number" inputmode="numeric" min="1" max="5000" placeholder="kcal" aria-label="Calories"><button class="trk-btn">Ajouter</button></form></div>';
+  // water
+  var n=Math.max(wGoal,t.water),g='';for(var i=0;i<n;i++)g+='<button class="trk-glass'+(i<t.water?' on':'')+'" onclick="trkWater('+(i<t.water&&i===t.water-1?i:i+1)+')" aria-label="'+(i+1)+' verre'+(i?'s':'')+'"></button>';
+  h+='<div class="trk-card"><h3>Eau</h3><div class="trk-big">'+t.water+' <small>/ '+wGoal+' verres</small></div><div class="trk-glasses">'+g+'</div>';
+  h+='<div class="trk-row"><button class="trk-btn ghost" onclick="trkWater('+Math.max(0,t.water-1)+')" aria-label="Retirer un verre">− 1</button><button class="trk-btn" onclick="trkWater('+(t.water+1)+')">+ 1 verre</button></div>';
+  h+='<p class="trk-note">'+wGoal+' verres de 25 cl, soit '+String(+(wGoal*0.25).toFixed(2)).replace('.',',')+' L : 35 ml par kilo ('+trkKg()+' kg)'+(mins?', plus 1 verre par 30 min de sport':'')+'.</p></div>';
+  // steps
+  h+='<div class="trk-card"><h3>Pas</h3><div class="trk-big">'+trkN(t.steps)+' <small>/ '+trkN(s.stepGoal)+' pas</small></div>'+trkBar(t.steps,s.stepGoal,'blue');
+  h+='<p class="trk-note">'+(t.steps>=s.stepGoal?'Objectif atteint ✓':'Encore <b>'+trkN(s.stepGoal-t.steps)+' pas</b> pour ton objectif.')+'</p>';
+  h+='<form class="trk-form" onsubmit="trkSteps();return false"><input class="au-input" id="trk-steps" type="number" inputmode="numeric" min="0" max="100000" placeholder="Pas du jour" aria-label="Pas faits aujourd\'hui"><button class="trk-btn">Enregistrer</button></form>';
+  h+='<form class="trk-form" onsubmit="trkGoal();return false"><input class="au-input" id="trk-goal" type="number" inputmode="numeric" min="1000" max="50000" step="500" value="'+s.stepGoal+'" aria-label="Objectif de pas"><button class="trk-btn ghost">Changer l\'objectif</button></form></div>';
+  // activities
+  h+='<div class="trk-card"><h3>Activités</h3><div class="trk-big">'+trkN(mins)+' <small>min · '+trkN(burned)+' kcal</small></div>';
+  h+=t.act.length?'<ul class="trk-list">'+t.act.map(function(x,i){return '<li><span>'+escH(x.t)+' · '+x.min+' min</span><b>'+trkN(x.k)+' kcal</b><button class="trk-x" onclick="trkDel(\'act\','+i+')" aria-label="Retirer '+escH(x.t)+'">×</button></li>'}).join('')+'</ul>':'<p class="trk-note">Aucune activité aujourd\'hui.</p>';
+  h+='<form class="trk-form" onsubmit="trkAddAct();return false"><select class="au-input" id="trk-act-t" aria-label="Type d\'activité">'+TRK_ACTS.map(function(a){return '<option>'+a[0]+'</option>'}).join('')+'</select><input class="au-input num" id="trk-act-m" type="number" inputmode="numeric" min="1" max="600" placeholder="min" aria-label="Durée en minutes"><button class="trk-btn">Ajouter</button></form>';
+  h+='<p class="trk-note">Calories estimées selon l\'activité, la durée et ton poids.</p></div>';
+  return h+'</div></section>';
+}
+function trkRender(){var el=document.getElementById('trk');if(el)el.innerHTML=trkHtml()}
+function trkVal(id){var el=document.getElementById(id);return el?el.value.trim():''}
+function trkAddCal(){var n=trkVal('trk-cal-n')||'Repas',k=Math.round(+trkVal('trk-cal-k'));if(!(k>0&&k<=5000)){toast('Indique les calories (entre 1 et 5 000).');return}var s=trkLoad();s.t.cal.push({n:n.slice(0,40),k:k});trkSave(s);var f=document.getElementById('trk-cal-n');if(f)f.focus()}
+function trkWater(v){var s=trkLoad();s.t.water=Math.max(0,Math.min(40,v));trkSave(s)}
+function trkSteps(){var v=Math.round(+trkVal('trk-steps'));if(!(v>=0&&v<=100000)||trkVal('trk-steps')===''){toast('Indique un nombre de pas.');return}var s=trkLoad();s.t.steps=v;trkSave(s)}
+function trkGoal(){var v=Math.round(+trkVal('trk-goal'));if(!(v>=1000&&v<=50000)){toast('Choisis un objectif entre 1 000 et 50 000 pas.');return}var s=trkLoad();s.stepGoal=v;trkSave(s);toast('Objectif : '+trkN(v)+' pas.')}
+function trkAddAct(){var t=trkVal('trk-act-t'),m=Math.round(+trkVal('trk-act-m'));if(!(m>0&&m<=600)){toast('Indique la durée en minutes.');return}var met=(TRK_ACTS.filter(function(a){return a[0]===t})[0]||['',5])[1];var s=trkLoad();s.t.act.push({t:t,min:m,k:Math.round(met*trkKg()*m/60)});trkSave(s)}
+function trkDel(kind,i){var s=trkLoad();s.t[kind].splice(i,1);trkSave(s)}
 function showDashboard(){
 if(!hasProfile()&&!restoreProfile()){beginFunnel();return}
 var mc=computeMacros();
@@ -1715,6 +1790,7 @@ h+='<div class="dash-greet"><h1>Bonjour'+(nm?' '+escH(nm):'')+'</h1><p>Voici ta 
 if(!u)h+='<div class="dash-lock"><div class="dl-ico">🔒</div><div class="dl-txt"><strong>Ton plan est prêt, il te manque la clé.</strong><span>Débloque toutes les recettes, les macros de chaque repas et la liste de courses.</span></div><button class="btn btn-p" onclick="showPaywall()">Débloquer</button></div>';
 if(MEALS.filter(mealOk).length===0)h+='<div class="dash-warn">Tous les repas contiennent un aliment que tu as exclu. Retire-en quelques-uns dans « Mes réponses » pour avoir un plan adapté.</div>';
 h+='<div class="dash-kpis"><div class="dk"><strong>'+mc.cal+'</strong><span>kcal / jour</span></div><div class="dk"><strong>'+mc.protG+' g</strong><span>protéines / jour</span></div><div class="dk"><strong>'+mc.m+'</strong><span>repas / semaine</span></div><div class="dk"><strong id="dk-cost">'+gen.weekCost.toFixed(0)+' €</strong><span>courses estimées</span></div></div>';
+if(isAdmin()){window._trkCal=mc.cal;h+='<div id="trk">'+trkHtml()+'</div>'}
 h+='<h2 class="dash-h">Ta semaine</h2><div id="dash-week">'+weekHtml(gen,u)+'</div>';
 
 
