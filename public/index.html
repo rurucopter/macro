@@ -953,6 +953,33 @@ body:has(#dashboard.active){background:var(--bg)}
 .trk-chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .trk-prev{font-size:.9375rem;font-weight:700;color:var(--accent-text);font-variant-numeric:tabular-nums;min-height:1.4em}
 .trk-link{border:0;background:none;padding:0;color:var(--accent-text);font-family:var(--font);font-size:.8125rem;font-weight:700;cursor:pointer;text-decoration:underline}
+.ds{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.25rem;margin:0 0 1rem}
+.ds-d{display:flex;flex-direction:column;align-items:center;gap:.3rem;border:0;background:none;padding:.25rem 0;cursor:pointer;font-family:var(--font);color:var(--muted)}
+.ds-ring{position:relative;width:42px;height:42px;display:grid;place-items:center}
+.ds-ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.ds-ring b{font-size:.875rem;font-weight:800;color:var(--ink)}
+.ds-n{font-size:.75rem;font-weight:600;font-variant-numeric:tabular-nums;min-width:1.75rem;padding:.1rem 0;border-radius:99px;text-align:center}
+.ds-d.today .ds-n{color:var(--accent-text);font-weight:800}
+.ds-d.on .ds-n{background:var(--ink);color:var(--bg)}
+.ds-d:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:10px}
+.trk-sub{font-family:var(--font-d);font-size:1.0625rem;font-weight:800;color:var(--ink);margin:1.25rem 0 .75rem}
+.trk-wide{grid-column:1/-1}
+.trk-chart{width:100%;height:auto;display:block;overflow:visible}
+.trk-chart text{font-family:var(--font);font-size:10px;fill:var(--muted)}
+.trk-scale{position:relative;height:10px;border-radius:99px;background:linear-gradient(90deg,var(--yellow),var(--bg2) 50%,var(--blue))}
+.trk-scale i{position:absolute;top:50%;width:16px;height:16px;border-radius:50%;background:var(--surface);border:3px solid var(--ink);transform:translate(-50%,-50%)}
+.trk-ticks{display:flex;justify-content:space-between;font-size:.6875rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.trk-help summary{cursor:pointer;font-size:.8125rem;font-weight:700;color:var(--accent-text)}
+.trk-help ol{margin:.5rem 0 0;padding-left:1.1rem;font-size:.8125rem;color:var(--ink2);line-height:1.5;display:flex;flex-direction:column;gap:.3rem}
+.trk-help code{font-size:.75rem;background:var(--bg2);border-radius:6px;padding:.05rem .3rem;overflow-wrap:anywhere}
+.sp-head{display:flex;flex-direction:column;gap:.35rem;margin-bottom:.75rem}
+.sp-row{display:flex;justify-content:space-between;align-items:baseline;gap:.75rem;font-size:.875rem;color:var(--ink2)}
+.sp-row strong{white-space:nowrap;font-size:1.125rem;color:var(--ink);font-variant-numeric:tabular-nums}
+.sp-row.main strong{font-size:1.375rem}
+.sp-warn{font-size:.8125rem;color:var(--ink2);background:var(--yellow-bg);border-radius:10px;padding:.5rem .75rem}
+.mp-shop-price{display:flex;flex-direction:column;align-items:flex-end;gap:.1rem;text-align:right;max-width:46%;flex-shrink:0}
+.mp-shop-price b{font-size:.9375rem;color:var(--ink);font-variant-numeric:tabular-nums}
+.mp-shop-price small{font-size:.6875rem;color:var(--muted);line-height:1.3}
 .trk-glasses{display:flex;flex-wrap:wrap;gap:.4rem}
 .trk-glass{width:24px;height:30px;border:2px solid var(--blue);border-radius:3px 3px 7px 7px;background:transparent;cursor:pointer;padding:0}
 .trk-glass.on{background:var(--blue)}
@@ -1753,7 +1780,7 @@ function dashDay(di){window._dashDay=di;renderWeek()}
 function tileHtml(m,di,mi,u){
 var el=m.img&&document.getElementById(m.img),bg=el?'<img class="tp" src="'+el.src+'" alt="">':'<div class="tp te">'+m.emoji+'</div>';
 return '<button type="button" class="tile'+(u?'':' locked')+'" onclick="'+(u?'showMealDetail('+di+','+mi+')':'showPaywall()')+'">'+bg+'<span class="tc">'+(CAT_LBL[m.cat]||'Repas')+(u?'':' 🔒')+'</span><span class="tt"><span class="tn">'+m.n+'</span><span class="tm">'+m.cal+' kcal · '+m.p+' g prot · '+(m.t||20)+' min</span></span></button>'}
-function weekHtml(gen,u){var ti=todayIndex(),h='';
+function weekHtml(gen,u){if(isInsider())return weekDayHtml(gen,u);var ti=todayIndex(),h='';
 gen.plan.forEach(function(d,di){
 h+='<section class="wk-day'+(di===ti?' today':'')+'"><div class="wk-head"><strong>'+d.day+(di===ti?' <em>Aujourd\'hui</em>':'')+'</strong><span>'+d.totals.cal+' kcal · '+d.totals.p+' g de protéines</span></div><div class="wk-grid c'+d.meals.length+'">';
 d.meals.forEach(function(m,mi){h+=tileHtml(m,di,mi,u)});
@@ -1808,7 +1835,116 @@ function trkUnit(g){var el=document.getElementById('trk-g');if(!el)return;el.val
 function trkPreview(){var f=trkFoods()[window._trkSel],g=+trkVal('trk-g'),el=document.getElementById('trk-prev');if(!el||!f)return;el.textContent=g>0?'= '+trkN(f.k*g/100)+' kcal · '+trkN(f.p*g/100)+' g de protéines':''}
 function trkAddFood(){var f=trkFoods()[window._trkSel],g=Math.round(+trkVal('trk-g'));if(!f)return;if(!(g>0&&g<=3000)){toast('Indique le poids en grammes.');return}
   var s=trkLoad();s.t.cal.push({n:f.n,g:g,k:Math.round(f.k*g/100),p:Math.round(f.p*g/10)/10});window._trkSel=null;trkSave(s);trkFoodRender('trk-food')}
-function trkDay(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+/* ---- insider-only: real shopping prices (hard-discount averages, 2026 estimates) ---- */
+// name: [pack label, pack size, pack price €, unit ('g' default, 'ml', 'u' = eggs, 'x' = text quantity), amount per text use, pantry]
+var SHOP_PRICES={
+'Filet de poulet':['barquette 1 kg',1000,9.99],'Escalope de dinde':['barquette 500 g',500,5.99],'Bœuf haché':['barquette 500 g',500,4.99],
+'Bœuf haché 5%':['barquette 500 g',500,5.49],'Steak haché 5%':['10 steaks surgelés (1 kg)',1000,8.99],'Pavé de saumon':['2 pavés (250 g)',250,5.99],
+'Thon':['lot de 3 boîtes (312 g égoutté)',312,4.99],'Thon au naturel':['lot de 3 boîtes (312 g égoutté)',312,4.99],'Œufs':['boîte de 12',12,3.69,'u'],
+'Cottage cheese':['pot 200 g',200,1.49],'Fromage blanc':['pot 1 kg',1000,2.29],'Feta':['bloc 200 g',200,1.99],'Lait':['bouteille 1 L',1000,1.09,'ml'],
+'Lait de coco':['boîte 400 ml',400,1.39,'ml'],'Beurre':['plaquette 250 g',250,2.49],'Sauce yaourt':['flacon 250 g',250,1.39],
+'Riz':['paquet 1 kg',1000,1.59],'Riz basmati':['paquet 1 kg',1000,2.49],'Pâtes':['paquet 1 kg',1000,1.19],'Pâtes complètes':['paquet 500 g',500,0.99],
+'Quinoa':['paquet 500 g',500,2.99],"Flocons d'avoine":['paquet 1 kg',1000,1.59],"Flocons d'avoine mixés":['paquet 1 kg',1000,1.59],'Muesli':['paquet 750 g',750,2.19],
+'Lentilles corail':['paquet 500 g',500,1.69],'Pois chiches':['boîte 400 g (265 g égoutté)',265,0.89],'Haricots rouges':['boîte 400 g (250 g égoutté)',250,0.79],
+'Maïs':['boîte (285 g égoutté)',285,0.99],'Pommes de terre':['filet 2,5 kg',2500,2.49],'Pain complet':['pain de mie complet 500 g',500,1.49],'Tortilla':['6 wraps (370 g)',370,1.49],
+'Brocoli':['1 brocoli (≈ 500 g)',500,1.49],'Courgette':['1 courgette (≈ 250 g)',250,0.65],'Tomate':['1 tomate (≈ 120 g)',120,0.36],'Concombre':['1 concombre (≈ 350 g)',350,0.89],
+'Poivron':['1 poivron (≈ 180 g)',180,0.79],'Oignon':['filet 1 kg',1000,1.29],'Salade':['1 laitue (≈ 300 g)',300,0.99],'Banane':['1 banane (≈ 120 g)',120,0.25],
+'Fruits de saison':['1 fruit (≈ 150 g)',150,0.45],'Légumes vapeur':['sachet surgelé 1 kg',1000,1.99],'Tomate concassée':['boîte 400 g',400,0.79],'Sauce tomate':['bocal 500 g',500,0.89],
+'Beurre de cacahuète':['pot 350 g',350,2.49],'Citron':['1 citron',1,0.35,'x',0.5],'Basilic':['1 barquette',1,0.99,'x',0.5],
+"Huile d'olive":['bouteille 50 cl',500,4.49,'g',0,1],'Sauce soja':['flacon 150 ml',150,1.29,'g',0,1],'Vinaigrette':['bouteille 500 ml',500,1.49,'g',0,1],'Miel':['pot 500 g',500,3.99,'g',0,1],
+'Ail':['1 tête',1,0.59,'x',0.1,1],'Épices':['1 pot',1,1.19,'x',0.05,1],'Cumin':['1 pot',1,1.19,'x',0.05,1],'Curry':['1 pot',1,1.19,'x',0.05,1],'Paprika':['1 pot',1,1.19,'x',0.05,1],
+'Herbes de Provence':['1 pot',1,1.19,'x',0.05,1],'Levure':['1 sachet',1,0.25,'x',1,1],'Sel, poivre':['sel + poivre',1,1.5,'x',0.01,1]};
+function spNeed(e,pr){var u=pr[3]||'g';return u==='u'?e.eggs:u==='ml'?e.ml:u==='x'?e.count*(pr[4]||1):e.g}
+function shopReal(gen){
+  var map={};
+  function add(n,g,tag,u,k){var e=map[n]||(map[n]={n:n,g:0,eggs:0,ml:0,count:0});e.count++;if(typeof g==='number'){var v=g*k;if(u)e.eggs+=Math.max(1,Math.round(v/u));else if(tag==='ml')e.ml+=v;else e.g+=v}}
+  gen.plan.forEach(function(day){day.meals.forEach(function(m){(m.q||[]).forEach(function(x){add(x[0],x[1],x[2]||'',x[3],m.k)})})});
+  var by={},order=['Protéines','Féculents','Fruits & légumes','Produits laitiers','Épicerie','Placard'],out=[],caisse=0,used=0,usedMain=0,pantry=0;
+  Object.keys(map).forEach(function(n){var e=map[n],pr=SHOP_PRICES[n];var it={n:n,count:e.count,qty:qtyText(e)};
+    if(pr){var need=spNeed(e,pr),packs=Math.max(1,Math.ceil(need/pr[1]-1e-9));it.pack=pr[0];it.packs=packs;it.cost=packs*pr[2];it.used=Math.min(it.cost,need*pr[2]/pr[1]);
+      if(pr[5]){pantry+=it.cost;used+=it.used}else{caisse+=it.cost;used+=it.used;usedMain+=it.used}}
+    var c=pr&&pr[5]?{l:'Placard',e:'\u{1FAD9}'}:shopCategory(n);if(!by[c.l])by[c.l]={emoji:c.e,items:[]};by[c.l].items.push(it)});
+  order.forEach(function(l){if(by[l])out.push({label:l,emoji:by[l].emoji,items:by[l].items})});
+  return {cats:out,caisse:Math.round(caisse*100)/100,used:Math.round(used*100)/100,pantry:Math.round(pantry*100)/100,left:Math.max(0,Math.round((caisse-usedMain)*100)/100)}}
+function mealRealCost(m){var c=0;(m.q||[]).forEach(function(x){var pr=SHOP_PRICES[x[0]];if(!pr)return;var u=pr[3]||'g';var a=typeof x[1]==='number'?x[1]*m.k:0;
+  if(u==='u')a=x[3]?Math.max(1,Math.round(a/x[3])):a;else if(u==='x')a=pr[4]||1;c+=a*pr[2]/pr[1]});return Math.round(c*100)/100}
+function eur(v){return v.toFixed(2).replace('.',',')+' €'}
+function shopRealHtml(gen,budget){
+  var r=shopReal(gen),chk=lsGet('macro_checked');chk=(chk&&chk.wk===weekKey())?chk.items:{};var total=0,done=0;
+  r.cats.forEach(function(c){c.items.forEach(function(it){total++;if(chk[it.n])done++})});
+  var h='<div class="shop"><div class="sp-head"><div class="sp-row main"><span>À payer en caisse</span><strong>'+eur(r.caisse)+'</strong></div>';
+  h+='<div class="sp-row"><span>Consommé par tes repas cette semaine</span><strong>'+eur(r.used)+'</strong></div>';
+  if(r.pantry)h+='<div class="sp-row"><span>Placard, si tu n\'en as pas déjà</span><strong>+ '+eur(r.pantry)+'</strong></div>';
+  h+=r.caisse>budget?'<div class="sp-warn">Ça dépasse ton budget de '+budget+' € de <b>'+eur(r.caisse-budget)+'</b> en caisse, parce qu\'on achète des paquets entiers. Il te restera environ '+eur(r.left)+' de produits pour la semaine suivante.</div>':'<div class="sp-row"><span>Ton budget</span><strong>'+budget+' €</strong></div>';
+  h+='<p class="trk-note">Prix moyens estimés en hard-discount (type Lidl, Aldi) pour 2026, par paquet entier. Ils varient selon le magasin et les promos.</p></div>';
+  h+='<div class="shop-actions"><span class="shop-hint" id="shop-prog">'+done+' / '+total+' articles cochés</span><button class="shop-copy" onclick="copyShop()">📋 Copier la liste</button></div><div class="shop-items">';
+  r.cats.forEach(function(c){
+    h+='<div class="mp-shop-cat"><div class="mp-shop-cat-label"><span>'+c.emoji+' '+c.label+'</span><small>'+c.items.length+' article'+(c.items.length>1?'s':'')+'</small></div>';
+    c.items.forEach(function(it){h+='<div class="mp-shop-item'+(chk[it.n]?' checked':'')+'" data-n="'+escH(it.n)+'" onclick="shopToggle(this)"><span class="mp-shop-check"></span><span class="mp-shop-name">'+it.n+'<small>Besoin : '+it.qty+' · '+it.count+' repas</small></span>'+
+      (it.pack?'<span class="mp-shop-price"><b>'+eur(it.cost)+'</b><small>'+(it.packs>1?it.packs+' × ':'')+escH(it.pack)+'</small></span>':'<span class="mp-shop-qty">'+it.qty+'</span>')+'</div>'});
+    h+='</div>'});
+  return h+'</div></div>'}
+
+/* ---- insider-only: week plan day by day ---- */
+function trkKey(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+function weekDates(){var m=new Date();m.setHours(12,0,0,0);m.setDate(m.getDate()-todayIndex());var a=[];for(var i=0;i<7;i++){var d=new Date(m);d.setDate(m.getDate()+i);a.push(d)}return a}
+function ringSvg(p,col){var r=18,c=2*Math.PI*r,v=Math.max(0,Math.min(1,p));return '<svg viewBox="0 0 42 42" width="42" height="42" aria-hidden="true"><circle cx="21" cy="21" r="'+r+'" fill="none" stroke="var(--bg2)" stroke-width="4"/>'+(v>0?'<circle cx="21" cy="21" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="4" stroke-linecap="round" stroke-dasharray="'+(c*v).toFixed(1)+' '+c.toFixed(1)+'"/>':'')+'</svg>'}
+function weekDayHtml(gen,u){
+  var ti=todayIndex(),di=window._dashDay!=null?window._dashDay:ti,dates=weekDates(),st=lsGet('macro_track')||{},days=st.days||{},goal=window._trkCal||2000;
+  var h='<div class="ds" role="tablist" aria-label="Jours de la semaine">';
+  gen.plan.forEach(function(d,i){var t=days[trkKey(dates[i])],eaten=t?t.cal.reduce(function(a,x){return a+x.k},0):0,burn=t?t.act.reduce(function(a,x){return a+x.k},0):0,p=eaten/(goal+burn);
+    h+='<button type="button" role="tab" aria-selected="'+(i===di)+'" class="ds-d'+(i===di?' on':'')+(i===ti?' today':'')+'" onclick="dashDay('+i+')" aria-label="'+d.day+' '+dates[i].getDate()+'"><span class="ds-ring">'+ringSvg(p,p>1.1?'var(--yellow)':'var(--accent)')+'<b>'+d.day.charAt(0)+'</b></span><span class="ds-n">'+dates[i].getDate()+'</span></button>'});
+  h+='</div>';var d=gen.plan[di];
+  h+='<section class="wk-day'+(di===ti?' today':'')+'"><div class="wk-head"><strong>'+d.day+' '+dates[di].getDate()+(di===ti?' <em>Aujourd\'hui</em>':'')+'</strong><span>'+d.totals.cal+' kcal · '+d.totals.p+' g de protéines</span></div><div class="wk-grid c'+d.meals.length+'">';
+  d.meals.forEach(function(m,mi){h+=tileHtml(m,di,mi,u)});
+  return h+'</div></section>'}
+
+/* ---- insider-only: progress (weight, calorie balance, 7 days) ---- */
+function trkMonth(d){return d.getDate()+' '+['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'][d.getMonth()]}
+function trkProgressHtml(s){
+  var t=s.t,goal=window._trkCal||2000,start=+D.poids||70,w=s.w||[],cur=w.length?w[w.length-1].kg:start,cib=cibleOn()&&D.cible?+D.cible:0;
+  var h='<h3 class="trk-sub">Mes progrès</h3><div class="trk-grid">';
+  // weight
+  var dl=Math.round((cur-start)*10)/10,pct=cib&&cib!==start?Math.max(0,Math.min(100,Math.round((cur-start)/(cib-start)*100))):null;
+  h+='<div class="trk-card"><h3>Poids</h3><div class="trk-big">'+String(cur.toFixed(1)).replace('.',',')+' <small>kg</small></div><p class="trk-note">'+(dl>0?'+':dl<0?'−':'')+Math.abs(dl).toFixed(1).replace('.',',')+' kg depuis le début ('+start+' kg)'+(pct!=null?' · <b>'+pct+' %</b> de l\'objectif ('+cib+' kg)':'')+'</p>'+trkWeightChart(w,start,cur,cib)+
+    '<form class="trk-form" onsubmit="trkWeight();return false"><input class="au-input num" id="trk-kg" type="number" inputmode="decimal" step="0.1" min="30" max="250" placeholder="kg" aria-label="Poids du jour en kg" style="flex:1 1 6rem"><button class="trk-btn">Noter mon poids</button></form></div>';
+  // today's balance
+  var eaten=t.cal.reduce(function(a,x){return a+x.k},0),burn=t.act.reduce(function(a,x){return a+x.k},0),obj=goal+burn,bal=eaten-obj,pos=Math.max(0,Math.min(100,(bal+1000)/20));
+  h+='<div class="trk-card"><h3>Balance calorique du jour</h3><div class="trk-big">'+(bal>0?'+':bal<0?'−':'')+trkN(Math.abs(bal))+' <small>kcal</small></div><p class="trk-note">Mangé '+trkN(eaten)+' · objectif '+trkN(obj)+(burn?' (activité comprise)':'')+'</p>';
+  h+='<div class="trk-scale" role="img" aria-label="Balance '+trkN(bal)+' kcal"><i style="left:'+pos+'%"></i></div><div class="trk-ticks"><span>−1 000</span><span>−500</span><span>0</span><span>+500</span><span>+1 000</span></div>';
+  h+='<p class="trk-note">'+(Math.abs(bal)<=obj*0.1?'Pile dans ton objectif ✓':bal<0?'Il te reste <b>'+trkN(-bal)+' kcal</b> pour atteindre ton objectif.':'Tu es <b>'+trkN(bal)+' kcal</b> au-dessus de ton objectif.')+'</p></div>';
+  // 7 days
+  var ks=[],now=new Date();now.setHours(12,0,0,0);for(var i=6;i>=0;i--){var d=new Date(now);d.setDate(now.getDate()-i);ks.push(d)}
+  var vals=ks.map(function(d){var x=s.days[trkKey(d)];if(!x||!x.cal.length)return null;return {e:x.cal.reduce(function(a,y){return a+y.k},0),o:goal+x.act.reduce(function(a,y){return a+y.k},0)}});
+  var got=vals.filter(function(v){return v}),avg=got.length?Math.round(got.reduce(function(a,v){return a+v.e},0)/got.length):0,okN=got.filter(function(v){return Math.abs(v.e-v.o)<=v.o*0.1}).length;
+  var mx=Math.max(goal*1.3,Math.max.apply(null,got.map(function(v){return v.e}).concat([0]))*1.05),W=300,H=120,bw=26,gy=H-20-(goal/mx)*(H-30);
+  var svg='<svg class="trk-chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Calories des 7 derniers jours">';
+  vals.forEach(function(v,i){var x=12+i*(W-24)/7+((W-24)/7-bw)/2,lbl='DLMMJVS'.charAt(ks[i].getDay());
+    if(v){var bh=Math.max(2,(v.e/mx)*(H-30)),ok=Math.abs(v.e-v.o)<=v.o*0.1;svg+='<rect x="'+x.toFixed(1)+'" y="'+(H-20-bh).toFixed(1)+'" width="'+bw+'" height="'+bh.toFixed(1)+'" rx="5" fill="'+(ok?'var(--accent)':v.e>v.o?'var(--yellow)':'var(--blue)')+'"/>'}
+    else svg+='<rect x="'+x.toFixed(1)+'" y="'+(H-22)+'" width="'+bw+'" height="2" rx="1" fill="var(--bg2)"/>';
+    svg+='<text x="'+(x+bw/2).toFixed(1)+'" y="'+(H-5)+'" text-anchor="middle">'+lbl+'</text>'});
+  svg+='<line x1="8" x2="'+(W-8)+'" y1="'+gy.toFixed(1)+'" y2="'+gy.toFixed(1)+'" stroke="var(--ink2)" stroke-width="1.2" stroke-dasharray="5 4"/><text x="'+(W-8)+'" y="'+(gy-5).toFixed(1)+'" text-anchor="end">objectif '+trkN(goal)+'</text></svg>';
+  h+='<div class="trk-card trk-wide"><h3>Objectif calorique · 7 jours</h3><div class="trk-big">'+(got.length?trkN(avg):'–')+' <small>kcal en moyenne</small></div><p class="trk-note">'+(got.length?okN+' jour'+(okN>1?'s':'')+' sur '+got.length+' noté'+(got.length>1?'s':'')+' dans ton objectif (à 10 % près). Vert : dans l\'objectif · bleu : en dessous · orange : au-dessus.':'Note tes repas pour voir ta semaine ici.')+'</p>'+svg+'</div>';
+  return h+'</div>'}
+function trkWeightChart(w,start,cur,cib){
+  var today=new Date();today.setHours(12,0,0,0);var pts=w.map(function(x){return {t:new Date(x.d+'T12:00:00').getTime(),kg:x.kg}});
+  if(!pts.length)pts=[{t:today.getTime(),kg:start}];var last=pts[pts.length-1],end=null;
+  if(cib){var wk=Math.abs(cib-last.kg)/cibleRate(start);end={t:last.t+Math.max(1,wk)*7*864e5,kg:cib}}
+  var all=pts.concat(end?[end]:[]),t0=all[0].t,t1=Math.max(all[all.length-1].t,t0+7*864e5),k0=Math.min.apply(null,all.map(function(p){return p.kg}))-1,k1=Math.max.apply(null,all.map(function(p){return p.kg}))+1;
+  var W=300,H=110,X=function(t){return 10+(t-t0)/(t1-t0)*(W-20)},Y=function(k){return 12+(k1-k)/(k1-k0)*(H-34)};
+  var svg='<svg class="trk-chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Évolution du poids">';
+  if(pts.length>1)svg+='<polyline fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linejoin="round" points="'+pts.map(function(p){return X(p.t).toFixed(1)+','+Y(p.kg).toFixed(1)}).join(' ')+'"/>';
+  if(end)svg+='<line x1="'+X(last.t).toFixed(1)+'" y1="'+Y(last.kg).toFixed(1)+'" x2="'+X(end.t).toFixed(1)+'" y2="'+Y(end.kg).toFixed(1)+'" stroke="var(--blue)" stroke-width="2" stroke-dasharray="5 4"/><circle cx="'+X(end.t).toFixed(1)+'" cy="'+Y(end.kg).toFixed(1)+'" r="3.5" fill="var(--surface)" stroke="var(--blue)" stroke-width="2"/>';
+  pts.forEach(function(p,i){if(i===pts.length-1||pts.length<8)svg+='<circle cx="'+X(p.t).toFixed(1)+'" cy="'+Y(p.kg).toFixed(1)+'" r="'+(i===pts.length-1?4.5:3)+'" fill="var(--blue)"/>'});
+  svg+='<text x="10" y="'+(H-4)+'">'+trkMonth(new Date(t0))+'</text>'+(end?'<text x="'+(W-10)+'" y="'+(H-4)+'" text-anchor="end">'+cib+' kg vers le '+trkMonth(new Date(end.t))+'</text>':'')+'</svg>';
+  return svg}
+function trkWeight(){var v=Math.round(+trkVal('trk-kg')*10)/10;if(!(v>=30&&v<=250)){toast('Indique ton poids en kg.');return}var s=trkLoad(),k=trkDay();s.w=(s.w||[]).filter(function(x){return x.d!==k});s.w.push({d:k,kg:v});s.w.sort(function(a,b){return a.d<b.d?-1:1});if(s.w.length>400)s.w.shift();trkSave(s);toast('Poids noté : '+String(v).replace('.',',')+' kg')}
+
+/* ---- insider-only: steps from the iPhone (iOS Shortcut opens /#pas=NNNN) ---- */
+function trkApplySteps(){var p=lsGet('macro_steps_in');if(!p||!isInsider())return false;lsDel('macro_steps_in');if(p.d!==trkDay())return false;var s=trkLoad();s.t.steps=p.n;trkSave(s);setTimeout(function(){toast(trkN(p.n)+' pas importés depuis ton iPhone ✓');var el=document.getElementById('trk');if(el)el.scrollIntoView({behavior:'smooth'})},400);return true}
+function trkStepsHash(){var m=/^#pas=(\d{1,6})$/.exec(location.hash||'');if(!m)return false;lsSet('macro_steps_in',{n:+m[1],d:trkDay()});try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}return true}
+window.addEventListener('hashchange',function(){if(!trkStepsHash())return;var dp=document.getElementById('dashboard');if(dp&&dp.classList.contains('active')&&isInsider())showDashboard()});
+function trkDay(){return trkKey(new Date())}
 // recommended daily steps for the plan's goal: bulk = move for health without burning the surplus,
 // cut = extra burn for the deficit, maintain = where health benefits level off (lower from 60 y.o.)
 function trkStepRec(){var go=D.goal||'Prise de masse',old=(parseInt(D.age)||22)>=60,kg=trkKg();
@@ -1842,13 +1978,14 @@ function trkHtml(){
   h+='<p class="trk-note">'+(t.steps>=s.stepGoal?'Objectif atteint ✓':'Encore <b>'+trkN(s.stepGoal-t.steps)+' pas</b> pour ton objectif.')+(t.steps?' Tes pas du jour ≈ '+trkN(trkStepKcal(t.steps))+' kcal.':'')+'</p>';
   h+=s.stepMine?'<p class="trk-note">Objectif choisi par toi. Objectif calculé pour toi : '+trkN(s.rec.v)+' pas. <button class="trk-link" onclick="trkGoalReset()">Revenir à '+trkN(s.rec.v)+' pas</button></p>':'<p class="trk-note">'+s.rec.why+'</p>';
   h+='<form class="trk-form" onsubmit="trkSteps();return false"><input class="au-input" id="trk-steps" type="number" inputmode="numeric" min="0" max="100000" placeholder="Pas du jour" aria-label="Pas faits aujourd\'hui"><button class="trk-btn">Enregistrer</button></form>';
-  h+='<form class="trk-form" onsubmit="trkGoal();return false"><input class="au-input" id="trk-goal" type="number" inputmode="numeric" min="1000" max="50000" step="500" value="'+s.stepGoal+'" aria-label="Objectif de pas"><button class="trk-btn ghost">Changer l\'objectif</button></form></div>';
+  h+='<form class="trk-form" onsubmit="trkGoal();return false"><input class="au-input" id="trk-goal" type="number" inputmode="numeric" min="1000" max="50000" step="500" value="'+s.stepGoal+'" aria-label="Objectif de pas"><button class="trk-btn ghost">Changer l\'objectif</button></form>'+
+    '<details class="trk-help"><summary>Relier les pas de ton iPhone</summary><ol><li>Ouvre l\'app <b>Raccourcis</b>, touche <b>+</b>.</li><li>Ajoute l\'action <b>Rechercher des échantillons de santé</b> : type <b>Nombre de pas</b>, date de début <b>Aujourd\'hui</b>. Autorise l\'accès à Santé.</li><li>Ajoute <b>Calculer les statistiques</b> → <b>Somme</b>, puis <b>Arrondir le nombre</b>.</li><li>Ajoute <b>URL</b> : <code>https://www.mangereco.com/#pas=</code> suivi de la variable <b>Nombre arrondi</b>, puis <b>Ouvrir les URL</b>.</li><li>Nomme-le « Mes pas » et lance-le : Safari s\'ouvre et tes pas du jour sont notés ici. Tu peux aussi l\'automatiser (onglet <b>Automatisation</b>, tous les soirs).</li></ol><p class="trk-note">Fonctionne dans Safari, là où tu es connecté. Tes pas ne sont envoyés à aucun serveur.</p></details></div>';
   // activities
   h+='<div class="trk-card"><h3>Activités</h3><div class="trk-big">'+trkN(mins)+' <small>min · '+trkN(burned)+' kcal</small></div>';
   h+=t.act.length?'<ul class="trk-list">'+t.act.map(function(x,i){return '<li><span>'+escH(x.t)+' · '+x.min+' min</span><b>'+trkN(x.k)+' kcal</b><button class="trk-x" onclick="trkDel(\'act\','+i+')" aria-label="Retirer '+escH(x.t)+'">×</button></li>'}).join('')+'</ul>':'<p class="trk-note">Aucune activité aujourd\'hui.</p>';
   h+='<form class="trk-form" onsubmit="trkAddAct();return false"><select class="au-input" id="trk-act-t" aria-label="Type d\'activité">'+TRK_ACTS.map(function(a){return '<option>'+a[0]+'</option>'}).join('')+'</select><input class="au-input num" id="trk-act-m" type="number" inputmode="numeric" min="1" max="600" placeholder="min" aria-label="Durée en minutes"><button class="trk-btn">Ajouter</button></form>';
   h+='<p class="trk-note">Calories estimées selon l\'activité, la durée et ton poids.</p></div>';
-  return h+'</div></section>';
+  return h+'</div>'+trkProgressHtml(s)+'</section>';
 }
 function trkRender(){var el=document.getElementById('trk');if(el)el.innerHTML=trkHtml()}
 function trkVal(id){var el=document.getElementById(id);return el?el.value.trim():''}
@@ -1869,12 +2006,12 @@ var h='<div class="dash-wrap">';
 h+='<div class="dash-greet"><h1>Bonjour'+(nm?' '+escH(nm):'')+'</h1><p>Voici ta semaine, pensée pour '+goalTxt+'.</p>'+answerChips()+'</div>';
 if(!u)h+='<div class="dash-lock"><div class="dl-ico">🔒</div><div class="dl-txt"><strong>Ton plan est prêt, il te manque la clé.</strong><span>Débloque toutes les recettes, les macros de chaque repas et la liste de courses.</span></div><button class="btn btn-p" onclick="showPaywall()">Débloquer</button></div>';
 if(MEALS.filter(mealOk).length===0)h+='<div class="dash-warn">Tous les repas contiennent un aliment que tu as exclu. Retire-en quelques-uns dans « Mes réponses » pour avoir un plan adapté.</div>';
-h+='<div class="dash-kpis"><div class="dk"><strong>'+mc.cal+'</strong><span>kcal / jour</span></div><div class="dk"><strong>'+mc.protG+' g</strong><span>protéines / jour</span></div><div class="dk"><strong>'+mc.m+'</strong><span>repas / semaine</span></div><div class="dk"><strong id="dk-cost">'+gen.weekCost.toFixed(0)+' €</strong><span>courses estimées</span></div></div>';
-if(isInsider()){window._trkCal=mc.cal;window._trkProt=mc.protG;h+='<div id="trk">'+trkHtml()+'</div>'}
+h+='<div class="dash-kpis"><div class="dk"><strong>'+mc.cal+'</strong><span>kcal / jour</span></div><div class="dk"><strong>'+mc.protG+' g</strong><span>protéines / jour</span></div><div class="dk"><strong>'+mc.m+'</strong><span>repas / semaine</span></div><div class="dk"><strong id="dk-cost">'+(isInsider()?shopReal(gen).caisse:gen.weekCost).toFixed(0)+' €</strong><span>'+(isInsider()?'en caisse':'courses estimées')+'</span></div></div>';
+if(isInsider()){window._trkCal=mc.cal;window._trkProt=mc.protG;trkApplySteps();h+='<div id="trk">'+trkHtml()+'</div>'}
 h+='<h2 class="dash-h">Ta semaine</h2><div id="dash-week">'+weekHtml(gen,u)+'</div>';
 
 
-h+='<h2 class="dash-h">Ta liste de courses</h2><div id="dash-shop">'+shopListHtml(gen,mc.b,u)+'</div>';
+h+='<h2 class="dash-h">Ta liste de courses</h2><div id="dash-shop">'+(isInsider()?shopRealHtml(gen,mc.b):shopListHtml(gen,mc.b,u))+'</div>';
 h+='<div class="dash-actions"><button class="dash-action" onclick="showResult()"><strong>📊 Mes macros</strong><span>Calories, protéines, glucides, lipides</span></button><button class="dash-action" onclick="editProfile()"><strong>⚙️ Mes réponses</strong><span>Budget, salle, objectif…</span></button>'+(u?'<button class="dash-action" onclick="regenWeek()"><strong>🔄 Nouvelle semaine</strong><span>Un autre plan avec les mêmes réponses</span></button>':'')+(isAdmin()?'<button class="dash-action" onclick="startDemoRun()"><strong>🎬 Refaire le parcours</strong><span>Mode vidéo : repars de zéro</span></button>':'')+'</div>';
 h+='<div class="dash-account"><div class="dash-account-row"><span>Compte</span><strong>'+escH(Auth.user?Auth.user.email:'')+'</strong></div><div class="dash-account-row"><span>Statut</span><strong>'+(u?'Plan complet':'Aperçu gratuit')+'</strong></div>'+(u?'<a class="au-toggle" href="mailto:'+MACRO_CFG.contact+'?subject=Mon%20abonnement%20mangereco">Gérer ou résilier mon abonnement</a>':'')+(isAdmin()?'<button class="au-toggle" onclick="showAdmin()">📈 Statistiques du site</button>':'')+'<button class="au-toggle" onclick="signOut()">Se déconnecter</button><button class="au-toggle" onclick="deleteMyData()">Supprimer mes données</button></div>';
 h+='</div>';
@@ -2197,6 +2334,7 @@ function afterLogin(fromRedirect){track('login');
 }
 function initAuth(){
   track('lp_view');track('page_view',{page:'landing',ref:utmSrc()||refHost(),dev:devType(),camp:utmCamp()});var yr=document.getElementById('yr');if(yr)yr.textContent=new Date().getFullYear();
+  if(trkStepsHash())history.replaceState(null,'',location.pathname+location.search);
   var hash=location.hash||'';
   if(sbOn()&&hash.indexOf('access_token=')>-1){
     var q={};hash.replace(/^#/,'').split('&').forEach(function(kv){var i=kv.indexOf('=');if(i>0)q[kv.slice(0,i)]=decodeURIComponent(kv.slice(i+1))});
@@ -2405,7 +2543,7 @@ var el=document.createElement('div');el.className='pw-modal';el.id='meal-modal';
 el.innerHTML='<div class="pw-sheet rc-sheet"><button class="pw-x" onclick="closeMealDetail()" aria-label="Fermer">&times;</button>'+
 '<div class="rc-hero">'+(img?'<img class="rc-photo" src="'+img+'" alt="">':'<div class="rc-emoji">'+m.emoji+'</div>')+'<span class="rc-tag">'+day.day+' · '+(CAT_LBL[m.cat]||'Repas')+'</span></div>'+
 '<h2 class="rc-title">'+m.n+'</h2>'+
-'<div class="rc-kcal"><strong>'+m.cal+'</strong><em>kcal</em><span>⏱ '+(m.t||20)+' min · 1 portion · '+m.price.toFixed(2).replace('.',',')+' €</span></div>'+
+'<div class="rc-kcal"><strong>'+m.cal+'</strong><em>kcal</em><span>⏱ '+(m.t||20)+' min · 1 portion · '+(isInsider()?mealRealCost(m):m.price).toFixed(2).replace('.',',')+' €</span></div>'+
 '<div class="rc-bar"><i class="p" style="width:'+(kp/kt*100).toFixed(1)+'%"></i><i class="g" style="width:'+(kg/kt*100).toFixed(1)+'%"></i><i class="l" style="width:'+(kl/kt*100).toFixed(1)+'%"></i></div>'+
 '<div class="rc-legend"><span><i class="p"></i>Protéines <b>'+m.p+' g</b></span><span><i class="g"></i>Glucides <b>'+m.g+' g</b></span><span><i class="l"></i>Lipides <b>'+m.l+' g</b></span></div>'+
 (ing?'<h3 class="rc-h">Ce qu\'il te faut</h3>'+(m.q?'<p class="rc-note">Poids à cru ou à sec, sauf mention. Ils correspondent aux calories et aux macros ci-dessus.</p>':'')+'<ul class="rc-ing'+(m.q?' rc-ing-q':'')+'">'+ing+'</ul>':'')+
@@ -2464,15 +2602,16 @@ lsSet('macro_checked',c);var pr=document.getElementById('shop-prog');if(pr){var 
 function copyShop(){
 var gen=window._gen;if(!gen||!isUnlocked())return;
 var t='Ma liste de courses (mangereco.)\n';
-shopData(gen).forEach(function(c){t+='\n'+c.label.toUpperCase()+'\n';c.items.forEach(function(i){t+='- '+i.n+' : '+i.qty+'\n'})});
-t+='\nTotal estimé : '+gen.weekCost.toFixed(2).replace('.',',')+' €';
+if(isInsider()){var rr=shopReal(gen);rr.cats.forEach(function(c){t+='\n'+c.label.toUpperCase()+'\n';c.items.forEach(function(i){t+='- '+i.n+' : '+(i.pack?(i.packs>1?i.packs+' × ':'')+i.pack+' ('+eur(i.cost)+')':i.qty)+'\n'})});t+='\nÀ payer en caisse : '+eur(rr.caisse)+(rr.pantry?' (+ '+eur(rr.pantry)+' de placard si besoin)':'')}
+else{shopData(gen).forEach(function(c){t+='\n'+c.label.toUpperCase()+'\n';c.items.forEach(function(i){t+='- '+i.n+' : '+i.qty+'\n'})});
+t+='\nTotal estimé : '+gen.weekCost.toFixed(2).replace('.',',')+' €'}
 track('copy_list');noteList();
 if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){toast('Liste copiée !')}).catch(function(){toast('Copie impossible.')});
 else toast('Copie impossible.')}
 function refreshShop(){
 var mc=computeMacros(),el=document.getElementById('dash-shop');
-if(el)el.innerHTML=shopListHtml(window._gen,mc.b,isUnlocked());
-var k=document.getElementById('dk-cost');if(k)k.textContent=window._gen.weekCost.toFixed(0)+' €'}
+if(el)el.innerHTML=isInsider()?shopRealHtml(window._gen,mc.b):shopListHtml(window._gen,mc.b,isUnlocked());
+var k=document.getElementById('dk-cost');if(k)k.textContent=(isInsider()?shopReal(window._gen).caisse:window._gen.weekCost).toFixed(0)+' €'}
 function swapMeal(di,mi){
 var gen=window._gen;if(!gen||!isUnlocked())return;
 var cur=gen.plan[di].meals[mi],veg=D.diet==='Végétarien';
