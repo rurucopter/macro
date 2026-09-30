@@ -953,6 +953,50 @@ body:has(#dashboard.active){background:var(--bg)}
 .trk-chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .trk-prev{font-size:.9375rem;font-weight:700;color:var(--accent-text);font-variant-numeric:tabular-nums;min-height:1.4em}
 .trk-link{border:0;background:none;padding:0;color:var(--accent-text);font-family:var(--font);font-size:.8125rem;font-weight:700;cursor:pointer;text-decoration:underline}
+body.app-mode .nav,body.app-mode #sticky-cta,body.app-mode .ft{display:none!important}
+.app{max-width:560px;margin:0 auto;padding:max(14px,env(safe-area-inset-top)) 16px calc(128px + env(safe-area-inset-bottom))}
+.app-top{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin:.25rem 0 .25rem}
+.app-brand{font-family:var(--font-d);font-weight:800;font-size:1rem;color:var(--ink)}
+.app-brand i{font-style:normal;color:var(--accent)}
+.app-date{font-size:.8125rem;font-weight:600;color:var(--muted);text-transform:capitalize}
+.app-title{font-family:var(--font-d);font-size:2.125rem;line-height:1.1;font-weight:800;letter-spacing:-.02em;color:var(--ink);margin:.35rem 0 1rem}
+.app-h{display:flex;align-items:baseline;justify-content:space-between;gap:.75rem;font-family:var(--font-d);font-size:1.125rem;font-weight:800;color:var(--ink);margin:1.5rem 0 .65rem}
+.app-h small{font-family:var(--font);font-size:.8125rem;font-weight:600;color:var(--muted)}
+.app-card{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:1.1rem;box-shadow:var(--shadow)}
+.hero-cal{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.35rem 1.25rem}
+.hero-cal .n{font-family:var(--font-d);font-size:3rem;font-weight:800;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.hero-cal .l{font-size:.9375rem;color:var(--muted);margin-top:.35rem}
+.hero-cal .sub{font-size:.75rem;color:var(--muted);margin-top:.6rem;font-variant-numeric:tabular-nums}
+.ring{position:relative;display:grid;place-items:center;flex-shrink:0}
+.ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.ring b{position:relative;font-size:.875rem;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+.trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem;margin-top:.75rem}
+.trio .app-card{display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:.9rem .5rem;text-align:center;font-family:var(--font);color:inherit;cursor:pointer}
+.trio strong{font-family:var(--font-d);font-size:1.25rem;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1}
+.trio span{font-size:.75rem;color:var(--muted)}
+.menu-row{display:flex;align-items:stretch;gap:.85rem;padding:.6rem;margin-bottom:.6rem}
+.menu-row .ph{width:76px;height:76px;border-radius:16px;object-fit:cover;flex-shrink:0;background:var(--bg2);display:grid;place-items:center;font-size:2rem}
+.menu-row .bd{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:.2rem;cursor:pointer}
+.menu-row .ct{font-size:.6875rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.menu-row .nm{font-weight:700;color:var(--ink);line-height:1.25}
+.menu-row .mt{font-size:.8125rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.menu-ck{align-self:center;width:40px;height:40px;border-radius:50%;border:2px solid var(--border);background:var(--bg2);color:transparent;font-size:1.1rem;font-weight:800;cursor:pointer;flex-shrink:0}
+.menu-ck.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.menu-ck:focus-visible,.tab:focus-visible,.app-fab:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.app .trk-grid{grid-template-columns:1fr}
+.app .trk-card{border-radius:22px;box-shadow:var(--shadow);padding:1.1rem}
+.set-list{display:flex;flex-direction:column}
+.set-list button,.set-list a{display:flex;align-items:center;justify-content:space-between;gap:.75rem;width:100%;background:none;border:0;border-bottom:1px solid var(--border);padding:.95rem .25rem;font-family:var(--font);font-size:.9375rem;font-weight:600;color:var(--ink);text-align:left;cursor:pointer;text-decoration:none}
+.set-list > :last-child{border-bottom:0}
+.set-list small{font-weight:500;color:var(--muted);font-size:.8125rem}
+.set-list .danger{color:#DC2626}
+.tabbar{position:fixed;left:50%;bottom:calc(12px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:60;width:calc(100% - 24px);max-width:520px;display:grid;grid-template-columns:repeat(5,1fr);gap:.15rem;padding:.4rem;border-radius:30px;background:var(--glass);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);border:1px solid var(--glass-border);box-shadow:var(--shadow-lg)}
+.tab{display:flex;flex-direction:column;align-items:center;gap:.2rem;border:0;background:none;border-radius:24px;padding:.5rem .1rem .45rem;font-family:var(--font);font-size:.6875rem;font-weight:600;color:var(--ink2);cursor:pointer}
+.tab svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tab.on{background:var(--accent-bg);color:var(--accent-text)}
+.app-fab{position:fixed;right:max(16px,calc(50% - 264px));bottom:calc(96px + env(safe-area-inset-bottom));z-index:61;width:58px;height:58px;border-radius:50%;border:0;background:var(--grad-strong);color:var(--on-accent);font-size:2rem;line-height:1;box-shadow:0 10px 26px rgba(5,150,105,.35);cursor:pointer}
+@media(prefers-reduced-motion:no-preference){.app-view{animation:appIn .22s ease-out}}
+@keyframes appIn{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:none}}
 .ds{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.25rem;margin:0 0 1rem}
 .ds-d{display:flex;flex-direction:column;align-items:center;gap:.3rem;border:0;background:none;padding:.25rem 0;cursor:pointer;font-family:var(--font);color:var(--muted)}
 .ds-ring{position:relative;width:42px;height:42px;display:grid;place-items:center}
@@ -1479,7 +1523,7 @@ a.au-toggle{display:block;text-align:left}
 <img id="img-real-atmo2" src="/img/real-atmo2.jpg" style="display:none">
 <script>
 var D={},step=0,selGender=null;
-function showPage(id){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});document.getElementById(id).classList.add('active');window.scrollTo(0,0);var stk=document.getElementById('sticky-cta');if(stk)stk.classList.remove('show');if(id==='landing')initReveal();if(id!=='admin')track('page_view',{page:id})}
+function showPage(id){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});document.getElementById(id).classList.add('active');document.body.classList.toggle('app-mode',id==='dashboard'&&typeof isInsider==='function'&&isInsider());window.scrollTo(0,0);var stk=document.getElementById('sticky-cta');if(stk)stk.classList.remove('show');if(id==='landing')initReveal();if(id!=='admin')track('page_view',{page:id})}
 function beginFunnel(){track('funnel_start');step=0;D={};showPage('onboarding');renderStep()}
 function startOnboarding(){if(window._demoRun&&isAdmin()){beginFunnel();return}
 if(Auth.user){
@@ -1502,34 +1546,41 @@ var S=[
 {icon:'\u{1F356}',bg:'#92400E',label:'Je mange de tout',sub:'Aucune restriction.'},{icon:'\u{1F96C}',bg:'#15803D',label:'V\u00e9g\u00e9tarien',sub:'Prot\u00e9ines via oeufs, laitages, l\u00e9gumineuses.'},{icon:'\u{1F6AB}',bg:'#B91C1C',label:'Sans porc'},{icon:'\u262A',bg:'#1D4ED8',label:'Halal'}
 ]},
 {id:'avoid',title:'Des allergies ou des aliments que tu n\'aimes pas ?',desc:'On les retire de tes repas et de ta liste de courses.',type:'avoid'},
+{id:'body',title:'Ta taille et ton poids',desc:'Le calcul de tes calories part de l\u00e0.',type:'double-slider',s1:{label:'Taille',min:140,max:210,default:175,unit:' cm'},s2:{label:'Poids',min:40,max:160,default:75,unit:' kg'}},
 {id:'goal',title:'Ton objectif ?',desc:'',type:'list',options:[
 {icon:'\u{1F4AA}',bg:'#16A34A',label:'Prise de masse',sub:'Surplus calorique pour construire du muscle.'},{icon:'\u{1F525}',bg:'#DC2626',label:'S\u00e8che',sub:'D\u00e9ficit pour perdre du gras.'},{icon:'\u2696',bg:'#2563EB',label:'Maintien',sub:'Stabiliser et recomposer.'}
 ]},
-{id:'body',title:'Ta taille et ton poids',desc:'Le calcul de tes calories part de l\u00e0.',type:'double-slider',s1:{label:'Taille',min:140,max:210,default:175,unit:' cm'},s2:{label:'Poids',min:40,max:160,default:75,unit:' kg'}},
 {id:'profile',title:'Pour finir',desc:'Derni\u00e8re question.',type:'profile'}
 ];
 function renderStep(){track('step_view',{idx:step,id:S[step].id});
 var s=S[step],pct=((step+1)/S.length*100);setSegs(step);document.getElementById('ob-pct').textContent=(step+1)+'/'+S.length;updateCounter();var h='';
 if(step>0)h+='<button class="ob-back" onclick="pStep()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Retour</button>';
 h+='<div class="ob-step">\u00C9TAPE '+(step+1)+' SUR '+S.length+'</div><div class="ob-title">'+s.title+'</div>';
-if(s.desc)h+='<div class="ob-desc">'+(s.type==='double-slider'&&cibleOn()?'Le calcul de tes calories part de là, et ton poids cible fixe le cap.':s.desc)+'</div>';if(step>1)h+=buildSummary();
-if(s.type==='grid'){h+='<div class="ob-grid" style="grid-template-columns:repeat('+(s.cols||3)+',1fr)">';s.options.forEach(function(o){var ic;if(o.imgId){var el=document.getElementById(o.imgId);ic=el?'<img src="'+el.src+'" alt="'+o.label+'" style="width:28px;height:28px;object-fit:contain;border-radius:4px">':o.label.charAt(0);h+='<button class="ob-opt" onclick="pick(\''+s.id+"','"+o.label.replace(/'/g,"\\'")+"')\"><div class=\"ob-icon\" style=\"background:"+o.bg+";padding:4px\">"+ic+"</div><div class=\"ob-opt-label\">"+o.label+"</div></button>"}else{h+='<button class="ob-opt" onclick="pick(\''+s.id+"','"+o.label.replace(/'/g,"\\'")+"')\"><div class=\"ob-icon\" style=\"background:"+o.bg+"\">"+o.icon+"</div><div class=\"ob-opt-label\">"+o.label+"</div></button>"}});h+='</div>'}
+if(s.desc)h+='<div class="ob-desc">'+s.desc+'</div>';if(step>1)h+=buildSummary();
+if(s.id==='goal')h+=goalHtml(s);
+else if(s.type==='grid'){h+='<div class="ob-grid" style="grid-template-columns:repeat('+(s.cols||3)+',1fr)">';s.options.forEach(function(o){var ic;if(o.imgId){var el=document.getElementById(o.imgId);ic=el?'<img src="'+el.src+'" alt="'+o.label+'" style="width:28px;height:28px;object-fit:contain;border-radius:4px">':o.label.charAt(0);h+='<button class="ob-opt" onclick="pick(\''+s.id+"','"+o.label.replace(/'/g,"\\'")+"')\"><div class=\"ob-icon\" style=\"background:"+o.bg+";padding:4px\">"+ic+"</div><div class=\"ob-opt-label\">"+o.label+"</div></button>"}else{h+='<button class="ob-opt" onclick="pick(\''+s.id+"','"+o.label.replace(/'/g,"\\'")+"')\"><div class=\"ob-icon\" style=\"background:"+o.bg+"\">"+o.icon+"</div><div class=\"ob-opt-label\">"+o.label+"</div></button>"}});h+='</div>'}
 else if(s.type==='list'){h+='<div class="ob-opts">';s.options.forEach(function(o){var val=o.val||o.label;var tag=o.tag?'<span class="ob-tag">'+o.tag+'</span>':'';var ic;if(o.imgId){var el=document.getElementById(o.imgId);ic=el?'<img src="'+el.src+'" alt="'+o.label+'" style="width:28px;height:28px;object-fit:contain;border-radius:4px">':o.label.charAt(0);h+='<button class="ob-opt" onclick="pick(\''+s.id+"','"+val+"')\"><div class=\"ob-icon\" style=\"background:"+o.bg+";padding:4px\">"+ic+"</div><div style=\"flex:1\"><div class=\"ob-opt-label\">"+o.label+"</div>"+(o.sub?'<div class="ob-opt-sub">'+o.sub+"</div>":"")+"</div>"+tag+"</button>"}else{h+='<button class="ob-opt" onclick="pick(\''+s.id+"','"+val+"')\"><div class=\"ob-icon\" style=\"background:"+o.bg+"\">"+o.icon+"</div><div style=\"flex:1\"><div class=\"ob-opt-label\">"+o.label+"</div>"+(o.sub?'<div class="ob-opt-sub">'+o.sub+"</div>":"")+"</div>"+tag+"</button>"}});h+='</div>'}
 else if(s.type==='slider'){var v=D[s.id]||s.default;h+='<div class="ob-slider-val" id="sv">'+v+' <small>'+s.unit+s.suffix+'</small></div><div class="ob-cash" id="ob-cash" data-n="'+cashN(v)+'">'+cashHtml(v)+'</div><input type="range" class="ob-range" min="'+s.min+'" max="'+s.max+'" value="'+v+'" oninput="updS(this)"><div class="ob-range-labels"><span>'+s.min+' '+s.unit+'</span><span>'+s.max+' '+s.unit+'</span></div>';var meals=parseInt(D.meals)||14;var ppm=(v/meals).toFixed(2).replace('.',',');h+='<div class="ob-insight" id="ob-ins"><strong>'+ppm+' \u20AC</strong> par repas sur '+meals+' repas/semaine</div><button class="btn btn-p btn-lg btn-full" style="margin-top:1.5rem" onclick="pick(\''+s.id+"',document.querySelector('.ob-range').value)\">Continuer \u2192</button>"}
-else if(s.type==='double-slider'){var v1=D.taille||s.s1.default,v2=D.poids||s.s2.default;h+='<div style="font-weight:600;font-size:.8125rem;color:var(--muted);margin-bottom:.25rem">'+s.s1.label+'</div><div class="ob-slider-val" id="sv1">'+v1+'<small>'+s.s1.unit+'</small></div><input type="range" class="ob-range" id="r1" min="'+s.s1.min+'" max="'+s.s1.max+'" value="'+v1+'" oninput="document.getElementById(\'sv1\').innerHTML=this.value+\'<small>'+s.s1.unit+"</small>'\"><div class=\"ob-range-labels\"><span>"+s.s1.min+s.s1.unit+"</span><span>"+s.s1.max+s.s1.unit+"</span></div>";h+='<div style="font-weight:600;font-size:.8125rem;color:var(--muted);margin-top:1.5rem;margin-bottom:.25rem">'+s.s2.label+'</div><div class="ob-slider-val" id="sv2">'+v2+'<small>'+s.s2.unit+'</small></div><input type="range" class="ob-range" id="r2" min="'+s.s2.min+'" max="'+s.s2.max+'" value="'+v2+'" oninput="document.getElementById(\'sv2\').innerHTML=this.value+\'<small>'+s.s2.unit+"</small>'\"><div class=\"ob-range-labels\"><span>"+s.s2.min+s.s2.unit+"</span><span>"+s.s2.max+s.s2.unit+"</span></div>";if(cibleOn())h+='<div style="font-weight:600;font-size:.8125rem;color:var(--muted);margin-top:1.5rem;margin-bottom:.25rem">Poids cible</div><div class="ob-slider-val" id="sv3"></div><input type="range" class="ob-range" id="r3" aria-label="Poids cible"><div class="ob-range-labels"><span id="r3-min"></span><span id="r3-max"></span></div><div class="ob-insight" id="ob-cible" aria-live="polite"></div>';h+='<button class="btn btn-p btn-lg btn-full" style="margin-top:1.5rem" onclick="pickBody()">Continuer \u2192</button>'}
+else if(s.type==='double-slider'){var v1=D.taille||s.s1.default,v2=D.poids||s.s2.default;h+='<div style="font-weight:600;font-size:.8125rem;color:var(--muted);margin-bottom:.25rem">'+s.s1.label+'</div><div class="ob-slider-val" id="sv1">'+v1+'<small>'+s.s1.unit+'</small></div><input type="range" class="ob-range" id="r1" min="'+s.s1.min+'" max="'+s.s1.max+'" value="'+v1+'" oninput="document.getElementById(\'sv1\').innerHTML=this.value+\'<small>'+s.s1.unit+"</small>'\"><div class=\"ob-range-labels\"><span>"+s.s1.min+s.s1.unit+"</span><span>"+s.s1.max+s.s1.unit+"</span></div>";h+='<div style="font-weight:600;font-size:.8125rem;color:var(--muted);margin-top:1.5rem;margin-bottom:.25rem">'+s.s2.label+'</div><div class="ob-slider-val" id="sv2">'+v2+'<small>'+s.s2.unit+'</small></div><input type="range" class="ob-range" id="r2" min="'+s.s2.min+'" max="'+s.s2.max+'" value="'+v2+'" oninput="document.getElementById(\'sv2\').innerHTML=this.value+\'<small>'+s.s2.unit+"</small>'\"><div class=\"ob-range-labels\"><span>"+s.s2.min+s.s2.unit+"</span><span>"+s.s2.max+s.s2.unit+"</span></div>";h+='<button class="btn btn-p btn-lg btn-full" style="margin-top:1.5rem" onclick="pickBody()">Continuer \u2192</button>'}
 else if(s.type==='stepper'){var v=D[s.id]||s.default;h+='<div class="ob-stepper"><button class="ob-stepper-btn" onclick="stepMeals(-1)">&#x2212;</button><div class="ob-stepper-val"><div class="ob-stepper-n" id="stepper-n">'+v+'</div><div class="ob-stepper-u">'+s.unit+'</div></div><button class="ob-stepper-btn" onclick="stepMeals(1)">+</button></div>';h+='<div class="ob-presets">';s.presets.forEach(function(p){var cls=p.val===v?' active':'';var tag=p.tag?'<span class="ob-tag">'+p.tag+'</span>':'';h+='<button class="ob-preset'+cls+'" data-v="'+p.val+'" onclick="setMeals('+p.val+')"><span class="pr-l">'+p.label+'</span>'+(p.sub?'<span class="pr-s">'+p.sub+'</span>':'')+tag+'</button>'});h+='</div><button class="btn btn-p btn-lg btn-full" onclick="pick(\''+s.id+"',document.getElementById('stepper-n').textContent)\">Continuer \u2192</button>"}
 else if(s.type==='avoid'){h+=avoidHtml()}
 else if(s.type==='profile'){h+='<div style="font-weight:600;font-size:.8125rem;color:var(--muted);margin-bottom:.25rem">Ton prénom</div><input type="text" class="au-input" id="ob-prenom" placeholder="Comment on t\'appelle ?" value="'+escH(D.prenom||'')+'" oninput="D.prenom=this.value" style="margin-bottom:1.25rem;width:100%">';h+='<div class="ob-grid" style="grid-template-columns:repeat(2,1fr);margin-bottom:1rem"><button class="ob-opt" id="g-h" onclick="pickG(\'Homme\')"><div class="ob-icon" style="background:#1D4ED8">\u2642</div><div class="ob-opt-label">Homme</div></button><button class="ob-opt" id="g-f" onclick="pickG(\'Femme\')"><div class="ob-icon" style="background:#BE185D">\u2640</div><div class="ob-opt-label">Femme</div></button></div>';var age=D.age||22;h+='<div style="font-weight:600;font-size:.8125rem;color:var(--muted);margin-bottom:.25rem">\u00C2ge</div><div class="ob-slider-val" id="sv-age">'+age+'<small> ans</small></div><input type="range" class="ob-range" id="r-age" min="16" max="60" value="'+age+'" oninput="document.getElementById(\'sv-age\').innerHTML=this.value+\'<small> ans</small>\'"><div class="ob-range-labels"><span>16</span><span>60</span></div><button class="btn btn-p btn-lg btn-full" style="margin-top:1.5rem" onclick="finishWithLoading()">Voir mon plan \u2192</button>'}
-document.getElementById('ob-main').innerHTML=h;window.scrollTo(0,0);if(s.type==='double-slider')cibleInit();initRanges();if(s.type==='avoid')avoidRender()}
+document.getElementById('ob-main').innerHTML=h;window.scrollTo(0,0);if(s.id==='goal'&&cibleOn())cibleInit();initRanges();if(s.type==='avoid')avoidRender()}
 // target weight (bulk / cut only): range follows the current weight, time estimate at a healthy pace
+// goal step: bulk / cut reveal the target weight (current weight comes from the previous step); maintain goes straight on
+function goalHtml(s){var h='<div class="ob-opts">';s.options.forEach(function(o){h+='<button class="ob-opt'+(D.goal===o.label?' selected':'')+'" onclick="goalPick(\''+o.label+'\')"><div class="ob-icon" style="background:'+o.bg+'">'+o.icon+'</div><div style="flex:1"><div class="ob-opt-label">'+o.label+'</div><div class="ob-opt-sub">'+o.sub+'</div></div></button>'});h+='</div>';
+  if(cibleOn())h+='<div id="ob-target"><div style="font-weight:600;font-size:.8125rem;color:var(--muted);margin-top:1.5rem;margin-bottom:.25rem">Ton poids cible <span style="font-weight:500">(aujourd\'hui '+(+D.poids||75)+' kg)</span></div><div class="ob-slider-val" id="sv3"></div><input type="range" class="ob-range" id="r3" aria-label="Poids cible"><div class="ob-range-labels"><span id="r3-min"></span><span id="r3-max"></span></div><div class="ob-insight" id="ob-cible" aria-live="polite"></div><button class="btn btn-p btn-lg btn-full" style="margin-top:1.5rem" onclick="goalNext()">Continuer \u2192</button></div>';
+  return h}
+function goalPick(v){var had=cibleOn();D.goal=v;if(!cibleOn()){delete D.cible;step++;renderStep();return}renderStep();var t=document.getElementById('ob-target');if(t&&!had)setTimeout(function(){t.scrollIntoView({behavior:'smooth',block:'center'})},60)}
+function goalNext(){var r3=document.getElementById('r3');if(r3)D.cible=r3.value;step++;if(step<S.length)renderStep();else showResult()}
 function cibleOn(){return D.goal==='Prise de masse'||D.goal==='Sèche'}
 function cibleRange(p){return D.goal==='Sèche'?[Math.max(40,p-40),p-1]:[p+1,Math.min(180,p+25)]}
 function cibleRate(p){return D.goal==='Sèche'?Math.max(0.3,Math.round(p*0.007*10)/10):0.3} // kg per week: cut ≈ 0.7 % of body weight, lean bulk 0.3
-function cibleInit(){var r2=document.getElementById('r2'),r3=document.getElementById('r3');if(!r2||!r3)return;
-  var p=+r2.value,rg=cibleRange(p),c=+D.cible;r3.min=rg[0];r3.max=rg[1];r3.value=c>=rg[0]&&c<=rg[1]?c:(D.goal==='Sèche'?Math.max(rg[0],p-5):Math.min(rg[1],p+5));
-  window._cibleD=null;r2.addEventListener('input',cibleUpd);r3.addEventListener('input',cibleUpd);cibleUpd()}
-function cibleUpd(e){var r2=document.getElementById('r2'),r3=document.getElementById('r3');if(!r2||!r3)return;
-  var p=+r2.value,rg=cibleRange(p),c=+r3.value;r3.min=rg[0];r3.max=rg[1];if(e&&e.target===r2&&window._cibleD!=null)c=p+window._cibleD;r3.value=c;if(c<rg[0]||c>rg[1]){c=Math.min(rg[1],Math.max(rg[0],c));r3.value=c}c=+r3.value;window._cibleD=c-p;
+function cibleInit(){var r3=document.getElementById('r3');if(!r3)return;
+  var p=+D.poids||75,rg=cibleRange(p),c=+D.cible;r3.min=rg[0];r3.max=rg[1];r3.value=c>=rg[0]&&c<=rg[1]?c:(D.goal==='Sèche'?Math.max(rg[0],p-5):Math.min(rg[1],p+5));
+  r3.addEventListener('input',cibleUpd);cibleUpd()}
+function cibleUpd(){var r3=document.getElementById('r3');if(!r3)return;
+  var p=+D.poids||75,rg=cibleRange(p),c=+r3.value;if(c<rg[0]||c>rg[1]){c=Math.min(rg[1],Math.max(rg[0],c));r3.value=c}
   document.getElementById('sv3').innerHTML=c+'<small> kg</small>';document.getElementById('r3-min').textContent=rg[0]+' kg';document.getElementById('r3-max').textContent=rg[1]+' kg';
   var d=Math.abs(c-p),rate=cibleRate(p),w=Math.ceil(d/rate),mo=Math.round(w/4.35);
   document.getElementById('ob-cible').innerHTML='<strong>'+(c>p?'+':'−')+d+' kg</strong> en environ '+w+' semaine'+(w>1?'s':'')+(mo>=2?' (≈ '+mo+' mois)':'')+', à un rythme sain de '+String(rate).replace('.',',')+' kg par semaine.';
@@ -1538,7 +1589,7 @@ function nrm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u
 var AVOID_GROUPS={'gluten':/pates|pain|tortilla|avoine|muesli|flocons|sauce soja/,'lactose':/\blait\b(?! de coco)|fromage|feta|beurre(?! de cacahuete)|cottage|yaourt|creme/,'oeufs':/oeuf/,'arachides':/cacahuete|arachide/,'poisson':/thon|saumon|poisson/,'fruits a coque':/noix|amande|noisette|pistache|cajou|muesli/,'viande':/poulet|boeuf|steak|dinde/,'porc':/porc|lardon|jambon/};
 var AVOID_QUICK=['Gluten','Lactose','Œufs','Arachides','Poisson','Fruits à coque','Poulet','Bœuf','Thon','Riz','Pâtes','Oignon'];
 function mealHasAvoid(m){var a=D.avoid;if(!a||!a.length)return false;var t=nrm((m.n||'')+' '+(m.ing||[]).join(' '));return a.some(function(x){var k=nrm(x),g=AVOID_GROUPS[k];if(g)return g.test(t);k=k.replace(/s$/,'');return k.length>1&&t.indexOf(k)>-1})}
-function mealOk(m){return !(D.diet==='Végétarien'&&!m.veg)&&!mealHasAvoid(m)}
+function mealOk(m){return !(m.bud&&!isInsider())&&!(D.diet==='Végétarien'&&!m.veg)&&!mealHasAvoid(m)}
 function poolFor(cat){var base=MEALS.filter(mealOk),p=base.filter(function(m){return m.cat===cat});return p.length?p:(base.length?base:MEALS)}
 var _avAll=null;
 function avoidAll(){if(_avAll)return _avAll;var o={};AVOID_QUICK.forEach(function(x){o[nrm(x)]=x});MEALS.forEach(function(m){(m.ing||[]).forEach(function(i){var n=i.replace(/ \(x\d+\)$/,'');if(/,|^Sel|Épices|^Herbes|Curry|Paprika|Cumin|Levure/.test(n))return;var k=nrm(n);if(!o[k])o[k]=n})});_avAll=Object.keys(o).map(function(k){return o[k]}).sort(function(a,b){return nrm(a)<nrm(b)?-1:1});return _avAll}
@@ -1557,7 +1608,7 @@ if(!exact&&v.trim().length>1)h+='<button type="button" class="av-s add" data-v="
 function pick(id,val){D[id]=val;step++;if(step<S.length)renderStep();else showResult()}
 function pStep(){if(step>0){step--;renderStep()}}
 function updS(el){var s=S[step];var cc=document.getElementById('ob-cash');if(cc){var nn=cashN(el.value);if(cc.getAttribute('data-n')!=nn){cc.setAttribute('data-n',nn);cc.innerHTML=cashHtml(el.value)}}document.getElementById('sv').innerHTML=el.value+' <small>'+s.unit+s.suffix+'</small>';var meals=parseInt(D.meals)||14;var ppm=(el.value/meals).toFixed(2).replace('.',',');document.getElementById('ob-ins').innerHTML='<strong>'+ppm+' \u20AC</strong> par repas sur '+meals+' repas/semaine'}
-function pickBody(){D.taille=document.getElementById('r1').value;D.poids=document.getElementById('r2').value;var r3=document.getElementById('r3');if(r3)D.cible=r3.value;else delete D.cible;step++;renderStep()}
+function pickBody(){D.taille=document.getElementById('r1').value;D.poids=document.getElementById('r2').value;step++;renderStep()}
 function pickG(g){selGender=g;document.getElementById('g-h').className='ob-opt'+(g==='Homme'?' selected':'');document.getElementById('g-f').className='ob-opt'+(g==='Femme'?' selected':'')}
 
 function stepMeals(d){var s=S[step];var el=document.getElementById('stepper-n');var v=parseInt(el.textContent)+d;if(v<s.min)v=s.min;if(v>s.max)v=s.max;el.textContent=v;updPresets(v)}
@@ -1747,10 +1798,10 @@ h+='<section class="ad-sec"><h2>Tous les événements</h2>'+adTable(['Événemen
 h+='<p class="ad-note">Un visiteur = un navigateur. La même personne sur deux appareils compte deux fois. Tes propres visites (compte admin) ne sont pas comptées. Jours calculés à l’heure de Paris.</p></div>';
 return h}
 function getWeekPlan(cal,p,c,f,m,b){
-var sig='v5|'+(D.diet||'')+'|'+(D.avoid||[]).join(',')+'|'+[cal,p,c,f,m,b].join('|'),wk=weekKey();
+var sig=(isInsider()?'b2|':'v5|')+(D.diet||'')+'|'+(D.avoid||[]).join(',')+'|'+[cal,p,c,f,m,b].join('|'),wk=weekKey();
 var s=lsGet('macro_plan');
 if(s&&s.sig===sig&&s.wk===wk&&s.gen&&s.gen.plan)return s.gen;
-var gen=generatePlan(cal,p,c,f,m,b);
+var gen=isInsider()?generatePlanBudget(cal,p,m,b):generatePlan(cal,p,c,f,m,b);
 lsSet('macro_plan',{sig:sig,wk:wk,gen:gen});
 return gen}
 var DAYS_SHORT=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
@@ -1850,10 +1901,15 @@ var SHOP_PRICES={
 'Brocoli':['1 brocoli (≈ 500 g)',500,1.49],'Courgette':['1 courgette (≈ 250 g)',250,0.65],'Tomate':['1 tomate (≈ 120 g)',120,0.36],'Concombre':['1 concombre (≈ 350 g)',350,0.89],
 'Poivron':['1 poivron (≈ 180 g)',180,0.79],'Oignon':['filet 1 kg',1000,1.29],'Salade':['1 laitue (≈ 300 g)',300,0.99],'Banane':['1 banane (≈ 120 g)',120,0.25],
 'Fruits de saison':['1 fruit (≈ 150 g)',150,0.45],'Légumes vapeur':['sachet surgelé 1 kg',1000,1.99],'Tomate concassée':['boîte 400 g',400,0.79],'Sauce tomate':['bocal 500 g',500,0.89],
-'Beurre de cacahuète':['pot 350 g',350,2.49],'Citron':['1 citron',1,0.35,'x',0.5],'Basilic':['1 barquette',1,0.99,'x',0.5],
+'Beurre de cacahuète':['pot 350 g',350,2.49],'Pain':['baguette 250 g',250,0.39],'Emmental râpé':['sachet 200 g',200,1.79],'Semoule':['paquet 1 kg',1000,1.29],
+'Légumes surgelés':['sachet surgelé 1 kg',1000,1.79],'Carottes':['sachet 1 kg',1000,1.19],"Huile de tournesol":['bouteille 1 L',1000,1.99,'g',0,1],'Citron':['1 citron',1,0.35,'x',0.5],'Basilic':['1 barquette',1,0.99,'x',0.5],
 "Huile d'olive":['bouteille 50 cl',500,4.49,'g',0,1],'Sauce soja':['flacon 150 ml',150,1.29,'g',0,1],'Vinaigrette':['bouteille 500 ml',500,1.49,'g',0,1],'Miel':['pot 500 g',500,3.99,'g',0,1],
 'Ail':['1 tête',1,0.59,'x',0.1,1],'Épices':['1 pot',1,1.19,'x',0.05,1],'Cumin':['1 pot',1,1.19,'x',0.05,1],'Curry':['1 pot',1,1.19,'x',0.05,1],'Paprika':['1 pot',1,1.19,'x',0.05,1],
 'Herbes de Provence':['1 pot',1,1.19,'x',0.05,1],'Levure':['1 sachet',1,0.25,'x',1,1],'Sel, poivre':['sel + poivre',1,1.5,'x',0.01,1]};
+// other pack sizes: the cheapest way to cover the week's need is chosen (small packs for small needs, bulk for big ones)
+var SHOP_ALT={'Œufs':[['boîte de 6',6,1.99],['plateau de 30',30,7.49]],'Lait':[['pack 6 × 1 L',6000,5.94]],'Filet de poulet':[['barquette 500 g',500,5.49]],'Fromage blanc':[['pot 500 g',500,1.29]],
+'Pâtes':[['paquet 500 g',500,0.69]],'Riz':[['paquet 500 g',500,0.95]],'Semoule':[['paquet 500 g',500,0.79]],'Oignon':[['3 oignons (≈ 450 g)',450,0.79]],'Carottes':[['3 carottes (≈ 300 g)',300,0.55]],
+'Légumes surgelés':[['sachet surgelé 450 g',450,1.05]],"Flocons d'avoine":[['paquet 500 g',500,0.89]],'Emmental râpé':[['sachet 100 g',100,1.09]]};
 function spNeed(e,pr){var u=pr[3]||'g';return u==='u'?e.eggs:u==='ml'?e.ml:u==='x'?e.count*(pr[4]||1):e.g}
 function shopReal(gen){
   var map={};
@@ -1861,7 +1917,7 @@ function shopReal(gen){
   gen.plan.forEach(function(day){day.meals.forEach(function(m){(m.q||[]).forEach(function(x){add(x[0],x[1],x[2]||'',x[3],m.k)})})});
   var by={},order=['Protéines','Féculents','Fruits & légumes','Produits laitiers','Épicerie','Placard'],out=[],caisse=0,used=0,usedMain=0,pantry=0;
   Object.keys(map).forEach(function(n){var e=map[n],pr=SHOP_PRICES[n];var it={n:n,count:e.count,qty:qtyText(e)};
-    if(pr){var need=spNeed(e,pr),packs=Math.max(1,Math.ceil(need/pr[1]-1e-9));it.pack=pr[0];it.packs=packs;it.cost=packs*pr[2];it.used=Math.min(it.cost,need*pr[2]/pr[1]);
+    if(pr){var need=spNeed(e,pr),alt=SHOP_ALT[n];[pr].concat(alt||[]).forEach(function(o){var k=Math.max(1,Math.ceil(need/o[1]-1e-9));if(it.cost==null||k*o[2]<it.cost){it.pack=o[0];it.packs=k;it.cost=k*o[2];it.used=Math.min(it.cost,need*o[2]/o[1])}});
       if(pr[5]){pantry+=it.cost;used+=it.used}else{caisse+=it.cost;used+=it.used;usedMain+=it.used}}
     var c=pr&&pr[5]?{l:'Placard',e:'\u{1FAD9}'}:shopCategory(n);if(!by[c.l])by[c.l]={emoji:c.e,items:[]};by[c.l].items.push(it)});
   order.forEach(function(l){if(by[l])out.push({label:l,emoji:by[l].emoji,items:by[l].items})});
@@ -1872,10 +1928,12 @@ function eur(v){return v.toFixed(2).replace('.',',')+' €'}
 function shopRealHtml(gen,budget){
   var r=shopReal(gen),chk=lsGet('macro_checked');chk=(chk&&chk.wk===weekKey())?chk.items:{};var total=0,done=0;
   r.cats.forEach(function(c){c.items.forEach(function(it){total++;if(chk[it.n])done++})});
-  var h='<div class="shop"><div class="sp-head"><div class="sp-row main"><span>À payer en caisse</span><strong>'+eur(r.caisse)+'</strong></div>';
-  h+='<div class="sp-row"><span>Consommé par tes repas cette semaine</span><strong>'+eur(r.used)+'</strong></div>';
-  if(r.pantry)h+='<div class="sp-row"><span>Placard, si tu n\'en as pas déjà</span><strong>+ '+eur(r.pantry)+'</strong></div>';
-  h+=r.caisse>budget?'<div class="sp-warn">Ça dépasse ton budget de '+budget+' € de <b>'+eur(r.caisse-budget)+'</b> en caisse, parce qu\'on achète des paquets entiers. Il te restera environ '+eur(r.left)+' de produits pour la semaine suivante.</div>':'<div class="sp-row"><span>Ton budget</span><strong>'+budget+' €</strong></div>';
+  var h='<div class="shop"><div class="sp-head"><div class="sp-row main"><span>Coût de ta semaine</span><strong>'+eur(r.used)+'<small style="font-size:.8125rem;color:var(--muted);font-weight:600"> / '+budget+' €</small></strong></div>';
+  h+='<div class="mp-shop-bar"><div class="mp-shop-fill" style="width:'+Math.min(100,Math.round(r.used/budget*100))+'%"></div></div>';
+  h+='<div class="sp-row"><span>À payer en caisse cette semaine</span><strong>'+eur(r.caisse)+'</strong></div>';
+  if(gen.real&&!gen.fits)h+='<p class="trk-note">Avec tes besoins ('+trkN(computeMacros().cal)+' kcal par jour), c\'est le plan le moins cher qu\'on peut te faire en gardant assez de protéines.</p>';
+  if(r.left>0.5)h+='<p class="trk-note">On achète des paquets entiers : environ '+eur(r.left)+' de produits te resteront pour la semaine suivante, ta prochaine liste sera plus légère.</p>';
+  if(r.pantry)h+='<div class="sp-row"><span>Placard (huile, épices…), si tu n\'en as pas</span><strong>+ '+eur(r.pantry)+'</strong></div>';
   h+='<p class="trk-note">Prix moyens estimés en hard-discount (type Lidl, Aldi) pour 2026, par paquet entier. Ils varient selon le magasin et les promos.</p></div>';
   h+='<div class="shop-actions"><span class="shop-hint" id="shop-prog">'+done+' / '+total+' articles cochés</span><button class="shop-copy" onclick="copyShop()">📋 Copier la liste</button></div><div class="shop-items">';
   r.cats.forEach(function(c){
@@ -1987,7 +2045,7 @@ function trkHtml(){
   h+='<p class="trk-note">Calories estimées selon l\'activité, la durée et ton poids.</p></div>';
   return h+'</div>'+trkProgressHtml(s)+'</section>';
 }
-function trkRender(){var el=document.getElementById('trk');if(el)el.innerHTML=trkHtml()}
+function trkRender(){if(document.getElementById('app-view')){var y=window.scrollY;renderTab();window.scrollTo(0,y);return}var el=document.getElementById('trk');if(el)el.innerHTML=trkHtml()}
 function trkVal(id){var el=document.getElementById(id);return el?el.value.trim():''}
 function trkWater(v){var s=trkLoad();s.t.water=Math.max(0,Math.min(40,v));trkSave(s)}
 function trkSteps(){var v=Math.round(+trkVal('trk-steps'));if(!(v>=0&&v<=100000)||trkVal('trk-steps')===''){toast('Indique un nombre de pas.');return}var s=trkLoad();s.t.steps=v;trkSave(s)}
@@ -1995,6 +2053,63 @@ function trkGoal(){var v=Math.round(+trkVal('trk-goal'));if(!(v>=1000&&v<=50000)
 function trkGoalReset(){var s=trkLoad();s.stepMine=0;trkSave(s)}
 function trkAddAct(){var t=trkVal('trk-act-t'),m=Math.round(+trkVal('trk-act-m'));if(!(m>0&&m<=600)){toast('Indique la durée en minutes.');return}var met=(TRK_ACTS.filter(function(a){return a[0]===t})[0]||['',5])[1];var s=trkLoad();s.t.act.push({t:t,min:m,k:Math.round(met*trkKg()*m/60)});trkSave(s)}
 function trkDel(kind,i){var s=trkLoad();s.t[kind].splice(i,1);trkSave(s)}
+/* ---- insider app shell: bottom tab bar ---- */
+var APP_TABS=[['jour','Aujourd\'hui','<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>'],
+  ['repas','Repas','<path d="M7 3v18M4.5 3v5a2.5 2.5 0 0 0 5 0V3M17 21V3c-2.2 1.3-3.5 4-3.5 7.5H17"/>'],
+  ['courses','Courses','<circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.6 12.2a1 1 0 0 0 1 .8h9.7a1 1 0 0 0 1-.8L21 7H6"/>'],
+  ['progres','Progrès','<path d="M3 20h18M6 16v-5M11 16V6M16 16v-8"/>'],
+  ['reglages','Réglages','<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>']];
+function appTab(){var t=lsGet('macro_tab');return APP_TABS.some(function(x){return x[0]===t})?t:'jour'}
+function appShell(){return '<div class="app"><div class="app-view" id="app-view"></div></div><button class="app-fab" id="app-fab" onclick="appFab()" aria-label="Ajouter un aliment">+</button><nav class="tabbar" aria-label="Navigation">'+
+  APP_TABS.map(function(t){return '<button type="button" class="tab" id="tab-'+t[0]+'" onclick="appGo(\''+t[0]+'\')" aria-label="'+t[1]+'"><svg viewBox="0 0 24 24" aria-hidden="true">'+t[2]+'</svg>'+t[1]+'</button>'}).join('')+'</nav>'}
+function appGo(t){lsSet('macro_tab',t);renderTab();window.scrollTo(0,0);var v=document.getElementById('app-view');if(v){v.classList.remove('app-view');void v.offsetWidth;v.classList.add('app-view')}}
+function appFab(){if(appTab()!=='jour'){lsSet('macro_tab','jour');renderTab()}window._trkSel=null;window._trkNew=null;trkFoodRender('trk-food');var el=document.getElementById('trk-food');if(el)el.scrollIntoView({behavior:'smooth',block:'center'})}
+function bigRing(p,size,stroke,col,inner){var r=(size-stroke)/2,c=2*Math.PI*r,v=Math.max(0,Math.min(1,p));return '<div class="ring" style="width:'+size+'px;height:'+size+'px"><svg viewBox="0 0 '+size+' '+size+'" width="'+size+'" height="'+size+'" aria-hidden="true"><circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="var(--bg2)" stroke-width="'+stroke+'"/>'+(v>0?'<circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="'+stroke+'" stroke-linecap="round" stroke-dasharray="'+(c*v).toFixed(1)+' '+c.toFixed(1)+'"/>':'')+'</svg><b>'+(inner||'')+'</b></div>'}
+function renderTab(){var v=document.getElementById('app-view');if(!v)return;var t=appTab(),gen=window._gen,mc=computeMacros(),h='';
+  APP_TABS.forEach(function(x){var b=document.getElementById('tab-'+x[0]);if(b){b.classList.toggle('on',x[0]===t);b.setAttribute('aria-current',x[0]===t?'page':'false')}});
+  var fab=document.getElementById('app-fab');if(fab)fab.hidden=t!=='jour'&&t!=='repas';
+  if(t==='jour')h=tabJour(mc,gen);
+  else if(t==='repas')h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span></div><h1 class="app-title">Tes repas</h1><div id="dash-week">'+weekHtml(gen,true)+'</div><div class="set-list app-card" style="margin-top:1rem;padding:.2rem 1rem"><button onclick="regenWeek()">Nouvelle semaine<small>Un autre plan, même budget</small></button></div>';
+  else if(t==='courses')h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span></div><h1 class="app-title">Courses</h1><div id="dash-shop">'+shopRealHtml(gen,mc.b)+'</div>';
+  else if(t==='progres'){h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span></div><h1 class="app-title">Progrès</h1><div id="trk-prog">'+trkProgressHtml(trkLoad()).replace('<h3 class="trk-sub">Mes progrès</h3>','')+'</div>'}
+  else h=tabReglages(mc);
+  v.innerHTML=h}
+function tabJour(mc,gen){
+  var s=trkLoad(),t=s.t,goal=window._trkCal||mc.cal,eaten=t.cal.reduce(function(a,x){return a+x.k},0),burn=t.act.reduce(function(a,x){return a+x.k},0),mins=t.act.reduce(function(a,x){return a+x.min},0),obj=goal+burn,left=obj-eaten;
+  var prot=t.cal.reduce(function(a,x){return a+(x.p||0)},0),pg=window._trkProt||mc.protG,wGoal=Math.round(trkKg()*35/250)+Math.round(mins/30);
+  var d=new Date(),h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span><span class="app-date">'+d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})+'</span></div><h1 class="app-title">Bonjour'+(firstName()?' '+escH(firstName()):'')+'</h1>';
+  h+='<div class="app-card hero-cal"><div><div class="n">'+trkN(Math.abs(left))+'</div><div class="l">'+(left>=0?'Calories restantes':'Calories au-dessus de ton objectif')+'</div><div class="sub">Objectif '+trkN(goal)+(burn?' + '+trkN(burn)+' activité':'')+' · mangé '+trkN(eaten)+'</div></div>'+bigRing(eaten/obj,112,12,eaten>obj*1.1?'var(--yellow)':'var(--accent)',Math.round(Math.min(999,eaten/obj*100))+' %')+'</div>';
+  h+='<div class="trio"><div class="app-card">'+bigRing(prot/pg,58,7,'var(--blue)','')+'<strong>'+trkN(prot)+' g</strong><span>Protéines / '+pg+' g</span></div>';
+  h+='<button type="button" class="app-card" onclick="trkWater('+(t.water+1)+')" aria-label="Ajouter un verre d\'eau">'+bigRing(t.water/wGoal,58,7,'#0EA5E9','+1')+'<strong>'+t.water+'</strong><span>Verres / '+wGoal+'</span></button>';
+  h+='<div class="app-card">'+bigRing(t.steps/s.stepGoal,58,7,'var(--yellow)','')+'<strong>'+trkN(t.steps)+'</strong><span>Pas / '+trkN(s.stepGoal)+'</span></div></div>';
+  // today's planned meals, tick when eaten (adds them to the day's calories)
+  var ti=todayIndex(),day=gen.plan[ti],done={};t.cal.forEach(function(x){if(x.plan)done[x.plan]=1});
+  h+='<div class="app-h">Au menu aujourd\'hui<small>'+day.totals.cal+' kcal · '+day.totals.p+' g prot</small></div>';
+  day.meals.forEach(function(m,mi){var key=weekKey()+'-'+ti+'-'+mi,on=!!done[key],el=m.img&&document.getElementById(m.img);
+    h+='<div class="app-card menu-row">'+(el?'<img class="ph" src="'+el.src+'" alt="">':'<div class="ph">'+m.emoji+'</div>')+'<div class="bd" onclick="showMealDetail('+ti+','+mi+')"><span class="ct">'+(CAT_LBL[m.cat]||'Repas')+'</span><span class="nm">'+m.n+'</span><span class="mt">'+m.cal+' kcal · '+m.p+' g prot</span></div><button type="button" class="menu-ck'+(on?' on':'')+'" onclick="trkPlanMeal('+ti+','+mi+')" aria-pressed="'+on+'" aria-label="'+(on?'Retirer':'J\'ai mangé')+' '+escH(m.n)+'">✓</button></div>'});
+  // eaten list + food search
+  h+='<div class="app-h">Ce que tu as mangé<small>'+trkN(eaten)+' kcal</small></div><div class="app-card" style="display:flex;flex-direction:column;gap:.65rem">';
+  if(t.cal.length)h+='<ul class="trk-list">'+t.cal.map(function(x,i){return '<li><span>'+escH(x.n)+(x.g?' · '+x.g+' g':'')+'</span><b>'+trkN(x.k)+' kcal</b><button class="trk-x" onclick="trkDel(\'cal\','+i+')" aria-label="Retirer '+escH(x.n)+'">×</button></li>'}).join('')+'</ul>';
+  h+='<div id="trk-food-box" style="display:flex;flex-direction:column;gap:.5rem">'+trkFoodBox()+'</div></div>';
+  // water, steps, activities (same cards as before)
+  var n=Math.max(wGoal,t.water),g='';for(var i=0;i<n;i++)g+='<button class="trk-glass'+(i<t.water?' on':'')+'" onclick="trkWater('+(i<t.water&&i===t.water-1?i:i+1)+')" aria-label="'+(i+1)+' verre'+(i?'s':'')+'"></button>';
+  h+='<div class="app-h">Eau<small>'+String(+(wGoal*0.25).toFixed(2)).replace('.',',')+' L conseillés</small></div><div class="app-card" style="display:flex;flex-direction:column;gap:.65rem"><div class="trk-glasses">'+g+'</div><div class="trk-row"><button class="trk-btn ghost" onclick="trkWater('+Math.max(0,t.water-1)+')" aria-label="Retirer un verre">− 1</button><button class="trk-btn" onclick="trkWater('+(t.water+1)+')">+ 1 verre</button></div><p class="trk-note">Verres de 25 cl : 35 ml par kilo ('+trkKg()+' kg)'+(mins?', plus 1 verre par 30 min de sport':'')+'.</p></div>';
+  h+='<div class="app-h">Pas<small>'+(t.steps>=s.stepGoal?'objectif atteint ✓':'encore '+trkN(s.stepGoal-t.steps))+'</small></div><div class="app-card" style="display:flex;flex-direction:column;gap:.65rem">'+trkBar(t.steps,s.stepGoal,'blue')+
+    (s.stepMine?'<p class="trk-note">Objectif choisi par toi. <button class="trk-link" onclick="trkGoalReset()">Revenir à '+trkN(s.rec.v)+' pas</button></p>':'<p class="trk-note">'+s.rec.why+'</p>')+
+    '<form class="trk-form" onsubmit="trkSteps();return false"><input class="au-input" id="trk-steps" type="number" inputmode="numeric" min="0" max="100000" placeholder="Pas du jour" aria-label="Pas faits aujourd\'hui"><button class="trk-btn">Enregistrer</button></form>'+
+    '<form class="trk-form" onsubmit="trkGoal();return false"><input class="au-input" id="trk-goal" type="number" inputmode="numeric" min="1000" max="50000" step="500" value="'+s.stepGoal+'" aria-label="Objectif de pas"><button class="trk-btn ghost">Changer l\'objectif</button></form>'+trkIphoneHelp()+'</div>';
+  h+='<div class="app-h">Activités<small>'+trkN(mins)+' min · '+trkN(burn)+' kcal</small></div><div class="app-card" style="display:flex;flex-direction:column;gap:.65rem">'+
+    (t.act.length?'<ul class="trk-list">'+t.act.map(function(x,i){return '<li><span>'+escH(x.t)+' · '+x.min+' min</span><b>'+trkN(x.k)+' kcal</b><button class="trk-x" onclick="trkDel(\'act\','+i+')" aria-label="Retirer '+escH(x.t)+'">×</button></li>'}).join('')+'</ul>':'')+
+    '<form class="trk-form" onsubmit="trkAddAct();return false"><select class="au-input" id="trk-act-t" aria-label="Type d\'activité">'+TRK_ACTS.map(function(a){return '<option>'+a[0]+'</option>'}).join('')+'</select><input class="au-input num" id="trk-act-m" type="number" inputmode="numeric" min="1" max="600" placeholder="min" aria-label="Durée en minutes"><button class="trk-btn">Ajouter</button></form><p class="trk-note">Calories estimées selon l\'activité, la durée et ton poids.</p></div>';
+  return h}
+function trkIphoneHelp(){return '<details class="trk-help"><summary>Relier les pas de ton iPhone</summary><ol><li>Ouvre l\'app <b>Raccourcis</b>, touche <b>+</b>.</li><li>Ajoute l\'action <b>Rechercher des échantillons de santé</b> : type <b>Nombre de pas</b>, date de début <b>Aujourd\'hui</b>. Autorise l\'accès à Santé.</li><li>Ajoute <b>Calculer les statistiques</b> → <b>Somme</b>, puis <b>Arrondir le nombre</b>.</li><li>Ajoute <b>URL</b> : <code>https://www.mangereco.com/#pas=</code> suivi de la variable <b>Nombre arrondi</b>, puis <b>Ouvrir les URL</b>.</li><li>Nomme-le « Mes pas » et lance-le : Safari s\'ouvre et tes pas du jour sont notés ici. Tu peux aussi l\'automatiser (onglet <b>Automatisation</b>, tous les soirs).</li></ol><p class="trk-note">Fonctionne dans Safari, là où tu es connecté. Tes pas ne sont envoyés à aucun serveur.</p></details>'}
+function trkPlanMeal(di,mi){var m=window._gen.plan[di].meals[mi],key=weekKey()+'-'+di+'-'+mi,s=trkLoad(),i=-1;s.t.cal.forEach(function(x,j){if(x.plan===key)i=j});
+  if(i>-1)s.t.cal.splice(i,1);else s.t.cal.push({n:m.n,k:m.cal,p:m.p,plan:key});trkSave(s)}
+function tabReglages(mc){var u=isUnlocked();
+  var h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span><span class="trk-tag">Mode test</span></div><h1 class="app-title">Réglages</h1>'+answerChips();
+  h+='<div class="app-card set-list" style="margin-top:1rem;padding:.2rem 1rem"><button onclick="showResult()">Mes macros<small>'+mc.cal+' kcal · '+mc.protG+' g prot</small></button><button onclick="editProfile()">Mes réponses<small>Budget, objectif, poids…</small></button><button onclick="regenWeek()">Nouvelle semaine<small>Même budget</small></button>'+(isAdmin()?'<button onclick="startDemoRun()">Refaire le parcours<small>Mode vidéo</small></button><button onclick="showAdmin()">Statistiques du site<small>Admin</small></button>':'')+'</div>';
+  h+='<div class="app-h">Compte</div><div class="app-card set-list" style="padding:.2rem 1rem"><button type="button" style="cursor:default">'+escH(Auth.user?Auth.user.email:'')+'<small>'+(u?'Plan complet':'Aperçu gratuit')+'</small></button><button onclick="signOut()">Se déconnecter</button><button class="danger" onclick="deleteMyData()">Supprimer mes données</button></div>';
+  return h}
 function showDashboard(){
 if(!hasProfile()&&!restoreProfile()){beginFunnel();return}
 var mc=computeMacros();
@@ -2006,8 +2121,9 @@ var h='<div class="dash-wrap">';
 h+='<div class="dash-greet"><h1>Bonjour'+(nm?' '+escH(nm):'')+'</h1><p>Voici ta semaine, pensée pour '+goalTxt+'.</p>'+answerChips()+'</div>';
 if(!u)h+='<div class="dash-lock"><div class="dl-ico">🔒</div><div class="dl-txt"><strong>Ton plan est prêt, il te manque la clé.</strong><span>Débloque toutes les recettes, les macros de chaque repas et la liste de courses.</span></div><button class="btn btn-p" onclick="showPaywall()">Débloquer</button></div>';
 if(MEALS.filter(mealOk).length===0)h+='<div class="dash-warn">Tous les repas contiennent un aliment que tu as exclu. Retire-en quelques-uns dans « Mes réponses » pour avoir un plan adapté.</div>';
-h+='<div class="dash-kpis"><div class="dk"><strong>'+mc.cal+'</strong><span>kcal / jour</span></div><div class="dk"><strong>'+mc.protG+' g</strong><span>protéines / jour</span></div><div class="dk"><strong>'+mc.m+'</strong><span>repas / semaine</span></div><div class="dk"><strong id="dk-cost">'+(isInsider()?shopReal(gen).caisse:gen.weekCost).toFixed(0)+' €</strong><span>'+(isInsider()?'en caisse':'courses estimées')+'</span></div></div>';
-if(isInsider()){window._trkCal=mc.cal;window._trkProt=mc.protG;trkApplySteps();h+='<div id="trk">'+trkHtml()+'</div>'}
+h+='<div class="dash-kpis"><div class="dk"><strong>'+mc.cal+'</strong><span>kcal / jour</span></div><div class="dk"><strong>'+mc.protG+' g</strong><span>protéines / jour</span></div><div class="dk"><strong>'+mc.m+'</strong><span>repas / semaine</span></div><div class="dk"><strong id="dk-cost">'+(isInsider()?shopReal(gen).used:gen.weekCost).toFixed(0)+' €</strong><span>'+(isInsider()?'par semaine':'courses estimées')+'</span></div></div>';
+if(isInsider()){window._trkCal=mc.cal;window._trkProt=mc.protG;trkApplySteps();if(lsGet('macro_goto')==='liste')lsSet('macro_tab','courses');
+  document.getElementById('dash-content').innerHTML=appShell();window._dashDay=window._dashDay!=null?window._dashDay:ti;showPage('dashboard');renderTab();track('dashboard_view');markOpened();watchList();dashGoto();return}
 h+='<h2 class="dash-h">Ta semaine</h2><div id="dash-week">'+weekHtml(gen,u)+'</div>';
 
 
@@ -2508,9 +2624,49 @@ var MEALS=[
 {n:'Dahl de lentilles corail + riz basmati',p:29,g:80,l:10,cal:525,price:1.4,cat:'dejeuner',emoji:'🍛',t:25,veg:1,img:'img-lentilbowl',ing:['Lentilles corail','Riz basmati','Lait de coco','Oignon','Curry'],q:[["Lentilles corail",105,"sec"],["Riz basmati",30,"sec"],["Lait de coco",45,"ml"],["Oignon",35],["Curry","1 c. à café"]],st:['Rincer les lentilles corail à l\'eau froide.','Faire revenir l\'oignon émincé 3 min avec le curry dans une casserole.','Ajouter les lentilles, le lait de coco et deux fois leur volume d\'eau, puis mijoter 15 min en remuant.','Cuire le riz basmati selon le paquet.','Servir le dahl bien épais sur le riz.']},
 {n:'Bowl quinoa + pois chiches + feta',p:22,g:60,l:15,cal:459,price:2.0,cat:'dejeuner',emoji:'🥗',t:20,veg:1,img:'img-quinoachickpea',ing:['Quinoa','Pois chiches','Feta','Tomate','Concombre',"Huile d'olive",'Citron'],q:[["Quinoa",45,"sec"],["Pois chiches",165,"égoutté"],["Feta",22],["Tomate",80],["Concombre",80],["Huile d'olive",3],["Citron","½ citron"]],st:['Cuire le quinoa selon le paquet et le laisser tiédir.','Égoutter et rincer les pois chiches.','Couper la tomate, le concombre et la feta en petits dés.','Mélanger le quinoa, les pois chiches et les légumes dans un bol.','Émietter la feta par-dessus, ajouter un filet d\'huile d\'olive et un peu de citron.']},
 {n:'Œufs brouillés + pommes de terre sautées',p:26,g:46,l:20,cal:464,price:1.1,cat:'diner',emoji:'🍳',t:25,veg:1,img:'img-eggspotatoes',ing:['Œufs','Pommes de terre','Oignon',"Huile d'olive"],q:[["Œufs",165,"",55],["Pommes de terre",240],["Oignon",40],["Huile d'olive",3]],st:['Couper les pommes de terre en petits dés et les cuire 8 min à l\'eau bouillante, puis égoutter.','Les faire dorer 8 min à la poêle avec un filet d\'huile d\'olive et l\'oignon émincé.','Battre les œufs avec du sel et du poivre.','Verser les œufs sur les pommes de terre et remuer à feu doux 2-3 min jusqu\'à cuisson brouillée.','Servir chaud.']},
-{n:'Chili sin carne aux haricots rouges + quinoa',p:21,g:76,l:6,cal:446,price:1.5,cat:'diner',emoji:'🌶️',t:30,veg:1,img:'img-chilisincarne',ing:['Haricots rouges','Quinoa','Tomate concassée','Poivron','Épices'],q:[["Haricots rouges",100,"égoutté"],["Quinoa",90,"sec"],["Tomate concassée",105],["Poivron",75],["Épices","1 c. à café"]],st:['Rincer et cuire le quinoa selon le paquet.','Faire revenir le poivron coupé en dés 4 min dans une casserole.','Ajouter les haricots rouges égouttés, la tomate concassée et les épices (cumin, paprika, piment).','Laisser mijoter 15 min à feu doux en remuant de temps en temps.','Servir sur le quinoa.']}
+{n:'Chili sin carne aux haricots rouges + quinoa',p:21,g:76,l:6,cal:446,price:1.5,cat:'diner',emoji:'🌶️',t:30,veg:1,img:'img-chilisincarne',ing:['Haricots rouges','Quinoa','Tomate concassée','Poivron','Épices'],q:[["Haricots rouges",100,"égoutté"],["Quinoa",90,"sec"],["Tomate concassée",105],["Poivron",75],["Épices","1 c. à café"]],st:['Rincer et cuire le quinoa selon le paquet.','Faire revenir le poivron coupé en dés 4 min dans une casserole.','Ajouter les haricots rouges égouttés, la tomate concassée et les épices (cumin, paprika, piment).','Laisser mijoter 15 min à feu doux en remuant de temps en temps.','Servir sur le quinoa.']},
+// budget recipes (insider mode): cheapest staples per kcal and per gram of protein
+{n:"Porridge fromage blanc + banane",p:34,g:92,l:16,cal:673,price:0,cat:'petit-dej',emoji:"🥣",t:8,veg:1,bud:1,ing:["Flocons d'avoine","Lait","Fromage blanc","Banane"],q:[["Flocons d'avoine",80,"sec"],["Lait",250,"ml"],["Fromage blanc",200],["Banane",120]],st:["Chauffer les flocons avec le lait 3-4 min à feu doux en remuant.","Hors du feu, incorporer le fromage blanc.","Couper la banane en rondelles par-dessus."]},
+{n:"Tartines beurre de cacahuète + lait",p:30,g:110,l:22,cal:750,price:0,cat:'petit-dej',emoji:"🥜",t:5,veg:1,bud:1,ing:["Pain","Beurre de cacahuète","Lait","Banane"],q:[["Pain",120],["Beurre de cacahuète",30],["Lait",300,"ml"],["Banane",120]],st:["Couper le pain en tartines et le toaster si tu veux.","Étaler le beurre de cacahuète, ajouter la banane en rondelles.","Servir avec le verre de lait."]},
+{n:"Omelette 3 œufs + pain",img:'img-eggstoast',p:30,g:56,l:23,cal:546,price:0,cat:'petit-dej',emoji:"🍳",t:8,veg:1,bud:1,ing:["Œufs (x3)","Pain","Huile de tournesol","Sel, poivre"],q:[["Œufs",165,"",55],["Pain",100],["Huile de tournesol",5],["Sel, poivre","Une pincée"]],st:["Battre les œufs avec le sel et le poivre.","Cuire dans une poêle huilée à feu moyen 3-4 min.","Servir avec le pain."]},
+{n:"Pâtes bolognaise aux lentilles",img:'img-bolo',p:41,g:131,l:14,cal:853,price:0,cat:'dejeuner',emoji:"🍝",t:20,veg:1,bud:1,ing:["Pâtes","Lentilles corail","Tomate concassée","Oignon","Emmental râpé","Huile de tournesol"],q:[["Pâtes",120,"sec"],["Lentilles corail",70,"sec"],["Tomate concassée",200],["Oignon",60],["Emmental râpé",20],["Huile de tournesol",5]],st:["Faire revenir l'oignon émincé dans l'huile 3 min.","Ajouter les lentilles, la tomate concassée et 150 ml d'eau. Cuire 15 min à feu doux.","Pendant ce temps, cuire les pâtes dans l'eau salée.","Mélanger les pâtes à la sauce et parsemer d'emmental."]},
+{n:"Riz, poulet et lentilles au curry",img:'img-lentil',p:46,g:117,l:9,cal:763,price:0,cat:'dejeuner',emoji:"🍛",t:25,bud:1,ing:["Riz","Lentilles corail","Filet de poulet","Légumes surgelés","Huile de tournesol","Curry"],q:[["Riz",100,"sec"],["Lentilles corail",60,"sec"],["Filet de poulet",90,"cru"],["Légumes surgelés",150],["Huile de tournesol",5],["Curry","1 c. à café"]],st:["Cuire le riz dans l'eau salée.","Cuire les lentilles 12 min dans deux fois leur volume d'eau.","Saisir le poulet en dés dans l'huile, ajouter les légumes et le curry, cuire 8 min.","Mélanger lentilles, poulet et légumes, servir sur le riz."]},
+{n:"Semoule aux pois chiches et légumes",img:'img-quinoachickpea',p:27,g:108,l:14,cal:696,price:0,cat:'dejeuner',emoji:"🥘",t:15,veg:1,bud:1,ing:["Semoule","Pois chiches","Légumes surgelés","Tomate concassée","Huile de tournesol","Épices"],q:[["Semoule",100,"sec"],["Pois chiches",130,"égoutté"],["Légumes surgelés",150],["Tomate concassée",100],["Huile de tournesol",8],["Épices","1 c. à café"]],st:["Verser le même volume d'eau bouillante salée sur la semoule, couvrir 5 min puis égrainer.","Faire revenir les légumes dans l'huile 6 min avec les épices.","Ajouter les pois chiches et la tomate, laisser mijoter 5 min.","Servir sur la semoule."]},
+{n:"Pâtes carbonara aux œufs",p:41,g:106,l:27,cal:846,price:0,cat:'dejeuner',emoji:"🍝",t:15,veg:1,bud:1,ing:["Pâtes","Œufs (x2)","Emmental râpé","Huile de tournesol","Sel, poivre"],q:[["Pâtes",150,"sec"],["Œufs",110,"",55],["Emmental râpé",30],["Huile de tournesol",5],["Sel, poivre","Une pincée"]],st:["Cuire les pâtes dans l'eau salée, garder un peu d'eau de cuisson.","Battre les œufs avec l'emmental et le poivre.","Hors du feu, mélanger les pâtes chaudes aux œufs avec un peu d'eau de cuisson jusqu'à ce que ce soit crémeux."]},
+{n:"Riz sauté aux œufs et légumes",p:26,g:91,l:23,cal:685,price:0,cat:'diner',emoji:"🍚",t:15,veg:1,bud:1,ing:["Riz","Œufs (x2)","Légumes surgelés","Huile de tournesol","Sauce soja"],q:[["Riz",100,"sec"],["Œufs",110,"",55],["Légumes surgelés",200],["Huile de tournesol",10],["Sauce soja",10]],st:["Cuire le riz (idéalement la veille).","Faire sauter les légumes dans l'huile 5 min.","Ajouter le riz, puis les œufs battus en remuant 2 min.","Assaisonner avec la sauce soja."]},
+{n:"Soupe de lentilles corail + pain",img:'img-lentilbowl',p:31,g:104,l:8,cal:647,price:0,cat:'diner',emoji:"🍲",t:25,veg:1,bud:1,ing:["Lentilles corail","Carottes","Oignon","Tomate concassée","Pain","Huile de tournesol","Cumin"],q:[["Lentilles corail",90,"sec"],["Carottes",100],["Oignon",50],["Tomate concassée",100],["Pain",80],["Huile de tournesol",5],["Cumin","1 c. à café"]],st:["Faire revenir l'oignon et les carottes en dés dans l'huile 5 min.","Ajouter les lentilles, la tomate, le cumin et 500 ml d'eau. Cuire 20 min.","Mixer ou écraser à la fourchette, saler.","Servir avec le pain."]},
+{n:"Chili aux haricots rouges + riz",img:'img-chilisincarne',p:25,g:103,l:11,cal:647,price:0,cat:'diner',emoji:"🌶️",t:25,veg:1,bud:1,ing:["Riz","Haricots rouges","Tomate concassée","Oignon","Emmental râpé","Huile de tournesol","Épices"],q:[["Riz",90,"sec"],["Haricots rouges",150,"égoutté"],["Tomate concassée",150],["Oignon",50],["Emmental râpé",15],["Huile de tournesol",5],["Épices","1 c. à café"]],st:["Cuire le riz dans l'eau salée.","Faire revenir l'oignon dans l'huile, ajouter les épices.","Ajouter haricots et tomate, mijoter 15 min.","Servir sur le riz avec l'emmental."]},
+{n:"Poulet, pâtes et sauce tomate",img:'img-pasta',p:39,g:82,l:8,cal:579,price:0,cat:'diner',emoji:"🍗",t:20,bud:1,ing:["Pâtes","Filet de poulet","Tomate concassée","Huile de tournesol","Herbes de Provence"],q:[["Pâtes",110,"sec"],["Filet de poulet",100,"cru"],["Tomate concassée",150],["Huile de tournesol",5],["Herbes de Provence","1 c. à café"]],st:["Cuire les pâtes dans l'eau salée.","Saisir le poulet en dés dans l'huile 6-7 min.","Ajouter la tomate et les herbes, mijoter 5 min.","Mélanger avec les pâtes."]},
+{n:"Tortilla de pommes de terre",img:'img-eggspotatoes',p:27,g:56,l:27,cal:581,price:0,cat:'diner',emoji:"🥔",t:30,veg:1,bud:1,ing:["Pommes de terre","Œufs (x3)","Oignon","Huile de tournesol"],q:[["Pommes de terre",300],["Œufs",165,"",55],["Oignon",50],["Huile de tournesol",10]],st:["Couper les pommes de terre en fines rondelles et l'oignon en lamelles.","Les cuire à la poêle dans l'huile 15 min à feu moyen, couvert.","Verser les œufs battus salés, cuire 5 min, retourner et cuire 3 min."]},
+{n:"Fromage blanc, flocons et banane",img:'img-cottageberry',p:29,g:67,l:13,cal:521,price:0,cat:'petit-dej',emoji:"🥛",t:3,veg:1,bud:1,ing:["Fromage blanc","Flocons d'avoine","Banane"],q:[["Fromage blanc",300],["Flocons d'avoine",50,"sec"],["Banane",120]],st:["Verser le fromage blanc dans un bol.","Ajouter les flocons et la banane en rondelles.","Mélanger, c'est prêt (ou laisser la nuit au frais)."]},
+{n:"Semoule au lait + banane",p:24,g:102,l:8,cal:580,price:0,cat:'petit-dej',emoji:"🍮",t:10,veg:1,bud:1,ing:["Semoule","Lait","Banane"],q:[["Semoule",80,"sec"],["Lait",400,"ml"],["Banane",120]],st:["Porter le lait à frémissement.","Verser la semoule en pluie et cuire 4-5 min en remuant.","Servir tiède avec la banane en rondelles."]},
+{n:"Dahl de lentilles aux œufs + riz",img:'img-lentilbowl',p:43,g:96,l:18,cal:755,price:0,cat:'diner',emoji:"🍛",t:25,veg:1,bud:1,ing:["Lentilles corail","Riz","Œufs (x2)","Tomate concassée","Oignon","Huile de tournesol","Curry"],q:[["Lentilles corail",100,"sec"],["Riz",50,"sec"],["Œufs",110,"",55],["Tomate concassée",100],["Oignon",40],["Huile de tournesol",5],["Curry","1 c. à café"]],st:["Cuire les œufs 9 min dans l'eau bouillante, les écaler.","Faire revenir l'oignon dans l'huile avec le curry.","Ajouter les lentilles, la tomate et 300 ml d'eau, cuire 15 min.","Cuire le riz. Servir le dahl sur le riz avec les œufs coupés en deux."]},
+{n:"Pâtes ail, huile et emmental",p:27,g:105,l:23,cal:755,price:0,cat:'dejeuner',emoji:"🧄",t:12,veg:1,bud:1,ing:["Pâtes","Huile de tournesol","Emmental râpé","Ail"],q:[["Pâtes",150,"sec"],["Huile de tournesol",12],["Emmental râpé",30],["Ail","1 gousse"]],st:["Cuire les pâtes dans l'eau salée.","Faire dorer l'ail émincé dans l'huile 1 min à feu doux.","Mélanger les pâtes égouttées à l'huile et parsemer d'emmental."]},
+{n:"Poulet, lentilles et semoule",img:'img-lentil',p:49,g:93,l:9,cal:680,price:0,cat:'diner',emoji:"🍗",t:25,bud:1,ing:["Semoule","Lentilles corail","Filet de poulet","Tomate concassée","Huile de tournesol","Épices"],q:[["Semoule",80,"sec"],["Lentilles corail",60,"sec"],["Filet de poulet",100,"cru"],["Tomate concassée",150],["Huile de tournesol",5],["Épices","1 c. à café"]],st:["Cuire les lentilles 12 min dans deux fois leur volume d'eau.","Saisir le poulet en dés dans l'huile avec les épices, ajouter la tomate et les lentilles, mijoter 5 min.","Verser le même volume d'eau bouillante sur la semoule, couvrir 5 min.","Servir le poulet et les lentilles sur la semoule."]},
+{n:"Galettes de lentilles, sauce fromage blanc",p:43,g:108,l:15,cal:786,price:0,cat:'dejeuner',emoji:"🥙",t:25,veg:1,bud:1,ing:["Lentilles corail","Riz","Oignon","Fromage blanc","Huile de tournesol","Cumin"],q:[["Lentilles corail",120,"sec"],["Riz",50,"sec"],["Oignon",40],["Fromage blanc",150],["Huile de tournesol",8],["Cumin","1 c. à café"]],st:["Cuire les lentilles 12 min dans très peu d'eau, jusqu'à ce qu'elles soient sèches et fondantes.","Écraser avec l'oignon haché, le cumin et le sel, former 4 galettes.","Les dorer 3 min par face dans l'huile.","Cuire le riz. Servir avec le fromage blanc salé et poivré en sauce."]},
+{n:"Salade de lentilles aux œufs",p:41,g:58,l:23,cal:630,price:0,cat:'diner',emoji:"🥗",t:20,veg:1,bud:1,ing:["Lentilles corail","Œufs (x2)","Oignon","Huile de tournesol","Sel, poivre"],q:[["Lentilles corail",110,"sec"],["Œufs",110,"",55],["Oignon",30],["Huile de tournesol",10],["Sel, poivre","Une pincée"]],st:["Cuire les lentilles 10 min, égoutter et laisser tiédir.","Cuire les œufs 9 min, les écaler et les couper.","Mélanger lentilles, oignon émincé, huile, sel et poivre, ajouter les œufs."]}
 ];
 var DAYS=['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+// insider: pick the week so real food cost <= budget and protein >= 88 % of target; cheaper picks only as much as needed
+function generatePlanBudget(cal,protG,mealsPerWeek,budget){
+  var mpd=Math.round(mealsPerWeek/7),cpm=Math.round(cal/mpd),cats=[];for(var mi=0;mi<mpd;mi++)cats.push(mpd===1?'dejeuner':mpd===2?(mi===0?'dejeuner':'diner'):(mi===0?'petit-dej':mi===mpd-1?'diner':'dejeuner'));
+  var info={};MEALS.filter(mealOk).forEach(function(m){info[m.n]={m:m,e:mealRealCost(Object.assign({},m,{k:1}))/m.cal*1000,pr:m.p/m.cal*1000}});
+  var pools={};cats.forEach(function(c){if(!pools[c]){var p=MEALS.filter(function(m){return mealOk(m)&&(m.cat===c||(c!=='petit-dej'&&m.cat!=='petit-dej'))});pools[c]=p.length?p:MEALS.filter(mealOk)}});
+  var needP=protG*7*0.88,best=null,bestAny=null,t0=Date.now();
+  function till(week){return shopReal({plan:week.map(function(day){return {meals:day.map(function(m){return {q:m.q,k:cpm/m.cal}})}})}).caisse}
+  [0,0.6,1.2,2,3,5,8,14].some(function(lam){var found=null;
+    [1,2,4].forEach(function(rho){if(found&&rho>1)return;
+    for(var it=0;it<140;it++){var cnt={},week=[],cost=0,prot=0,rep=lam>=3?5:3;
+      for(var d=0;d<7;d++){var day=[];cats.forEach(function(c){var pool=pools[c],ws=pool.map(function(m){var w=Math.exp(-lam*info[m.n].e)*Math.pow(info[m.n].pr/50,rho);return (cnt[m.n]||0)>=rep?w*0.02:w}),sum=ws.reduce(function(a,b){return a+b},0),r=Math.random()*sum,k=0;
+        while(k<pool.length-1&&(r-=ws[k])>0)k++;var m=pool[k];cnt[m.n]=(cnt[m.n]||0)+1;day.push(m);cost+=info[m.n].e*cpm/1000;prot+=info[m.n].pr*cpm/1000});week.push(day)}
+      var cand={week:week,cost:cost,prot:prot,v:Object.keys(cnt).length};
+      cand.pen=cost+Math.max(0,needP-prot)*0.06;if(!bestAny||cand.pen<bestAny.pen)bestAny=cand;
+      if(cost<=budget*0.97&&prot>=needP&&(!found||cand.v>found.v)){cand.till=till(week);if(cand.till<=budget)found=cand;else if(!bestAny.till||cand.till<bestAny.till){cand.pen=cost;bestAny=cand}}}});
+    if(found){best=found;return true}return Date.now()-t0>2500});
+  var pick=best||bestAny,plan=[],total=0;
+  pick.week.forEach(function(day,d){var ms=[],t={p:0,g:0,l:0,cal:0};day.forEach(function(m,si){var sc=cpm/m.cal,x={n:m.n,emoji:m.emoji,img:m.img,t:m.t,cat:cats[si],p:Math.round(m.p*sc),g:Math.round(m.g*sc),l:Math.round(m.l*sc),cal:Math.round(m.cal*sc),ing:m.ing,q:m.q,k:sc,st:m.st};x.price=mealRealCost(x);total+=x.price;
+    t.p+=x.p;t.g+=x.g;t.l+=x.l;t.cal+=x.cal;ms.push(x)});plan.push({day:DAYS[d],meals:ms,totals:t})});
+  return {plan:plan,weekCost:Math.round(total*100)/100,f:1,calPerMeal:cpm,real:1,fits:!!best}}
 function generatePlan(cal,protG,carbG,fatG,mealsPerWeek,budget){
 var mealsPerDay=Math.round(mealsPerWeek/7);
 var calPerMeal=Math.round(cal/mealsPerDay);
@@ -2557,9 +2713,9 @@ function closeMealDetail(){var el=document.getElementById('meal-modal');if(el)el
 function shopCategory(name){
 var s=name.toLowerCase();
 if(/poulet|œuf|oeuf|thon|bœuf|boeuf|steak|saumon|dinde|cottage/.test(s))return{l:'Protéines',e:'\u{1F357}'};
-if(/riz|pâtes|patate|pommes? de terre|pain|avoine|quinoa|lentille|pois chiche|tortilla|muesli/.test(s))return{l:'Féculents',e:'\u{1F35A}'};
-if(/tomate|oignon|ail|brocoli|courgette|salade|banane|citron|légume|haricot|maïs|fruit|basilic|herbe|poivron|concombre|épinard|champignon/.test(s))return{l:'Fruits & légumes',e:'\u{1F966}'};
-if(/lait|beurre|fromage|feta/.test(s))return{l:'Produits laitiers',e:'\u{1F95B}'};
+if(/riz|pâtes|patate|pommes? de terre|pain|avoine|quinoa|lentille|pois chiche|tortilla|muesli|semoule/.test(s))return{l:'Féculents',e:'\u{1F35A}'};
+if(/tomate|oignon|ail|brocoli|courgette|salade|banane|citron|légume|haricot|maïs|fruit|basilic|herbe|poivron|concombre|épinard|champignon|carotte/.test(s))return{l:'Fruits & légumes',e:'\u{1F966}'};
+if(/lait|beurre|fromage|feta|emmental/.test(s))return{l:'Produits laitiers',e:'\u{1F95B}'};
 return{l:'Épicerie',e:'\u{1F6D2}'};
 }
 function parisDays(){var d=new Date();try{var p={};new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Paris',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(d).forEach(function(x){p[x.type]=x.value});var v=Date.UTC(+p.year,+p.month-1,+p.day,(+p.hour)%24,+p.minute)/86400000;if(isFinite(v))return v}catch(e){}return d.getTime()/86400000+1/12}
@@ -2611,14 +2767,14 @@ else toast('Copie impossible.')}
 function refreshShop(){
 var mc=computeMacros(),el=document.getElementById('dash-shop');
 if(el)el.innerHTML=isInsider()?shopRealHtml(window._gen,mc.b):shopListHtml(window._gen,mc.b,isUnlocked());
-var k=document.getElementById('dk-cost');if(k)k.textContent=(isInsider()?shopReal(window._gen).caisse:window._gen.weekCost).toFixed(0)+' €'}
+var k=document.getElementById('dk-cost');if(k)k.textContent=(isInsider()?shopReal(window._gen).used:window._gen.weekCost).toFixed(0)+' €'}
 function swapMeal(di,mi){
 var gen=window._gen;if(!gen||!isUnlocked())return;
 var cur=gen.plan[di].meals[mi],veg=D.diet==='Végétarien';
 var pool=MEALS.filter(function(m){return m.cat===cur.cat&&m.n!==cur.n&&mealOk(m)});
 if(!pool.length){toast('Pas d’autre option pour ce repas.');return}
 var pick=pool[Math.floor(Math.random()*pool.length)],scale=(gen.calPerMeal||cur.cal)/pick.cal,f=gen.f||1;
-gen.plan[di].meals[mi]={n:pick.n,emoji:pick.emoji,img:pick.img,t:pick.t,cat:pick.cat,p:Math.round(pick.p*scale),g:Math.round(pick.g*scale),l:Math.round(pick.l*scale),cal:Math.round(pick.cal*scale),price:Math.round(pick.price*scale*f*100)/100,ing:pick.ing,q:pick.q,k:scale,st:pick.st};
+gen.plan[di].meals[mi]={n:pick.n,emoji:pick.emoji,img:pick.img,t:pick.t,cat:pick.cat,p:Math.round(pick.p*scale),g:Math.round(pick.g*scale),l:Math.round(pick.l*scale),cal:Math.round(pick.cal*scale),price:Math.round(pick.price*scale*f*100)/100,ing:pick.ing,q:pick.q,k:scale,st:pick.st};if(gen.real)gen.plan[di].meals[mi].price=mealRealCost(gen.plan[di].meals[mi]);
 var day=gen.plan[di];day.totals={p:0,g:0,l:0,cal:0};
 day.meals.forEach(function(m){day.totals.p+=m.p;day.totals.g+=m.g;day.totals.l+=m.l;day.totals.cal+=m.cal});
 var tot=0;gen.plan.forEach(function(d){d.meals.forEach(function(m){tot+=m.price})});gen.weekCost=Math.round(tot*100)/100;
