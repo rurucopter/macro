@@ -1027,6 +1027,18 @@ body.app-mode[data-tab="repas"] #dashboard,body.app-mode[data-tab="repas"]{backg
 body.app-mode[data-tab="courses"] #dashboard,body.app-mode[data-tab="courses"]{background:linear-gradient(180deg,color-mix(in srgb,var(--c-money) 14%,var(--bg)) 0,var(--bg) 420px) no-repeat var(--bg)}
 body.app-mode[data-tab="progres"] #dashboard,body.app-mode[data-tab="progres"]{background:linear-gradient(180deg,color-mix(in srgb,var(--c-steps) 13%,var(--bg)) 0,var(--bg) 420px) no-repeat var(--bg)}
 body.app-mode[data-tab="reglages"] #dashboard,body.app-mode[data-tab="reglages"]{background:linear-gradient(180deg,color-mix(in srgb,var(--c-prot) 11%,var(--bg)) 0,var(--bg) 420px) no-repeat var(--bg)}
+.trio .bub{position:relative;padding:0}
+.bub-hit{display:flex;flex-direction:column;align-items:center;gap:.5rem;width:100%;padding:.9rem .5rem;border:0;background:none;font-family:var(--font);color:inherit;cursor:pointer;border-radius:22px}
+.bub-minus{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;border:0;background:color-mix(in srgb,var(--c) 18%,var(--surface));color:var(--c);font-size:1.1rem;font-weight:800;line-height:1;cursor:pointer}
+.bub-hit:focus-visible,.bub-minus:focus-visible{outline:2px solid var(--c);outline-offset:2px}
+.pw-modal .pw-sheet.st-sheet{background:var(--surface);color:var(--ink);border-top:1px solid var(--border)}
+.st-sheet .pw-x{background:var(--bg2);color:var(--ink);border:1px solid var(--border)}
+.st-sheet{display:flex;flex-direction:column;gap:.85rem;padding-bottom:calc(1.5rem + env(safe-area-inset-bottom))}
+.st-head{display:flex;align-items:center;gap:.6rem}
+.st-head h2{font-family:var(--font-d);font-size:1.375rem;font-weight:800;margin:0;color:var(--ink)}
+.st-form{display:flex;gap:.5rem}
+.st-in{flex:1;min-width:0;font-size:1.5rem;font-weight:800;padding:.7rem .9rem;font-variant-numeric:tabular-nums}
+.st-sheet .trk-bar.blue i{background:var(--c-steps)}
 .ds{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.25rem;margin:0 0 1rem}
 .ds-d{display:flex;flex-direction:column;align-items:center;gap:.3rem;border:0;background:none;padding:.25rem 0;cursor:pointer;font-family:var(--font);color:var(--muted)}
 .ds-ring{position:relative;width:42px;height:42px;display:grid;place-items:center}
@@ -2161,8 +2173,8 @@ function tabJour(mc,gen){
   var d=new Date(),h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span><span class="app-date">'+d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})+'</span></div><h1 class="app-title">Bonjour'+(firstName()?' '+escH(firstName()):'')+'</h1>';
   h+='<div class="app-card hero-cal tinted t-cal"><div><div class="n">'+trkN(Math.abs(left))+'</div><div class="l">'+(left>=0?'Calories restantes':'Calories au-dessus de ton objectif')+'</div><div class="sub">Objectif '+trkN(goal)+(burn?' + '+trkN(burn)+' activité':'')+' · mangé '+trkN(eaten)+'</div><span class="pct">'+Math.round(Math.min(999,eaten/obj*100))+' % de ton objectif</span></div>'+bigRing(eaten/obj,112,12,eaten>obj*1.1?'var(--yellow)':'var(--c-cal)',ico('flame'))+'</div>';
   h+='<div class="trio"><div class="app-card tinted t-prot">'+bigRing(prot/pg,58,7,'var(--c-prot)',ico('bolt'))+'<strong>'+trkN(prot)+' g</strong><span>Protéines / '+pg+' g</span></div>';
-  h+='<button type="button" class="app-card tinted t-water" onclick="trkWater('+(t.water+1)+')" aria-label="Ajouter un verre d\'eau">'+bigRing(t.water/wGoal,58,7,'var(--c-water)',ico('drop'))+'<strong>'+t.water+'</strong><span>Verres / '+wGoal+' · touche +1</span></button>';
-  h+='<div class="app-card tinted t-steps">'+bigRing(t.steps/s.stepGoal,58,7,'var(--c-steps)',ico('steps'))+'<strong>'+trkN(t.steps)+'</strong><span>Pas / '+trkN(s.stepGoal)+'</span></div></div>';
+  h+='<div class="app-card tinted t-water bub"><button type="button" class="bub-hit" onclick="trkWater('+(t.water+1)+')" aria-label="Ajouter un verre d\'eau">'+bigRing(t.water/wGoal,58,7,'var(--c-water)',ico('drop'))+'<strong>'+t.water+'</strong><span>Verres / '+wGoal+' · touche +1</span></button>'+(t.water>0?'<button type="button" class="bub-minus" onclick="trkWater('+(t.water-1)+')" aria-label="Retirer un verre d\'eau">−</button>':'')+'</div>';
+  h+='<button type="button" class="app-card tinted t-steps" onclick="stepsOpen()" aria-label="Noter tes pas du jour">'+bigRing(t.steps/s.stepGoal,58,7,'var(--c-steps)',ico('steps'))+'<strong>'+trkN(t.steps)+'</strong><span>Pas / '+trkN(s.stepGoal)+' · touche pour noter</span></button></div>';
   // today's planned meals, tick when eaten (adds them to the day's calories)
   var ti=todayIndex(),day=gen.plan[ti],done={};t.cal.forEach(function(x){if(x.plan)done[x.plan]=1});
   h+=appH('t-lunch','plate','Au menu aujourd\'hui',day.totals.cal+' kcal · '+day.totals.p+' g prot');
@@ -2172,17 +2184,23 @@ function tabJour(mc,gen){
   h+=appH('t-cal','flame','Ce que tu as mangé',trkN(eaten)+' kcal')+'<div class="app-card" style="display:flex;flex-direction:column;gap:.65rem">';
   if(t.cal.length)h+='<ul class="trk-list">'+t.cal.map(function(x,i){return '<li>'+eatenPh(x)+'<span>'+escH(x.n)+(x.g?' · '+x.g+' g':'')+'</span><b>'+trkN(x.k)+' kcal</b><button class="trk-x" onclick="trkDel(\'cal\','+i+')" aria-label="Retirer '+escH(x.n)+'">×</button></li>'}).join('')+'</ul>';
   h+='<div id="trk-food-box" style="display:flex;flex-direction:column;gap:.5rem">'+trkFoodBox()+'</div></div>';
-  // water, steps, activities (same cards as before)
-  var n=Math.max(wGoal,t.water),g='';for(var i=0;i<n;i++)g+='<button class="trk-glass'+(i<t.water?' on':'')+'" onclick="trkWater('+(i<t.water&&i===t.water-1?i:i+1)+')" aria-label="'+(i+1)+' verre'+(i?'s':'')+'"></button>';
-  h+=appH('t-water','drop','Eau',String(+(wGoal*0.25).toFixed(2)).replace('.',',')+' L conseillés')+'<div class="app-card tinted t-water" style="display:flex;flex-direction:column;gap:.65rem"><div class="trk-glasses">'+g+'</div><div class="trk-row"><button class="trk-btn ghost" onclick="trkWater('+Math.max(0,t.water-1)+')" aria-label="Retirer un verre">− 1</button><button class="trk-btn" onclick="trkWater('+(t.water+1)+')">+ 1 verre</button></div><p class="trk-note">Verres de 25 cl : 35 ml par kilo ('+trkKg()+' kg)'+(mins?', plus 1 verre par 30 min de sport':'')+'.</p></div>';
-  h+=appH('t-steps','steps','Pas',t.steps>=s.stepGoal?'objectif atteint ✓':'encore '+trkN(s.stepGoal-t.steps))+'<div class="app-card tinted t-steps" style="display:flex;flex-direction:column;gap:.65rem">'+trkBar(t.steps,s.stepGoal,'blue')+
-    (s.stepMine?'<p class="trk-note">Objectif choisi par toi. <button class="trk-link" onclick="trkGoalReset()">Revenir à '+trkN(s.rec.v)+' pas</button></p>':'<p class="trk-note">'+s.rec.why+'</p>')+
-    '<form class="trk-form" onsubmit="trkSteps();return false"><input class="au-input" id="trk-steps" type="number" inputmode="numeric" min="0" max="100000" placeholder="Pas du jour" aria-label="Pas faits aujourd\'hui"><button class="trk-btn">Enregistrer</button></form>'+
-    '<form class="trk-form" onsubmit="trkGoal();return false"><input class="au-input" id="trk-goal" type="number" inputmode="numeric" min="1000" max="50000" step="500" value="'+s.stepGoal+'" aria-label="Objectif de pas"><button class="trk-btn ghost">Changer l\'objectif</button></form>'+trkIphoneHelp()+'</div>';
+  // activities
   h+=appH('t-act','dumbbell','Activités',trkN(mins)+' min · '+trkN(burn)+' kcal')+'<div class="app-card tinted t-act" style="display:flex;flex-direction:column;gap:.65rem">'+
     (t.act.length?'<ul class="trk-list">'+t.act.map(function(x,i){return '<li><span>'+escH(x.t)+' · '+x.min+' min</span><b>'+trkN(x.k)+' kcal</b><button class="trk-x" onclick="trkDel(\'act\','+i+')" aria-label="Retirer '+escH(x.t)+'">×</button></li>'}).join('')+'</ul>':'')+
     '<form class="trk-form" onsubmit="trkAddAct();return false"><select class="au-input" id="trk-act-t" aria-label="Type d\'activité">'+TRK_ACTS.map(function(a){return '<option>'+a[0]+'</option>'}).join('')+'</select><input class="au-input num" id="trk-act-m" type="number" inputmode="numeric" min="1" max="600" placeholder="min" aria-label="Durée en minutes"><button class="trk-btn">Ajouter</button></form><p class="trk-note">Calories estimées selon l\'activité, la durée et ton poids.</p></div>';
   return h}
+/* ---- steps sheet (tap on the steps bubble) ---- */
+function stepsOpen(){var s=trkLoad(),t=s.t;stepsClose();var el=document.createElement('div');el.className='pw-modal';el.id='steps-modal';
+  el.innerHTML='<div class="pw-sheet st-sheet t-steps" role="dialog" aria-modal="true" aria-labelledby="st-title"><button class="pw-x" onclick="stepsClose()" aria-label="Fermer">&times;</button>'+
+    '<div class="st-head">'+ico('steps')+'<h2 id="st-title">Tes pas du jour</h2></div>'+
+    '<form class="st-form" onsubmit="stepsSave();return false"><input class="au-input st-in" id="st-in" type="number" inputmode="numeric" min="0" max="100000" value="'+(t.steps||'')+'" placeholder="Ex. 8 500" aria-label="Nombre de pas faits aujourd\'hui"><button class="trk-btn">Enregistrer</button></form>'+
+    trkBar(t.steps,s.stepGoal,'blue')+'<p class="trk-note"><b>'+(t.steps>=s.stepGoal?'Objectif atteint ✓':'Encore '+trkN(s.stepGoal-t.steps)+' pas')+'</b> · objectif '+trkN(s.stepGoal)+' pas.</p>'+
+    (s.stepMine?'<p class="trk-note">Objectif choisi par toi. <button class="trk-link" onclick="trkGoalReset();stepsClose()">Revenir à '+trkN(s.rec.v)+' pas</button></p>':'<p class="trk-note">'+s.rec.why+'</p>')+
+    '<form class="trk-form" onsubmit="trkGoal();stepsClose();return false"><input class="au-input" id="trk-goal" type="number" inputmode="numeric" min="1000" max="50000" step="500" value="'+s.stepGoal+'" aria-label="Objectif de pas"><button class="trk-btn ghost">Changer l\'objectif</button></form>'+trkIphoneHelp()+'</div>';
+  el.addEventListener('click',function(e){if(e.target===el)stepsClose()});document.body.appendChild(el);
+  requestAnimationFrame(function(){el.classList.add('open');var i=document.getElementById('st-in');if(i){i.focus();i.select()}})}
+function stepsClose(){var el=document.getElementById('steps-modal');if(el)el.remove()}
+function stepsSave(){var raw=trkVal('st-in'),v=Math.round(+raw);if(raw===''||!(v>=0&&v<=100000)){toast('Indique un nombre de pas.');return}var s=trkLoad();s.t.steps=v;trkSave(s);stepsClose();toast(trkN(v)+' pas notés ✓')}
 function trkIphoneHelp(){return '<details class="trk-help"><summary>Relier les pas de ton iPhone</summary><ol><li>Ouvre l\'app <b>Raccourcis</b>, touche <b>+</b>.</li><li>Ajoute l\'action <b>Rechercher des échantillons de santé</b> : type <b>Nombre de pas</b>, date de début <b>Aujourd\'hui</b>. Autorise l\'accès à Santé.</li><li>Ajoute <b>Calculer les statistiques</b> → <b>Somme</b>, puis <b>Arrondir le nombre</b>.</li><li>Ajoute <b>URL</b> : <code>https://www.mangereco.com/#pas=</code> suivi de la variable <b>Nombre arrondi</b>, puis <b>Ouvrir les URL</b>.</li><li>Nomme-le « Mes pas » et lance-le : Safari s\'ouvre et tes pas du jour sont notés ici. Tu peux aussi l\'automatiser (onglet <b>Automatisation</b>, tous les soirs).</li></ol><p class="trk-note">Fonctionne dans Safari, là où tu es connecté. Tes pas ne sont envoyés à aucun serveur.</p></details>'}
 function trkPlanMeal(di,mi){var m=window._gen.plan[di].meals[mi],key=weekKey()+'-'+di+'-'+mi,s=trkLoad(),i=-1;s.t.cal.forEach(function(x,j){if(x.plan===key)i=j});
   if(i>-1)s.t.cal.splice(i,1);else s.t.cal.push({n:m.n,k:m.cal,p:m.p,plan:key});trkSave(s)}
