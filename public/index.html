@@ -1054,6 +1054,10 @@ body.app-mode[data-tab="reglages"] #dashboard,body.app-mode[data-tab="reglages"]
 .mp-shop-price{display:flex;flex-direction:column;align-items:flex-end;gap:.1rem;text-align:right;max-width:46%;flex-shrink:0}
 .mp-shop-price b{font-size:.9375rem;color:var(--ink);font-variant-numeric:tabular-nums}
 .mp-shop-price small{font-size:.6875rem;color:var(--muted);line-height:1.3}
+.ing-ph{width:40px;height:40px;border-radius:11px;object-fit:cover;flex-shrink:0;background:var(--bg2);display:inline-block}
+.trk-sug button .sg{display:flex;align-items:center;gap:.6rem;min-width:0}
+.trk-list li .ing-ph{width:34px;height:34px;border-radius:9px}
+.mp-shop-item .ing-ph{margin-right:.15rem}
 .trk-glasses{display:flex;flex-wrap:wrap;gap:.4rem}
 .trk-glass{width:24px;height:30px;border:2px solid var(--blue);border-radius:3px 3px 7px 7px;background:transparent;cursor:pointer;padding:0}
 .trk-glass.on{background:var(--blue)}
@@ -1919,13 +1923,13 @@ function trkFoodBox(){
   var f=window._trkSel!=null?trkFoods()[window._trkSel]:null;
   if(window._trkNew!=null)return '<form class="trk-form" onsubmit="trkNewSave();return false" style="flex-direction:column"><p class="trk-note">Nouvel aliment : indique ses valeurs pour 100 g (sur l\'emballage, ligne « Énergie »).</p><input class="au-input" id="trk-new-n" maxlength="40" value="'+escH(window._trkNew)+'" aria-label="Nom de l\'aliment"><div class="trk-form"><input class="au-input num" id="trk-new-k" type="number" inputmode="decimal" min="0" max="900" step="any" placeholder="kcal / 100 g" aria-label="Calories pour 100 g"><input class="au-input num" id="trk-new-p" type="number" inputmode="decimal" min="0" max="100" step="any" placeholder="protéines / 100 g" aria-label="Protéines pour 100 g (facultatif)"></div><div class="trk-row"><button class="trk-btn">Enregistrer l\'aliment</button><button type="button" class="trk-link" onclick="trkPick(null)">Annuler</button></div></form>';
   if(!f)return '<input class="au-input" id="trk-food" autocomplete="off" placeholder="Cherche un aliment : poulet, riz, œuf…" oninput="trkSuggest()" aria-label="Chercher un aliment" style="padding:.6rem .75rem;font-size:.9375rem"><div class="trk-sug" id="trk-sug"></div>';
-  var h='<div class="trk-pick"><b>'+escH(f.n)+'</b><span>'+trkN(f.k)+' kcal · '+String(f.p).replace('.',',')+' g protéines / 100 g</span><button class="trk-link" onclick="trkPick(null)">Changer</button></div>';
+  var h='<div class="trk-pick">'+ingPh(f.n)+'<b>'+escH(f.n)+'</b><span>'+trkN(f.k)+' kcal · '+String(f.p).replace('.',',')+' g protéines / 100 g</span><button class="trk-link" onclick="trkPick(null)">Changer</button></div>';
   if(f.ug)h+='<div class="trk-chips"><button class="trk-chip" onclick="trkUnit('+f.ug+')">+ '+escH(f.u)+' ('+f.ug+' g)</button></div>';
   h+='<form class="trk-form" onsubmit="trkAddFood();return false"><input class="au-input num" id="trk-g" type="number" inputmode="numeric" min="1" max="3000" placeholder="grammes" oninput="trkPreview()" aria-label="Poids en grammes" style="flex:1 1 7rem"><button class="trk-btn">Ajouter</button></form><div class="trk-prev" id="trk-prev" aria-live="polite"></div>';
   return h}
 function trkFoodRender(focusId){var el=document.getElementById('trk-food-box');if(!el)return;el.innerHTML=trkFoodBox();var i=document.getElementById(focusId);if(i)i.focus()}
 function trkSuggest(){var q=trkVal('trk-food'),el=document.getElementById('trk-sug');if(!el)return;var all=trkFoods(),ids=trkSearch(q);
-  el.innerHTML=ids.map(function(i){var f=all[i];return '<button type="button" onclick="trkPick('+i+')">'+escH(f.n)+'<span>'+trkN(f.k)+' kcal / 100 g</span></button>'}).join('')+(q.length>=2?'<button type="button" class="new" onclick="trkNewStart()">+ Ajouter « '+escH(q.slice(0,40))+' » moi-même</button>':'')}
+  el.innerHTML=ids.map(function(i){var f=all[i];return '<button type="button" onclick="trkPick('+i+')"><span class="sg">'+ingPh(f.n)+escH(f.n)+'</span><span>'+trkN(f.k)+' kcal / 100 g</span></button>'}).join('')+(q.length>=2?'<button type="button" class="new" onclick="trkNewStart()">+ Ajouter « '+escH(q.slice(0,40))+' » moi-même</button>':'')}
 function trkPick(i){window._trkSel=i;window._trkNew=null;trkFoodRender(i==null?'trk-food':'trk-g')}
 function trkNewStart(){window._trkNew=trkVal('trk-food').slice(0,40);window._trkSel=null;trkFoodRender('trk-new-k')}
 function trkNewSave(){var n=trkVal('trk-new-n'),k=+trkVal('trk-new-k'),p=+(trkVal('trk-new-p')||0);if(!n){toast('Donne un nom à l\'aliment.');return}if(!(k>=0&&k<=900)||trkVal('trk-new-k')===''){toast('Indique les kcal pour 100 g (entre 0 et 900).');return}if(!(p>=0&&p<=100))p=0;
@@ -1974,6 +1978,22 @@ function shopReal(gen){
 function mealRealCost(m){var c=0;(m.q||[]).forEach(function(x){var pr=SHOP_PRICES[x[0]];if(!pr)return;var u=pr[3]||'g';var a=typeof x[1]==='number'?x[1]*m.k:0;
   if(u==='u')a=x[3]?Math.max(1,Math.round(a/x[3])):a;else if(u==='x')a=pr[4]||1;c+=a*pr[2]/pr[1]});return Math.round(c*100)/100}
 function eur(v){return v.toFixed(2).replace('.',',')+' €'}
+/* ---- ingredient thumbnails (insider app) ---- */
+var ING_OK={"turkey":"chicken","cannedtomato":"tomato","tomatosauce":"tomato","quark":"yogurt","sunoil":"oliveoil","herbs":"spices","chicken":"chicken","groundbeef":"groundbeef","steak":"steak","pork":"pork","ham":"ham","salmon":"salmon","tuna":"tuna","cod":"cod","sardines":"sardines","eggs":"eggs","tofu":"tofu","rice":"rice","pasta":"pasta","couscous":"couscous","quinoa":"quinoa","oats":"oats","muesli":"muesli","cornflakes":"cornflakes","baguette":"baguette","wholebread":"wholebread","sliced":"sliced","tortilla":"tortilla","potato":"potato","sweetpotato":"sweetpotato","fries":"fries","lentils":"lentils","kidneybeans":"kidneybeans","broccoli":"broccoli","greenbeans":"greenbeans","spinach":"spinach","zucchini":"zucchini","carrot":"carrot","tomato":"tomato","lettuce":"lettuce","pepper":"pepper","onion":"onion","avocado":"avocado","banana":"banana","apple":"apple","orange":"orange","kiwi":"kiwi","berries":"berries","cucumber":"cucumber","garlic":"garlic","lemon":"lemon","basil":"basil","corn":"corn","frozenveg":"frozenveg","yogurt":"yogurt","cottage":"cottage","grated":"grated","mozzarella":"mozzarella","feta":"feta","oliveoil":"oliveoil","peanutbutter":"peanutbutter","almonds":"almonds","walnuts":"walnuts","chocolate":"chocolate","whey":"whey","honey":"honey","sugar":"sugar","jam":"jam","hummus":"hummus","pizza":"pizza","oj":"oj","beer":"beer","spices":"spices"};
+var ING_RULES=[[/sauce yaourt|vinaigrette/,'dressing'],[/steak hache|boeuf hache/,'groundbeef'],[/poulet/,'chicken'],[/dinde/,'turkey'],[/boeuf|steak/,'steak'],[/porc/,'pork'],[/jambon/,'ham'],[/lardon/,'lardons'],
+[/saumon/,'salmon'],[/thon/,'tuna'],[/cabillaud/,'cod'],[/sardine/,'sardines'],[/oeuf/,'eggs'],[/tofu/,'tofu'],[/riz/,'rice'],[/pates/,'pasta'],[/semoule|couscous/,'couscous'],[/quinoa/,'quinoa'],
+[/flocons|avoine/,'oats'],[/muesli/,'muesli'],[/corn flakes|cereales/,'cornflakes'],[/pain complet/,'wholebread'],[/pain de mie/,'sliced'],[/baguette|^pain/,'baguette'],[/wrap|tortilla/,'tortilla'],
+[/patate douce/,'sweetpotato'],[/frites/,'fries'],[/pommes? de terre/,'potato'],[/lentille/,'lentils'],[/pois chiche/,'chickpeas'],[/haricots rouges/,'kidneybeans'],[/brocoli/,'broccoli'],
+[/haricots verts/,'greenbeans'],[/epinard/,'spinach'],[/courgette/,'zucchini'],[/carotte/,'carrot'],[/tomate concassee/,'cannedtomato'],[/sauce tomate/,'tomatosauce'],[/tomate/,'tomato'],
+[/salade/,'lettuce'],[/poivron/,'pepper'],[/oignon/,'onion'],[/champignon/,'mushroom'],[/avocat/,'avocado'],[/banane/,'banana'],[/jus d.orange/,'oj'],[/pomme/,'apple'],[/orange/,'orange'],
+[/kiwi/,'kiwi'],[/fruits/,'berries'],[/concombre/,'cucumber'],[/^ail$/,'garlic'],[/citron/,'lemon'],[/basilic/,'basil'],[/mais/,'corn'],[/legumes/,'frozenveg'],[/lait de coco/,'coconutmilk'],
+[/^lait/,'milk'],[/skyr|yaourt/,'yogurt'],[/fromage blanc/,'quark'],[/cottage/,'cottage'],[/emmental|gruyere/,'grated'],[/mozzarella/,'mozzarella'],[/feta/,'feta'],[/beurre de cacahuete/,'peanutbutter'],
+[/beurre/,'butter'],[/huile d.olive/,'oliveoil'],[/huile/,'sunoil'],[/amande/,'almonds'],[/noix/,'walnuts'],[/chocolat/,'chocolate'],[/whey/,'whey'],[/miel/,'honey'],[/sucre/,'sugar'],
+[/confiture/,'jam'],[/houmous/,'hummus'],[/ketchup/,'ketchup'],[/mayonnaise/,'mayo'],[/creme/,'cream'],[/pizza/,'pizza'],[/chips/,'chips'],[/soda|cola/,'cola'],[/biere/,'beer'],[/sauce soja/,'soy'],
+[/epices|cumin|curry|paprika/,'spices'],[/herbes/,'herbs'],[/sel/,'saltpepper']];
+function ingImg(n){var x=trkNorm(n);for(var i=0;i<ING_RULES.length;i++)if(ING_RULES[i][0].test(x))return ING_OK[ING_RULES[i][1]]?'/img/i/'+ING_OK[ING_RULES[i][1]]+'.jpg':'';return ''}
+function ingPh(n){var u=ingImg(n);return u?'<img class="ing-ph" src="'+u+'" alt="" loading="lazy">':'<span class="ing-ph"></span>'}
+function eatenPh(x){if(x.plan){var m=MEALS.filter(function(y){return y.n===x.n})[0],el=m&&m.img&&document.getElementById(m.img);if(el)return '<img class="ing-ph" src="'+el.src+'" alt="" loading="lazy">'}return ingPh(x.n)}
 function shopRealHtml(gen,budget){
   var r=shopReal(gen),chk=lsGet('macro_checked');chk=(chk&&chk.wk===weekKey())?chk.items:{};var total=0,done=0;
   r.cats.forEach(function(c){c.items.forEach(function(it){total++;if(chk[it.n])done++})});
@@ -1987,7 +2007,7 @@ function shopRealHtml(gen,budget){
   h+='<div class="shop-actions"><span class="shop-hint" id="shop-prog">'+done+' / '+total+' articles cochés</span><button class="shop-copy" onclick="copyShop()">📋 Copier la liste</button></div><div class="shop-items">';
   r.cats.forEach(function(c){
     h+='<div class="mp-shop-cat '+(SHOP_TINT[c.label]||'')+'"><div class="mp-shop-cat-label"><span>'+c.emoji+' '+c.label+'</span><small>'+c.items.length+' article'+(c.items.length>1?'s':'')+'</small></div>';
-    c.items.forEach(function(it){h+='<div class="mp-shop-item'+(chk[it.n]?' checked':'')+'" data-n="'+escH(it.n)+'" onclick="shopToggle(this)"><span class="mp-shop-check"></span><span class="mp-shop-name">'+it.n+'<small>Besoin : '+it.qty+' · '+it.count+' repas</small></span>'+
+    c.items.forEach(function(it){h+='<div class="mp-shop-item'+(chk[it.n]?' checked':'')+'" data-n="'+escH(it.n)+'" onclick="shopToggle(this)"><span class="mp-shop-check"></span>'+ingPh(it.n)+'<span class="mp-shop-name">'+it.n+'<small>Besoin : '+it.qty+' · '+it.count+' repas</small></span>'+
       (it.pack?'<span class="mp-shop-price"><b>'+eur(it.cost)+'</b><small>'+(it.packs>1?it.packs+' × ':'')+escH(it.pack)+'</small></span>':'<span class="mp-shop-qty">'+it.qty+'</span>')+'</div>'});
     h+='</div>'});
   return h+'</div></div>'}
@@ -2073,7 +2093,7 @@ function trkHtml(){
   h+='<div class="trk-card"><h3>Calories</h3><div class="trk-big">'+trkN(eaten)+' <small>/ '+trkN(goal+burned)+' kcal</small></div>'+trkBar(eaten,goal+burned,eaten>goal+burned?'over':'');
   h+='<p class="trk-note">'+(left>=0?'Il te reste <b>'+trkN(left)+' kcal</b>':'Tu as dépassé de <b>'+trkN(-left)+' kcal</b>')+(burned?', en comptant les '+trkN(burned)+' kcal brûlées pendant ton activité':'')+'.</p>';
   var prot=t.cal.reduce(function(a,x){return a+(x.p||0)},0);h+='<p class="trk-note">Protéines : <b>'+trkN(prot)+' g</b> sur '+(window._trkProt||0)+' g.</p>';
-  if(t.cal.length)h+='<ul class="trk-list">'+t.cal.map(function(x,i){return '<li><span>'+escH(x.n)+(x.g?' · '+x.g+' g':'')+'</span><b>'+trkN(x.k)+' kcal</b><button class="trk-x" onclick="trkDel(\'cal\','+i+')" aria-label="Retirer '+escH(x.n)+'">×</button></li>'}).join('')+'</ul>';
+  if(t.cal.length)h+='<ul class="trk-list">'+t.cal.map(function(x,i){return '<li>'+eatenPh(x)+'<span>'+escH(x.n)+(x.g?' · '+x.g+' g':'')+'</span><b>'+trkN(x.k)+' kcal</b><button class="trk-x" onclick="trkDel(\'cal\','+i+')" aria-label="Retirer '+escH(x.n)+'">×</button></li>'}).join('')+'</ul>';
   h+='<div id="trk-food-box" style="display:flex;flex-direction:column;gap:.5rem">'+trkFoodBox()+'</div></div>';
   // water
   var n=Math.max(wGoal,t.water),g='';for(var i=0;i<n;i++)g+='<button class="trk-glass'+(i<t.water?' on':'')+'" onclick="trkWater('+(i<t.water&&i===t.water-1?i:i+1)+')" aria-label="'+(i+1)+' verre'+(i?'s':'')+'"></button>';
@@ -2150,7 +2170,7 @@ function tabJour(mc,gen){
     h+='<div class="app-card menu-row">'+(el?'<img class="ph" src="'+el.src+'" alt="">':'<div class="ph">'+m.emoji+'</div>')+'<div class="bd '+(CAT_TINT[m.cat]||'')+'" onclick="showMealDetail('+ti+','+mi+')"><span class="ct">'+(CAT_LBL[m.cat]||'Repas')+'</span><span class="nm">'+m.n+'</span><span class="mt">'+m.cal+' kcal · '+m.p+' g prot</span></div><button type="button" class="menu-ck'+(on?' on':'')+'" onclick="trkPlanMeal('+ti+','+mi+')" aria-pressed="'+on+'" aria-label="'+(on?'Retirer':'J\'ai mangé')+' '+escH(m.n)+'">✓</button></div>'});
   // eaten list + food search
   h+=appH('t-cal','flame','Ce que tu as mangé',trkN(eaten)+' kcal')+'<div class="app-card" style="display:flex;flex-direction:column;gap:.65rem">';
-  if(t.cal.length)h+='<ul class="trk-list">'+t.cal.map(function(x,i){return '<li><span>'+escH(x.n)+(x.g?' · '+x.g+' g':'')+'</span><b>'+trkN(x.k)+' kcal</b><button class="trk-x" onclick="trkDel(\'cal\','+i+')" aria-label="Retirer '+escH(x.n)+'">×</button></li>'}).join('')+'</ul>';
+  if(t.cal.length)h+='<ul class="trk-list">'+t.cal.map(function(x,i){return '<li>'+eatenPh(x)+'<span>'+escH(x.n)+(x.g?' · '+x.g+' g':'')+'</span><b>'+trkN(x.k)+' kcal</b><button class="trk-x" onclick="trkDel(\'cal\','+i+')" aria-label="Retirer '+escH(x.n)+'">×</button></li>'}).join('')+'</ul>';
   h+='<div id="trk-food-box" style="display:flex;flex-direction:column;gap:.5rem">'+trkFoodBox()+'</div></div>';
   // water, steps, activities (same cards as before)
   var n=Math.max(wGoal,t.water),g='';for(var i=0;i<n;i++)g+='<button class="trk-glass'+(i<t.water?' on':'')+'" onclick="trkWater('+(i<t.water&&i===t.water-1?i:i+1)+')" aria-label="'+(i+1)+' verre'+(i?'s':'')+'"></button>';
