@@ -1595,7 +1595,17 @@ if(Auth.user){
 if(restoreProfile()){showDashboard();return}
 if(sbOn()&&Auth.session){loadRemoteProfile(function(ok){if(ok)showDashboard();else beginFunnel()});return}
 }
+if(sbOn()&&!Auth.user){renderStartGate();return}
 beginFunnel()}
+// account first: Google sign-up / log-in, then the questions (after login, showDashboard() finds no profile and starts the funnel)
+function renderStartGate(){
+  showPage('onboarding');setSegs(0);document.getElementById('ob-pct').textContent='';document.getElementById('ob-counter').innerHTML='';
+  document.getElementById('ob-main').innerHTML='<button class="ob-back" onclick="showPage(\'landing\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Retour</button>'+
+    '<div class="au-ico">👋</div><h2 class="au-t">Crée ton compte pour commencer</h2><p class="au-s">Ensuite, quelques questions et ton plan repas est prêt en 2 minutes. Il reste enregistré sur ton compte, sur ton téléphone comme sur ton ordi.</p>'+
+    '<label class="au-optin" id="optin-lbl"><input type="checkbox" id="optin-cb" onchange="optinOk()"> J\'accepte de recevoir les e-mails de mangereco (mon plan, des rappels, des conseils et des offres). Désinscription en 1 clic.</label><div class="au-err" id="optin-err" role="alert"></div>'+
+    '<button class="au-google" onclick="gateGoogle()">'+GSVG+'Continuer avec Google</button>'+
+    '<p class="au-s" style="margin-top:1rem;font-size:.8125rem">Déjà un compte ? Le même bouton te reconnecte.</p>';
+  window.scrollTo(0,0);track('start_gate_view')}
 var S=[
 {id:'gym',title:"O\u00f9 tu t'entra\u00eenes ?",desc:"On adapte tes repas \u00e0 ton rythme.",type:'grid',cols:3,options:[
 {imgId:'img-basicfit',bg:'#fff',label:'Basic-Fit'},{imgId:'img-fitnesspark',bg:'#fff',label:'Fitness Park'},{imgId:'img-orangebleue',bg:'#fff',label:"L'Orange Bleue"},{imgId:'img-keepcool',bg:'#fff',label:'Keep Cool'},{imgId:'img-neoness',bg:'#fff',label:'Neoness'},{imgId:'img-energieforme',bg:'#fff',label:'\u00C9nergie Forme'},{icon:'CMG',bg:'#1E293B',label:'CMG Sports'},{icon:'\u{1F3E0}',bg:'#64748B',label:'\u00C0 la maison'},{icon:'+',bg:'#475569',label:'Autre salle'}
