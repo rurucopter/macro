@@ -1052,7 +1052,11 @@ body.app-mode[data-tab="reglages"] #dashboard,body.app-mode[data-tab="reglages"]
 .free-banner div{display:flex;flex-direction:column;gap:.2rem}
 .free-banner b{font-family:var(--font-d);color:var(--ink)}
 .free-banner span{font-size:.8125rem;color:var(--ink2);line-height:1.4}
-.menu-row.locked .ph{filter:blur(1.5px) saturate(.7)}
+.menu-row.locked{cursor:pointer}
+.menu-row.locked .ph,.menu-row.locked .bd{filter:blur(5px) saturate(.75);user-select:none}
+.viewonly{cursor:pointer;border-radius:22px}
+.viewonly .vo-in{pointer-events:none}
+.viewonly:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
 .menu-ck.lock{color:var(--muted);background:var(--bg2);font-size:1rem}
 .ds{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.25rem;margin:0 0 1rem}
 .ds-d{display:flex;flex-direction:column;align-items:center;gap:.3rem;border:0;background:none;padding:.25rem 0;cursor:pointer;font-family:var(--font);color:var(--muted)}
@@ -1310,6 +1314,7 @@ a.au-toggle{display:block;text-align:left}
 .tile .tn{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-weight:700;font-size:.8125rem;line-height:1.2}
 .tile .tm{display:block;font-size:.6875rem;opacity:.9;margin-top:.2rem}
 .tile.locked .tm{filter:blur(4px)}
+body.app-mode .tile.locked .tp,body.app-mode .tile.locked .tn{filter:blur(5px)}
 /* --- recipe sheet */
 .rc-hero{position:relative}
 .rc-tag{position:absolute;left:.25rem;bottom:1.25rem;background:rgba(0,0,0,.62);color:#fff;font-size:.6875rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.3rem .625rem;border-radius:99px}
@@ -2192,7 +2197,7 @@ function renderTab(){var v=document.getElementById('app-view');if(!v)return;var 
   if(t==='jour')h=tabJour(mc,gen);
   else if(t==='repas')h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span></div><h1 class="app-title">Tes repas</h1><div id="dash-week">'+weekHtml(gen,isMember())+'</div><div class="set-list app-card" style="margin-top:1rem;padding:.2rem 1rem"><button onclick="'+(isMember()?'regenWeek()':'showPaywall()')+'"><span class="row-l t-cal">'+ico('refresh')+'Nouvelle semaine</span><small>'+(isMember()?'Un autre plan, même budget':'🔒 Avec le plan complet')+'</small></button></div>';
   else if(t==='courses')h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span></div><h1 class="app-title">Courses</h1><div id="dash-shop">'+(isMember()?shopRealHtml(gen,mc.b):lockedShop(gen,mc.b))+'</div>';
-  else if(t==='progres'){h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span></div><h1 class="app-title">Progrès</h1><div id="trk-prog">'+(function(p){return isMember()?p:lockBox(p,'chart','Suis ta progression','Ton poids jusqu\'à ton objectif, ta balance calorique et tes 7 derniers jours.')})(trkProgressHtml(trkLoad()).replace('<h3 class="trk-sub">Mes progrès</h3>',''))+'</div>'}
+  else if(t==='progres'){h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span></div><h1 class="app-title">Progrès</h1><div id="trk-prog">'+(function(p){return isMember()?p:viewOnly(p)})(trkProgressHtml(trkLoad()).replace('<h3 class="trk-sub">Mes progrès</h3>',''))+'</div>'}
   else h=tabReglages(mc);
   v.innerHTML=h}
 function lockedShop(gen,b){return lockBox(shopRealHtml(gen,b),'euro','Ta liste de courses avec les prix','Tout ce qu\'il faut acheter pour ta semaine, au paquet près, pensé pour ton budget de '+b+' €.')}
@@ -2205,7 +2210,7 @@ function tabJour(mc,gen){
   h+='<div class="trio"><div class="app-card tinted t-prot">'+bigRing(prot/pg,58,7,'var(--c-prot)',ico('bolt'))+'<strong>'+trkN(prot)+' g</strong><span>Protéines / '+pg+' g</span></div>';
   h+='<div class="app-card tinted t-water bub"><button type="button" class="bub-hit" onclick="trkWater('+(t.water+1)+')" aria-label="Ajouter un verre d\'eau">'+bigRing(t.water/wGoal,58,7,'var(--c-water)',ico('drop'))+'<strong>'+t.water+'</strong><span>Verres / '+wGoal+' · touche +1</span></button>'+(t.water>0?'<button type="button" class="bub-minus" onclick="trkWater('+(t.water-1)+')" aria-label="Retirer un verre d\'eau">−</button>':'')+'</div>';
   h+='<button type="button" class="app-card tinted t-steps" onclick="stepsOpen()" aria-label="Noter tes pas du jour">'+bigRing(t.steps/s.stepGoal,58,7,'var(--c-steps)',ico('steps'))+'<strong>'+trkN(t.steps)+'</strong><span>Pas / '+trkN(s.stepGoal)+' · touche pour noter</span></button></div>';
-  var head=free?lockBox(h,'flame','Ton suivi du jour','Tes calories, tes protéines, ton eau et tes pas, mis à jour à chaque repas.'):h;h='';
+  var head=free?viewOnly(h):h;h='';
   // today's planned meals, tick when eaten (adds them to the day's calories)
   var ti=todayIndex(),day=gen.plan[ti],done={};t.cal.forEach(function(x){if(x.plan)done[x.plan]=1});
   h+=appH('t-lunch','plate','Au menu aujourd\'hui',day.totals.cal+' kcal · '+day.totals.p+' g prot');
@@ -2222,8 +2227,8 @@ function tabJour(mc,gen){
   h+=appH('t-act','dumbbell','Activités',trkN(mins)+' min · '+trkN(burn)+' kcal')+'<div class="app-card tinted t-act" style="display:flex;flex-direction:column;gap:.65rem">'+
     (t.act.length?'<ul class="trk-list">'+t.act.map(function(x,i){return '<li><span>'+escH(x.t)+' · '+x.min+' min</span><b>'+trkN(x.k)+' kcal</b><button class="trk-x" onclick="trkDel(\'act\','+i+')" aria-label="Retirer '+escH(x.t)+'">×</button></li>'}).join('')+'</ul>':'')+
     '<form class="trk-form" onsubmit="trkAddAct();return false"><select class="au-input" id="trk-act-t" aria-label="Type d\'activité">'+TRK_ACTS.map(function(a){return '<option>'+a[0]+'</option>'}).join('')+'</select><input class="au-input num" id="trk-act-m" type="number" inputmode="numeric" min="1" max="600" placeholder="min" aria-label="Durée en minutes"><button class="trk-btn">Ajouter</button></form><p class="trk-note">Calories estimées selon l\'activité, la durée et ton poids.</p></div>';
-  var rest=free?lockBox(h,'dumbbell','Note ce que tu manges et ton sport','Un aliment au gramme près, tes séances : tout s\'ajoute à ta journée.'):h;
-  return free?top+menu+head+rest:top+head+menu+rest}
+  var rest=free?viewOnly(h):h;
+  return top+head+menu+rest}
 /* ---- steps sheet (tap on the steps bubble) ---- */
 function stepsOpen(){var s=trkLoad(),t=s.t;stepsClose();var el=document.createElement('div');el.className='pw-modal';el.id='steps-modal';
   el.innerHTML='<div class="pw-sheet st-sheet t-steps" role="dialog" aria-modal="true" aria-labelledby="st-title"><button class="pw-x" onclick="stepsClose()" aria-label="Fermer">&times;</button>'+
@@ -2237,6 +2242,8 @@ function stepsOpen(){var s=trkLoad(),t=s.t;stepsClose();var el=document.createEl
 function stepsClose(){var el=document.getElementById('steps-modal');if(el)el.remove()}
 function stepsSave(){var raw=trkVal('st-in'),v=Math.round(+raw);if(raw===''||!(v>=0&&v<=100000)){toast('Indique un nombre de pas.');return}var s=trkLoad();s.t.steps=v;trkSave(s);stepsClose();toast(trkN(v)+' pas notés ✓')}
 function trkIphoneHelp(){return '<details class="trk-help"><summary>Relier les pas de ton iPhone</summary><ol><li>Ouvre l\'app <b>Raccourcis</b>, touche <b>+</b>.</li><li>Ajoute l\'action <b>Rechercher des échantillons de santé</b> : type <b>Nombre de pas</b>, date de début <b>Aujourd\'hui</b>. Autorise l\'accès à Santé.</li><li>Ajoute <b>Calculer les statistiques</b> → <b>Somme</b>, puis <b>Arrondir le nombre</b>.</li><li>Ajoute <b>URL</b> : <code>https://www.mangereco.com/#pas=</code> suivi de la variable <b>Nombre arrondi</b>, puis <b>Ouvrir les URL</b>.</li><li>Nomme-le « Mes pas » et lance-le : Safari s\'ouvre et tes pas du jour sont notés ici. Tu peux aussi l\'automatiser (onglet <b>Automatisation</b>, tous les soirs).</li></ol><p class="trk-note">Fonctionne dans Safari, là où tu es connecté. Tes pas ne sont envoyés à aucun serveur.</p></details>'}
+// visible but nothing usable: any tap opens the paywall
+function viewOnly(inner){return '<div class="viewonly" onclick="track(\'paywall_gate\',{from:\'viewonly\'});showPaywall()" onkeydown="if(event.key===\'Enter\')showPaywall()" role="button" tabindex="0" aria-label="Débloquer pour utiliser"><div class="vo-in" inert>'+inner+'</div></div>'}
 function freeBanner(){return '<div class="app-card free-banner"><div><b>Ton premier repas est offert 🎁</b><span>Débloque toute ta semaine, ta liste de courses avec les prix et ton suivi du jour.</span></div><button type="button" class="lb-btn" onclick="track(\'paywall_gate\',{from:\'banner\'});showPaywall()">Débloquer</button></div>'}
 function trkPlanMeal(di,mi){if(!isMember()){showPaywall();return}var m=window._gen.plan[di].meals[mi],key=weekKey()+'-'+di+'-'+mi,s=trkLoad(),i=-1;s.t.cal.forEach(function(x,j){if(x.plan===key)i=j});
   if(i>-1)s.t.cal.splice(i,1);else s.t.cal.push({n:m.n,k:m.cal,p:m.p,plan:key});trkSave(s)}
