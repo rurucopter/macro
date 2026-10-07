@@ -1588,7 +1588,7 @@ a.au-toggle{display:block;text-align:left}
 <img id="img-real-atmo2" src="/img/real-atmo2.jpg" style="display:none">
 <script>
 var D={},step=0,selGender=null;
-function showPage(id){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});document.getElementById(id).classList.add('active');document.body.classList.toggle('app-mode',id==='dashboard'&&typeof isInsider==='function'&&isInsider());window.scrollTo(0,0);var stk=document.getElementById('sticky-cta');if(stk)stk.classList.remove('show');if(id==='landing')initReveal();if(id!=='admin')track('page_view',{page:id})}
+function showPage(id){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});document.getElementById(id).classList.add('active');document.body.classList.toggle('app-mode',id==='dashboard'&&typeof isInsider==='function'&&isMember());window.scrollTo(0,0);var stk=document.getElementById('sticky-cta');if(stk)stk.classList.remove('show');if(id==='landing')initReveal();if(id!=='admin')track('page_view',{page:id})}
 function beginFunnel(){track('funnel_start');step=0;D={};showPage('onboarding');renderStep()}
 function startOnboarding(){if(window._demoRun&&isAdmin()){beginFunnel();return}
 if(Auth.user){
@@ -1664,7 +1664,7 @@ function nrm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u
 var AVOID_GROUPS={'gluten':/pates|pain|tortilla|avoine|muesli|flocons|sauce soja/,'lactose':/\blait\b(?! de coco)|fromage|feta|beurre(?! de cacahuete)|cottage|yaourt|creme/,'oeufs':/oeuf/,'arachides':/cacahuete|arachide/,'poisson':/thon|saumon|poisson/,'fruits a coque':/noix|amande|noisette|pistache|cajou|muesli/,'viande':/poulet|boeuf|steak|dinde/,'porc':/porc|lardon|jambon/};
 var AVOID_QUICK=['Gluten','Lactose','Œufs','Arachides','Poisson','Fruits à coque','Poulet','Bœuf','Thon','Riz','Pâtes','Oignon'];
 function mealHasAvoid(m){var a=D.avoid;if(!a||!a.length)return false;var t=nrm((m.n||'')+' '+(m.ing||[]).join(' '));return a.some(function(x){var k=nrm(x),g=AVOID_GROUPS[k];if(g)return g.test(t);k=k.replace(/s$/,'');return k.length>1&&t.indexOf(k)>-1})}
-function mealOk(m){return !(m.bud&&!isInsider())&&!(D.diet==='Végétarien'&&!m.veg)&&!mealHasAvoid(m)}
+function mealOk(m){return !(m.bud&&!isMember())&&!(D.diet==='Végétarien'&&!m.veg)&&!mealHasAvoid(m)}
 function poolFor(cat){var base=MEALS.filter(mealOk),p=base.filter(function(m){return m.cat===cat});return p.length?p:(base.length?base:MEALS)}
 var _avAll=null;
 function avoidAll(){if(_avAll)return _avAll;var o={};AVOID_QUICK.forEach(function(x){o[nrm(x)]=x});MEALS.forEach(function(m){(m.ing||[]).forEach(function(i){var n=i.replace(/ \(x\d+\)$/,'');if(/,|^Sel|Épices|^Herbes|Curry|Paprika|Cumin|Levure/.test(n))return;var k=nrm(n);if(!o[k])o[k]=n})});_avAll=Object.keys(o).map(function(k){return o[k]}).sort(function(a,b){return nrm(a)<nrm(b)?-1:1});return _avAll}
@@ -1792,12 +1792,15 @@ return h}
 function acqBy(rows,f){var m={},C=['visitors','starts','done','signups','paywalls','checkouts'];(rows||[]).forEach(function(r){var k=f(r);if(k==null||k==='')return;var o=m[k]=m[k]||{k:k};C.forEach(function(c){o[c]=(o[c]||0)+(r[c]||0)})});return Object.keys(m).map(function(k){return m[k]}).sort(function(a,b){return b.visitors-a.visitors})}
 function acqTable(list,lab,labF){return adTable([lab,'Visiteurs','Début funnel','Funnel fini','Inscrits','Paywall vu','Clic paiement','Visite → inscrit'],list.map(function(o){return [escH(labF?labF(o.k):o.k),fmtN(o.visitors),nP(o.starts,o.visitors),nP(o.done,o.visitors),fmtN(o.signups),fmtN(o.paywalls),fmtN(o.checkouts),'<b>'+pctOf(o.signups,o.visitors)+'</b>']}))}
 function devLabel(k){return k==='mobile'?'Mobile':k==='desktop'?'Ordinateur':k}
+// one row per question, in the current funnel order (events are stored with their step number at the time)
+function normSteps(st){var m={},order=S.map(function(x){return x.id});(st||[]).forEach(function(r){if(!r.id)return;var o=m[r.id]=m[r.id]||{id:r.id,views:0,visitors:0};o.views+=r.views||0;o.visitors+=r.visitors||0});
+  return Object.keys(m).map(function(k){return m[k]}).sort(function(a,b){var ia=order.indexOf(a.id),ib=order.indexOf(b.id);return (ia<0?99:ia)-(ib<0?99:ib)}).map(function(o){o.idx=order.indexOf(o.id);if(o.idx<0)o.idx=null;return o})}
 function adInsights(d,fun){
 var out=[],t=d.totals||{};
 function add(lvl,txt){out.push('<li class="ad-in '+lvl+'"><b>'+(lvl==='bad'?'À corriger':lvl==='warn'?'À surveiller':lvl==='good'?'Bon signal':'Info')+'</b><span>'+txt+'</span></li>')}
 var worst=null;for(var i=1;i<fun.length;i++){var a=fun[i-1][1],b=fun[i][1];if(a>=15){var loss=1-b/a;if(!worst||loss>worst.loss)worst={loss:loss,from:fun[i-1][0],to:fun[i][0],a:a,b:b}}}
 if(worst&&worst.loss>0.3)add(worst.loss>0.6?'bad':'warn','Plus grosse fuite du parcours : <b>'+escH(worst.from)+' → '+escH(worst.to)+'</b>, '+Math.round(worst.loss*100)+' % des visiteurs s’arrêtent là ('+fmtN(worst.a)+' → '+fmtN(worst.b)+').');
-var st=d.steps||[],wq=null;for(var j=1;j<st.length;j++){if(st[j-1].visitors>=15){var l=1-st[j].visitors/st[j-1].visitors;if(!wq||l>wq.l)wq={l:l,id:st[j].id,prev:st[j-1].id}}}
+var st=normSteps(d.steps),wq=null;for(var j=1;j<st.length;j++){if(st[j-1].visitors>=15){var l=1-st[j].visitors/st[j-1].visitors;if(!wq||l>wq.l)wq={l:l,id:st[j].id,prev:st[j-1].id}}}
 if(wq&&wq.l>0.12)add(wq.l>0.25?'bad':'warn','Question qui fait le plus abandonner : après <b>'+escH(STEP_LABELS[wq.prev]||wq.prev)+'</b>, '+Math.round(wq.l*100)+' % partent avant <b>'+escH(STEP_LABELS[wq.id]||wq.id)+'</b>.');
 var dv=acqBy(d.acq,function(r){return r.dev}),mob=dv.filter(function(o){return o.k==='mobile'})[0],desk=dv.filter(function(o){return o.k==='desktop'})[0];
 if(mob&&desk&&mob.visitors>=20&&desk.visitors>=20){var rm=mob.signups/mob.visitors,rd=desk.signups/desk.visitors;if(rd>0&&rm<rd*0.6)add('warn','Le mobile convertit moins bien : '+pctOf(mob.signups,mob.visitors)+' d’inscrits contre '+pctOf(desk.signups,desk.visitors)+' sur ordinateur. Teste le parcours sur ton téléphone.');else if(rm>0&&rd<rm*0.6)add('info','L’ordinateur convertit moins bien ('+pctOf(desk.signups,desk.visitors)+') que le mobile ('+pctOf(mob.signups,mob.visitors)+').')}
@@ -1806,7 +1809,7 @@ if(src.length>1){src.sort(function(a,b){return b.signups/b.visitors-a.signups/a.
 var pw=fun.filter(function(x){return x[0]==='Paywall vu'})[0],ck=fun.filter(function(x){return x[0]==='Clic paiement'})[0];
 if(pw&&pw[1]>=15&&ck){var r=ck[1]/pw[1];add(r<0.05?'bad':r<0.15?'warn':'good','Paywall → clic paiement : '+pctOf(ck[1],pw[1])+' ('+fmtN(ck[1])+' sur '+fmtN(pw[1])+'). '+(r<0.05?'L’offre ou le prix bloque : teste le texte, l’ordre des formules ou la mise en avant du fondateur.':''))}
 if(t.users>=10){var o=t.optin/t.users;if(o<0.5)add('warn','Seulement '+pctOf(t.optin,t.users)+' des comptes acceptent les e-mails ('+fmtN(t.optin)+' / '+fmtN(t.users)+'). Les relances A2 à A5 ne partent qu’à eux.')}
-if(t.users>=10&&t.plan_opened/t.users<0.5)add('warn','Seulement '+pctOf(t.plan_opened,t.users)+' des inscrits ont vraiment ouvert leur plan.');
+if(t.users>=10&&t.plan_opened/t.users<0.5)add('warn','Seulement '+pctOf(t.plan_opened,t.users)+' des inscrits sont revenus voir leur plan après l’avoir créé. Les inscrits comptent aussi ceux qui ont créé leur compte sans finir les questions.');
 var last=(d.mails_recent||[])[0];
 if(t.users>0){if(!last)add('bad','Aucun e-mail n’a encore été envoyé. Vérifie que la fonction mail-sequence est déployée et que la tâche planifiée tourne.');else{var h=(Date.now()-new Date(last.sent_at).getTime())/3600000;if(h>48)add('bad','Dernier e-mail envoyé il y a '+Math.round(h/24)+' jours ('+dtFr(last.sent_at)+'). Si des gens se sont inscrits depuis, la tâche planifiée est peut-être arrêtée.')}}
 if((t.unsub||0)>=3&&t.mails_all>0&&t.unsub/Math.max(1,t.users)>0.1)add('warn',fmtN(t.unsub)+' désinscriptions ('+pctOf(t.unsub,t.users)+' des comptes). Espace ou raccourcis les relances.');
@@ -1854,7 +1857,7 @@ h+='<section class="ad-sec" id="ad-s-mail"><h2>E-mails</h2><div class="ad-kpis a
 var top=fun[0][1]||1;
 h+='<section class="ad-sec" id="ad-s-fun"><h2>Parcours complet</h2><p class="ad-note">Visiteurs uniques (un navigateur = un visiteur) à chaque étape.</p>'+adTable(['Étape','Visiteurs','% de la landing','% de l’étape précédente'],fun.map(function(x,i){return [x[0],fmtN(x[1]),pctOf(x[1],top),i?pctOf(x[1],fun[i-1][1]):'–']}))+'</section>';
 var first=(d.steps&&d.steps[0])?d.steps[0].visitors:0;
-h+='<section class="ad-sec"><h2>Étapes du funnel (question par question)</h2>'+adTable(['#','Question','Vues','Visiteurs','% des arrivées','Perte vs précédente'],(d.steps||[]).map(function(s,i,a){return [(s.idx==null?'?':s.idx+1),STEP_LABELS[s.id]||escH(s.id||'?'),fmtN(s.views),fmtN(s.visitors),pctOf(s.visitors,first),i?pctOf(a[i-1].visitors-s.visitors,a[i-1].visitors):'–']}))+'</section>';
+h+='<section class="ad-sec"><h2>Étapes du funnel (question par question)</h2>'+adTable(['#','Question','Vues','Visiteurs','% des arrivées','Perte vs précédente'],normSteps(d.steps).map(function(s,i,a){return [(s.idx==null?'?':s.idx+1),STEP_LABELS[s.id]||escH(s.id||'?'),fmtN(s.views),fmtN(s.visitors),pctOf(s.visitors,first),i?pctOf(a[i-1].visitors-s.visitors,a[i-1].visitors):'–']}))+'</section>';
 var acc=sumBy(d.signups_daily,function(r){return dKey(r.day)}),dly={};(d.daily||[]).forEach(function(x){dly[dKey(x.day)]=x});
 h+='<section class="ad-sec" id="ad-s-day"><h2>Jour par jour</h2>'+dailyChart(d)+'<div class="ad-scroll">'+adTable(['Jour','Visiteurs','Débuts de funnel','Funnel fini','Comptes créés','Paywall vu','Clics paiement'],allDays(d.since,d.today).reverse().map(function(k){var x=dly[k]||{};return [dFr(k,1),fmtN(x.visitors),fmtN(x.starts),fmtN(x.done),fmtN(acc[k]),fmtN(x.paywalls),fmtN(x.checkouts)]}))+'</div></section>';
 var camps=acqBy(d.acq,function(r){return r.camp});
@@ -1873,10 +1876,10 @@ h+='<section class="ad-sec"><h2>Tous les événements</h2>'+adTable(['Événemen
 h+='<p class="ad-note">Un visiteur = un navigateur. La même personne sur deux appareils compte deux fois. Tes propres visites (compte admin) ne sont pas comptées. Jours calculés à l’heure de Paris.</p></div>';
 return h}
 function getWeekPlan(cal,p,c,f,m,b){
-var sig=(isInsider()?'b2|':'v5|')+(D.diet||'')+'|'+(D.avoid||[]).join(',')+'|'+[cal,p,c,f,m,b].join('|'),wk=weekKey();
+var sig=(isMember()?'b2|':'v5|')+(D.diet||'')+'|'+(D.avoid||[]).join(',')+'|'+[cal,p,c,f,m,b].join('|'),wk=weekKey();
 var s=lsGet('macro_plan');
 if(s&&s.sig===sig&&s.wk===wk&&s.gen&&s.gen.plan)return s.gen;
-var gen=isInsider()?generatePlanBudget(cal,p,m,b):generatePlan(cal,p,c,f,m,b);
+var gen=isMember()?generatePlanBudget(cal,p,m,b):generatePlan(cal,p,c,f,m,b);
 lsSet('macro_plan',{sig:sig,wk:wk,gen:gen});
 return gen}
 var DAYS_SHORT=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
@@ -1906,7 +1909,7 @@ function dashDay(di){window._dashDay=di;renderWeek()}
 function tileHtml(m,di,mi,u){
 var el=m.img&&document.getElementById(m.img),bg=el?'<img class="tp" src="'+el.src+'" alt="">':'<div class="tp te">'+m.emoji+'</div>';
 return '<button type="button" class="tile'+(u?'':' locked')+'" onclick="'+(u?'showMealDetail('+di+','+mi+')':'showPaywall()')+'">'+bg+'<span class="tc">'+(CAT_LBL[m.cat]||'Repas')+(u?'':' 🔒')+'</span><span class="tt"><span class="tn">'+m.n+'</span><span class="tm">'+m.cal+' kcal · '+m.p+' g prot · '+(m.t||20)+' min</span></span></button>'}
-function weekHtml(gen,u){if(isInsider())return weekDayHtml(gen,u);var ti=todayIndex(),h='';
+function weekHtml(gen,u){if(isMember())return weekDayHtml(gen,u);var ti=todayIndex(),h='';
 gen.plan.forEach(function(d,di){
 h+='<section class="wk-day'+(di===ti?' today':'')+'"><div class="wk-head"><strong>'+d.day+(di===ti?' <em>Aujourd\'hui</em>':'')+'</strong><span>'+d.totals.cal+' kcal · '+d.totals.p+' g de protéines</span></div><div class="wk-grid c'+d.meals.length+'">';
 d.meals.forEach(function(m,mi){h+=tileHtml(m,di,mi,u)});
@@ -2090,9 +2093,9 @@ function trkWeightChart(w,start,cur,cib){
 function trkWeight(){var v=Math.round(+trkVal('trk-kg')*10)/10;if(!(v>=30&&v<=250)){toast('Indique ton poids en kg.');return}var s=trkLoad(),k=trkDay();s.w=(s.w||[]).filter(function(x){return x.d!==k});s.w.push({d:k,kg:v});s.w.sort(function(a,b){return a.d<b.d?-1:1});if(s.w.length>400)s.w.shift();trkSave(s);toast('Poids noté : '+String(v).replace('.',',')+' kg')}
 
 /* ---- insider-only: steps from the iPhone (iOS Shortcut opens /#pas=NNNN) ---- */
-function trkApplySteps(){var p=lsGet('macro_steps_in');if(!p||!isInsider())return false;lsDel('macro_steps_in');if(p.d!==trkDay())return false;var s=trkLoad();s.t.steps=p.n;trkSave(s);setTimeout(function(){toast(trkN(p.n)+' pas importés depuis ton iPhone ✓');var el=document.getElementById('trk');if(el)el.scrollIntoView({behavior:'smooth'})},400);return true}
+function trkApplySteps(){var p=lsGet('macro_steps_in');if(!p||!isMember())return false;lsDel('macro_steps_in');if(p.d!==trkDay())return false;var s=trkLoad();s.t.steps=p.n;trkSave(s);setTimeout(function(){toast(trkN(p.n)+' pas importés depuis ton iPhone ✓');var el=document.getElementById('trk');if(el)el.scrollIntoView({behavior:'smooth'})},400);return true}
 function trkStepsHash(){var m=/^#pas=(\d{1,6})$/.exec(location.hash||'');if(!m)return false;lsSet('macro_steps_in',{n:+m[1],d:trkDay()});try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}return true}
-window.addEventListener('hashchange',function(){if(!trkStepsHash())return;var dp=document.getElementById('dashboard');if(dp&&dp.classList.contains('active')&&isInsider())showDashboard()});
+window.addEventListener('hashchange',function(){if(!trkStepsHash())return;var dp=document.getElementById('dashboard');if(dp&&dp.classList.contains('active')&&isMember())showDashboard()});
 function trkDay(){return trkKey(new Date())}
 // recommended daily steps for the plan's goal: bulk = move for health without burning the surplus,
 // cut = extra burn for the deficit, maintain = where health benefits level off (lower from 60 y.o.)
@@ -2215,7 +2218,7 @@ function trkIphoneHelp(){return '<details class="trk-help"><summary>Relier les p
 function trkPlanMeal(di,mi){var m=window._gen.plan[di].meals[mi],key=weekKey()+'-'+di+'-'+mi,s=trkLoad(),i=-1;s.t.cal.forEach(function(x,j){if(x.plan===key)i=j});
   if(i>-1)s.t.cal.splice(i,1);else s.t.cal.push({n:m.n,k:m.cal,p:m.p,plan:key});trkSave(s)}
 function tabReglages(mc){var u=isUnlocked();
-  var h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span><span class="trk-tag">Mode test</span></div><h1 class="app-title">Réglages</h1>'+answerChips();
+  var h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span>'+(isInsider()?'<span class="trk-tag">Mode test</span>':'')+'</div><h1 class="app-title">Réglages</h1>'+answerChips();
   h+='<div class="app-card set-list" style="margin-top:1rem;padding:.2rem 1rem"><button onclick="showResult()"><span class="row-l t-prot">'+ico('bolt')+'Mes macros</span><small>'+mc.cal+' kcal · '+mc.protG+' g prot</small></button><button onclick="editProfile()"><span class="row-l t-lunch">'+ico('list')+'Mes réponses</span><small>Budget, objectif, poids…</small></button><button onclick="regenWeek()"><span class="row-l t-cal">'+ico('refresh')+'Nouvelle semaine</span><small>Même budget</small></button>'+(isAdmin()?'<button onclick="startDemoRun()"><span class="row-l t-act">'+ico('video')+'Refaire le parcours</span><small>Mode vidéo</small></button><button onclick="showAdmin()"><span class="row-l t-steps">'+ico('chart')+'Statistiques du site</span><small>Admin</small></button>':'')+'</div>';
   h+='<div class="app-h">Compte</div><div class="app-card set-list" style="padding:.2rem 1rem"><button type="button" style="cursor:default"><span class="row-l t-muted">'+ico('user')+escH(Auth.user?Auth.user.email:'')+'</span><small>'+(u?'Plan complet':'Aperçu gratuit')+'</small></button><button onclick="signOut()">Se déconnecter</button><button class="danger" onclick="deleteMyData()">Supprimer mes données</button></div>';
   return h}
@@ -2230,13 +2233,13 @@ var h='<div class="dash-wrap">';
 h+='<div class="dash-greet"><h1>Bonjour'+(nm?' '+escH(nm):'')+'</h1><p>Voici ta semaine, pensée pour '+goalTxt+'.</p>'+answerChips()+'</div>';
 if(!u)h+='<div class="dash-lock"><div class="dl-ico">🔒</div><div class="dl-txt"><strong>Ton plan est prêt, il te manque la clé.</strong><span>Débloque toutes les recettes, les macros de chaque repas et la liste de courses.</span></div><button class="btn btn-p" onclick="showPaywall()">Débloquer</button></div>';
 if(MEALS.filter(mealOk).length===0)h+='<div class="dash-warn">Tous les repas contiennent un aliment que tu as exclu. Retire-en quelques-uns dans « Mes réponses » pour avoir un plan adapté.</div>';
-h+='<div class="dash-kpis"><div class="dk"><strong>'+mc.cal+'</strong><span>kcal / jour</span></div><div class="dk"><strong>'+mc.protG+' g</strong><span>protéines / jour</span></div><div class="dk"><strong>'+mc.m+'</strong><span>repas / semaine</span></div><div class="dk"><strong id="dk-cost">'+(isInsider()?shopReal(gen).used:gen.weekCost).toFixed(0)+' €</strong><span>'+(isInsider()?'par semaine':'courses estimées')+'</span></div></div>';
-if(isInsider()){window._trkCal=mc.cal;window._trkProt=mc.protG;trkApplySteps();if(lsGet('macro_goto')==='liste')lsSet('macro_tab','courses');
+h+='<div class="dash-kpis"><div class="dk"><strong>'+mc.cal+'</strong><span>kcal / jour</span></div><div class="dk"><strong>'+mc.protG+' g</strong><span>protéines / jour</span></div><div class="dk"><strong>'+mc.m+'</strong><span>repas / semaine</span></div><div class="dk"><strong id="dk-cost">'+(isMember()?shopReal(gen).used:gen.weekCost).toFixed(0)+' €</strong><span>'+(isMember()?'par semaine':'courses estimées')+'</span></div></div>';
+if(isMember()){window._trkCal=mc.cal;window._trkProt=mc.protG;trkApplySteps();if(lsGet('macro_goto')==='liste')lsSet('macro_tab','courses');
   document.getElementById('dash-content').innerHTML=appShell();window._dashDay=window._dashDay!=null?window._dashDay:ti;showPage('dashboard');renderTab();track('dashboard_view');markOpened();watchList();dashGoto();return}
 h+='<h2 class="dash-h">Ta semaine</h2><div id="dash-week">'+weekHtml(gen,u)+'</div>';
 
 
-h+='<h2 class="dash-h">Ta liste de courses</h2><div id="dash-shop">'+(isInsider()?shopRealHtml(gen,mc.b):shopListHtml(gen,mc.b,u))+'</div>';
+h+='<h2 class="dash-h">Ta liste de courses</h2><div id="dash-shop">'+(isMember()?shopRealHtml(gen,mc.b):shopListHtml(gen,mc.b,u))+'</div>';
 h+='<div class="dash-actions"><button class="dash-action" onclick="showResult()"><strong>📊 Mes macros</strong><span>Calories, protéines, glucides, lipides</span></button><button class="dash-action" onclick="editProfile()"><strong>⚙️ Mes réponses</strong><span>Budget, salle, objectif…</span></button>'+(u?'<button class="dash-action" onclick="regenWeek()"><strong>🔄 Nouvelle semaine</strong><span>Un autre plan avec les mêmes réponses</span></button>':'')+(isAdmin()?'<button class="dash-action" onclick="startDemoRun()"><strong>🎬 Refaire le parcours</strong><span>Mode vidéo : repars de zéro</span></button>':'')+'</div>';
 h+='<div class="dash-account"><div class="dash-account-row"><span>Compte</span><strong>'+escH(Auth.user?Auth.user.email:'')+'</strong></div><div class="dash-account-row"><span>Statut</span><strong>'+(u?'Plan complet':'Aperçu gratuit')+'</strong></div>'+(u?'<a class="au-toggle" href="mailto:'+MACRO_CFG.contact+'?subject=Mon%20abonnement%20mangereco">Gérer ou résilier mon abonnement</a>':'')+(isAdmin()?'<button class="au-toggle" onclick="showAdmin()">📈 Statistiques du site</button>':'')+'<button class="au-toggle" onclick="signOut()">Se déconnecter</button><button class="au-toggle" onclick="deleteMyData()">Supprimer mes données</button></div>';
 h+='</div>';
@@ -2394,7 +2397,7 @@ return '<div class="paywall-card" id="unlock-card"><div style="font-size:2rem;ma
 '<button class="paywall-plan" id="plan-month" onclick="selectPlan(\'month\')"><div class="pp-name">Mensuel</div><div class="pp-price">9,99€<small>/mois</small></div></button>'+
 (SHOW_ANNUAL_PLAN?'<button class="paywall-plan" id="plan-year" onclick="selectPlan(\'year\')"><span class="pp-badge">2 mois offerts</span><div class="pp-name">Annuel</div><div class="pp-price">99€<small>/an</small></div><div class="pp-sub">soit 8,25€/mois</div></button>':'')+
 '</div>'+
-'<div class="paywall-features"><div class="paywall-feat">'+chk+'Plan repas personnalisé chaque semaine</div><div class="paywall-feat">'+chk+'Liste de courses par rayon</div><div class="paywall-feat">'+chk+'Recettes muscu adaptées à ton budget</div><div class="paywall-feat">'+chk+'Macros calculées automatiquement</div></div>'+
+'<div class="paywall-features"><div class="paywall-feat">'+chk+'Tes repas jour par jour, pensés pour ton budget de '+(parseInt(D.budget)||25)+' €</div><div class="paywall-feat">'+chk+'Ta liste de courses avec les vrais prix, au paquet près</div><div class="paywall-feat">'+chk+'Calories et protéines suivies : tu coches tes repas, tu ajoutes un aliment au gramme</div><div class="paywall-feat">'+chk+'Eau, pas (avec ton iPhone) et séances de sport au même endroit</div><div class="paywall-feat">'+chk+'Ta courbe de poids jusqu’à '+(D.cible&&(D.goal==='Prise de masse'||D.goal==='Sèche')?D.cible+' kg':'ton objectif')+'</div></div>'+
 '<button class="btn btn-p btn-lg btn-full" id="paywall-cta-btn" onclick="startCheckout()">Devenir membre fondateur →</button>'+
 '<p class="paywall-legal">En continuant, tu acceptes les <a href="/cgu" target="_blank" rel="noopener">CGU</a> et tu demandes l\'accès immédiat au contenu numérique : tu renonces à ton droit de rétractation de 14 jours.</p>'+
 '<div class="paywall-proof">Calculé chaque semaine pour ton budget, ta salle et ton objectif.</div>'+
@@ -2486,6 +2489,8 @@ var ADMIN_EMAIL='arthurdemortiere15@gmail.com';
 var FULL_ACCESS=['crevatjuliette@gmail.com'];
 function isFull(){return !!(Auth.user&&FULL_ACCESS.indexOf(String(Auth.user.email||'').toLowerCase())>-1)}
 function isInsider(){return isAdmin()||isFull()}
+// paying customers (and full-access accounts) get the full app: tabs, tracker, progress, real-price list, budget plan
+function isMember(){return isInsider()||isUnlocked()}
 function isAdmin(){return !!(Auth.user&&String(Auth.user.email||'').toLowerCase()===ADMIN_EMAIL)}
 function vid(){var v=lsGet('macro_vid');if(!v){v='v'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);lsSet('macro_vid',v)}return v}
 function sid(){try{var s=sessionStorage.getItem('macro_sid');if(!s){s='s'+Math.random().toString(36).slice(2,10)+Date.now().toString(36);sessionStorage.setItem('macro_sid',s)}return s}catch(e){return 'nosid'}}
@@ -2808,7 +2813,7 @@ var el=document.createElement('div');el.className='pw-modal';el.id='meal-modal';
 el.innerHTML='<div class="pw-sheet rc-sheet"><button class="pw-x" onclick="closeMealDetail()" aria-label="Fermer">&times;</button>'+
 '<div class="rc-hero">'+(img?'<img class="rc-photo" src="'+img+'" alt="">':'<div class="rc-emoji">'+m.emoji+'</div>')+'<span class="rc-tag">'+day.day+' · '+(CAT_LBL[m.cat]||'Repas')+'</span></div>'+
 '<h2 class="rc-title">'+m.n+'</h2>'+
-'<div class="rc-kcal"><strong>'+m.cal+'</strong><em>kcal</em><span>⏱ '+(m.t||20)+' min · 1 portion · '+(isInsider()?mealRealCost(m):m.price).toFixed(2).replace('.',',')+' €</span></div>'+
+'<div class="rc-kcal"><strong>'+m.cal+'</strong><em>kcal</em><span>⏱ '+(m.t||20)+' min · 1 portion · '+(isMember()?mealRealCost(m):m.price).toFixed(2).replace('.',',')+' €</span></div>'+
 '<div class="rc-bar"><i class="p" style="width:'+(kp/kt*100).toFixed(1)+'%"></i><i class="g" style="width:'+(kg/kt*100).toFixed(1)+'%"></i><i class="l" style="width:'+(kl/kt*100).toFixed(1)+'%"></i></div>'+
 '<div class="rc-legend"><span><i class="p"></i>Protéines <b>'+m.p+' g</b></span><span><i class="g"></i>Glucides <b>'+m.g+' g</b></span><span><i class="l"></i>Lipides <b>'+m.l+' g</b></span></div>'+
 (ing?'<h3 class="rc-h">Ce qu\'il te faut</h3>'+(m.q?'<p class="rc-note">Poids à cru ou à sec, sauf mention. Ils correspondent aux calories et aux macros ci-dessus.</p>':'')+'<ul class="rc-ing'+(m.q?' rc-ing-q':'')+'">'+ing+'</ul>':'')+
@@ -2867,7 +2872,7 @@ lsSet('macro_checked',c);var pr=document.getElementById('shop-prog');if(pr){var 
 function copyShop(){
 var gen=window._gen;if(!gen||!isUnlocked())return;
 var t='Ma liste de courses (mangereco.)\n';
-if(isInsider()){var rr=shopReal(gen);rr.cats.forEach(function(c){t+='\n'+c.label.toUpperCase()+'\n';c.items.forEach(function(i){t+='- '+i.n+' : '+(i.pack?(i.packs>1?i.packs+' × ':'')+i.pack+' ('+eur(i.cost)+')':i.qty)+'\n'})});t+='\nÀ payer en caisse : '+eur(rr.caisse)+(rr.pantry?' (+ '+eur(rr.pantry)+' de placard si besoin)':'')}
+if(isMember()){var rr=shopReal(gen);rr.cats.forEach(function(c){t+='\n'+c.label.toUpperCase()+'\n';c.items.forEach(function(i){t+='- '+i.n+' : '+(i.pack?(i.packs>1?i.packs+' × ':'')+i.pack+' ('+eur(i.cost)+')':i.qty)+'\n'})});t+='\nÀ payer en caisse : '+eur(rr.caisse)+(rr.pantry?' (+ '+eur(rr.pantry)+' de placard si besoin)':'')}
 else{shopData(gen).forEach(function(c){t+='\n'+c.label.toUpperCase()+'\n';c.items.forEach(function(i){t+='- '+i.n+' : '+i.qty+'\n'})});
 t+='\nTotal estimé : '+gen.weekCost.toFixed(2).replace('.',',')+' €'}
 track('copy_list');noteList();
@@ -2875,8 +2880,8 @@ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeT
 else toast('Copie impossible.')}
 function refreshShop(){
 var mc=computeMacros(),el=document.getElementById('dash-shop');
-if(el)el.innerHTML=isInsider()?shopRealHtml(window._gen,mc.b):shopListHtml(window._gen,mc.b,isUnlocked());
-var k=document.getElementById('dk-cost');if(k)k.textContent=(isInsider()?shopReal(window._gen).used:window._gen.weekCost).toFixed(0)+' €'}
+if(el)el.innerHTML=isMember()?shopRealHtml(window._gen,mc.b):shopListHtml(window._gen,mc.b,isUnlocked());
+var k=document.getElementById('dk-cost');if(k)k.textContent=(isMember()?shopReal(window._gen).used:window._gen.weekCost).toFixed(0)+' €'}
 function swapMeal(di,mi){
 var gen=window._gen;if(!gen||!isUnlocked())return;
 var cur=gen.plan[di].meals[mi],veg=D.diet==='Végétarien';
