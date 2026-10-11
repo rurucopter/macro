@@ -1954,10 +1954,20 @@ h+='<section class="ad-sec" id="ad-s-users"><h2>Derniers inscrits</h2><div class
 h+='<section class="ad-sec"><h2>Tous les événements</h2>'+adTable(['Événement','Occurrences','Visiteurs'],(d.events||[]).map(function(e){return [EVENT_LABELS[e.name]||escH(e.name),fmtN(e.n),fmtN(e.visitors)]}))+'</section>';
 h+='<p class="ad-note">Un visiteur = un navigateur. La même personne sur deux appareils compte deux fois. Tes propres visites (compte admin) ne sont pas comptées. Jours calculés à l’heure de Paris.</p></div>';
 return h}
+function sameMeal(a,b){return a.n===b.n||(!!a.img&&a.img===b.img)}
+// repair a saved plan: replace any meal that repeats in its day (same name or same photo), keeping the rest
+function fixDupDays(gen){var changed=false;(gen.plan||[]).forEach(function(day,di){day.meals.forEach(function(cur,mi){
+  var others=day.meals.filter(function(x,j){return j!==mi});if(!others.some(function(x){return sameMeal(x,cur)})||day.meals.slice(0,mi).every(function(x){return !sameMeal(x,cur)}))return;
+  var pool=MEALS.filter(function(m){return (cur.cat==='petit-dej'?m.cat==='petit-dej':m.cat!=='petit-dej')&&mealOk(m)&&!day.meals.some(function(x){return sameMeal(x,m)})});if(!pool.length)return;
+  var pick=pool[Math.floor(Math.random()*pool.length)],sc=(gen.calPerMeal||cur.cal)/pick.cal,f=gen.f||1;
+  day.meals[mi]={n:pick.n,emoji:pick.emoji,img:pick.img,t:pick.t,cat:cur.cat,p:Math.round(pick.p*sc),g:Math.round(pick.g*sc),l:Math.round(pick.l*sc),cal:Math.round(pick.cal*sc),price:Math.round(pick.price*sc*f*100)/100,ing:pick.ing,q:pick.q,k:sc,st:pick.st};
+  if(gen.real)day.meals[mi].price=mealRealCost(day.meals[mi]);changed=true});
+  if(changed){day.totals={p:0,g:0,l:0,cal:0};day.meals.forEach(function(m){day.totals.p+=m.p;day.totals.g+=m.g;day.totals.l+=m.l;day.totals.cal+=m.cal})}});
+  if(changed){var t=0;gen.plan.forEach(function(d){d.meals.forEach(function(m){t+=m.price})});gen.weekCost=Math.round(t*100)/100}return changed}
 function getWeekPlan(cal,p,c,f,m,b){
 var sig=(appOn()?'b2|':'v5|')+(D.diet||'')+'|'+(D.avoid||[]).join(',')+'|'+[cal,p,c,f,m,b].join('|'),wk=weekKey();
 var s=lsGet('macro_plan');
-if(s&&s.sig===sig&&s.wk===wk&&s.gen&&s.gen.plan)return s.gen;
+if(s&&s.sig===sig&&s.wk===wk&&s.gen&&s.gen.plan){if(fixDupDays(s.gen))lsSet('macro_plan',s);return s.gen}
 var gen=appOn()?generatePlanBudget(cal,p,m,b):generatePlan(cal,p,c,f,m,b);
 lsSet('macro_plan',{sig:sig,wk:wk,gen:gen});
 return gen}
@@ -2932,7 +2942,7 @@ function generatePlanBudget(cal,protG,mealsPerWeek,budget){
   [0,0.6,1.2,2,3,5,8,14].some(function(lam){var found=null;
     [[1,2],[1,3],[2,2],[2,3],[4,3],[4,5]].forEach(function(rr){var rho=rr[0],cap=lam>=3?Math.max(rr[1],3):rr[1];if(found&&found.v>=8)return;
     for(var it=0;it<70;it++){var cnt={},week=[],cost=0,prot=0,rep=cap;
-      for(var d=0;d<7;d++){var day=[];cats.forEach(function(c){var pool=pools[c],ws=pool.map(function(m){if(pool.length>day.length&&day.some(function(x){return x.n===m.n}))return 0;var w=Math.exp(-lam*info[m.n].e)*Math.pow(info[m.n].pr/50,rho);return (cnt[m.n]||0)>=rep?w*0.02:w}),sum=ws.reduce(function(a,b){return a+b},0),r=Math.random()*sum,k=0;
+      for(var d=0;d<7;d++){var day=[];cats.forEach(function(c){var pool=pools[c],ws=pool.map(function(m){if(pool.length>day.length&&day.some(function(x){return sameMeal(x,m)}))return 0;var w=Math.exp(-lam*info[m.n].e)*Math.pow(info[m.n].pr/50,rho);return (cnt[m.n]||0)>=rep?w*0.02:w}),sum=ws.reduce(function(a,b){return a+b},0),r=Math.random()*sum,k=0;
         while(k<pool.length-1&&(r-=ws[k])>0)k++;var m=pool[k];cnt[m.n]=(cnt[m.n]||0)+1;day.push(m);cost+=info[m.n].e*cpm/1000;prot+=info[m.n].pr*cpm/1000});week.push(day)}
       var cand={week:week,cost:cost,prot:prot,v:Object.keys(cnt).length};
       cand.pen=cost+Math.max(0,needP-prot)*0.06;if(!bestAny||cand.pen<bestAny.pen)bestAny=cand;
@@ -2952,7 +2962,7 @@ for(var mi=0;mi<mealsPerDay;mi++){
 var cat=mealsPerDay===1?'dejeuner':mealsPerDay===2?(mi===0?'dejeuner':'diner'):(mi===0?'petit-dej':mi===mealsPerDay-1?'diner':'dejeuner');
 var pool=poolFor(cat);
 if(pool.length===0)pool=MEALS;
-var _np=pool.filter(function(m){return !dayMeals.some(function(x){return x.n===m.n})});if(_np.length)pool=_np;
+var _np=pool.filter(function(m){return !dayMeals.some(function(x){return sameMeal(x,m)})});if(_np.length)pool=_np;
 var pick=pool[Math.floor(Math.random()*pool.length)];
 var scale=calPerMeal/pick.cal;
 var scaled={n:pick.n,emoji:pick.emoji,img:pick.img,t:pick.t,cat:pick.cat,p:Math.round(pick.p*scale),g:Math.round(pick.g*scale),l:Math.round(pick.l*scale),cal:Math.round(pick.cal*scale),price:Math.round(pick.price*scale*100)/100,ing:pick.ing,q:pick.q,k:scale,st:pick.st};
@@ -3047,8 +3057,7 @@ var k=document.getElementById('dk-cost');if(k)k.textContent=(appOn()?shopReal(wi
 function swapMeal(di,mi){
 var gen=window._gen;if(!gen||!isUnlocked())return;
 var cur=gen.plan[di].meals[mi],veg=D.diet==='Végétarien';
-var inDay=gen.plan[di].meals.map(function(x){return x.n});
-var pool=MEALS.filter(function(m){return (cur.cat==='petit-dej'?m.cat==='petit-dej':m.cat!=='petit-dej')&&inDay.indexOf(m.n)<0&&mealOk(m)});
+var pool=MEALS.filter(function(m){return (cur.cat==='petit-dej'?m.cat==='petit-dej':m.cat!=='petit-dej')&&!gen.plan[di].meals.some(function(x){return sameMeal(x,m)})&&mealOk(m)});
 if(!pool.length){toast('Pas d’autre option pour ce repas.');return}
 var pick=pool[Math.floor(Math.random()*pool.length)],scale=(gen.calPerMeal||cur.cal)/pick.cal,f=gen.f||1;
 gen.plan[di].meals[mi]={n:pick.n,emoji:pick.emoji,img:pick.img,t:pick.t,cat:pick.cat,p:Math.round(pick.p*scale),g:Math.round(pick.g*scale),l:Math.round(pick.l*scale),cal:Math.round(pick.cal*scale),price:Math.round(pick.price*scale*f*100)/100,ing:pick.ing,q:pick.q,k:scale,st:pick.st};if(gen.real)gen.plan[di].meals[mi].price=mealRealCost(gen.plan[di].meals[mi]);
