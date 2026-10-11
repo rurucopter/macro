@@ -1058,6 +1058,34 @@ body.app-mode[data-tab="reglages"] #dashboard,body.app-mode[data-tab="reglages"]
 .viewonly .vo-in{pointer-events:none}
 .viewonly:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
 .menu-ck.lock{color:var(--muted);background:var(--bg2);font-size:1rem}
+.ref-card{display:flex;flex-direction:column;gap:.7rem;align-items:flex-start}
+.ref-card p{margin:0;font-size:.9375rem;color:var(--ink2);line-height:1.45}
+.ref-link{width:100%;font-family:ui-monospace,monospace;font-size:.875rem;background:var(--surface);border:1px dashed color-mix(in srgb,var(--c-money) 45%,var(--border));border-radius:12px;padding:.6rem .75rem;color:var(--ink);overflow-wrap:anywhere}
+.ref-pw{margin:0 0 1rem;padding:.6rem .8rem;border-radius:12px;background:rgba(52,211,153,.14);color:#A7F3D0;font-size:.875rem;text-align:center}
+body.cr-mode>*:not(#cr-page):not(.toast):not(script){display:none!important}
+#cr-page{min-height:100vh;background:linear-gradient(180deg,color-mix(in srgb,var(--c-money,#059669) 14%,var(--bg)) 0,var(--bg) 380px) no-repeat var(--bg)}
+.cr-wrap{max-width:560px;margin:0 auto;padding:20px 16px 48px;display:flex;flex-direction:column;gap:1rem}
+.cr-top{display:flex;justify-content:space-between;align-items:center}
+.cr-live{display:flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:700;color:var(--accent-text);background:var(--accent-bg);border-radius:99px;padding:.25rem .65rem}
+.cr-live i{width:8px;height:8px;border-radius:50%;background:#16A34A;animation:crp 1.6s infinite}
+@keyframes crp{50%{opacity:.3}}
+.cr-wrap h1{font-family:var(--font-d);font-size:2rem;font-weight:800;margin:.2rem 0 0;color:var(--ink)}
+.cr-wrap h2{font-family:var(--font-d);font-size:1.125rem;margin:.5rem 0 0;color:var(--ink)}
+.cr-link{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:.8rem 1rem}
+.cr-link span{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+.cr-link b{flex:1;min-width:0;overflow-wrap:anywhere;font-family:ui-monospace,monospace;font-size:.875rem;color:var(--ink)}
+.cr-link button{border:0;border-radius:99px;background:var(--grad-strong);color:var(--on-accent);font-weight:700;padding:.45rem .9rem;cursor:pointer;font-family:var(--font)}
+.cr-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem}
+.cr-k{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:.9rem;display:flex;flex-direction:column;gap:.2rem}
+.cr-k b{font-family:var(--font-d);font-size:1.75rem;color:var(--ink);font-variant-numeric:tabular-nums}
+.cr-k span{font-size:.8125rem;color:var(--muted)}
+.cr-k.hi{background:color-mix(in srgb,var(--c-money,#059669) 12%,var(--surface));border-color:color-mix(in srgb,var(--c-money,#059669) 35%,var(--border))}
+.cr-k.hi b{color:var(--c-money,#059669)}
+.cr-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:.3rem 1rem}
+.cr-row{display:flex;justify-content:space-between;gap:1rem;padding:.7rem 0;border-bottom:1px solid var(--border);font-size:.9375rem;color:var(--ink2)}
+.cr-row:last-child{border-bottom:0}
+.cr-row b{color:var(--ink);font-variant-numeric:tabular-nums}
+.cr-muted{font-size:.8125rem;color:var(--muted);margin:0}
 .ds{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.25rem;margin:0 0 1rem}
 .ds-d{display:flex;flex-direction:column;align-items:center;gap:.3rem;border:0;background:none;padding:.25rem 0;cursor:pointer;font-family:var(--font);color:var(--muted)}
 .ds-ring{position:relative;width:42px;height:42px;display:grid;place-items:center}
@@ -1808,11 +1836,16 @@ freshToken(function(tok){
 if(!tok){c.innerHTML='<div class="ad-wrap"><p class="ad-err">Session expirée. Déconnecte-toi puis reconnecte-toi avec Google.</p></div>';return}
 sbFetch('/rest/v1/rpc/admin_stats',{method:'POST',body:JSON.stringify({p_days:days})},tok).then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j}})}).then(function(o){
 if(!o.ok){var msg=(o.j&&(o.j.message||o.j.hint))||'Erreur';c.innerHTML='<div class="ad-wrap"><p class="ad-err">'+escH(msg)+(/admin_stats|schema cache/.test(msg)?'<br>Exécute le fichier supabase_admin.sql dans Supabase (SQL Editor) puis recharge.':'')+'</p></div>';return}
-c.innerHTML=renderAdmin(o.j,days);window.scrollTo(0,0)}).catch(function(){c.innerHTML='<div class="ad-wrap"><p class="ad-err">Impossible de joindre Supabase.</p></div>'})})}
+c.innerHTML=renderAdmin(o.j,days);window.scrollTo(0,0);adCreators(tok)}).catch(function(){c.innerHTML='<div class="ad-wrap"><p class="ad-err">Impossible de joindre Supabase.</p></div>'})})}
 var MAIL_LABELS={A1:'Pack fondateur (+10 min après paywall)',A2:'Liste de courses floutée (J+1)',A3:'Dernier rappel fondateur (J+3)',A4:'Teaser recettes (samedi, 4 max)',F1:'Pack fondateur (anciens inscrits)',B1:'Plan prêt, fais tes courses',B2:'Liste pas ouverte (48 h)',B3:'Plan de la semaine (samedi 18 h)',B4:'Rappel renouvellement',B5:'Nouveauté (manuel)',C1:'Après résiliation',M10:'Pack fondateur +10 min (ancien)',A5:'Dernier mail fondateur (ancien)'};
 var MAIL_TEST_KEYS=['A1','A2','A3','A4','F1','B1','B2','B3','B4','C1'];
 function mailName(k){var p=String(k||'').split('-'),t=p[0]==='T',c=t?p[1]:p[0];return (t?'<b>Test</b> · ':'')+escH(c)+' · '+escH(MAIL_LABELS[c]||k)+(c==='B5'&&!t&&p.length>1?' <small class="ad-sub">'+escH(p.slice(1).join('-'))+'</small>':'')}
 function mailStatus(m){if(m.status==='failed')return '<span class="ad-bad">Échec ('+(m.attempts||1)+'/3)</span>'+(m.last_error?' <small class="ad-sub">'+escH(String(m.last_error).slice(0,90))+'</small>':'');return m.status==='pending'?'En cours':'Envoyé'}
+function adCreators(tok){sbFetch('/rest/v1/rpc/admin_creators',{method:'POST',body:'{}'},tok).then(function(r){return r.ok?r.json():null}).then(function(list){
+  var w=document.querySelector('#admin-content .ad-wrap');if(!w)return;var sec=document.createElement('section');sec.className='ad-sec';
+  sec.innerHTML='<h2>Créateurs</h2>'+(list===null?'<p class="ad-note">Exécute le fichier supabase_createurs.sql dans Supabase (SQL Editor) pour activer les liens créateurs.</p>':!list.length?'<p class="ad-note">Aucun créateur. Ajoute-en un dans Supabase : insert into public.creators (code, name) values (\'antoine\', \'Antoine\');</p>':
+    adTable(['Créateur','Lien à partager','Visiteurs','Inscrits','Payants','Fondateur','Mensuel','Page de stats'],list.map(function(c){return [escH(c.name),'mangereco.com/?ref='+escH(c.code),c.visits,c.signups,'<b>'+c.paid+'</b>',c.paid_life,c.paid_month,'<a href="/?createur='+escH(c.secret)+'" target="_blank" rel="noopener">Ouvrir</a>']})));
+  w.insertBefore(sec,w.children[2]||null)}).catch(function(){})}
 function adSendHtml(){
 return '<section class="ad-sec" id="ad-s-send"><h2>Envoyer un e-mail</h2><p class="ad-note">Les tests partent seulement sur '+escH(ADMIN_EMAIL)+', avec [TEST] dans l’objet et tes vraies réponses. Ils ne comptent pas dans les stats, mais leurs clics sont enregistrés : clique un bouton du mail pour vérifier le suivi.</p>'+
 '<div class="ad-send">'+MAIL_TEST_KEYS.map(function(k){return '<button type="button" title="'+escH(MAIL_LABELS[k])+'" onclick="adTestMail(\''+k+'\',this)">'+k+'</button>'}).join('')+'<button type="button" onclick="adTestMail(\'\',this)">Les 10</button></div><p class="ad-out" id="ad-test-out" aria-live="polite"></p>'+
@@ -2322,9 +2355,10 @@ function trkPlanMeal(di,mi){if(!isMember()){showPaywall();return}var m=window._g
 function tabReglages(mc){var u=isUnlocked();
   var h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span>'+(isInsider()?'<span class="trk-tag">Mode test</span>':'')+'</div><h1 class="app-title">Réglages</h1>'+answerChips()+(u?'':freeBanner());
   h+='<div class="app-card set-list" style="margin-top:1rem;padding:.2rem 1rem"><button onclick="showResult()"><span class="row-l t-prot">'+ico('bolt')+'Mes macros</span><small>'+mc.cal+' kcal · '+mc.protG+' g prot</small></button><button onclick="editProfile()"><span class="row-l t-lunch">'+ico('list')+'Mes réponses</span><small>Budget, objectif, poids…</small></button><button onclick="'+(isMember()?'regenWeek()':'showPaywall()')+'"><span class="row-l t-cal">'+ico('refresh')+'Nouvelle semaine</span><small>'+(isMember()?'Même budget':'🔒 Avec le plan complet')+'</small></button>'+(isAdmin()?'<button onclick="startDemoRun()"><span class="row-l t-act">'+ico('video')+'Refaire le parcours</span><small>Mode vidéo</small></button><button onclick="showAdmin()"><span class="row-l t-steps">'+ico('chart')+'Statistiques du site</span><small>Admin</small></button>':'')+'</div>';
+  h+=refCard();
   h+='<div class="app-h">Compte</div><div class="app-card set-list" style="padding:.2rem 1rem"><button type="button" style="cursor:default"><span class="row-l t-muted">'+ico('user')+escH(Auth.user?Auth.user.email:'')+'</span><small>'+(u?'Plan complet':'Aperçu gratuit')+'</small></button><button onclick="signOut()">Se déconnecter</button><button class="danger" onclick="deleteMyData()">Supprimer mes données</button></div>';
   return h}
-function showDashboard(){
+function showDashboard(){refSend();
 if(!hasProfile()&&!restoreProfile()){beginFunnel();return}
 var mc=computeMacros();
 var gen=getWeekPlan(mc.cal,mc.protG,mc.carbG,mc.fatG,mc.m,mc.b);
@@ -2499,7 +2533,7 @@ return '<div class="paywall-card" id="unlock-card"><div style="font-size:2rem;ma
 '<button class="paywall-plan" id="plan-month" onclick="selectPlan(\'month\')"><div class="pp-name">Mensuel</div><div class="pp-price">9,99€<small>/mois</small></div></button>'+
 (SHOW_ANNUAL_PLAN?'<button class="paywall-plan" id="plan-year" onclick="selectPlan(\'year\')"><span class="pp-badge">2 mois offerts</span><div class="pp-name">Annuel</div><div class="pp-price">99€<small>/an</small></div><div class="pp-sub">soit 8,25€/mois</div></button>':'')+
 '</div>'+
-'<div class="paywall-features"><div class="paywall-feat">'+chk+'Tes repas jour par jour, pensés pour ton budget de '+(parseInt(D.budget)||25)+' €</div><div class="paywall-feat">'+chk+'Ta liste de courses avec les vrais prix, au paquet près</div><div class="paywall-feat">'+chk+'Calories et protéines suivies : tu coches tes repas, tu ajoutes un aliment au gramme</div><div class="paywall-feat">'+chk+'Eau, pas (avec ton iPhone) et séances de sport au même endroit</div><div class="paywall-feat">'+chk+'Ta courbe de poids jusqu’à '+(D.cible&&(D.goal==='Prise de masse'||D.goal==='Sèche')?D.cible+' kg':'ton objectif')+'</div></div>'+
+(refActive()?'<div class="ref-pw">🎁 Parrainage : <b>−'+MACRO_CFG.refPct+' %</b> appliqué au paiement</div>':'')+'<div class="paywall-features"><div class="paywall-feat">'+chk+'Tes repas jour par jour, pensés pour ton budget de '+(parseInt(D.budget)||25)+' €</div><div class="paywall-feat">'+chk+'Ta liste de courses avec les vrais prix, au paquet près</div><div class="paywall-feat">'+chk+'Calories et protéines suivies : tu coches tes repas, tu ajoutes un aliment au gramme</div><div class="paywall-feat">'+chk+'Eau, pas (avec ton iPhone) et séances de sport au même endroit</div><div class="paywall-feat">'+chk+'Ta courbe de poids jusqu’à '+(D.cible&&(D.goal==='Prise de masse'||D.goal==='Sèche')?D.cible+' kg':'ton objectif')+'</div></div>'+
 '<button class="btn btn-p btn-lg btn-full" id="paywall-cta-btn" onclick="startCheckout()">Devenir membre fondateur →</button>'+
 '<p class="paywall-legal">En continuant, tu acceptes les <a href="/cgu" target="_blank" rel="noopener">CGU</a> et tu demandes l\'accès immédiat au contenu numérique : tu renonces à ton droit de rétractation de 14 jours.</p>'+
 '<div class="paywall-proof">Calculé chaque semaine pour ton budget, ta salle et ton objectif.</div>'+
@@ -2572,8 +2606,38 @@ var MACRO_CFG={
   supabaseUrl:'https://umgzewacqmbnzmdocxsk.supabase.co',supabaseKey:'sb_publishable_2WHd-FbR8lZHgKKjfNRLFA_tqdIbqwV',
   leadsWebhook:'',
   checkout:{month:'https://whop.com/checkout/plan_hhas7orR1hxgW/',year:'https://whop.com/mangereco/plan-complet-mangereco/',lifetime:'https://whop.com/mangereco/plan-complet-mangereco/',downsell:''},
-  contact:'arthurdemortiere15@gmail.com'
+  contact:'arthurdemortiere15@gmail.com',
+  refPromo:'REPAS',refPct:5 // Whop promo code (5 %) applied to people who come through a referral link
 };
+/* ---- referral ---- */
+function myRefCode(){return Auth.user&&Auth.user.id?String(Auth.user.id).replace(/-/g,'').slice(0,8).toLowerCase():''}
+function myRefLink(){return 'https://www.mangereco.com/?ref='+myRefCode()}
+function refActive(){var r=lsGet('macro_ref');return !!(r&&r.c&&r.c!==myRefCode()&&MACRO_CFG.refPromo)}
+function refCapture(){var m=/[?&]ref=([a-z0-9_-]{3,24})(&|$)/i.exec(location.search);if(!m)return;var c=m[1].toLowerCase();
+  if(!lsGet('macro_ref'))lsSet('macro_ref',{c:c,t:Date.now()});track('ref_visit',{ref:c});
+  try{history.replaceState(null,'',location.pathname+location.search.replace(/([?&])ref=[^&]*&?/,'$1').replace(/[?&]$/,''))}catch(e){}
+  if(c!==myRefCode())setTimeout(function(){toast('Lien de parrainage activé : −'+MACRO_CFG.refPct+' % sur ton abonnement 🎁')},800)}
+// save the referral code on the account once (separate request: harmless if the column is not there yet)
+function refSend(){var r=lsGet('macro_ref');if(!r||!r.c||!(Auth.user&&Auth.session&&sbOn())||r.c===myRefCode()||lsGet('macro_ref_sent')===Auth.user.id)return;var uid=Auth.user.id;
+  sbFetch('/rest/v1/profiles?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:uid,email:Auth.user.email,ref:r.c})},Auth.session.access_token).then(function(x){if(x.ok)lsSet('macro_ref_sent',uid)}).catch(function(){})}
+/* ---- creator stats page: www.mangereco.com/?createur=SECRET (live, no personal data) ---- */
+function creatorPage(secret){
+  document.body.classList.add('cr-mode');var el=document.createElement('div');el.id='cr-page';el.innerHTML='<div class="cr-wrap"><p class="cr-muted">Chargement…</p></div>';document.body.appendChild(el);
+  function eur(n){return n.toFixed(2).replace('.',',')+' €'}
+  function load(){sbFetch('/rest/v1/rpc/creator_stats',{method:'POST',body:JSON.stringify({p_secret:secret})}).then(function(r){return r.json().then(function(j){return {ok:r.ok,j:j}})}).then(function(o){
+    var w=el.querySelector('.cr-wrap');if(!o.ok||!o.j){w.innerHTML='<h1>Lien invalide</h1><p class="cr-muted">'+(o.ok?'Ce lien de stats n\'existe pas. Vérifie-le avec mangereco.':'Le suivi des créateurs n\'est pas encore activé.')+'</p>';return}
+    var d=o.j,pct=MACRO_CFG.refPct,link='www.mangereco.com/?ref='+d.code,conv=d.visits?Math.round(d.paid/d.visits*1000)/10:0,ca=(d.paid_life*59.99+d.paid_month*9.99)*(1-pct/100);
+    w.innerHTML='<div class="cr-top"><span class="app-brand">mangereco<i>.</i></span><span class="cr-live"><i></i>En direct</span></div><h1>Salut '+escH(d.name)+'</h1>'+
+      '<div class="cr-link"><span>Ton lien</span><b>'+escH(link)+'</b><button type="button" onclick="navigator.clipboard&&navigator.clipboard.writeText(\'https://'+link+'\').then(function(){toast(\'Lien copié ✓\')})">Copier</button></div>'+
+      '<div class="cr-grid"><div class="cr-k"><b>'+d.visits+'</b><span>Visiteurs</span></div><div class="cr-k"><b>'+d.signups+'</b><span>Inscrits</span></div><div class="cr-k hi"><b>'+d.paid+'</b><span>Ont payé</span></div><div class="cr-k"><b>'+conv+' %</b><span>Visiteurs → payants</span></div></div>'+
+      '<div class="cr-card"><div class="cr-row"><span>Pack fondateur à vie</span><b>'+d.paid_life+'</b></div><div class="cr-row"><span>Abonnement mensuel</span><b>'+d.paid_month+'</b></div><div class="cr-row"><span>Abonnés actifs aujourd\'hui</span><b>'+d.active+'</b></div><div class="cr-row"><span>Ventes générées (estimation, après −'+pct+' %)</span><b>'+eur(ca)+'</b></div></div>'+
+      '<h2>Derniers paiements</h2>'+(d.recent&&d.recent.length?'<div class="cr-card">'+d.recent.map(function(p){return '<div class="cr-row"><span>'+new Date(p.at).toLocaleString('fr-FR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})+'</span><b>'+(p.kind==='life'?'Fondateur':p.kind==='month'?'Mensuel':escH(p.kind))+'</b></div>'}).join('')+'</div>':'<p class="cr-muted">Pas encore de paiement. Partage ton lien !</p>')+
+      '<p class="cr-muted">Tes abonnés ont −'+pct+' % avec ton lien. Mis à jour toutes les 30 secondes · '+new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})+'</p>'}).catch(function(){var w=el.querySelector('.cr-wrap');if(/Chargement/.test(w.textContent))w.innerHTML='<p class="cr-muted">Connexion impossible pour le moment. Réessaie dans un instant.</p>'})}
+  load();setInterval(function(){if(!document.hidden)load()},30000)}
+function refShare(){var l=myRefLink(),t='Je fais mes repas muscu avec mangereco. Avec mon lien tu as −'+MACRO_CFG.refPct+' % :';track('ref_share');
+  if(navigator.share){navigator.share({title:'mangereco.',text:t,url:l}).catch(function(){});return}
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t+' '+l).then(function(){toast('Lien copié ✓')}).catch(function(){toast(l)});else toast(l)}
+function refCard(){if(!myRefCode())return '';return '<div class="app-h t-money"><span class="lbl">'+ico('user')+'Parraine tes potes</span></div><div class="app-card ref-card tinted t-money"><p>Tes amis ont <b>−'+MACRO_CFG.refPct+' %</b> sur l\'abonnement quand ils s\'inscrivent avec ton lien.</p><div class="ref-link" id="ref-link">'+escH(myRefLink().replace('https://',''))+'</div><button type="button" class="lb-btn" onclick="refShare()">Partager mon lien</button></div>'}
 var Auth={user:null,session:null,after:null,gate:false,mode:'signup'};
 var GSVG='<svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>';
 function lsGet(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
@@ -2610,7 +2674,7 @@ function utmCamp(){var m=/[?&]utm_campaign=([^&]+)/.exec(location.search);return
 function utmSrc(){var m=/[?&]utm_source=([^&]+)/.exec(location.search);return m?decodeURIComponent(m[1]):''}
 function track(ev,p){if(isInsider())return;p=p||{};p.vid=vid();p.sid=sid();var q=lsGet('macro_events')||[];q.push({ev:ev,t:Date.now(),p:p});if(q.length>100)q.shift();lsSet('macro_events',q);if(sbOn())sbFetch('/rest/v1/events',{method:'POST',headers:{Prefer:'return=minimal'},body:JSON.stringify({name:ev,props:p,user_email:null})}).catch(function(){})}
 
-function saveProfile(){if(!hasProfile())return;
+function saveProfile(){if(!hasProfile())return;var _r=lsGet('macro_ref');if(_r&&_r.c&&_r.c!==myRefCode()&&!D.ref)D.ref=_r.c;
   lsSet('macro_profile',{D:D,g:selGender||null,ts:Date.now()});
   if(Auth.user&&Auth.session&&sbOn())sbFetch('/rest/v1/profiles?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:Auth.user.id,email:Auth.user.email,data:{D:D,g:selGender||null},updated_at:new Date().toISOString()})},Auth.session.access_token).catch(function(){});
 }
@@ -2660,7 +2724,7 @@ function founderOffer(){var off=lsGet('macro_offer_pending');if(!off||!Auth.user
 function payLink(plan){track('offer_link',{offer:'pay-'+plan});
 var go=function(){if(plan==='life'&&founderCount!==null&&founderCount>=FOUNDER_MAX){showPaywall();toast('Le pack fondateur est complet : il reste le mensuel à 9,99 €.');return}selectedPlan=plan;startCheckout()};
 if(plan==='life'&&founderCount===null)loadFounderCount(go);else setTimeout(go,250)}
-function afterLogin(fromRedirect){track('login');
+function afterLogin(fromRedirect){track('login');refSend();
   if(lsGet('macro_offer_pending')){if(restoreProfile()){showDashboard();founderOffer();return}if(sbOn()&&Auth.session){loadRemoteProfile(function(ok){if(ok){showDashboard();founderOffer()}else{lsDel('macro_offer_pending');toast('Connecté ! Crée ton plan pour commencer.')}});return}}
   if(lsGet('macro_goto')){if(restoreProfile()){showDashboard();return}if(sbOn()&&Auth.session){loadRemoteProfile(function(ok){if(ok)showDashboard();else{lsDel('macro_goto');toast('Connecté ! Crée ton plan pour commencer.')}});return}}
   if(lsGet('macro_admin_pending')){lsDel('macro_admin_pending');if(isAdmin()){showAdmin();return}}
@@ -2672,7 +2736,7 @@ function afterLogin(fromRedirect){track('login');
     loadRemoteProfile(function(ok){if(ok)showDashboard();else toast('Connecté ! Crée ton plan pour commencer.')});
   }
 }
-function initAuth(){
+function initAuth(){var _cr=/[?&]createur=([a-f0-9]{16,40})(&|$)/i.exec(location.search);if(_cr){creatorPage(_cr[1]);return}refCapture();
   track('lp_view');track('page_view',{page:'landing',ref:utmSrc()||refHost(),dev:devType(),camp:utmCamp()});var yr=document.getElementById('yr');if(yr)yr.textContent=new Date().getFullYear();
   if(trkStepsHash())history.replaceState(null,'',location.pathname+location.search);
   var hash=location.hash||'';
@@ -2822,7 +2886,7 @@ function startCheckout(kind){
   track('checkout_click',{plan:kind==='downsell'?'downsell':selectedPlan});setLeadStatus('checkout_started');
   if(!Auth.user&&authReady()){openAuth('signup',function(){startCheckout(kind)});return}
   var c=MACRO_CFG.checkout||{};var url=kind==='downsell'?(c.downsell||c.year):c[selectedPlan==='life'?'lifetime':selectedPlan];
-  if(url){location.href=url+(url.indexOf('?')>-1?'&':'?')+(Auth.user?'email='+encodeURIComponent(Auth.user.email):'');return}
+  if(url){var qs=[];if(Auth.user)qs.push('email='+encodeURIComponent(Auth.user.email));if(refActive())qs.push('promoCode='+encodeURIComponent(MACRO_CFG.refPromo));location.href=url+(qs.length?(url.indexOf('?')>-1?'&':'?')+qs.join('&'):'');return}
   toast('Le paiement ouvre très bientôt. Ton plan est sauvegardé, on te prévient par e-mail.');
 }
 
