@@ -2579,6 +2579,9 @@ function toast(msg){var t=document.createElement('div');t.className='toast';t.te
 var ADMIN_EMAIL='arthurdemortiere15@gmail.com';
 // accounts with full access (plan unlocked + daily tracker), without the stats: the owner's partner
 var FULL_ACCESS=['crevatjuliette@gmail.com'];
+// accounts given paid access for free (same as a paying customer, no test tag, counted in stats)
+var GIFT_ACCESS=['antoineecom9@gmail.com'];
+function isGift(){return !!(Auth.user&&GIFT_ACCESS.indexOf(String(Auth.user.email||'').toLowerCase())>-1)}
 function isFull(){return !!(Auth.user&&FULL_ACCESS.indexOf(String(Auth.user.email||'').toLowerCase())>-1)}
 function isInsider(){return isAdmin()||isFull()}
 // paying customers (and full-access accounts) get the full app: tabs, tracker, progress, real-price list, budget plan
@@ -2958,7 +2961,7 @@ plan.push({day:DAYS[d],meals:dayMeals,totals:{p:dayP,g:dayG,l:dayL,cal:dayCal}})
 var f=(budget>0&&totalCost>budget)?(budget*0.96/totalCost):1;if(f<1){plan.forEach(function(d){d.meals.forEach(function(m){m.price=Math.round(m.price*f*100)/100})});totalCost=totalCost*f}return{plan:plan,weekCost:Math.round(totalCost*100)/100,f:f,calPerMeal:calPerMeal}}
 function isUnlocked(){
 if(/^(localhost|127.0.0.1)$/.test(location.hostname)&&/[?&]preview=unlocked/.test(location.search))return true;
-return !!(Auth.user&&(Auth.user.unlocked||isFull()));
+return !!(Auth.user&&(Auth.user.unlocked||isFull()||isGift()));
 }
 function qtyHtml(m){if(!m.q||!m.k)return '';return m.q.map(function(x){var n=x[0],g=x[1],tag=x[2]||'',u=x[3];if(typeof g!=='number')return '<li><span>'+n+'</span><b>'+g+'</b></li>';var v=g*m.k;if(u){var c=Math.max(1,Math.round(v/u));return '<li><span>'+n+'</span><b>'+c+' '+(c>1?'œufs':'œuf')+' <small>('+(c*u)+' g)</small></b></li>'}v=v<25?Math.max(1,Math.round(v)):Math.round(v/5)*5;return '<li><span>'+n+(tag&&tag!=='ml'?' <small>('+tag+')</small>':'')+'</span><b>'+v+(tag==='ml'?' ml':' g')+'</b></li>'}).join('')}
 function showMealDetail(di,mi){if(!isUnlocked()&&!isFreeMeal(di,mi)){track('paywall_gate',{from:'recipe'});showPaywall();return}track('meal_open');
