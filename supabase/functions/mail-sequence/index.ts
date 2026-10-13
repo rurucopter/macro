@@ -110,9 +110,10 @@ function build(key: string, v: V, go: Go): Mail | null {
   switch (key) {
     // ---------- A: not paying
     case "A1": // 3 lines, one button straight to the checkout
-      subject = F ? "Ton plan est prêt — 59,99 € une fois, à vie" : "Ton plan est prêt — 9,99 €/mois";
-      body = F ? P(`${hi} ton plan est prêt : <b>59,99 € une fois</b>, et il est à toi à vie.`) +
-                 P(`Soit moins de 5 € par mois la 1re année. <b>${nb}</b>, ensuite c'est 9,99 €/mois.`) + sign
+      subject = F ? "Ton plan à 4,99 €/mois est prêt" : "Ton plan est prêt — 9,99 €/mois";
+      body = F ? P(`${hi} ton plan à <b>4,99 € par mois</b> est prêt.`) +
+                 P(`C'est le pack fondateur : <b>59,99 € payés une seule fois</b>, soit 4,99 € par mois sur la 1re année, puis plus rien à payer. Pas d'abonnement, rien à résilier.`) +
+                 P(`<b>${nb}</b>, ensuite c'est 9,99 €/mois.`) + sign
                : P(`${hi} ton plan est prêt : tous tes repas et ta liste de courses avec les prix.`) + P("Débloque-le pour <b>9,99 €/mois</b>.") + sign;
       cta = F ? "Débloquer mon plan à vie" : "Débloquer mon plan";
       to = PAY;
