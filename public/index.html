@@ -2428,7 +2428,7 @@ function freePage(mc,gen){var ti=todayIndex(),dates=weekDates(),nm=firstName(),r
   h+='<h1 class="app-title">'+(nm?escH(nm)+', ton':'Ton')+' plan est prêt</h1><p class="fp-sub">Toute ta semaine, pensée pour '+goalTxt+' avec '+mc.b+' € chez '+escH(D.store||'ton magasin')+'.</p>';
   h+='<div class="fp-kpis"><div><b>'+mc.cal+'</b><span>kcal / jour</span></div><div><b>'+mc.protG+' g</b><span>protéines / jour</span></div><div><b>'+r.used.toFixed(0)+' €</b><span>par semaine</span></div></div>';
   var t=testOn(),order=gen.plan.map(function(_,i){return i});
-  if(t){h+=fpProjection();order=order.slice(ti).concat(order.slice(0,ti))}
+  if(t)order=order.slice(ti).concat(order.slice(0,ti));
   h+=freeBanner();
   order.forEach(function(di,k){var d=gen.plan[di];
     if(t&&k===2)h+='<button type="button" class="fp-more" onclick="fpMore(this)">Voir les '+(order.length-2)+' autres jours<i aria-hidden="true">▾</i></button><div class="fp-rest" hidden>';
@@ -2438,6 +2438,7 @@ function freePage(mc,gen){var ti=todayIndex(),dates=weekDates(),nm=firstName(),r
         '<div class="bd '+(CAT_TINT[m.cat]||'')+'"><span class="ct">'+(CAT_LBL[m.cat]||'Repas')+(open?' · offert':'')+'</span><span class="nm">'+m.n+'</span><span class="mt">'+m.cal+' kcal · '+m.p+' g prot'+(open?' · voir la recette':'')+'</span></div>'+(open?'':'<span class="fp-pad" aria-hidden="true">🔒</span>')+'</div>'});
     h+='</div>'});
   if(t&&order.length>2)h+='</div>';
+  if(t)h+=fpProjection();
   h+='<div class="app-h t-money"><span class="lbl">'+ico('euro')+'Ta liste de courses</span><small>'+r.used.toFixed(2).replace('.',',')+' € / '+mc.b+' €</small></div>'+lockBox(shopRealHtml(gen,mc.b),'euro','Ta liste de courses avec les prix','Tout ce qu\'il faut acheter pour ta semaine, au paquet près.');
   h+='<div class="fp-links"><button type="button" onclick="editProfile()">Mes réponses</button><button type="button" onclick="signOut()">Se déconnecter</button></div>';
   h+='</div><div class="fp-cta"><div class="fp-cta-in"><span class="fp-cd"></span><button type="button" class="btn btn-p btn-lg btn-full" onclick="track(\'paywall_gate\',{from:\'free_cta\'});showPaywall()">🔓 Débloquer toute ma semaine</button></div></div>';
