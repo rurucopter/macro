@@ -2654,7 +2654,7 @@ var ADMIN_EMAIL='arthurdemortiere15@gmail.com';
 // accounts with full access (plan unlocked + daily tracker), without the stats: the owner's partner
 var FULL_ACCESS=['crevatjuliette@gmail.com'];
 // accounts given paid access for free (same as a paying customer, no test tag, counted in stats)
-var GIFT_ACCESS=['antoineecom9@gmail.com'];
+var GIFT_ACCESS=[];
 function isGift(){return !!(Auth.user&&GIFT_ACCESS.indexOf(String(Auth.user.email||'').toLowerCase())>-1)}
 function isFull(){return !!(Auth.user&&FULL_ACCESS.indexOf(String(Auth.user.email||'').toLowerCase())>-1)}
 function isInsider(){return isAdmin()||isFull()}
