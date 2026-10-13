@@ -2419,7 +2419,7 @@ function showProof(){if(document.getElementById('proof-modal'))return;
   var lose=D.goal==='Sèche'||(+D.cible&&+D.poids&&+D.cible<+D.poids);
   var P=!lose?{img:'proof-arthur',alt:'Avant et après 3 ans de musculation : Arthur, fondateur de mangereco',cap:'Arthur, fondateur de mangereco · +27 kg en 3 ans',h:'Regarde : Arthur, lui, a passé le cap.',t:'Ça a changé sa relation avec les autres.'}
     :D.gender==='Femme'?{img:'proof-v',alt:'Avant et après : V., 8 kg perdus',cap:'V. · −8 kg',h:'V. avait le même objectif que toi.',t:'Elle a juste passé le cap.'}
-    :{img:'proof-b',alt:'Avant et après : B., 8 kg perdus',cap:'B. · −8 kg',h:'B. avait le même objectif que toi.',t:'Il a juste passé le cap.'};
+    :{img:'proof-b',alt:'Avant et après : B., 8 kg perdus en 8 mois',cap:'B. · −8 kg en 8 mois',h:'B. avait le même objectif que toi.',t:'Il a juste passé le cap.'};
   track('proof_view',{goal:D.goal||'',who:P.img});
   var media='<img class="pf-img" src="/img/'+P.img+'.jpg" alt="'+P.alt+'"><p class="pf-cap">'+P.cap+'</p>';
   el.innerHTML='<div class="pw-sheet pf-sheet" role="dialog" aria-modal="true" aria-labelledby="pf-t"><button class="pw-x" onclick="closeProof()" aria-label="Fermer">&times;</button>'+media+
