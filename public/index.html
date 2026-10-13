@@ -1040,7 +1040,7 @@ body.app-mode[data-tab="reglages"] #dashboard,body.app-mode[data-tab="reglages"]
 .st-in{flex:1;min-width:0;font-size:1.5rem;font-weight:800;padding:.7rem .9rem;font-variant-numeric:tabular-nums}
 .st-sheet .trk-bar.blue i{background:var(--c-steps)}
 .lockbox{position:relative;border-radius:22px;overflow:hidden;margin:.25rem 0}
-.lockbox .lb-in{filter:blur(6px) saturate(.85);opacity:.7;pointer-events:none;user-select:none}
+.lockbox .lb-in{filter:blur(11px) saturate(.8);opacity:.6;pointer-events:none;user-select:none}
 .lockbox{min-height:230px}
 .lockbox .lb-cta{position:absolute;inset:0;padding:1.25rem 1rem}
 .lb-card{position:sticky;top:max(24px,calc(50vh - 260px));margin:0 auto;background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow-lg);padding:1.1rem 1.2rem;max-width:330px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:.45rem}
@@ -1086,6 +1086,29 @@ body.cr-mode>*:not(#cr-page):not(.toast):not(script){display:none!important}
 .cr-row:last-child{border-bottom:0}
 .cr-row b{color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
 .cr-muted{font-size:.8125rem;color:var(--muted);margin:0}
+.fp{padding-bottom:calc(150px + env(safe-area-inset-bottom))}
+.fp-sub{margin:-.5rem 0 1rem;color:var(--ink2);font-size:.9375rem;line-height:1.45}
+.fp-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem;margin-bottom:1rem}
+.fp-kpis div{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:.7rem .5rem;text-align:center;display:flex;flex-direction:column;gap:.15rem}
+.fp-kpis b{font-family:var(--font-d);font-size:1.25rem;color:var(--ink);font-variant-numeric:tabular-nums}
+.fp-kpis span{font-size:.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+.fp-day{margin:1.1rem 0 .4rem}
+.fp-dh{display:flex;justify-content:space-between;align-items:baseline;gap:.6rem;margin-bottom:.5rem}
+.fp-dh b{font-family:var(--font-d);font-size:1.0625rem;color:var(--ink)}
+.fp-dh em{font-style:normal;font-size:.6875rem;font-weight:700;background:var(--accent-strong);color:var(--on-accent);border-radius:99px;padding:.1rem .5rem;margin-left:.3rem}
+.fp-dh span{font-size:.75rem;color:var(--muted)}
+.menu-row.fp-lock{position:relative;overflow:hidden}
+.menu-row.fp-lock .ph,.menu-row.fp-lock .bd{filter:blur(10px) saturate(.7);opacity:.75}
+.fp-pad{position:absolute;inset:0;display:grid;place-items:center;font-size:1.4rem}
+.fp-links{display:flex;justify-content:center;gap:1.25rem;margin:1.5rem 0 0}
+.fp-links button{border:0;background:none;color:var(--muted);font-family:var(--font);font-size:.875rem;text-decoration:underline;cursor:pointer}
+.fp-cta{position:fixed;left:0;right:0;bottom:0;z-index:60;padding:.75rem 16px calc(.9rem + env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent,var(--bg) 35%)}
+.fp-cta-in{max-width:528px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:.4rem}
+.fp-cd{font-size:.8125rem;font-weight:700;color:var(--c-cal,#EA580C);font-variant-numeric:tabular-nums}
+.fp-cd:empty{display:none}
+.pr-sub-m{margin:.2rem 0 0;font-size:.875rem;opacity:.85}
+#pv-bar{position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:400;display:flex;align-items:center;gap:.7rem;background:#111827;color:#fff;border-radius:99px;padding:.4rem .5rem .4rem .9rem;font:600 .8125rem var(--font);box-shadow:0 6px 20px rgba(0,0,0,.25)}
+#pv-bar button{border:0;border-radius:99px;background:#fff;color:#111827;font:700 .8125rem var(--font);padding:.35rem .8rem;cursor:pointer}
 .ds{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.25rem;margin:0 0 1rem}
 .ds-d{display:flex;flex-direction:column;align-items:center;gap:.3rem;border:0;background:none;padding:.25rem 0;cursor:pointer;font-family:var(--font);color:var(--muted)}
 .ds-ring{position:relative;width:42px;height:42px;display:grid;place-items:center}
@@ -1618,7 +1641,7 @@ body.app-mode .tile.locked .tp,body.app-mode .tile.locked .tn{filter:blur(5px)}
   <h2 class="sec-t" id="t-tarifs">Choisis ta formule.</h2>
   <p class="sec-sub">Tu vois d’abord l’aperçu de ton plan. Tu débloques l’accès complet quand tu es prêt. Paiement sécurisé par Whop.</p>
   <div class="pr-grid">
-    <div class="pr-card star" id="pr-founder"><h3>Offre de lancement · Pack fondateur</h3><div class="pr-price">59,99&nbsp;€ <small>une seule fois</small></div><p class="pr-left" id="pr-founder-left">Places limitées à 20</p><ul><li>Accès à vie</li><li>Toutes les futures nouveautés</li><li>Prix bloqué pour toujours</li></ul><button class="btn btn-p" onclick="startOnboarding()">Créer mon plan</button></div>
+    <div class="pr-card star" id="pr-founder"><h3>Offre de lancement · Pack fondateur</h3><div class="pr-price">59,99&nbsp;€ <small>une seule fois</small></div><p class="pr-sub-m">soit moins de 5 € par mois la 1re année</p><p class="pr-left" id="pr-founder-left">⏳ Se termine dans …</p><ul><li>Accès à vie</li><li>Toutes les futures nouveautés</li><li>Prix bloqué pour toujours</li></ul><button class="btn btn-p" onclick="startOnboarding()">Créer mon plan</button></div>
     <div class="pr-card" id="pr-year" hidden><h3>Annuel</h3><div class="pr-price">99&nbsp;€ <small>par an</small></div><ul><li>Soit 8,25 € par mois</li><li>Plan complet, recettes et liste de courses</li></ul><button class="btn btn-p" onclick="startOnboarding()">Créer mon plan</button></div>
     <div class="pr-card"><h3>Mensuel</h3><div class="pr-price">9,99&nbsp;€ <small>par mois</small></div><ul><li>Plan complet, recettes et liste de courses</li></ul><button class="btn btn-p" onclick="startOnboarding()">Créer mon plan</button></div>
   </div>
@@ -1695,7 +1718,7 @@ body.app-mode .tile.locked .tp,body.app-mode .tile.locked .tn{filter:blur(5px)}
 <img id="img-real-atmo2" src="/img/real-atmo2.jpg" style="display:none">
 <script>
 var D={},step=0,selGender=null;
-function showPage(id){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});document.getElementById(id).classList.add('active');document.body.classList.toggle('app-mode',id==='dashboard'&&typeof appOn==='function'&&appOn());window.scrollTo(0,0);var stk=document.getElementById('sticky-cta');if(stk)stk.classList.remove('show');if(id==='landing')initReveal();if(id!=='admin')track('page_view',{page:id})}
+function showPage(id){setTimeout(function(){if(typeof previewBar==='function')previewBar()},0);document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});document.getElementById(id).classList.add('active');document.body.classList.toggle('app-mode',id==='dashboard'&&typeof appOn==='function'&&appOn());window.scrollTo(0,0);var stk=document.getElementById('sticky-cta');if(stk)stk.classList.remove('show');if(id==='landing')initReveal();if(id!=='admin')track('page_view',{page:id})}
 function beginFunnel(){track('funnel_start');step=0;D={};showPage('onboarding');renderStep()}
 function startOnboarding(){if(window._demoRun&&isAdmin()){beginFunnel();return}
 if(Auth.user){
@@ -2349,12 +2372,29 @@ function stepsSave(){var raw=trkVal('st-in'),v=Math.round(+raw);if(raw===''||!(v
 function trkIphoneHelp(){return '<details class="trk-help"><summary>Relier les pas de ton iPhone</summary><ol><li>Ouvre l\'app <b>Raccourcis</b>, touche <b>+</b>.</li><li>Ajoute l\'action <b>Rechercher des échantillons de santé</b> : type <b>Nombre de pas</b>, date de début <b>Aujourd\'hui</b>. Autorise l\'accès à Santé.</li><li>Ajoute <b>Calculer les statistiques</b> → <b>Somme</b>, puis <b>Arrondir le nombre</b>.</li><li>Ajoute <b>URL</b> : <code>https://www.mangereco.com/#pas=</code> suivi de la variable <b>Nombre arrondi</b>, puis <b>Ouvrir les URL</b>.</li><li>Nomme-le « Mes pas » et lance-le : Safari s\'ouvre et tes pas du jour sont notés ici. Tu peux aussi l\'automatiser (onglet <b>Automatisation</b>, tous les soirs).</li></ol><p class="trk-note">Fonctionne dans Safari, là où tu es connecté. Tes pas ne sont envoyés à aucun serveur.</p></details>'}
 // visible but nothing usable: any tap opens the paywall
 function viewOnly(inner){return '<div class="viewonly" onclick="track(\'paywall_gate\',{from:\'viewonly\'});showPaywall()" onkeydown="if(event.key===\'Enter\')showPaywall()" role="button" tabindex="0" aria-label="Débloquer pour utiliser"><div class="vo-in" inert>'+inner+'</div></div>'}
+// one page for people who have not paid: the whole week, only the first meal open, everything else heavily blurred
+function freePage(mc,gen){var ti=todayIndex(),dates=weekDates(),nm=firstName(),r=shopReal(gen);
+  var goalTxt=mc.go==='Prise de masse'?'ta prise de masse':mc.go==='Sèche'?'ta sèche':'ton maintien';
+  var h='<div class="app fp"><div class="app-top"><span class="app-brand">mangereco<i>.</i></span><span class="app-date">'+new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})+'</span></div>';
+  h+='<h1 class="app-title">'+(nm?escH(nm)+', ton':'Ton')+' plan est prêt</h1><p class="fp-sub">Toute ta semaine, pensée pour '+goalTxt+' avec '+mc.b+' € chez '+escH(D.store||'ton magasin')+'.</p>';
+  h+='<div class="fp-kpis"><div><b>'+mc.cal+'</b><span>kcal / jour</span></div><div><b>'+mc.protG+' g</b><span>protéines / jour</span></div><div><b>'+r.used.toFixed(0)+' €</b><span>par semaine</span></div></div>';
+  h+=freeBanner();
+  gen.plan.forEach(function(d,di){
+    h+='<div class="fp-day'+(di===ti?' today':'')+'"><div class="fp-dh"><b>'+d.day+' '+dates[di].getDate()+(di===ti?' <em>Aujourd\'hui</em>':'')+'</b><span>'+d.totals.cal+' kcal · '+d.totals.p+' g prot</span></div>';
+    d.meals.forEach(function(m,mi){var open=isFreeMeal(di,mi),el=m.img&&document.getElementById(m.img);
+      h+='<div class="app-card menu-row'+(open?'':' locked fp-lock')+'" onclick="'+(open?'showMealDetail('+di+','+mi+')':'track(\'paywall_gate\',{from:\'free_week\'});showPaywall()')+'">'+(el?'<img class="ph" src="'+el.src+'" alt="">':'<div class="ph">'+m.emoji+'</div>')+
+        '<div class="bd '+(CAT_TINT[m.cat]||'')+'"><span class="ct">'+(CAT_LBL[m.cat]||'Repas')+(open?' · offert':'')+'</span><span class="nm">'+m.n+'</span><span class="mt">'+m.cal+' kcal · '+m.p+' g prot'+(open?' · voir la recette':'')+'</span></div>'+(open?'':'<span class="fp-pad" aria-hidden="true">🔒</span>')+'</div>'});
+    h+='</div>'});
+  h+='<div class="app-h t-money"><span class="lbl">'+ico('euro')+'Ta liste de courses</span><small>'+r.used.toFixed(2).replace('.',',')+' € / '+mc.b+' €</small></div>'+lockBox(shopRealHtml(gen,mc.b),'euro','Ta liste de courses avec les prix','Tout ce qu\'il faut acheter pour ta semaine, au paquet près.');
+  h+='<div class="fp-links"><button type="button" onclick="editProfile()">Mes réponses</button><button type="button" onclick="signOut()">Se déconnecter</button></div>';
+  h+='</div><div class="fp-cta"><div class="fp-cta-in"><span class="fp-cd"></span><button type="button" class="btn btn-p btn-lg btn-full" onclick="track(\'paywall_gate\',{from:\'free_cta\'});showPaywall()">🔓 Débloquer toute ma semaine</button></div></div>';
+  return h}
 function freeBanner(){return '<div class="app-card free-banner"><div><b>Ton premier repas est offert 🎁</b><span>Débloque toute ta semaine, ta liste de courses avec les prix et ton suivi du jour.</span></div><button type="button" class="lb-btn" onclick="track(\'paywall_gate\',{from:\'banner\'});showPaywall()">Débloquer</button></div>'}
 function trkPlanMeal(di,mi){if(!isMember()){showPaywall();return}var m=window._gen.plan[di].meals[mi],key=weekKey()+'-'+di+'-'+mi,s=trkLoad(),i=-1;s.t.cal.forEach(function(x,j){if(x.plan===key)i=j});
   if(i>-1)s.t.cal.splice(i,1);else s.t.cal.push({n:m.n,k:m.cal,p:m.p,plan:key});trkSave(s)}
 function tabReglages(mc){var u=isUnlocked();
   var h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span>'+(isInsider()?'<span class="trk-tag">Mode test</span>':'')+'</div><h1 class="app-title">Réglages</h1>'+answerChips()+(u?'':freeBanner());
-  h+='<div class="app-card set-list" style="margin-top:1rem;padding:.2rem 1rem"><button onclick="showResult()"><span class="row-l t-prot">'+ico('bolt')+'Mes macros</span><small>'+mc.cal+' kcal · '+mc.protG+' g prot</small></button><button onclick="editProfile()"><span class="row-l t-lunch">'+ico('list')+'Mes réponses</span><small>Budget, objectif, poids…</small></button><button onclick="'+(isMember()?'regenWeek()':'showPaywall()')+'"><span class="row-l t-cal">'+ico('refresh')+'Nouvelle semaine</span><small>'+(isMember()?'Même budget':'🔒 Avec le plan complet')+'</small></button>'+(isAdmin()?'<button onclick="startDemoRun()"><span class="row-l t-act">'+ico('video')+'Refaire le parcours</span><small>Mode vidéo</small></button><button onclick="showAdmin()"><span class="row-l t-steps">'+ico('chart')+'Statistiques du site</span><small>Admin</small></button>':'')+'</div>';
+  h+='<div class="app-card set-list" style="margin-top:1rem;padding:.2rem 1rem"><button onclick="showResult()"><span class="row-l t-prot">'+ico('bolt')+'Mes macros</span><small>'+mc.cal+' kcal · '+mc.protG+' g prot</small></button><button onclick="editProfile()"><span class="row-l t-lunch">'+ico('list')+'Mes réponses</span><small>Budget, objectif, poids…</small></button><button onclick="'+(isMember()?'regenWeek()':'showPaywall()')+'"><span class="row-l t-cal">'+ico('refresh')+'Nouvelle semaine</span><small>'+(isMember()?'Même budget':'🔒 Avec le plan complet')+'</small></button>'+(isAdmin()?'<button onclick="startPreviewFree()"><span class="row-l t-bf">'+ico('user')+'Voir comme un client non payant</span><small>Parcours complet</small></button><button onclick="startDemoRun()"><span class="row-l t-act">'+ico('video')+'Refaire le parcours</span><small>Mode vidéo</small></button><button onclick="showAdmin()"><span class="row-l t-steps">'+ico('chart')+'Statistiques du site</span><small>Admin</small></button>':'')+'</div>';
   h+=refCard();
   h+='<div class="app-h">Compte</div><div class="app-card set-list" style="padding:.2rem 1rem"><button type="button" style="cursor:default"><span class="row-l t-muted">'+ico('user')+escH(Auth.user?Auth.user.email:'')+'</span><small>'+(u?'Plan complet':'Aperçu gratuit')+'</small></button><button onclick="signOut()">Se déconnecter</button><button class="danger" onclick="deleteMyData()">Supprimer mes données</button></div>';
   return h}
@@ -2370,6 +2410,7 @@ h+='<div class="dash-greet"><h1>Bonjour'+(nm?' '+escH(nm):'')+'</h1><p>Voici ta 
 if(!u)h+='<div class="dash-lock"><div class="dl-ico">🔒</div><div class="dl-txt"><strong>Ton plan est prêt, il te manque la clé.</strong><span>Débloque toutes les recettes, les macros de chaque repas et la liste de courses.</span></div><button class="btn btn-p" onclick="showPaywall()">Débloquer</button></div>';
 if(MEALS.filter(mealOk).length===0)h+='<div class="dash-warn">Tous les repas contiennent un aliment que tu as exclu. Retire-en quelques-uns dans « Mes réponses » pour avoir un plan adapté.</div>';
 h+='<div class="dash-kpis"><div class="dk"><strong>'+mc.cal+'</strong><span>kcal / jour</span></div><div class="dk"><strong>'+mc.protG+' g</strong><span>protéines / jour</span></div><div class="dk"><strong>'+mc.m+'</strong><span>repas / semaine</span></div><div class="dk"><strong id="dk-cost">'+(appOn()?shopReal(gen).used:gen.weekCost).toFixed(0)+' €</strong><span>'+(appOn()?'par semaine':'courses estimées')+'</span></div></div>';
+if(appOn()&&!isMember()){document.getElementById('dash-content').innerHTML=freePage(mc,gen);window._dashDay=ti;showPage('dashboard');track('dashboard_view');markOpened();notePaywall();renderFounder();return}
 if(appOn()){window._trkCal=mc.cal;window._trkProt=mc.protG;trkApplySteps();if(lsGet('macro_goto')==='liste')lsSet('macro_tab','courses');
   document.getElementById('dash-content').innerHTML=appShell();window._dashDay=window._dashDay!=null?window._dashDay:ti;showPage('dashboard');renderTab();track('dashboard_view');markOpened();if(!isMember())notePaywall();watchList();dashGoto();return}
 h+='<h2 class="dash-h">Ta semaine</h2><div id="dash-week">'+weekHtml(gen,u)+'</div>';
@@ -2529,7 +2570,7 @@ var personaLine=(D.prenom?'Salut '+escH(D.prenom)+' 👋 ':'')+'On a vu que tu t
 var chk='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>';
 return '<div class="paywall-card" id="unlock-card"><div style="font-size:2rem;margin-bottom:.5rem">\u{1F512}</div><h2>Débloque ton plan</h2><p class="paywall-persona">'+personaLine+'</p>'+
 '<div class="paywall-plans">'+
-'<button class="paywall-plan pp-founder active" id="plan-life" onclick="selectPlan(\'life\')"><span class="pp-badge pp-badge-f">Offre de lancement</span><div class="pp-founder-row"><div><div class="pp-name">À vie · paiement unique</div><div class="pp-price">59,99€</div><div class="pp-strike">au lieu de 9,99€ par mois, pour toujours</div></div><ul class="pp-founder-list"><li>Accès à vie</li><li>Toutes les futures nouveautés</li><li>Prix bloqué pour toujours</li></ul></div><div class="pp-meter" id="founder-meter"><div class="pp-meter-txt" id="founder-txt">Places limitées à 20</div><div class="pp-meter-bar"><div class="pp-meter-fill" id="founder-fill" style="width:0"></div></div></div></button>'+
+'<button class="paywall-plan pp-founder active" id="plan-life" onclick="selectPlan(\'life\')"><span class="pp-badge pp-badge-f">Offre de lancement</span><div class="pp-founder-row"><div><div class="pp-name">À vie · paiement unique</div><div class="pp-price">59,99€</div><div class="pp-strike">soit moins de 5 € par mois la 1re année, puis plus rien à payer</div></div><ul class="pp-founder-list"><li>Accès à vie</li><li>Toutes les futures nouveautés</li><li>Prix bloqué pour toujours</li></ul></div><div class="pp-meter" id="founder-meter"><div class="pp-meter-txt" id="founder-txt">⏳ Se termine dans …</div><div class="pp-meter-bar"><div class="pp-meter-fill" id="founder-fill" style="width:0"></div></div></div></button>'+
 '<button class="paywall-plan" id="plan-month" onclick="selectPlan(\'month\')"><div class="pp-name">Mensuel</div><div class="pp-price">9,99€<small>/mois</small></div></button>'+
 (SHOW_ANNUAL_PLAN?'<button class="paywall-plan" id="plan-year" onclick="selectPlan(\'year\')"><span class="pp-badge">2 mois offerts</span><div class="pp-name">Annuel</div><div class="pp-price">99€<small>/an</small></div><div class="pp-sub">soit 8,25€/mois</div></button>':'')+
 '</div>'+
@@ -2546,7 +2587,7 @@ var m=document.createElement('div');m.id='pw-modal';m.className='pw-modal';
 m.innerHTML='<div class="pw-sheet"><button class="pw-x" onclick="closePaywall()" aria-label="Fermer">&times;</button>'+unlockCardHtml()+'</div>';
 document.body.appendChild(m);
 requestAnimationFrame(function(){m.classList.add('open')});
-renderFounder();loadFounderCount();
+renderFounder();loadFounderCount();if(founderClosed())selectPlan('month');
 }
 
 function selectPlan(p){track('plan_select',{plan:p});var cb=document.getElementById('paywall-cta-btn');if(cb)cb.textContent=p==='life'?'Devenir membre fondateur →':'Débloquer mon plan →';
@@ -2554,16 +2595,22 @@ selectedPlan=p;
 ['month','year','life'].forEach(function(k){var el=document.getElementById('plan-'+k);if(el)el.className='paywall-plan'+(k==='life'?' pp-founder':'')+(p===k?' active':'')});
 }
 var founderCount=null,FOUNDER_MAX=20;
+// launch offer ends for everyone on Tue 20 Oct 2026, 23:59:59 Paris time
+var FOUNDER_END=Date.UTC(2026,9,20,21,59,59);
+function founderClosed(){return Date.now()>FOUNDER_END||(founderCount!==null&&founderCount>=FOUNDER_MAX)}
+function cdText(){var ms=Math.max(0,FOUNDER_END-Date.now()),sx=Math.floor(ms/1000),d=Math.floor(sx/86400),h=Math.floor(sx%86400/3600),m=Math.floor(sx%3600/60),x=sx%60;function p(n){return (n<10?'0':'')+n}
+  return (d?d+' j ':'')+p(h)+' h '+p(m)+' min '+p(x)+' s'}
+setInterval(function(){if(document.getElementById('founder-txt')||document.getElementById('pr-founder-left')||document.querySelector('.fp-cd'))renderFounder()},1000);
 function renderFounder(){
-var left=founderCount===null?null:Math.max(0,FOUNDER_MAX-founderCount);
+var closed=founderClosed(),cd='Se termine dans '+cdText(),dur=7*864e5,pct=Math.max(0,Math.min(100,Math.round((1-(FOUNDER_END-Date.now())/dur)*100)));
 var lc=document.getElementById('pr-founder'),ll=document.getElementById('pr-founder-left');
-if(lc&&ll){if(left===null)ll.textContent='Places limitées à '+FOUNDER_MAX;else if(left===0){ll.textContent='Complet';lc.classList.add('sold-out');var lb=lc.querySelector('button');if(lb){lb.disabled=true;lb.textContent='Complet'}}else ll.textContent='Plus que '+left+' place'+(left>1?'s':'')+' sur '+FOUNDER_MAX}
+if(lc&&ll){if(closed){ll.textContent='Offre terminée';lc.classList.add('sold-out');var lb=lc.querySelector('button');if(lb){lb.disabled=true;lb.textContent='Offre terminée'}}else ll.textContent='⏳ '+cd}
+document.querySelectorAll('.fp-cd').forEach(function(e){e.textContent=closed?'Offre terminée':cd});
 var t=document.getElementById('founder-txt'),fl=document.getElementById('founder-fill'),card=document.getElementById('plan-life');
 if(!t||!card)return;
-if(left===null){t.textContent='Places limitées à '+FOUNDER_MAX;if(fl)fl.style.width='0';return}
-if(fl)fl.style.width=Math.min(100,Math.round(founderCount/FOUNDER_MAX*100))+'%';
-if(left===0){t.textContent='Complet';card.classList.add('sold-out');card.disabled=true;if(selectedPlan==='life')selectPlan('month')}
-else t.textContent=founderCount+'/'+FOUNDER_MAX+' places prises · plus que '+left;
+if(fl)fl.style.width=pct+'%';
+if(closed){t.textContent='Offre terminée';card.classList.add('sold-out');card.disabled=true;if(selectedPlan==='life')selectPlan('month')}
+else t.textContent='⏳ '+cd;
 }
 function loadFounderCount(cb){
 var done=false,fin=function(){if(!done){done=true;if(cb)cb()}};
@@ -2659,7 +2706,14 @@ function isGift(){return !!(Auth.user&&GIFT_ACCESS.indexOf(String(Auth.user.emai
 function isFull(){return !!(Auth.user&&FULL_ACCESS.indexOf(String(Auth.user.email||'').toLowerCase())>-1)}
 function isInsider(){return isAdmin()||isFull()}
 // paying customers (and full-access accounts) get the full app: tabs, tracker, progress, real-price list, budget plan
-function isMember(){return isInsider()||isUnlocked()}
+function previewFree(){return isAdmin()&&!!lsGet('macro_preview_free')}
+function isMember(){if(previewFree())return false;return isInsider()||isUnlocked()}
+function startPreviewFree(){if(!isAdmin())return;lsSet('macro_preview_bak',{p:localStorage.getItem('macro_profile'),pl:localStorage.getItem('macro_plan')});lsSet('macro_preview_free',1);startDemoRun()}
+function stopPreviewFree(){var b=lsGet('macro_preview_bak');lsDel('macro_preview_free');lsDel('macro_preview_bak');
+  try{if(b){if(b.p)localStorage.setItem('macro_profile',b.p);if(b.pl)localStorage.setItem('macro_plan',b.pl);else localStorage.removeItem('macro_plan')}}catch(e){}
+  restoreProfile();window._demoRun=false;var x=document.getElementById('pv-bar');if(x)x.remove();showDashboard()}
+function previewBar(){var x=document.getElementById('pv-bar');if(!previewFree()){if(x)x.remove();return}if(x)return;x=document.createElement('div');x.id='pv-bar';
+  x.innerHTML='<span>👀 Aperçu client non payant</span><button type="button" onclick="stopPreviewFree()">Quitter</button>';document.body.appendChild(x)}
 // the app (tabs + budget plan) for every signed-in user; paying unlocks it (see isMember / isFreeMeal)
 function appOn(){return !!Auth.user||isInsider()}
 // the one meal a free user can open: first meal of the day the plan was made
@@ -2674,7 +2728,7 @@ function utmCamp(){var m=/[?&]utm_campaign=([^&]+)/.exec(location.search);return
 function utmSrc(){var m=/[?&]utm_source=([^&]+)/.exec(location.search);return m?decodeURIComponent(m[1]):''}
 function track(ev,p){if(isInsider())return;p=p||{};p.vid=vid();p.sid=sid();var q=lsGet('macro_events')||[];q.push({ev:ev,t:Date.now(),p:p});if(q.length>100)q.shift();lsSet('macro_events',q);if(sbOn())sbFetch('/rest/v1/events',{method:'POST',headers:{Prefer:'return=minimal'},body:JSON.stringify({name:ev,props:p,user_email:null})}).catch(function(){})}
 
-function saveProfile(){if(!hasProfile())return;var _r=lsGet('macro_ref');if(_r&&_r.c&&_r.c!==myRefCode()&&!D.ref)D.ref=_r.c;
+function saveProfile(){if(!hasProfile())return;if(previewFree()){lsSet('macro_profile',{D:D,g:selGender||null,ts:Date.now()});return}var _r=lsGet('macro_ref');if(_r&&_r.c&&_r.c!==myRefCode()&&!D.ref)D.ref=_r.c;
   lsSet('macro_profile',{D:D,g:selGender||null,ts:Date.now()});
   if(Auth.user&&Auth.session&&sbOn())sbFetch('/rest/v1/profiles?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:Auth.user.id,email:Auth.user.email,data:{D:D,g:selGender||null},updated_at:new Date().toISOString()})},Auth.session.access_token).catch(function(){});
 }
@@ -2722,7 +2776,7 @@ function sbUser(sess){
 }
 function founderOffer(){var off=lsGet('macro_offer_pending');if(!off||!Auth.user)return;if(isUnlocked()){lsDel('macro_offer_pending');return}if(!hasProfile()&&!restoreProfile())return;lsDel('macro_offer_pending');if(off==='pay-life'||off==='pay-month'){payLink(off.slice(4));return}off=off==='plan'?'plan':'fondateur';track('offer_link',{offer:off});setTimeout(function(){showPaywall()},250)}
 function payLink(plan){track('offer_link',{offer:'pay-'+plan});
-var go=function(){if(plan==='life'&&founderCount!==null&&founderCount>=FOUNDER_MAX){showPaywall();toast('Le pack fondateur est complet : il reste le mensuel à 9,99 €.');return}selectedPlan=plan;startCheckout()};
+var go=function(){if(plan==='life'&&founderClosed()){showPaywall();toast('L’offre fondateur est terminée : il reste le mensuel à 9,99 €.');return}selectedPlan=plan;startCheckout()};
 if(plan==='life'&&founderCount===null)loadFounderCount(go);else setTimeout(go,250)}
 function afterLogin(fromRedirect){track('login');refSend();
   if(lsGet('macro_offer_pending')){if(restoreProfile()){showDashboard();founderOffer();return}if(sbOn()&&Auth.session){loadRemoteProfile(function(ok){if(ok){showDashboard();founderOffer()}else{lsDel('macro_offer_pending');toast('Connecté ! Crée ton plan pour commencer.')}});return}}
@@ -2819,7 +2873,7 @@ function setLeadStatus(status){if(!hasProfile())return;
   sbFetch('/rest/v1/profiles?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:Auth.user.id,email:Auth.user.email,data:{D:D,g:selGender||null,status:status},updated_at:new Date().toISOString()})},Auth.session.access_token).catch(function(){});
 }
 function afterOnboarding(){track('onboarding_done');lsSet('macro_onb_ts',Date.now());
-  if(window._demoRun&&isAdmin()){window._demoRun=false;saveProfile();refreshNav();showResult();return}
+  if(window._demoRun&&isAdmin()){window._demoRun=false;saveProfile();refreshNav();if(previewFree()){lsDel('macro_plan');showDashboard();return}showResult();return}
   saveProfile();
   if((Auth.user&&!(window._demoRun&&isAdmin()))||!authReady()){showDashboard();return}
   renderSignupGate();
@@ -3035,6 +3089,7 @@ plan.push({day:DAYS[d],meals:dayMeals,totals:{p:dayP,g:dayG,l:dayL,cal:dayCal}})
 var f=(budget>0&&totalCost>budget)?(budget*0.96/totalCost):1;if(f<1){plan.forEach(function(d){d.meals.forEach(function(m){m.price=Math.round(m.price*f*100)/100})});totalCost=totalCost*f}return{plan:plan,weekCost:Math.round(totalCost*100)/100,f:f,calPerMeal:calPerMeal}}
 function isUnlocked(){
 if(/^(localhost|127.0.0.1)$/.test(location.hostname)&&/[?&]preview=unlocked/.test(location.search))return true;
+if(typeof previewFree==='function'&&previewFree())return false;
 return !!(Auth.user&&(Auth.user.unlocked||isFull()||isGift()));
 }
 function qtyHtml(m){if(!m.q||!m.k)return '';return m.q.map(function(x){var n=x[0],g=x[1],tag=x[2]||'',u=x[3];if(typeof g!=='number')return '<li><span>'+n+'</span><b>'+g+'</b></li>';var v=g*m.k;if(u){var c=Math.max(1,Math.round(v/u));return '<li><span>'+n+'</span><b>'+c+' '+(c>1?'œufs':'œuf')+' <small>('+(c*u)+' g)</small></b></li>'}v=v<25?Math.max(1,Math.round(v)):Math.round(v/5)*5;return '<li><span>'+n+(tag&&tag!=='ml'?' <small>('+tag+')</small>':'')+'</span><b>'+v+(tag==='ml'?' ml':' g')+'</b></li>'}).join('')}
