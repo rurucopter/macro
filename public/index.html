@@ -2413,12 +2413,17 @@ function fpProjection(){var p=+D.poids||0,c=+D.cible||0;if(!p||!c||c===p||!(D.go
   return '<div class="app-h t-weight"><span class="lbl">'+ico('scale')+'Ton objectif</span><small>'+p+' → '+c+' kg</small></div><div class="app-card fp-proj">'+
     '<div class="fp-proj-top"><div><b>'+c+' kg</b><span>vers le '+dd+'</span></div><div class="fp-leg"><span><i class="g"></i>Avec ton plan</span><span><i class="m"></i>Si rien ne change</span></div></div>'+svg+
     '<p class="trk-note">Estimation à un rythme sain ('+String(rate).replace('.',',')+' kg par semaine), si tu suis ton plan et tes calories. Sans changement, ton poids reste autour de '+p+' kg.</p></div>'}
-function showProof(){if(document.getElementById('proof-modal'))return;track('proof_view',{goal:D.goal||''});
-  var cut=D.goal==='Sèche',el=document.createElement('div');el.className='pw-modal';el.id='proof-modal';
-  var media=cut?'<div class="pf-quote">« Perdre du gras, c\'est surtout manger juste, tous les jours, sans y penser. »</div>'
-    :'<img class="pf-img" src="/img/proof-arthur.jpg" alt="Avant et après 1 an de musculation : Arthur, fondateur de mangereco"><p class="pf-cap">Arthur, fondateur de mangereco · 1 an de muscu et d\'alimentation suivie</p>';
+function showProof(){if(document.getElementById('proof-modal'))return;
+  var el=document.createElement('div');el.className='pw-modal';el.id='proof-modal';
+  // real people, shared with their permission; figures as they reported them
+  var lose=D.goal==='Sèche'||(+D.cible&&+D.poids&&+D.cible<+D.poids);
+  var P=!lose?{img:'proof-arthur',alt:'Avant et après 3 ans de musculation : Arthur, fondateur de mangereco',cap:'Arthur, fondateur de mangereco · +27 kg en 3 ans',h:'Regarde : Arthur, lui, a passé le cap.',t:'Ça a changé sa relation avec les autres.'}
+    :D.gender==='Femme'?{img:'proof-v',alt:'Avant et après : V., 8 kg perdus',cap:'V. · −8 kg',h:'V. avait le même objectif que toi.',t:'Elle a juste passé le cap.'}
+    :{img:'proof-b',alt:'Avant et après : B., 8 kg perdus',cap:'B. · −8 kg',h:'B. avait le même objectif que toi.',t:'Il a juste passé le cap.'};
+  track('proof_view',{goal:D.goal||'',who:P.img});
+  var media='<img class="pf-img" src="/img/'+P.img+'.jpg" alt="'+P.alt+'"><p class="pf-cap">'+P.cap+'</p>';
   el.innerHTML='<div class="pw-sheet pf-sheet" role="dialog" aria-modal="true" aria-labelledby="pf-t"><button class="pw-x" onclick="closeProof()" aria-label="Fermer">&times;</button>'+media+
-    '<h2 id="pf-t">'+(cut?'D\'autres avaient le même objectif que toi.':'Regarde : Arthur, lui, a passé le cap.')+'</h2><p class="pf-txt">'+(cut?'Ils ont juste passé le cap.':'Ça a changé sa relation avec les autres.')+' À toi de voir ce que tu veux vraiment pour toi.</p>'+
+    '<h2 id="pf-t">'+P.h+'</h2><p class="pf-txt">'+P.t+' À toi de voir ce que tu veux vraiment pour toi.</p>'+
     '<button type="button" class="btn btn-p btn-lg btn-full" onclick="closeProof();showPaywall()">Je passe le cap →</button><button type="button" class="pf-skip" onclick="closeProof()">Plus tard</button></div>';
   el.addEventListener('click',function(e){if(e.target===el)closeProof()});document.body.appendChild(el);requestAnimationFrame(function(){el.classList.add('open')})}
 function closeProof(){var el=document.getElementById('proof-modal');if(el)el.remove()}
