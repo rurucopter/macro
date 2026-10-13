@@ -2415,7 +2415,7 @@ function showProof(){if(document.getElementById('proof-modal'))return;track('pro
   var media=cut?'<div class="pf-quote">« Perdre du gras, c\'est surtout manger juste, tous les jours, sans y penser. »</div>'
     :'<img class="pf-img" src="/img/proof-arthur.jpg" alt="Avant et après 1 an de musculation : Arthur, fondateur de mangereco"><p class="pf-cap">Arthur, fondateur de mangereco · 1 an de muscu et d\'alimentation suivie</p>';
   el.innerHTML='<div class="pw-sheet pf-sheet" role="dialog" aria-modal="true" aria-labelledby="pf-t"><button class="pw-x" onclick="closeProof()" aria-label="Fermer">&times;</button>'+media+
-    '<h2 id="pf-t">'+(cut?'D\'autres avaient le même objectif que toi.':'Lui aussi avait des objectifs.')+'</h2><p class="pf-txt">'+(cut?'Ils ont juste passé le cap.':'Il a juste passé le cap.')+' À toi de voir ce que tu veux vraiment pour toi.</p>'+
+    '<h2 id="pf-t">'+(cut?'D\'autres avaient le même objectif que toi.':'Regarde : Arthur, lui, a passé le cap.')+'</h2><p class="pf-txt">'+(cut?'Ils ont juste passé le cap.':'Ça a changé sa relation avec les autres.')+' À toi de voir ce que tu veux vraiment pour toi.</p>'+
     '<button type="button" class="btn btn-p btn-lg btn-full" onclick="closeProof();showPaywall()">Je passe le cap →</button><button type="button" class="pf-skip" onclick="closeProof()">Plus tard</button></div>';
   el.addEventListener('click',function(e){if(e.target===el)closeProof()});document.body.appendChild(el);requestAnimationFrame(function(){el.classList.add('open')})}
 function closeProof(){var el=document.getElementById('proof-modal');if(el)el.remove()}
