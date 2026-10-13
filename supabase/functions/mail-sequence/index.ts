@@ -2,8 +2,8 @@
 //   A  account, not paying (needs e-mail consent). Clock starts when the paywall was first seen (else at sign-up).
 //        A1 +10 min (button straight to the Whop checkout), A2 D+1 (shopping list, blurred preview), A3 D+3 (last reminder),
 //        A4 then every Saturday 18:00 Paris, 1 per week, 4 at most (recipes teaser).
-//      Everything stops as soon as the person pays. While founder places remain (live count) the mails push the
-//      founder pack (links ?payer=fondateur / ?offre=fondateur), once the 20 are sold the 9.99 €/month plan
+//      Everything stops as soon as the person pays. Until FOUNDER_END (Tue 20 Oct 2026 23:59 Paris) the mails push the
+//      founder pack (links ?payer=fondateur / ?offre=fondateur), afterwards the 9.99 €/month plan
 //      (?payer=mensuel / ?offre=plan). The annual plan is not offered any more (hidden on the site).
 //   B  paying
 //        B1 right after payment (transactional, sent even if unsubscribed)
@@ -41,6 +41,7 @@ const MAX_PER_RUN = 40;
 const MAX_BROADCAST = 120; // per call (Resend: 2 mails/s, the function must answer within ~150 s)
 const MAX_ATTEMPTS = 3;
 const FOUNDER_CAP = 20;
+const FOUNDER_END = Date.UTC(2026, 9, 20, 21, 59, 59); // Tue 20 Oct 2026, 23:59:59 Paris: the launch offer closes for everyone
 const A4_MAX = 4;
 const CORS = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, apikey, content-type, x-cron-secret", "Access-Control-Allow-Methods": "POST, OPTIONS" };
 
@@ -100,8 +101,9 @@ function build(key: string, v: V, go: Go): Mail | null {
   const small = (h: string) => `<p style="line-height:1.5;margin:0 0 14px;font-size:14px;color:#3d4a44">${h}</p>`;
   const sign = P("Arthur");
   const F = v.places !== 0; // founder pack still open (-1: count unknown)
-  const nb = v.places > 0 ? `Il reste ${pl(v.places)} sur ${FOUNDER_CAP}` : `Places limitées à ${FOUNDER_CAP}`;
-  const left = P(`<b>${nb}</b>. Quand elles sont parties, l'offre ferme : ce sera 9,99 €/mois.`);
+  const dl = Math.max(1, Math.ceil((FOUNDER_END - Date.now()) / 864e5)); // days left
+  const nb = dl <= 1 ? "Dernier jour : l'offre se termine ce soir à 23h59" : `L'offre se termine mardi 20 octobre à 23h59 (plus que ${dl} jours)`;
+  const left = P(`<b>${nb}</b>. Ensuite, ce sera 9,99 €/mois.`);
   const PLAN = `/?${utm(key)}`, LISTE = `/?voir=liste&${utm(key)}`, FOND = `/?offre=fondateur&${utm(key)}`, OFFRE = `/?offre=plan&${utm(key)}`;
   const PAY = `/?payer=${F ? "fondateur" : "mensuel"}&${utm(key)}`; // straight to the Whop checkout
   let subject = "", body = "", cta = "", to = PLAN, tx = false;
@@ -110,7 +112,7 @@ function build(key: string, v: V, go: Go): Mail | null {
     case "A1": // 3 lines, one button straight to the checkout
       subject = F ? "Ton plan est prêt — 59,99 € une fois, à vie" : "Ton plan est prêt — 9,99 €/mois";
       body = F ? P(`${hi} ton plan est prêt : <b>59,99 € une fois</b>, et il est à toi à vie.`) +
-                 P(v.places > 0 ? `Il reste <b>${pl(v.places)}</b> au prix fondateur, ensuite c'est 9,99 €/mois.` : `<b>Places limitées à ${FOUNDER_CAP}</b> au prix fondateur, ensuite c'est 9,99 €/mois.`) + sign
+                 P(`Soit moins de 5 € par mois la 1re année. <b>${nb}</b>, ensuite c'est 9,99 €/mois.`) + sign
                : P(`${hi} ton plan est prêt : tous tes repas et ta liste de courses avec les prix.`) + P("Débloque-le pour <b>9,99 €/mois</b>.") + sign;
       cta = F ? "Débloquer mon plan à vie" : "Débloquer mon plan";
       to = PAY;
@@ -125,7 +127,7 @@ function build(key: string, v: V, go: Go): Mail | null {
       to = F ? FOND : OFFRE;
       break;
     case "A3":
-      subject = F ? (v.places > 0 ? `Dernier rappel : ${pl(v.places)} fondateur` : "Dernier rappel : pack fondateur") : "Dernier rappel pour ton plan";
+      subject = F ? (dl <= 1 ? "Dernier rappel : l'offre fondateur se termine ce soir" : dl === 2 ? "Dernier rappel : l'offre fondateur se termine demain" : `Dernier rappel : plus que ${dl} jours pour le pack fondateur`) : "Dernier rappel pour ton plan";
       body = P(hi) + P("C'est mon dernier rappel, promis.") +
         (F ? P(`Le pack fondateur, c'est <b>59,99 € une seule fois</b> pour ton plan repas et ta liste de courses, recalculés chaque semaine, à vie.`) + left
            : P("Ton plan repas + ta liste de courses avec les prix, recalculés chaque semaine : 9,99 €/mois.")) +
@@ -149,8 +151,8 @@ function build(key: string, v: V, go: Go): Mail | null {
     }
     case "F1":
       if (!F) return null;
-      subject = v.places > 0 ? `Plus que ${pl(v.places)} en accès à vie` : `Pack fondateur : places limitées à ${FOUNDER_CAP}`;
-      body = P(hi) + P(`J'ouvre le <b>pack fondateur</b> de Mangereco aux ${FOUNDER_CAP} premiers clients :`) +
+      subject = dl <= 1 ? "Pack fondateur : dernier jour" : `Pack fondateur : plus que ${dl} jours`;
+      body = P(hi) + P(`J'ouvre le <b>pack fondateur</b> de Mangereco jusqu'au mardi 20 octobre à 23h59 :`) +
         UL(["<b>59,99 € une seule fois</b>, pas d'abonnement", "Accès à vie à ton plan repas + ta liste de courses avec les prix", "Toutes les futures nouveautés incluses", "Prix bloqué pour toujours"]) +
         left + P("Une question ? Réponds à ce mail.") + sign;
       cta = "Devenir membre fondateur";
@@ -260,8 +262,8 @@ Deno.serve(async (req) => {
   const pt = paris();
 
   const { count: founders, error: fe } = await sb.from("subscriptions").select("user_id", { count: "exact", head: true }).or("plan_kind.eq.life,founder.eq.true");
-  // -1 = count unavailable: the founder pack stays offered, without a number ("Places limitées à 20")
-  const places = fe || founders === null ? -1 : Math.max(0, FOUNDER_CAP - founders);
+  // 0 = offer closed (deadline passed or all founder places sold); -1 = count unavailable but still open
+  const places = now > FOUNDER_END ? 0 : fe || founders === null ? -1 : Math.max(0, FOUNDER_CAP - founders);
 
   const info = (p: any): V => {
     const D = (p && p.data && p.data.D) || {};
