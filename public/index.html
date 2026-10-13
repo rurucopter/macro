@@ -1086,6 +1086,23 @@ body.cr-mode>*:not(#cr-page):not(.toast):not(script){display:none!important}
 .cr-row:last-child{border-bottom:0}
 .cr-row b{color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
 .cr-muted{font-size:.8125rem;color:var(--muted);margin:0}
+.fp-proj{display:flex;flex-direction:column;gap:.5rem}
+.fp-proj-top{display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem;flex-wrap:wrap}
+.fp-proj-top b{display:block;font-family:var(--font-d);font-size:1.75rem;color:var(--c-lunch,#16A34A);line-height:1.1}
+.fp-proj-top div>span{font-size:.8125rem;color:var(--muted)}
+.fp-leg{display:flex;flex-direction:column;gap:.25rem;font-size:.75rem;color:var(--ink2)}
+.fp-leg i{display:inline-block;width:18px;height:4px;border-radius:2px;margin-right:.4rem;vertical-align:middle}
+.fp-leg i.g{background:var(--c-lunch,#16A34A);height:5px}
+.fp-leg i.m{background:repeating-linear-gradient(90deg,var(--muted) 0 5px,transparent 5px 9px)}
+.fp-chart .fp-ct-g{font-size:13px;font-weight:800;fill:var(--c-lunch,#16A34A)}
+.fp-chart .fp-ct-m{font-size:11px;fill:var(--muted)}
+.pf-sheet{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.7rem}
+.pf-img{width:100%;border-radius:18px;display:block;margin-top:.5rem}
+.pf-cap{font-size:.75rem;opacity:.7;margin:0}
+.pf-quote{margin-top:1.5rem;font-family:var(--font-d);font-size:1.25rem;line-height:1.35;padding:1rem;border-left:4px solid var(--accent);text-align:left}
+.pf-sheet h2{font-family:var(--font-d);font-size:1.5rem;margin:.4rem 0 0}
+.pf-txt{margin:0;font-size:1rem;opacity:.85;line-height:1.45}
+.pf-skip{border:0;background:none;color:inherit;opacity:.6;font-family:var(--font);font-size:.875rem;text-decoration:underline;cursor:pointer}
 .fp{padding-bottom:calc(150px + env(safe-area-inset-bottom))}
 .fp-sub{margin:-.5rem 0 1rem;color:var(--ink2);font-size:.9375rem;line-height:1.45}
 .fp-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem;margin-bottom:1rem}
@@ -1100,6 +1117,10 @@ body.cr-mode>*:not(#cr-page):not(.toast):not(script){display:none!important}
 .menu-row.fp-lock{position:relative;overflow:hidden}
 .menu-row.fp-lock .ph,.menu-row.fp-lock .bd{filter:blur(10px) saturate(.7);opacity:.75}
 .fp-pad{position:absolute;inset:0;display:grid;place-items:center;font-size:1.4rem}
+.fp-t .menu-row.fp-lock .bd{filter:none;opacity:1}
+.fp-t .menu-row.fp-lock .ph,.fp-t .menu-row.fp-lock .bd .ct,.fp-t .menu-row.fp-lock .bd .nm{filter:blur(9px) saturate(.7);opacity:.75;user-select:none}
+.fp-t .menu-row.fp-lock .bd .mt{font-weight:700;color:var(--ink2)}
+.fp-t .fp-pad{position:static;display:block;align-self:center;font-size:1.25rem;flex-shrink:0;padding-right:.25rem}
 .fp-links{display:flex;justify-content:center;gap:1.25rem;margin:1.5rem 0 0}
 .fp-links button{border:0;background:none;color:var(--muted);font-family:var(--font);font-size:.875rem;text-decoration:underline;cursor:pointer}
 .fp-cta{position:fixed;left:0;right:0;bottom:0;z-index:60;padding:.75rem 16px calc(.9rem + env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent,var(--bg) 35%)}
@@ -2373,9 +2394,34 @@ function trkIphoneHelp(){return '<details class="trk-help"><summary>Relier les p
 // visible but nothing usable: any tap opens the paywall
 function viewOnly(inner){return '<div class="viewonly" onclick="track(\'paywall_gate\',{from:\'viewonly\'});showPaywall()" onkeydown="if(event.key===\'Enter\')showPaywall()" role="button" tabindex="0" aria-label="Débloquer pour utiliser"><div class="vo-in" inert>'+inner+'</div></div>'}
 // one page for people who have not paid: the whole week, only the first meal open, everything else heavily blurred
+// weight projection: with the plan (highlighted) vs if nothing changes
+function fpProjection(){var p=+D.poids||0,c=+D.cible||0;if(!p||!c||c===p||!(D.goal==='Prise de masse'||D.goal==='Sèche'))return '';
+  var rate=cibleRate(p),wk=Math.ceil(Math.abs(c-p)/rate),end=new Date(Date.now()+wk*7*864e5),dd=end.toLocaleDateString('fr-FR',{day:'numeric',month:'long'});
+  var W=320,H=190,L=34,R=W-14,T=22,B=H-34,lo=Math.min(p,c)-1.5,hi=Math.max(p,c)+1.5,Y=function(k){return T+(hi-k)/(hi-lo)*(B-T)},X=function(i){return L+i/wk*(R-L)};
+  var pts=[];for(var i=0;i<=wk;i++){var t=i/wk,e=t*t*(3-2*t)*.15+t*.85;pts.push(X(i).toFixed(1)+','+Y(p+(c-p)*e).toFixed(1))}
+  var up=c>p,svg='<svg class="trk-chart fp-chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Projection de ton poids">'+
+    '<line x1="'+L+'" x2="'+R+'" y1="'+Y(p).toFixed(1)+'" y2="'+Y(p).toFixed(1)+'" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6 5"/>'+
+    '<polygon points="'+L+','+Y(p).toFixed(1)+' '+pts.join(' ')+' '+R+','+Y(p).toFixed(1)+'" fill="var(--c-lunch,#16A34A)" opacity=".13"/>'+
+    '<polyline points="'+pts.join(' ')+'" fill="none" stroke="var(--c-lunch,#16A34A)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>'+
+    '<circle cx="'+L+'" cy="'+Y(p).toFixed(1)+'" r="5" fill="var(--ink)"/><circle cx="'+R+'" cy="'+Y(c).toFixed(1)+'" r="7" fill="var(--c-lunch,#16A34A)" stroke="var(--surface)" stroke-width="3"/>'+
+    '<text x="'+(R-4)+'" y="'+(Y(c)+(up?-12:22)).toFixed(1)+'" text-anchor="end" class="fp-ct-g">'+c+' kg</text>'+
+    '<text x="'+(R-4)+'" y="'+(Y(p)+(up?18:-8)).toFixed(1)+'" text-anchor="end" class="fp-ct-m">'+p+' kg</text>'+
+    '<text x="'+L+'" y="'+(H-10)+'">Aujourd\'hui</text><text x="'+R+'" y="'+(H-10)+'" text-anchor="end">'+dd+'</text></svg>';
+  return '<div class="app-h t-weight"><span class="lbl">'+ico('scale')+'Ton objectif</span><small>'+p+' → '+c+' kg</small></div><div class="app-card fp-proj">'+
+    '<div class="fp-proj-top"><div><b>'+c+' kg</b><span>vers le '+dd+'</span></div><div class="fp-leg"><span><i class="g"></i>Avec ton plan</span><span><i class="m"></i>Si rien ne change</span></div></div>'+svg+
+    '<p class="trk-note">Estimation à un rythme sain ('+String(rate).replace('.',',')+' kg par semaine), si tu suis ton plan et tes calories. Sans changement, ton poids reste autour de '+p+' kg.</p></div>'}
+function showProof(){if(document.getElementById('proof-modal'))return;track('proof_view',{goal:D.goal||''});
+  var cut=D.goal==='Sèche',el=document.createElement('div');el.className='pw-modal';el.id='proof-modal';
+  var media=cut?'<div class="pf-quote">« Perdre du gras, c\'est surtout manger juste, tous les jours, sans y penser. »</div>'
+    :'<img class="pf-img" src="/img/proof-arthur.jpg" alt="Avant et après 1 an de musculation : Arthur, fondateur de mangereco"><p class="pf-cap">Arthur, fondateur de mangereco · 1 an de muscu et d\'alimentation suivie</p>';
+  el.innerHTML='<div class="pw-sheet pf-sheet" role="dialog" aria-modal="true" aria-labelledby="pf-t"><button class="pw-x" onclick="closeProof()" aria-label="Fermer">&times;</button>'+media+
+    '<h2 id="pf-t">'+(cut?'D\'autres avaient le même objectif que toi.':'Lui aussi avait des objectifs.')+'</h2><p class="pf-txt">'+(cut?'Ils ont juste passé le cap.':'Il a juste passé le cap.')+' À toi de voir ce que tu veux vraiment pour toi.</p>'+
+    '<button type="button" class="btn btn-p btn-lg btn-full" onclick="closeProof();showPaywall()">Je passe le cap →</button><button type="button" class="pf-skip" onclick="closeProof()">Plus tard</button></div>';
+  el.addEventListener('click',function(e){if(e.target===el)closeProof()});document.body.appendChild(el);requestAnimationFrame(function(){el.classList.add('open')})}
+function closeProof(){var el=document.getElementById('proof-modal');if(el)el.remove()}
 function freePage(mc,gen){var ti=todayIndex(),dates=weekDates(),nm=firstName(),r=shopReal(gen);
   var goalTxt=mc.go==='Prise de masse'?'ta prise de masse':mc.go==='Sèche'?'ta sèche':'ton maintien';
-  var h='<div class="app fp"><div class="app-top"><span class="app-brand">mangereco<i>.</i></span><span class="app-date">'+new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})+'</span></div>';
+  var h='<div class="app fp'+(testOn()?' fp-t':'')+'"><div class="app-top"><span class="app-brand">mangereco<i>.</i></span><span class="app-date">'+new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})+'</span></div>';
   h+='<h1 class="app-title">'+(nm?escH(nm)+', ton':'Ton')+' plan est prêt</h1><p class="fp-sub">Toute ta semaine, pensée pour '+goalTxt+' avec '+mc.b+' € chez '+escH(D.store||'ton magasin')+'.</p>';
   h+='<div class="fp-kpis"><div><b>'+mc.cal+'</b><span>kcal / jour</span></div><div><b>'+mc.protG+' g</b><span>protéines / jour</span></div><div><b>'+r.used.toFixed(0)+' €</b><span>par semaine</span></div></div>';
   h+=freeBanner();
@@ -2385,6 +2431,7 @@ function freePage(mc,gen){var ti=todayIndex(),dates=weekDates(),nm=firstName(),r
       h+='<div class="app-card menu-row'+(open?'':' locked fp-lock')+'" onclick="'+(open?'showMealDetail('+di+','+mi+')':'track(\'paywall_gate\',{from:\'free_week\'});showPaywall()')+'">'+(el?'<img class="ph" src="'+el.src+'" alt="">':'<div class="ph">'+m.emoji+'</div>')+
         '<div class="bd '+(CAT_TINT[m.cat]||'')+'"><span class="ct">'+(CAT_LBL[m.cat]||'Repas')+(open?' · offert':'')+'</span><span class="nm">'+m.n+'</span><span class="mt">'+m.cal+' kcal · '+m.p+' g prot'+(open?' · voir la recette':'')+'</span></div>'+(open?'':'<span class="fp-pad" aria-hidden="true">🔒</span>')+'</div>'});
     h+='</div>'});
+  if(testOn())h+=fpProjection();
   h+='<div class="app-h t-money"><span class="lbl">'+ico('euro')+'Ta liste de courses</span><small>'+r.used.toFixed(2).replace('.',',')+' € / '+mc.b+' €</small></div>'+lockBox(shopRealHtml(gen,mc.b),'euro','Ta liste de courses avec les prix','Tout ce qu\'il faut acheter pour ta semaine, au paquet près.');
   h+='<div class="fp-links"><button type="button" onclick="editProfile()">Mes réponses</button><button type="button" onclick="signOut()">Se déconnecter</button></div>';
   h+='</div><div class="fp-cta"><div class="fp-cta-in"><span class="fp-cd"></span><button type="button" class="btn btn-p btn-lg btn-full" onclick="track(\'paywall_gate\',{from:\'free_cta\'});showPaywall()">🔓 Débloquer toute ma semaine</button></div></div>';
@@ -2570,7 +2617,7 @@ var personaLine=(D.prenom?'Salut '+escH(D.prenom)+' 👋 ':'')+'On a vu que tu t
 var chk='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>';
 return '<div class="paywall-card" id="unlock-card"><div style="font-size:2rem;margin-bottom:.5rem">\u{1F512}</div><h2>Débloque ton plan</h2><p class="paywall-persona">'+personaLine+'</p>'+
 '<div class="paywall-plans">'+
-'<button class="paywall-plan pp-founder active" id="plan-life" onclick="selectPlan(\'life\')"><span class="pp-badge pp-badge-f">Offre de lancement</span><div class="pp-founder-row"><div><div class="pp-name">À vie · paiement unique</div><div class="pp-price">59,99€</div><div class="pp-strike">soit moins de 5 € par mois la 1re année, puis plus rien à payer</div></div><ul class="pp-founder-list"><li>Accès à vie</li><li>Toutes les futures nouveautés</li><li>Prix bloqué pour toujours</li></ul></div><div class="pp-meter" id="founder-meter"><div class="pp-meter-txt" id="founder-txt">⏳ Se termine dans …</div><div class="pp-meter-bar"><div class="pp-meter-fill" id="founder-fill" style="width:0"></div></div></div></button>'+
+'<button class="paywall-plan pp-founder active" id="plan-life" onclick="selectPlan(\'life\')"><span class="pp-badge pp-badge-f">Offre de lancement</span><div class="pp-founder-row"><div><div class="pp-name">À vie · paiement unique</div>'+(testOn()?'<div class="pp-price">4,99€<small>/mois</small></div><div class="pp-strike">59,99 € payés une seule fois (sur 12 mois), puis plus rien à payer</div>':'<div class="pp-price">59,99€</div><div class="pp-strike">soit moins de 5 € par mois la 1re année, puis plus rien à payer</div>')+'</div><ul class="pp-founder-list"><li>Accès à vie</li><li>Toutes les futures nouveautés</li><li>Prix bloqué pour toujours</li></ul></div><div class="pp-meter" id="founder-meter"><div class="pp-meter-txt" id="founder-txt">⏳ Se termine dans …</div><div class="pp-meter-bar"><div class="pp-meter-fill" id="founder-fill" style="width:0"></div></div></div></button>'+
 '<button class="paywall-plan" id="plan-month" onclick="selectPlan(\'month\')"><div class="pp-name">Mensuel</div><div class="pp-price">9,99€<small>/mois</small></div></button>'+
 (SHOW_ANNUAL_PLAN?'<button class="paywall-plan" id="plan-year" onclick="selectPlan(\'year\')"><span class="pp-badge">2 mois offerts</span><div class="pp-name">Annuel</div><div class="pp-price">99€<small>/an</small></div><div class="pp-sub">soit 8,25€/mois</div></button>':'')+
 '</div>'+
@@ -2620,7 +2667,7 @@ sbFetch('/rest/v1/rpc/get_founder_count',{method:'POST',body:'{}'}).then(functio
 }
 var selectedPlan='life';
 
-function closePaywall(){var pm=document.getElementById('pw-modal');if(pm)pm.remove();if(!SHOW_ANNUAL_PLAN||!(MACRO_CFG.checkout&&MACRO_CFG.checkout.downsell)||isUnlocked())return;var el=document.createElement('div');el.className='downsell-overlay';el.id='downsell-screen';
+function closePaywall(){var pm=document.getElementById('pw-modal');if(pm)pm.remove();if(testOn()&&!isUnlocked()&&!window._proofShown&&Auth.user){window._proofShown=true;setTimeout(showProof,150)}if(!SHOW_ANNUAL_PLAN||!(MACRO_CFG.checkout&&MACRO_CFG.checkout.downsell)||isUnlocked())return;var el=document.createElement('div');el.className='downsell-overlay';el.id='downsell-screen';
 el.innerHTML='<div class="downsell-spin"></div><div class="downsell-wait">Une seconde...</div>';
 document.body.appendChild(el);
 setTimeout(function(){
@@ -2706,6 +2753,8 @@ function isGift(){return !!(Auth.user&&GIFT_ACCESS.indexOf(String(Auth.user.emai
 function isFull(){return !!(Auth.user&&FULL_ACCESS.indexOf(String(Auth.user.email||'').toLowerCase())>-1)}
 function isInsider(){return isAdmin()||isFull()}
 // paying customers (and full-access accounts) get the full app: tabs, tracker, progress, real-price list, budget plan
+// features in test: visible on the owner's account only (including the "non-paying customer" preview)
+function testOn(){return isAdmin()}
 function previewFree(){return isAdmin()&&!!lsGet('macro_preview_free')}
 function isMember(){if(previewFree())return false;return isInsider()||isUnlocked()}
 function startPreviewFree(){if(!isAdmin())return;lsSet('macro_preview_bak',{p:localStorage.getItem('macro_profile'),pl:localStorage.getItem('macro_plan')});lsSet('macro_preview_free',1);startDemoRun()}
@@ -2826,7 +2875,9 @@ function initAuth(){var _cr=/[?&]createur=([a-f0-9]{16,40})(&|$)/i.exec(location
     else if(sbOn()&&Auth.session)loadRemoteProfile(function(ok){if(ok){showDashboard();founderOffer()}});
   }
 }
-function refreshNav(){var hg=document.getElementById('hero-google');if(hg)hg.innerHTML=(sbOn()&&!viewUser())?'<button class="au-google hero-g" onclick="heroGoogle()">'+GSVG+'Continuer avec Google</button>':'';
+function landingTestPrice(){var c=document.querySelector('#pr-founder .pr-price'),m=document.querySelector('#pr-founder .pr-sub-m');if(!c||!m)return;
+  if(testOn()){c.innerHTML='4,99&nbsp;€ <small>/mois</small>';m.textContent='59,99 € payés une seule fois (sur 12 mois), puis plus rien à payer'}else{c.innerHTML='59,99&nbsp;€ <small>une seule fois</small>';m.textContent='soit moins de 5 € par mois la 1re année'}}
+function refreshNav(){landingTestPrice();var hg=document.getElementById('hero-google');if(hg)hg.innerHTML=(sbOn()&&!viewUser())?'<button class="au-google hero-g" onclick="heroGoogle()">'+GSVG+'Continuer avec Google</button>':'';
   document.querySelectorAll('.nav-pill').forEach(function(p){
     if(p.closest('#onboarding'))return;
     var slot=p.querySelector('.nav-auth');
