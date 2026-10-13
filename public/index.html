@@ -2767,7 +2767,7 @@ function isFull(){return !!(Auth.user&&FULL_ACCESS.indexOf(String(Auth.user.emai
 function isInsider(){return isAdmin()||isFull()}
 // paying customers (and full-access accounts) get the full app: tabs, tracker, progress, real-price list, budget plan
 // features in test: visible on the owner's account only (including the "non-paying customer" preview)
-function testOn(){return isAdmin()}
+function testOn(){return true}
 function previewFree(){return isAdmin()&&!!lsGet('macro_preview_free')}
 function isMember(){if(previewFree())return false;return isInsider()||isUnlocked()}
 function startPreviewFree(){if(!isAdmin())return;lsSet('macro_preview_bak',{p:localStorage.getItem('macro_profile'),pl:localStorage.getItem('macro_plan')});lsSet('macro_preview_free',1);startDemoRun()}
