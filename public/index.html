@@ -1940,6 +1940,8 @@ var EVENT_LABELS={mail_link:'Lien « voir ma liste » d’un mail',offer_link:'L
 var STATUS_LABELS={signed_up:'Inscrit',paywall_view:'Paywall vu',checkout_started:'Paiement lancé'};
 function fmtN(n){return Number(n||0).toLocaleString('fr-FR')}
 function pctOf(a,b){return b>0?Math.round(a/b*100)+' %':'–'}
+// small rates (under 10 %) keep one decimal, so 1 sale out of 560 visitors reads 0,2 % instead of 0 %
+function pctFine(a,b){if(!(b>0))return '–';var p=a/b*100;return (p>0&&p<10?String(Math.round(p*10)/10).replace('.',','):Math.round(p))+' %'}
 function kpi(a,b,c){return '<div class="ad-kpi"><span>'+a+'</span><strong>'+b+'</strong><small>'+(c||'')+'</small></div>'}
 function adBars(list,labelF){
 var max=0;list.forEach(function(x){if(x.n>max)max=x.n});
@@ -2049,7 +2051,7 @@ var pw=fun.filter(function(x){return x[0]==='Paywall vu'})[0],ck=fun.filter(func
 if(pw&&pw[1]>=15&&ck){var r=ck[1]/pw[1];add(r<0.05?'bad':r<0.15?'warn':'good','Paywall → clic paiement : '+pctOf(ck[1],pw[1])+' ('+fmtN(ck[1])+' sur '+fmtN(pw[1])+'). '+(r<0.05?'L’offre ou le prix bloque : teste le texte, l’ordre des formules ou la mise en avant du fondateur.':''))}
 var pv=V('proof_view');if(pv>=15){var pc=V('proof_cta');add(pc/pv<0.1?'warn':'good','Fenêtre preuve : '+pctOf(pc,pv)+' cliquent « Je passe le cap » ('+fmtN(pc)+' sur '+fmtN(pv)+'), '+fmtN(V('checkout_after_proof'))+' vont jusqu’au paiement ensuite.')}
 var bp=null;['A','B','V'].forEach(function(k){var v=V('proof_view_'+k);if(v>=15){var r=V('proof_cta_'+k)/v;if(!bp||r>bp.r)bp={k:k,r:r}}});if(bp)add('info','La transformation qui fait le plus agir : <b>'+({A:'A · Arthur',B:'B · Benjamin',V:'V · Valentine'})[bp.k]+'</b> ('+Math.round(bp.r*100)+' % de clics).');
-var dv0=V('dashboard_view'),mo=V('free_more_days');if(dv0>=20&&mo/dv0<0.15)add('warn','Seulement '+pctOf(mo,dv0)+' ouvrent « Voir les autres jours » sur la page gratuite. Le bouton est peut-être trop bas ou pas assez visible.');
+var dv0=V('dashboard_view'),mo=V('free_more_days');if(new Date(d.since)>=new Date('2026-10-13')&&dv0>=20&&mo/dv0<0.15)add('warn','Seulement '+pctOf(mo,dv0)+' ouvrent « Voir les autres jours » sur la page gratuite. Le bouton est peut-être trop bas ou pas assez visible.');
 if(!founderClosed()){var dl=Math.ceil((FOUNDER_END-Date.now())/864e5);if(dl<=3)add('warn','L’offre fondateur se termine dans '+dl+' jour'+(dl>1?'s':'')+'. Pense au dernier e-mail de relance et à décider de la suite (prix normal ou nouvelle offre).')}else add('info','L’offre fondateur est terminée : seules les formules normales sont proposées.');
 if(t.users>=10){var o=t.optin/t.users;if(o<0.5)add('warn','Seulement '+pctOf(t.optin,t.users)+' des comptes acceptent les e-mails ('+fmtN(t.optin)+' / '+fmtN(t.users)+'). Les relances A2 à A5 ne partent qu’à eux.')}
 if(t.users>=10&&t.plan_opened/t.users<0.5)add('warn','Seulement '+pctOf(t.plan_opened,t.users)+' des inscrits sont revenus voir leur plan après l’avoir créé. Les inscrits comptent aussi ceux qui ont créé leur compte sans finir les questions.');
@@ -2082,7 +2084,7 @@ kpi('Revenu mensuel récurrent',eur(mrr),'mensuels + annuels ramenés au mois')+
 kpi('Encaissé (estimé)',eur(cash),fmtN(paying)+' paiement'+(paying>1?'s':'')+', hors frais Whop')+
 kpi('Offre fondateur',fmtN(t.founders)+' fondateur'+((t.founders||0)>1?'s':''),founderClosed()?'Offre terminée':'Se termine dans '+(function(n){return n<1?'moins d’1 jour':n+' j'})(Math.floor((FOUNDER_END-Date.now())/864e5)))+
 kpi('Revenu par visiteur',t.visitors?eur(cash/t.visitors):'–','à ne pas dépasser en coût de pub par visiteur')+
-kpi('Visite → payant',pctOf(paying,t.visitors),fmtN(paying)+' client'+(paying>1?'s':'')+' sur '+fmtN(t.visitors)+' visiteurs')+
+kpi('Visite → payant',pctFine(paying,t.visitors),fmtN(paying)+' client'+(paying>1?'s':'')+' sur '+fmtN(t.visitors)+' visiteurs')+
 kpi('Accepte les e-mails',pctOf(t.optin,t.users),fmtN(t.optin)+' comptes · '+fmtN(t.unsub)+' désinscrits')+
 kpi('Plan vraiment ouvert',pctOf(t.plan_opened,t.users),fmtN(t.plan_opened)+' comptes')+
 kpi('Temps médian du funnel',fmtMin(d.timing&&d.timing.funnel_min),'1re question → funnel fini')+

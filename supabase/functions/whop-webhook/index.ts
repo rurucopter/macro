@@ -86,9 +86,12 @@ Deno.serve(async (req) => {
   const planId: string | undefined = event.data?.plan?.id;
   const founderPlanId = Deno.env.get("FOUNDER_PLAN_ID");
   const total = Math.round(Number(event.data?.total ?? event.data?.usd_total ?? NaN) * 100) / 100;
-  const isFounder = founderPlanId ? planId === founderPlanId : total === 59.99;
+  // list price or up to 10 % below it (promo codes such as REPAS); the ranges of the plans do not overlap
+  const near = (list: number) => total >= Math.round(list * 0.9 * 100) / 100 && total <= list + 0.01;
+  const isFounder = founderPlanId ? planId === founderPlanId : near(59.99);
   // kind of plan from the amount charged (prices are tax-inclusive)
-  const kind = isFounder ? "life" : total === 49.99 ? "downsell" : total === 99 ? "year" : total >= 9.9 && total <= 10.1 ? "month" : null;
+  const kind = isFounder ? "life" : near(49.99) ? "downsell" : near(99) ? "year" : near(9.99) ? "month" : null;
+  if (!kind) console.error("Unrecognised amount, plan kind left empty", total, planId);
 
   const row: Record<string, unknown> = {
     user_id: userId,
