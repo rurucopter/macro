@@ -1200,6 +1200,20 @@ body.cr-mode>*:not(#cr-page):not(.toast):not(script){display:none!important}
 .fp-shop1 .mp-shop-name small{display:block;font-weight:500;color:var(--muted);font-size:.75rem}
 .fp-shop1 .mp-shop-price{text-align:right;white-space:nowrap}
 .fp-shop1 .mp-shop-price small{display:block}
+.fp-more{position:sticky;bottom:calc(112px + env(safe-area-inset-bottom));z-index:6;box-shadow:0 8px 24px rgba(0,0,0,.12);border-style:solid;border-color:var(--accent);color:var(--accent-text)}
+.fp-save{display:flex;flex-direction:column;gap:.75rem;padding:1.1rem}
+.fp-save-t{font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.fp-save-row{display:flex;align-items:center;gap:.75rem}
+.fp-save-row>div{flex:1;display:flex;flex-direction:column;gap:.1rem;padding:.7rem .8rem;border-radius:14px;background:var(--accent-bg)}
+.fp-save-row>div.m{background:var(--bg2)}
+.fp-save-row b{font-family:var(--font-d);font-size:1.375rem;color:var(--accent-text);font-variant-numeric:tabular-nums}
+.fp-save-row .m b{color:var(--ink2);text-decoration:line-through;text-decoration-thickness:2px}
+.fp-save-row span{font-size:.75rem;color:var(--muted)}
+.fp-save-row i{font-style:normal;font-weight:800;font-size:.8125rem;color:var(--muted)}
+.fp-save-big{display:flex;flex-direction:column;align-items:center;text-align:center;font-size:.9375rem;color:var(--ink2)}
+.fp-save-big b{font-family:var(--font-d);font-size:2rem;line-height:1.1;color:var(--accent-text)}
+.fp-save-big small{font-size:.8125rem;color:var(--muted)}
+.fp-save-n{margin:0;font-size:.75rem;color:var(--muted);line-height:1.45}
 .fp-more i{font-style:normal;font-size:.8rem;color:var(--muted)}
 .fp-more:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .fp-dh{display:flex;justify-content:space-between;align-items:baseline;gap:.6rem;margin-bottom:.5rem}
@@ -2562,6 +2576,7 @@ function freePage(mc,gen){var ti=todayIndex(),dates=weekDates(),nm=firstName(),r
         '<div class="bd '+(CAT_TINT[m.cat]||'')+'"><span class="ct">'+(CAT_LBL[m.cat]||'Repas')+(open?' · offert':'')+'</span><span class="nm">'+m.n+'</span><span class="mt">'+m.cal+' kcal · '+m.p+' g prot'+(open?' · voir la recette':'')+'</span></div>'+(open?'':'<span class="fp-pad" aria-hidden="true">🔒</span>')+'</div>'});
     h+='</div>'});
   if(t&&order.length>2)h+='</div>';
+  h+=fpSavings(gen,r);
   if(t)h+=fpProjection();
   h+='<div class="app-h t-money"><span class="lbl">'+ico('euro')+'Ta liste de courses</span><small>'+r.used.toFixed(2).replace('.',',')+' € / '+mc.b+' €</small></div>'+fpShopOne(gen,r)+lockBox(shopRealHtml(gen,mc.b),'euro','Ta liste de courses avec les prix','Tout ce qu\'il faut acheter pour ta semaine, au paquet près.');
   h+='<div class="fp-links"><button type="button" onclick="editProfile()">Mes réponses</button><button type="button" onclick="signOut()">Se déconnecter</button></div>';
@@ -2571,6 +2586,15 @@ function freePage(mc,gen){var ti=todayIndex(),dates=weekDates(),nm=firstName(),r
 function fpShopOne(gen,r){var all=[];r.cats.forEach(function(c){if(c.label!=='Placard')c.items.forEach(function(it){if(it.pack)all.push(it)})});if(!all.length)return '';
   var f=gen.free||{di:todayIndex(),mi:0},m=(gen.plan[f.di]||{meals:[]}).meals[f.mi],names=(m&&m.q||[]).map(function(x){return x[0]}),it=all.filter(function(x){return names.indexOf(x.n)>-1})[0]||all[0];
   return '<div class="app-card fp-shop1"><span class="fp-shop1-t">Un article de ta liste</span><div class="mp-shop-item">'+ingPh(it.n)+'<span class="mp-shop-name">'+it.n+'<small>Besoin : '+it.qty+' · '+it.count+' repas</small></span><span class="mp-shop-price"><b>'+eur(it.cost)+'</b><small>'+(it.packs>1?it.packs+' × ':'')+escH(it.pack)+'</small></span></div></div>'}
+// savings from the user's own plan: cost per meal vs a fast-food menu (~10 €), if 5 meals a week replace eating out
+var FASTFOOD_EUR=10;
+function fpSavings(gen,r){var n=0;gen.plan.forEach(function(d){n+=d.meals.length});if(!n||!r.used)return '';
+  var ppm=r.used/n,swap=Math.min(5,n),month=Math.round(swap*(FASTFOOD_EUR-ppm)*52/12),year=Math.round(month*12),e2=function(x){return x.toFixed(2).replace('.',',')+' €'};
+  if(month<=0)return '';
+  return '<div class="app-card fp-save"><span class="fp-save-t">💸 Ce que ton plan te fait économiser</span>'+
+    '<div class="fp-save-row"><div><b>'+e2(ppm)+'</b><span>par repas avec ton plan</span></div><i aria-hidden="true">vs</i><div class="m"><b>≈ '+FASTFOOD_EUR+' €</b><span>un menu fast-food</span></div></div>'+
+    '<div class="fp-save-big"><b>jusqu’à '+month+' €</b> économisés par mois<small>soit environ '+year+' € sur un an</small></div>'+
+    '<p class="fp-save-n">Si '+swap+' de tes repas de la semaine remplacent un repas acheté dehors. Calculé avec les prix de ta liste de courses.</p></div>'}
 function fpMore(b){var r=b.nextElementSibling;if(r)r.hidden=false;b.remove();window._sawMore=true;track('free_more_days')}
 function freeBanner(){return '<div class="app-card free-banner"><div><b>Ton premier repas est offert 🎁</b><span>Débloque toute ta semaine, ta liste de courses avec les prix et ton suivi du jour.</span></div><button type="button" class="lb-btn" onclick="track(\'paywall_gate\',{from:\'banner\'});confetti();showPaywall()">Débloquer</button></div>'}
 function trkPlanMeal(di,mi){if(!isMember()){showPaywall();return}var m=window._gen.plan[di].meals[mi],key=weekKey()+'-'+di+'-'+mi,s=trkLoad(),i=-1;s.t.cal.forEach(function(x,j){if(x.plan===key)i=j});
@@ -2787,13 +2811,13 @@ function pw2Html(){var closed=founderClosed(),chk='<svg viewBox="0 0 24 24" fill
   (closed?'':'<div class="pw2-offer"><span class="pw2-offer-t">⚡ Offre de lancement</span><div class="pw2-cd" aria-label="Temps restant">'+pw2CdHtml()+'</div><span class="pw2-offer-s">Puis l’offre à vie disparaît</span><span class="sr-only" id="founder-txt"></span></div>')+
   '<div class="pw2-plans" role="radiogroup" aria-label="Formule">'+
   '<button type="button" class="pw2-plan" id="plan-month" role="radio" onclick="selectPlan(\'month\')">'+radio+'<span class="pw2-name"><b>Mensuel</b><small>Sans engagement</small></span><span class="pw2-price"><b>9,99 €</b><small>par mois</small></span></button>'+
-  '<button type="button" class="pw2-plan pw2-life active" id="plan-life" role="radio" onclick="selectPlan(\'life\')"><span class="pw2-tag">Le plus choisi</span>'+radio+'<span class="pw2-name"><b>À vie</b><small>Paiement unique, rien à résilier</small></span><span class="pw2-price"><b>4,99 €</b><small>par mois la 1re année</small><small class="pw2-once">59,99 € une seule fois</small></span></button>'+
+  (closed?'':'<button type="button" class="pw2-plan pw2-life active" id="plan-life" role="radio" onclick="selectPlan(\'life\')"><span class="pw2-tag">Le plus choisi</span>'+radio+'<span class="pw2-name"><b>À vie</b><small>Paiement unique, rien à résilier</small></span><span class="pw2-price"><b>4,99 €</b><small>par mois la 1re année</small><small class="pw2-once">59,99 € une seule fois</small></span></button>')+
   '</div>'+
-  '<p class="pw2-cmp">59,99 € une fois, au lieu de 119,88 € pour 1 an en mensuel. Soit 4,99 € par mois la 1re année, puis plus rien.</p>'+
+  (closed?'':'<p class="pw2-cmp">59,99 € une fois, au lieu de 119,88 € pour 1 an en mensuel. Soit 4,99 € par mois la 1re année, puis plus rien.</p>')+
   (refActive()?'<div class="ref-pw">🎁 Parrainage : <b>−'+MACRO_CFG.refPct+' %</b> appliqué au paiement</div>':'')+
   '<ul class="pw2-feats"><li>'+chk+'Tes '+(parseInt(D.meals)||14)+' repas avec leurs recettes</li><li>'+chk+'Ta liste de courses complète, avec les prix</li><li>'+chk+'Ton suivi : calories, protéines et poids</li></ul>'+
   '<p class="pw2-legal">Paiement sécurisé par Whop. En continuant, tu acceptes les <a href="/cgu" target="_blank" rel="noopener">CGU</a> et tu demandes l’accès immédiat au contenu : tu renonces à ton droit de rétractation de 14 jours.</p>'+
-  '<div class="pw2-foot"><button class="btn btn-p btn-lg btn-full" id="paywall-cta-btn" onclick="startCheckout()">Payer 59,99 € une fois →</button></div></div>'}
+  '<div class="pw2-foot"><button class="btn btn-p btn-lg btn-full" id="paywall-cta-btn" onclick="startCheckout()">'+(closed?'M’abonner à 9,99 € par mois →':'Payer 59,99 € une fois →')+'</button></div></div>'}
 function showPaywall(){
 if(document.getElementById('pw-modal'))return;
 window._pwAuto=true;selectedPlan='life';track('paywall_view');setLeadStatus('paywall_view');notePaywall(true);
@@ -2925,7 +2949,7 @@ function isInsider(){return isAdmin()||isFull()}
 // features in test: visible on the owner's account only (including the "non-paying customer" preview)
 function testOn(){return true}
 // next batch in test: owner's account only
-function labOn(){return isAdmin()}
+function labOn(){return true}
 // recipes that fit the answers so far (diet, dislikes, and the budget per meal once known)
 function obRecipes(bud){var mm=parseInt(window._obMeals||D.meals)||14,b=bud||parseInt(D.budget)||0,ppm=b?b/mm:0,noBk=!!(window._obMeals||D.meals)&&mm<21;
   return MEALS.filter(function(m){if(noBk&&m.cat==='petit-dej')return false;if(D.diet==='Végétarien'&&!m.veg)return false;if(mealHasAvoid(m))return false;if(ppm&&m.cat!=='petit-dej'&&mealRealCost(Object.assign({},m,{k:700/m.cal}))>ppm*1.15)return false;return true})}
