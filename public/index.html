@@ -622,6 +622,15 @@ body:has(#onboarding.active),body:has(#result.active){background:#2E2C28}
 .ob-fill::after{content:"";position:absolute;top:50%;right:-11px;bottom:auto;left:auto;width:22px;height:22px;transform:translateY(-50%);border-radius:50%;background:radial-gradient(circle at 35% 30%,#C4F2BE,#3E9E44 55%,#1F6B25);border:2px solid rgba(255,255,255,.65);box-shadow:0 3px 10px rgba(46,125,50,.5);animation:none}
 .ob-pct{flex-shrink:0;min-width:2.75rem;text-align:right;font-family:ui-monospace,Consolas,monospace;font-size:.8125rem;font-weight:700;color:var(--accent-text)}
 .ob-counter{display:none;align-items:center;justify-content:center;gap:.625rem;margin-top:.875rem;font-size:.8125rem;color:var(--ink2)}
+.ob-counter.ob-lab{justify-content:center;gap:.4rem}
+.ob-lab .ob-avs img{width:34px;height:34px;border-width:2.5px;margin-left:-11px;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.ob-lab .ob-avs{padding-left:11px}
+.ob-rc{display:inline-flex;align-items:center;gap:.3rem;background:var(--accent-bg);color:var(--accent-text);border-radius:99px;padding:.3rem .75rem;font-weight:600;font-variant-numeric:tabular-nums}
+.ob-tier{margin-top:1.1rem;padding:1rem;border:1px solid var(--border);border-radius:18px;background:var(--surface);text-align:center;display:flex;flex-direction:column;align-items:center;gap:.5rem}
+.ob-tier-chip{display:inline-block;background:var(--accent-bg);color:var(--accent-text);font-weight:800;border-radius:99px;padding:.3rem .85rem;font-size:.9375rem}
+.ob-tier p{margin:0;font-size:.875rem;color:var(--ink2);line-height:1.45;max-width:34ch}
+.ob-tier-n{background:var(--bg2);border-radius:12px;padding:.45rem .8rem;font-size:.8125rem;color:var(--ink2);font-variant-numeric:tabular-nums}
+.ob-tier-n b{color:var(--ink)}
 .ob-counter b{color:var(--accent-text);font-weight:800}
 .ob-avs{display:flex;padding-left:8px}
 .ob-avs img{width:26px;height:26px;border-radius:50%;object-fit:cover;border:2px solid var(--bg);margin-left:-8px}
@@ -1087,6 +1096,30 @@ body.cr-mode>*:not(#cr-page):not(.toast):not(script){display:none!important}
 .cr-row b{color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
 .cr-muted{font-size:.8125rem;color:var(--muted);margin:0}
 .fp-proj{display:flex;flex-direction:column;gap:.5rem}
+.pj{display:flex;flex-direction:column;gap:.75rem;padding:1.1rem 1.1rem .9rem}
+.pj-head{display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem}
+.pj-head h3{margin:0;font-family:var(--font-d);font-size:1.25rem;color:var(--ink);text-wrap:balance}
+.pj-head span{font-size:.8125rem;color:var(--muted)}
+.pj-badge{flex-shrink:0;background:var(--accent-bg);color:var(--accent-text)!important;font-weight:800;font-size:.9375rem!important;border-radius:99px;padding:.35rem .8rem;font-variant-numeric:tabular-nums}
+.pj-svg{width:100%;height:auto;display:block;overflow:visible}
+.pj-grid{stroke:var(--border);stroke-width:1}
+.pj-g0{stop-color:var(--c-lunch,#16A34A);stop-opacity:.28}
+.pj-g1{stop-color:var(--c-lunch,#16A34A);stop-opacity:0}
+.pj-flat{stroke:var(--muted);stroke-width:2;stroke-dasharray:6 5}
+.pj-line{fill:none;stroke:var(--c-lunch,#16A34A);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+.pj-dot{fill:var(--surface);stroke:var(--c-lunch,#16A34A);stroke-width:2.5}
+.pj-halo{fill:var(--c-lunch,#16A34A);opacity:.2}
+.pj-end{fill:var(--c-lunch,#16A34A)}
+.pj-x{font-size:11px;fill:var(--muted)}
+.pj-leg{display:flex;flex-direction:column;gap:.55rem;border-top:1px solid var(--border);padding-top:.8rem}
+.pj-leg div{display:flex;align-items:center;gap:.6rem;font-size:.875rem;color:var(--ink2)}
+.pj-leg span{flex:1}
+.pj-leg b{font-variant-numeric:tabular-nums;color:var(--ink)}
+.pj-leg b.m{color:var(--muted)}
+.pj-leg i{width:12px;height:12px;border-radius:4px;flex-shrink:0}
+.pj-leg i.g{background:var(--c-lunch,#16A34A)}
+.pj-leg i.m{background:var(--muted)}
+.pj-note{margin:0;font-size:.75rem;color:var(--muted);line-height:1.45}
 .fp-proj-top{display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem;flex-wrap:wrap}
 .fp-proj-top b{display:block;font-family:var(--font-d);font-size:1.75rem;color:var(--c-lunch,#16A34A);line-height:1.1}
 .fp-proj-top div>span{font-size:.8125rem;color:var(--muted)}
@@ -1786,7 +1819,7 @@ if(s.desc)h+='<div class="ob-desc">'+s.desc+'</div>';if(step>1)h+=buildSummary()
 if(s.id==='goal')h+=goalHtml(s);
 else if(s.type==='grid'){h+='<div class="ob-grid" style="grid-template-columns:repeat('+(s.cols||3)+',1fr)">';s.options.forEach(function(o){var ic;if(o.imgId){var el=document.getElementById(o.imgId);ic=el?'<img src="'+el.src+'" alt="'+o.label+'" style="width:28px;height:28px;object-fit:contain;border-radius:4px">':o.label.charAt(0);h+='<button class="ob-opt" onclick="pick(\''+s.id+"','"+o.label.replace(/'/g,"\\'")+"')\"><div class=\"ob-icon\" style=\"background:"+o.bg+";padding:4px\">"+ic+"</div><div class=\"ob-opt-label\">"+o.label+"</div></button>"}else{h+='<button class="ob-opt" onclick="pick(\''+s.id+"','"+o.label.replace(/'/g,"\\'")+"')\"><div class=\"ob-icon\" style=\"background:"+o.bg+"\">"+o.icon+"</div><div class=\"ob-opt-label\">"+o.label+"</div></button>"}});h+='</div>'}
 else if(s.type==='list'){h+='<div class="ob-opts">';s.options.forEach(function(o){var val=o.val||o.label;var tag=o.tag?'<span class="ob-tag">'+o.tag+'</span>':'';var ic;if(o.imgId){var el=document.getElementById(o.imgId);ic=el?'<img src="'+el.src+'" alt="'+o.label+'" style="width:28px;height:28px;object-fit:contain;border-radius:4px">':o.label.charAt(0);h+='<button class="ob-opt" onclick="pick(\''+s.id+"','"+val+"')\"><div class=\"ob-icon\" style=\"background:"+o.bg+";padding:4px\">"+ic+"</div><div style=\"flex:1\"><div class=\"ob-opt-label\">"+o.label+"</div>"+(o.sub?'<div class="ob-opt-sub">'+o.sub+"</div>":"")+"</div>"+tag+"</button>"}else{h+='<button class="ob-opt" onclick="pick(\''+s.id+"','"+val+"')\"><div class=\"ob-icon\" style=\"background:"+o.bg+"\">"+o.icon+"</div><div style=\"flex:1\"><div class=\"ob-opt-label\">"+o.label+"</div>"+(o.sub?'<div class="ob-opt-sub">'+o.sub+"</div>":"")+"</div>"+tag+"</button>"}});h+='</div>'}
-else if(s.type==='slider'){var v=D[s.id]||s.default;h+='<div class="ob-slider-val" id="sv">'+v+' <small>'+s.unit+s.suffix+'</small></div><div class="ob-cash" id="ob-cash" data-n="'+cashN(v)+'">'+cashHtml(v)+'</div><input type="range" class="ob-range" min="'+s.min+'" max="'+s.max+'" value="'+v+'" oninput="updS(this)"><div class="ob-range-labels"><span>'+s.min+' '+s.unit+'</span><span>'+s.max+' '+s.unit+'</span></div>';var meals=parseInt(D.meals)||14;var ppm=(v/meals).toFixed(2).replace('.',',');h+='<div class="ob-insight" id="ob-ins"><strong>'+ppm+' \u20AC</strong> par repas sur '+meals+' repas/semaine</div><button class="btn btn-p btn-lg btn-full" style="margin-top:1.5rem" onclick="pick(\''+s.id+"',document.querySelector('.ob-range').value)\">Continuer \u2192</button>"}
+else if(s.type==='slider'){var v=D[s.id]||s.default;h+='<div class="ob-slider-val" id="sv">'+v+' <small>'+s.unit+s.suffix+'</small></div><div class="ob-cash" id="ob-cash" data-n="'+cashN(v)+'">'+cashHtml(v)+'</div><input type="range" class="ob-range" min="'+s.min+'" max="'+s.max+'" value="'+v+'" oninput="updS(this)"><div class="ob-range-labels"><span>'+s.min+' '+s.unit+'</span><span>'+s.max+' '+s.unit+'</span></div>';var meals=parseInt(D.meals)||14;var ppm=(v/meals).toFixed(2).replace('.',',');h+=labOn()?'<div class="ob-tier" id="ob-ins">'+obTierHtml(v)+'</div>':'<div class="ob-insight" id="ob-ins"><strong>'+ppm+' \u20AC</strong> par repas sur '+meals+' repas/semaine</div><button class="btn btn-p btn-lg btn-full" style="margin-top:1.5rem" onclick="pick(\''+s.id+"',document.querySelector('.ob-range').value)\">Continuer \u2192</button>"}
 else if(s.type==='double-slider'){var v1=D.taille||s.s1.default,v2=D.poids||s.s2.default;h+='<div style="font-weight:600;font-size:.8125rem;color:var(--muted);margin-bottom:.25rem">'+s.s1.label+'</div><div class="ob-slider-val" id="sv1">'+v1+'<small>'+s.s1.unit+'</small></div><input type="range" class="ob-range" id="r1" min="'+s.s1.min+'" max="'+s.s1.max+'" value="'+v1+'" oninput="document.getElementById(\'sv1\').innerHTML=this.value+\'<small>'+s.s1.unit+"</small>'\"><div class=\"ob-range-labels\"><span>"+s.s1.min+s.s1.unit+"</span><span>"+s.s1.max+s.s1.unit+"</span></div>";h+='<div style="font-weight:600;font-size:.8125rem;color:var(--muted);margin-top:1.5rem;margin-bottom:.25rem">'+s.s2.label+'</div><div class="ob-slider-val" id="sv2">'+v2+'<small>'+s.s2.unit+'</small></div><input type="range" class="ob-range" id="r2" min="'+s.s2.min+'" max="'+s.s2.max+'" value="'+v2+'" oninput="document.getElementById(\'sv2\').innerHTML=this.value+\'<small>'+s.s2.unit+"</small>'\"><div class=\"ob-range-labels\"><span>"+s.s2.min+s.s2.unit+"</span><span>"+s.s2.max+s.s2.unit+"</span></div>";h+='<button class="btn btn-p btn-lg btn-full" style="margin-top:1.5rem" onclick="pickBody()">Continuer \u2192</button>'}
 else if(s.type==='stepper'){var v=D[s.id]||s.default;h+='<div class="ob-stepper"><button class="ob-stepper-btn" onclick="stepMeals(-1)">&#x2212;</button><div class="ob-stepper-val"><div class="ob-stepper-n" id="stepper-n">'+v+'</div><div class="ob-stepper-u">'+s.unit+'</div></div><button class="ob-stepper-btn" onclick="stepMeals(1)">+</button></div>';h+='<div class="ob-presets">';s.presets.forEach(function(p){var cls=p.val===v?' active':'';var tag=p.tag?'<span class="ob-tag">'+p.tag+'</span>':'';h+='<button class="ob-preset'+cls+'" data-v="'+p.val+'" onclick="setMeals('+p.val+')"><span class="pr-l">'+p.label+'</span>'+(p.sub?'<span class="pr-s">'+p.sub+'</span>':'')+tag+'</button>'});h+='</div><button class="btn btn-p btn-lg btn-full" onclick="pick(\''+s.id+"',document.getElementById('stepper-n').textContent)\">Continuer \u2192</button>"}
 else if(s.type==='avoid'){h+=avoidHtml()}
@@ -1833,7 +1866,7 @@ var h=list.map(function(x){return '<button type="button" class="av-s" data-v="'+
 if(!exact&&v.trim().length>1)h+='<button type="button" class="av-s add" data-v="'+escH(v.trim())+'" onclick="avoidAdd(this.getAttribute(\'data-v\'))">Ajouter « '+escH(v.trim())+' »</button>';box.innerHTML=h}
 function pick(id,val){D[id]=val;step++;if(step<S.length)renderStep();else showResult()}
 function pStep(){if(step>0){step--;renderStep()}}
-function updS(el){var s=S[step];var cc=document.getElementById('ob-cash');if(cc){var nn=cashN(el.value);if(cc.getAttribute('data-n')!=nn){cc.setAttribute('data-n',nn);cc.innerHTML=cashHtml(el.value)}}document.getElementById('sv').innerHTML=el.value+' <small>'+s.unit+s.suffix+'</small>';var meals=parseInt(D.meals)||14;var ppm=(el.value/meals).toFixed(2).replace('.',',');document.getElementById('ob-ins').innerHTML='<strong>'+ppm+' \u20AC</strong> par repas sur '+meals+' repas/semaine'}
+function updS(el){var s=S[step];var cc=document.getElementById('ob-cash');if(cc){var nn=cashN(el.value);if(cc.getAttribute('data-n')!=nn){cc.setAttribute('data-n',nn);cc.innerHTML=cashHtml(el.value)}}document.getElementById('sv').innerHTML=el.value+' <small>'+s.unit+s.suffix+'</small>';var meals=parseInt(D.meals)||14;var ppm=(el.value/meals).toFixed(2).replace('.',',');if(labOn()){document.getElementById('ob-ins').innerHTML=obTierHtml(el.value);window._obBud=+el.value;updateCounter();return}document.getElementById('ob-ins').innerHTML='<strong>'+ppm+' \u20AC</strong> par repas sur '+meals+' repas/semaine'}
 function pickBody(){D.taille=document.getElementById('r1').value;D.poids=document.getElementById('r2').value;step++;renderStep()}
 function pickG(g){selGender=g;document.getElementById('g-h').className='ob-opt'+(g==='Homme'?' selected':'');document.getElementById('g-f').className='ob-opt'+(g==='Femme'?' selected':'')}
 
@@ -2406,7 +2439,31 @@ function trkIphoneHelp(){return '<details class="trk-help"><summary>Relier les p
 function viewOnly(inner){return '<div class="viewonly" onclick="track(\'paywall_gate\',{from:\'viewonly\'});showPaywall()" onkeydown="if(event.key===\'Enter\')showPaywall()" role="button" tabindex="0" aria-label="Débloquer pour utiliser"><div class="vo-in" inert>'+inner+'</div></div>'}
 // one page for people who have not paid: the whole week, only the first meal open, everything else heavily blurred
 // weight projection: with the plan (highlighted) vs if nothing changes
-function fpProjection(){var p=+D.poids||0,c=+D.cible||0;if(!p||!c||c===p||!(D.goal==='Prise de masse'||D.goal==='Sèche'))return '';
+// weight projection v2 (test): months on the x axis, a dot per month, final values in the legend
+function fpProjection2(){var p=+D.poids||0,c=+D.cible||0;if(!p||!c||c===p||!(D.goal==='Prise de masse'||D.goal==='Sèche'))return '';
+  var rate=cibleRate(p),wk=Math.abs(c-p)/rate,mo=Math.max(3,Math.min(12,Math.ceil(wk/4.345))),hw=mo*4.345,up=c>p;
+  function ease(t){return t*t*(3-2*t)*.35+t*.65}
+  function w(t){return t>=wk?c:p+(c-p)*ease(t/wk)}
+  var end=Math.round(w(hw)*10)/10,diff=Math.round((end-p)*10)/10,now=new Date();
+  var W=340,H=210,L=14,R=W-18,T=22,B=H-30,lo=Math.min(p,end),hi=Math.max(p,end),pad=(hi-lo)*.18||1;lo-=pad;hi+=pad;
+  function X(t){return L+t/hw*(R-L)}function Y(k){return T+(hi-k)/(hi-lo)*(B-T)}
+  var pts=[];for(var i=0;i<=60;i++){var t=hw*i/60;pts.push(X(t).toFixed(1)+','+Y(w(t)).toFixed(1))}
+  var grid='',dots='',lbl='';
+  for(var m=0;m<=mo;m++){var d=new Date(now.getFullYear(),now.getMonth()+m,1),t=m===0?0:(d-now)/6048e5;if(t>hw)break;if(m>0&&X(t)-L<34)continue;var x=X(t).toFixed(1);
+    grid+='<line x1="'+x+'" x2="'+x+'" y1="'+T+'" y2="'+B+'" class="pj-grid"/>';
+    if(m>0&&m<mo)dots+='<circle cx="'+x+'" cy="'+Y(w(t)).toFixed(1)+'" r="4.5" class="pj-dot"/>';
+    if(mo<=7||m%2===0)lbl+='<text x="'+x+'" y="'+(H-8)+'" text-anchor="'+(m===0?'start':'middle')+'" class="pj-x">'+(m===0?'auj.':d.toLocaleDateString('fr-FR',{month:'short'}))+'</text>'}
+  var ex=X(hw),ey=Y(end),py=Y(p).toFixed(1),f1=function(k){return String(k.toFixed(1)).replace('.',',')};
+  var svg='<svg class="pj-svg" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Projection : '+f1(p)+' kg aujourd’hui, '+f1(end)+' kg dans '+mo+' mois avec ton plan">'+
+    '<defs><linearGradient id="pj-g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="pj-g0"/><stop offset="1" class="pj-g1"/></linearGradient></defs>'+grid+
+    '<polygon points="'+L+','+py+' '+pts.join(' ')+' '+R+','+py+'" fill="url(#pj-g)"/>'+
+    '<line x1="'+L+'" x2="'+R+'" y1="'+py+'" y2="'+py+'" class="pj-flat"/>'+
+    '<polyline points="'+pts.join(' ')+'" class="pj-line"/>'+dots+
+    '<circle cx="'+L+'" cy="'+py+'" r="4.5" class="pj-dot"/><circle cx="'+ex.toFixed(1)+'" cy="'+ey.toFixed(1)+'" r="12" class="pj-halo"/><circle cx="'+ex.toFixed(1)+'" cy="'+ey.toFixed(1)+'" r="7" class="pj-end"/>'+lbl+'</svg>';
+  return '<div class="app-card pj"><div class="pj-head"><div><h3>Ton poids dans '+mo+' mois</h3><span>Aujourd’hui, '+f1(p)+' kg</span></div><span class="pj-badge">'+(up?'↗ +':'↘ −')+f1(Math.abs(diff))+' kg</span></div>'+svg+
+    '<div class="pj-leg"><div><i class="g"></i><span>Ton poids avec ton plan mangereco</span><b>'+f1(end)+' kg</b></div><div><i class="m"></i><span>Sans rien changer à ton alimentation</span><b class="m">'+f1(p)+' kg</b></div></div>'+
+    '<p class="pj-note">Projection indicative à un rythme sain ('+String(rate).replace('.',',')+' kg par semaine), si tu suis tes repas et ton entraînement.</p></div>'}
+function fpProjection(){if(labOn())return fpProjection2();var p=+D.poids||0,c=+D.cible||0;if(!p||!c||c===p||!(D.goal==='Prise de masse'||D.goal==='Sèche'))return '';
   var rate=cibleRate(p),wk=Math.ceil(Math.abs(c-p)/rate),end=new Date(Date.now()+wk*7*864e5),dd=end.toLocaleDateString('fr-FR',{day:'numeric',month:'long'});
   var W=320,H=190,L=34,R=W-14,T=22,B=H-34,lo=Math.min(p,c)-1.5,hi=Math.max(p,c)+1.5,Y=function(k){return T+(hi-k)/(hi-lo)*(B-T)},X=function(i){return L+i/wk*(R-L)};
   var pts=[];for(var i=0;i<=wk;i++){var t=i/wk,e=t*t*(3-2*t)*.15+t*.85;pts.push(X(i).toFixed(1)+','+Y(p+(c-p)*e).toFixed(1))}
@@ -2612,6 +2669,8 @@ var m=parseInt(D.meals),b=parseInt(D.budget),t='';
 if(m&&b){t='<b>'+m+'</b> repas · ≈ <b>'+(b/m).toFixed(2).replace('.',',')+' €</b> par repas'}
 else if(m){t='<b>'+m+'</b> repas par semaine'}
 else if(D.store){t='Courses chez <b>'+D.store+'</b>'}
+if(labOn()){var rc=obRecipes(window._obBud),av='';var seen={};rc.filter(function(m){return m.cat!=='petit-dej'}).forEach(function(m){var el=document.getElementById(m.img),src=el&&(el.getAttribute('src')||el.getAttribute('data-src'));if(src&&!seen[src]&&Object.keys(seen).length<3){seen[src]=1;av+='<img src="'+src+'" alt="">'}});
+  c.classList.add('ob-lab');c.innerHTML='<span class="ob-avs">'+av+'</span><span class="ob-rc">🍽️ <b>'+rc.length+'</b> recettes pour toi</span>';c.style.display='flex';return}
 if(!t){c.style.display='none';return}
 c.innerHTML='<span class="ob-avs">'+avatarsHtml()+'</span><span>'+t+'</span>';c.style.display='flex'}
 
@@ -2792,6 +2851,17 @@ function isInsider(){return isAdmin()||isFull()}
 // paying customers (and full-access accounts) get the full app: tabs, tracker, progress, real-price list, budget plan
 // features in test: visible on the owner's account only (including the "non-paying customer" preview)
 function testOn(){return true}
+// next batch in test: owner's account only
+function labOn(){return isAdmin()}
+// recipes that fit the answers so far (diet, dislikes, and the budget per meal once known)
+function obRecipes(bud){var mm=parseInt(D.meals)||14,b=bud||parseInt(D.budget)||0,ppm=b?b/mm:0;
+  return MEALS.filter(function(m){if(D.diet==='Végétarien'&&!m.veg)return false;if(mealHasAvoid(m))return false;if(ppm&&m.cat!=='petit-dej'&&mealRealCost(Object.assign({},m,{k:700/m.cal}))>ppm*1.15)return false;return true})}
+function obTier(ppm){return ppm<1.4?['🥚','Serré','Les basiques qui nourrissent bien : œufs, riz, lentilles, pâtes, poulet. Ça marche, c\'est juste moins varié.']
+  :ppm<2.2?['👌','Équilibré','La plupart de nos recettes passent. Une bonne semaine sans se priver.']
+  :ppm<3.2?['😋','Confortable','Presque tout le catalogue t\'est ouvert, avec plus de viande et de poisson.']
+  :['✨','Large','Tout le catalogue, et de la marge pour les produits que tu préfères.']}
+function obTierHtml(v){var mm=parseInt(D.meals)||14,ppm=v/mm,t=obTier(ppm),n=obRecipes(+v).length;
+  return '<span class="ob-tier-chip">'+t[0]+' '+t[1]+'</span><p>'+t[2]+'</p><span class="ob-tier-n"><b>'+String(ppm.toFixed(2)).replace('.',',')+' €</b> par repas, sur '+mm+' repas · <b>'+n+'</b> recettes possibles</span>'}
 function previewFree(){return isAdmin()&&!!lsGet('macro_preview_free')}
 function isMember(){if(previewFree())return false;return isInsider()||isUnlocked()}
 function startPreviewFree(){if(!isAdmin())return;lsSet('macro_preview_bak',{p:localStorage.getItem('macro_profile'),pl:localStorage.getItem('macro_plan')});lsSet('macro_preview_free',1);startDemoRun()}
