@@ -1185,6 +1185,9 @@ body.cr-mode>*:not(#cr-page):not(.toast):not(script){display:none!important}
 .pw2-feats svg{width:18px;height:18px;flex-shrink:0;color:#34D399}
 .pw2-legal{margin:0;font-size:.6875rem;opacity:.55;line-height:1.45;text-align:center}
 .pw2-legal a{color:inherit}
+.pw2-mine{margin:0;font-size:.875rem;line-height:1.45;opacity:.85}.pw2-mine b{font-weight:700}
+.pw2-price-sub{margin:.45rem 0 0;font-size:.75rem;text-align:center;opacity:.75}
+.pw2-legal-foot{margin-top:.3rem;font-size:.625rem;opacity:.45}
 .pw2-foot{position:sticky;bottom:0;margin:0 -1.25rem;padding:.8rem 1.25rem calc(.9rem + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid rgba(255,255,255,.08)}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .pf-sheet{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.7rem}
@@ -1543,6 +1546,7 @@ body.app-mode .tile.locked .tp,body.app-mode .tile.locked .tn{filter:blur(5px)}
 .ad-sec,.ad-cols{scroll-margin-top:84px}
 .ad-h3{font-size:.8125rem;font-weight:800;color:var(--ink);margin:1.125rem 0 .5rem;text-transform:uppercase;letter-spacing:.04em}
 .ad-kpis-in{margin-bottom:.5rem}
+.ad-newv{margin-top:-.5rem}.ad-newv .ad-note{margin:.5rem 0 0}
 .ad-sub{color:var(--muted);font-size:.75rem;margin-left:.25rem}
 .ad-send{display:flex;flex-wrap:wrap;gap:.375rem;margin:0 0 .25rem}
 .ad-send button,.ad-f button{padding:.4375rem .875rem;border-radius:99px;border:1.5px solid var(--border);background:var(--surface);color:var(--ink2);font-family:var(--font);font-weight:700;font-size:.75rem;cursor:pointer}
@@ -1967,6 +1971,16 @@ function fmtN(n){return Number(n||0).toLocaleString('fr-FR')}
 function pctOf(a,b){return b>0?Math.round(a/b*100)+' %':'–'}
 // small rates (under 10 %) keep one decimal, so 1 sale out of 560 visitors reads 0,2 % instead of 0 %
 function pctFine(a,b){if(!(b>0))return '–';var p=a/b*100;return (p>0&&p<10?String(Math.round(p*10)/10).replace('.',','):Math.round(p))+' %'}
+// totals since the new site version went live (sum of the daily rows: a visitor who comes back on 2 days counts twice)
+var NEW_SINCE='2026-10-17';
+function adNewVersion(d){var n={visitors:0,starts:0,done:0,signups:0,paywalls:0,checkouts:0},acc=0,paid=0,days=0;
+  (d.daily||[]).forEach(function(x){if(dKey(x.day)<NEW_SINCE)return;days++;for(var k in n)n[k]+=x[k]||0});
+  (d.signups_daily||[]).forEach(function(r){if(dKey(r.day)>=NEW_SINCE)acc+=r.n||0});
+  (d.paid_daily||[]).forEach(function(r){if(dKey(r.day)>=NEW_SINCE)paid+=r.n||0});
+  return '<section class="ad-today ad-newv"><div class="ad-today-head"><h2>Depuis la nouvelle version</h2><span>'+dFr(NEW_SINCE,1)+' → aujourd’hui</span></div><div class="ad-today-kpis">'+
+  kpi('Visiteurs',fmtN(n.visitors),'')+kpi('Funnel fini',fmtN(n.done),pctOf(n.done,n.visitors)+' des visiteurs')+kpi('Comptes créés',fmtN(acc),'Visite → compte : '+pctOf(acc,n.visitors))+
+  kpi('Paywall vu',fmtN(n.paywalls),'')+kpi('Clics paiement',fmtN(n.checkouts),'Paywall → clic : '+pctOf(n.checkouts,n.paywalls))+kpi('Paiements',fmtN(paid),'Paywall → paiement : '+pctOf(paid,n.paywalls))+
+  '</div>'+(dKey(d.since)>NEW_SINCE?'<p class="ad-note">La période choisie commence après le '+dFr(NEW_SINCE)+' : prends une période plus longue pour avoir tout depuis la nouvelle version.</p>':'')+'</section>'}
 function kpi(a,b,c){return '<div class="ad-kpi"><span>'+a+'</span><strong>'+b+'</strong><small>'+(c||'')+'</small></div>'}
 function adBars(list,labelF){
 var max=0;list.forEach(function(x){if(x.n>max)max=x.n});
@@ -2098,6 +2112,7 @@ var h='<div class="ad-wrap">';
 h+='<section class="ad-today"><div class="ad-today-head"><h2>Aujourd\'hui</h2><span>'+new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',timeZone:'Europe/Paris'})+'</span></div><div class="ad-today-kpis">'+
 kpi('Visiteurs',fmtN(tod.visitors),'')+kpi('Débuts de funnel',fmtN(tod.starts),'')+kpi('Comptes créés',fmtN(t.new_users_today),'')+kpi('E-mails envoyés',fmtN(t.mails_today),'')+kpi('Clics paiement',fmtN(tod.checkouts),'')+kpi('Paiements',fmtN(paidToday),'')+
 '</div></section>';
+h+=adNewVersion(d);
 h+='<div class="ad-head"><div><h1>Statistiques</h1><p>Depuis le '+new Date(d.since).toLocaleDateString('fr-FR')+' · '+escH(Auth.user.email)+'</p></div><div class="ad-per">'+[7,30,90,365].map(function(n){return '<button class="'+(n===days?'on':'')+'" onclick="showAdmin('+n+')">'+(n===365?'1 an':n+' jours')+'</button>'}).join('')+'</div></div>';
 h+='<nav class="ad-toc" aria-label="Sections">'+[['ad-s-prio','Priorités'],['ad-s-money','Argent'],['ad-s-mail','E-mails'],['ad-s-send','Envoyer'],['ad-s-free','Page gratuite'],['ad-s-fun','Parcours'],['ad-s-day','Jour par jour'],['ad-s-acq','Acquisition'],['ad-s-pw','Paywall'],['ad-s-prof','Profils'],['ad-s-users','Inscrits']].map(function(x){return '<a href="#'+x[0]+'">'+x[1]+'</a>'}).join('')+'</nav>';
 h+='<div class="ad-kpis">'+
@@ -2818,7 +2833,7 @@ function pw2CdHtml(){var ms=Math.max(0,FOUNDER_END-Date.now()),sx=Math.floor(ms/
   return (d?'<b>'+d+'</b><i>j</i>':'')+'<b>'+p(h)+'</b><i>h</i><b>'+p(m)+'</b><i>min</i><b>'+p(x)+'</b><i>s</i>'}
 function pw2Html(){var closed=founderClosed(),chk='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
   var radio='<span class="pw2-radio" aria-hidden="true"></span>';
-  return '<div class="pw2" id="unlock-card"><h2 class="pw2-t">Débloque ta semaine</h2>'+
+  return '<div class="pw2" id="unlock-card"><h2 class="pw2-t">Débloque ta semaine</h2>'+(pw3On()?pw2Mine():'')+
   (closed?'':'<div class="pw2-offer"><span class="pw2-offer-t">⚡ Offre de lancement</span><div class="pw2-cd" aria-label="Temps restant">'+pw2CdHtml()+'</div><span class="pw2-offer-s">Puis l’offre à vie disparaît</span><span class="sr-only" id="founder-txt"></span></div>')+
   '<div class="pw2-plans" role="radiogroup" aria-label="Formule">'+
   '<button type="button" class="pw2-plan" id="plan-month" role="radio" onclick="selectPlan(\'month\')">'+radio+'<span class="pw2-name"><b>Mensuel</b><small>Sans engagement</small></span><span class="pw2-price"><b>9,99 €</b><small>par mois</small></span></button>'+
@@ -2827,8 +2842,13 @@ function pw2Html(){var closed=founderClosed(),chk='<svg viewBox="0 0 24 24" fill
   (closed?'':'<p class="pw2-cmp">59,99 € une fois, au lieu de 119,88 € pour 1 an en mensuel. Soit 4,99 € par mois la 1re année, puis plus rien.</p>')+
   (refActive()?'<div class="ref-pw">🎁 Parrainage : <b>−'+MACRO_CFG.refPct+' %</b> appliqué au paiement</div>':'')+
   '<ul class="pw2-feats"><li>'+chk+'Tes '+(parseInt(D.meals)||14)+' repas avec leurs recettes</li><li>'+chk+'Ta liste de courses complète, avec les prix</li><li>'+chk+'Ton suivi : calories, protéines et poids</li></ul>'+
-  '<p class="pw2-legal">Paiement sécurisé par Whop. En continuant, tu acceptes les <a href="/cgu" target="_blank" rel="noopener">CGU</a> et tu demandes l’accès immédiat au contenu : tu renonces à ton droit de rétractation de 14 jours.</p>'+
-  '<div class="pw2-foot"><button class="btn btn-p btn-lg btn-full" id="paywall-cta-btn" onclick="startCheckout()">'+(closed?'M’abonner à 9,99 € par mois →':'Payer 59,99 € une fois →')+'</button></div></div>'}
+  (pw3On()?'<div class="pw2-foot"><button class="btn btn-p btn-lg btn-full" id="paywall-cta-btn" onclick="startCheckout()">Débloquer ma semaine →</button><p class="pw2-price-sub" id="pw2-price-sub">'+pw2PriceSub(closed?'month':'life')+'</p><p class="pw2-legal pw2-legal-foot">En continuant, tu acceptes les <a href="/cgu" target="_blank" rel="noopener">CGU</a> et tu demandes l’accès immédiat au contenu : tu renonces à ton droit de rétractation de 14 jours.</p></div></div>':'<p class="pw2-legal">Paiement sécurisé par Whop. En continuant, tu acceptes les <a href="/cgu" target="_blank" rel="noopener">CGU</a> et tu demandes l’accès immédiat au contenu : tu renonces à ton droit de rétractation de 14 jours.</p>'+'<div class="pw2-foot"><button class="btn btn-p btn-lg btn-full" id="paywall-cta-btn" onclick="startCheckout()">'+(closed?'M’abonner à 9,99 € par mois →':'Payer 59,99 € une fois →')+'</button></div></div>')}
+function pw2PriceSub(p){return p==='life'?'59,99 € une seule fois · paiement sécurisé':'9,99 € par mois · sans engagement · paiement sécurisé'}
+// the user's own plan in one line (meals, weekly cost, protein); empty if the plan is not built yet
+function pw2Mine(){try{var mc=computeMacros(),g=window._gen,n=parseInt(D.meals)||0,r=g?shopReal(g):null,x=[],nm=firstName();
+  if(g&&g.plan){n=0;g.plan.forEach(function(d){n+=(d.meals||[]).length})}
+  if(n)x.push('<b>'+n+' repas</b>');if(r&&r.used)x.push('<b>~'+r.used.toFixed(0)+' € / semaine</b>');if(mc&&mc.protG)x.push('<b>'+mc.protG+' g de protéines / jour</b>');
+  return x.length?'<p class="pw2-mine">'+(nm?escH(nm)+', ton':'Ton')+' plan : '+x.join(' · ')+'</p>':''}catch(e){return ''}}
 function showPaywall(){
 if(document.getElementById('pw-modal'))return;
 window._pwAuto=true;selectedPlan='life';track('paywall_view');setLeadStatus('paywall_view');notePaywall(true);
@@ -2839,7 +2859,7 @@ requestAnimationFrame(function(){m.classList.add('open')});
 renderFounder();loadFounderCount();if(founderClosed())selectPlan('month');
 }
 
-function selectPlan(p){if(labOn()&&document.querySelector('.pw2')){track('plan_select',{plan:p});selectedPlan=p;var cb2=document.getElementById('paywall-cta-btn');if(cb2)cb2.textContent=p==='life'?'Payer 59,99 € une fois →':'M’abonner à 9,99 € par mois →';
+function selectPlan(p){if(labOn()&&document.querySelector('.pw2')){track('plan_select',{plan:p});selectedPlan=p;var cb2=document.getElementById('pw2-price-sub'),cb3=document.getElementById('paywall-cta-btn');if(cb2)cb2.textContent=pw2PriceSub(p);else if(cb3)cb3.textContent=p==='life'?'Payer 59,99 € une fois →':'M’abonner à 9,99 € par mois →';
   ['month','life'].forEach(function(k){var el=document.getElementById('plan-'+k);if(el){el.classList.toggle('active',p===k);el.setAttribute('aria-checked',p===k?'true':'false')}});return}
   track('plan_select',{plan:p});var cb=document.getElementById('paywall-cta-btn');if(cb)cb.textContent=p==='life'?'Devenir membre fondateur →':'Débloquer mon plan →';
 selectedPlan=p;
@@ -2959,6 +2979,8 @@ function isInsider(){return isAdmin()||isFull()}
 // paying customers (and full-access accounts) get the full app: tabs, tracker, progress, real-price list, budget plan
 // features in test: visible on the owner's account only (including the "non-paying customer" preview)
 function testOn(){return true}
+// paywall v3 (owner only for now): 'Débloquer ma semaine' button, price under it, legal text under the button, own plan recap
+function pw3On(){return isAdmin()}
 // next batch in test: owner's account only
 function labOn(){return true}
 // recipes that fit the answers so far (diet, dislikes, and the budget per meal once known)
