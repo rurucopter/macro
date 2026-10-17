@@ -1111,6 +1111,13 @@ body.cr-mode>*:not(#cr-page):not(.toast):not(script){display:none!important}
 .fp-kpis span{font-size:.6875rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
 .fp-day{margin:1.1rem 0 .4rem}
 .fp-more{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;margin:1rem 0 .25rem;padding:.9rem 1rem;border:1.5px dashed var(--border);border-radius:16px;background:var(--surface);color:var(--ink);font-family:var(--font);font-size:.9375rem;font-weight:700;cursor:pointer}
+.fp-shop1{padding:.75rem 1rem .5rem;margin-bottom:.6rem}
+.fp-shop1-t{display:block;font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:.2rem}
+.fp-shop1 .mp-shop-item{cursor:default;border-bottom:0;padding-left:0;padding-right:0;background:none;gap:.75rem}
+.fp-shop1 .mp-shop-name{display:flex;flex-direction:column;flex:1;min-width:0;font-weight:700}
+.fp-shop1 .mp-shop-name small{display:block;font-weight:500;color:var(--muted);font-size:.75rem}
+.fp-shop1 .mp-shop-price{text-align:right;white-space:nowrap}
+.fp-shop1 .mp-shop-price small{display:block}
 .fp-more i{font-style:normal;font-size:.8rem;color:var(--muted)}
 .fp-more:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .fp-dh{display:flex;justify-content:space-between;align-items:baseline;gap:.6rem;margin-bottom:.5rem}
@@ -2446,7 +2453,8 @@ function freePage(mc,gen){var ti=todayIndex(),dates=weekDates(),nm=firstName(),r
   h+='<div class="fp-kpis"><div><b>'+mc.cal+'</b><span>kcal / jour</span></div><div><b>'+mc.protG+' g</b><span>protéines / jour</span></div><div><b>'+r.used.toFixed(0)+' €</b><span>par semaine</span></div></div>';
   var t=testOn(),order=gen.plan.map(function(_,i){return i});
   if(t)order=order.slice(ti).concat(order.slice(0,ti));
-  h+=freeBanner();
+  var td=gen.plan[ti]&&gen.plan[ti].totals||{cal:0,p:0},cov=mc.cal?td.cal/mc.cal:0;
+  h+='<div class="app-card hero-cal tinted t-cal"><div><div class="n">'+trkN(mc.cal)+'</div><div class="l">Calories par jour pour '+goalTxt+'</div><div class="sub">Aujourd\'hui dans ton plan : '+trkN(td.cal)+' kcal · '+td.p+' g de protéines</div><span class="pct">'+Math.round(Math.min(999,cov*100))+' % de ton objectif couvert</span></div>'+bigRing(cov,112,12,'var(--c-cal)',ico('flame'))+'</div>';
   order.forEach(function(di,k){var d=gen.plan[di];
     if(t&&k===2)h+='<button type="button" class="fp-more" onclick="fpMore(this)">Voir les '+(order.length-2)+' autres jours<i aria-hidden="true">▾</i></button><div class="fp-rest" hidden>';
     h+='<div class="fp-day'+(di===ti?' today':'')+'"><div class="fp-dh"><b>'+d.day+' '+dates[di].getDate()+(di===ti?' <em>Aujourd\'hui</em>':'')+'</b><span>'+d.totals.cal+' kcal · '+d.totals.p+' g prot</span></div>';
@@ -2456,12 +2464,16 @@ function freePage(mc,gen){var ti=todayIndex(),dates=weekDates(),nm=firstName(),r
     h+='</div>'});
   if(t&&order.length>2)h+='</div>';
   if(t)h+=fpProjection();
-  h+='<div class="app-h t-money"><span class="lbl">'+ico('euro')+'Ta liste de courses</span><small>'+r.used.toFixed(2).replace('.',',')+' € / '+mc.b+' €</small></div>'+lockBox(shopRealHtml(gen,mc.b),'euro','Ta liste de courses avec les prix','Tout ce qu\'il faut acheter pour ta semaine, au paquet près.');
+  h+='<div class="app-h t-money"><span class="lbl">'+ico('euro')+'Ta liste de courses</span><small>'+r.used.toFixed(2).replace('.',',')+' € / '+mc.b+' €</small></div>'+fpShopOne(gen,r)+lockBox(shopRealHtml(gen,mc.b),'euro','Ta liste de courses avec les prix','Tout ce qu\'il faut acheter pour ta semaine, au paquet près.');
   h+='<div class="fp-links"><button type="button" onclick="editProfile()">Mes réponses</button><button type="button" onclick="signOut()">Se déconnecter</button></div>';
-  h+='</div><div class="fp-cta"><div class="fp-cta-in"><span class="fp-cd"></span><button type="button" class="btn btn-p btn-lg btn-full" onclick="track(\'paywall_gate\',{from:\'free_cta\'});showPaywall()">🔓 Débloquer toute ma semaine</button></div></div>';
+  h+='</div><div class="fp-cta"><div class="fp-cta-in"><span class="fp-cd"></span><button type="button" class="btn btn-p btn-lg btn-full" onclick="track(\'paywall_gate\',{from:\'free_cta\'});confetti();showPaywall()">🔓 Débloquer toute ma semaine</button></div></div>';
   return h}
+// one readable product from the shopping list, preferably from the free meal
+function fpShopOne(gen,r){var all=[];r.cats.forEach(function(c){if(c.label!=='Placard')c.items.forEach(function(it){if(it.pack)all.push(it)})});if(!all.length)return '';
+  var f=gen.free||{di:todayIndex(),mi:0},m=(gen.plan[f.di]||{meals:[]}).meals[f.mi],names=(m&&m.q||[]).map(function(x){return x[0]}),it=all.filter(function(x){return names.indexOf(x.n)>-1})[0]||all[0];
+  return '<div class="app-card fp-shop1"><span class="fp-shop1-t">Un article de ta liste</span><div class="mp-shop-item">'+ingPh(it.n)+'<span class="mp-shop-name">'+it.n+'<small>Besoin : '+it.qty+' · '+it.count+' repas</small></span><span class="mp-shop-price"><b>'+eur(it.cost)+'</b><small>'+(it.packs>1?it.packs+' × ':'')+escH(it.pack)+'</small></span></div></div>'}
 function fpMore(b){var r=b.nextElementSibling;if(r)r.hidden=false;b.remove();window._sawMore=true;track('free_more_days')}
-function freeBanner(){return '<div class="app-card free-banner"><div><b>Ton premier repas est offert 🎁</b><span>Débloque toute ta semaine, ta liste de courses avec les prix et ton suivi du jour.</span></div><button type="button" class="lb-btn" onclick="track(\'paywall_gate\',{from:\'banner\'});showPaywall()">Débloquer</button></div>'}
+function freeBanner(){return '<div class="app-card free-banner"><div><b>Ton premier repas est offert 🎁</b><span>Débloque toute ta semaine, ta liste de courses avec les prix et ton suivi du jour.</span></div><button type="button" class="lb-btn" onclick="track(\'paywall_gate\',{from:\'banner\'});confetti();showPaywall()">Débloquer</button></div>'}
 function trkPlanMeal(di,mi){if(!isMember()){showPaywall();return}var m=window._gen.plan[di].meals[mi],key=weekKey()+'-'+di+'-'+mi,s=trkLoad(),i=-1;s.t.cal.forEach(function(x,j){if(x.plan===key)i=j});
   if(i>-1)s.t.cal.splice(i,1);else s.t.cal.push({n:m.n,k:m.cal,p:m.p,plan:key});trkSave(s)}
 function tabReglages(mc){var u=isUnlocked();
@@ -2652,6 +2664,16 @@ return '<div class="paywall-card" id="unlock-card"><div style="font-size:2rem;ma
 '<div class="paywall-proof">Calculé chaque semaine pour ton budget, ta salle et ton objectif.</div>'+
 '</div>';
 }
+// two small bursts from the bottom corners, above the paywall; skipped for reduced motion
+function confetti(){if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;if(document.getElementById('confetti-c'))return;
+  var c=document.createElement('canvas'),g=c.getContext('2d'),dpr=Math.min(2,window.devicePixelRatio||1),W=innerWidth,H=innerHeight;c.id='confetti-c';c.width=W*dpr;c.height=H*dpr;
+  c.style.cssText='position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:600';c.setAttribute('aria-hidden','true');document.body.appendChild(c);g.scale(dpr,dpr);
+  var col=['#10B981','#34D399','#FBBF24','#F472B6','#60A5FA','#F97316'],ps=[],n=Math.min(70,Math.round(W/6));
+  for(var side=0;side<2;side++)for(var i=0;i<n;i++){var a=(side?-1:1)*(0.35+Math.random()*0.75),v=H*(0.008+Math.random()*0.006);
+    ps.push({x:side?W+4:-4,y:H+4,vx:Math.sin(a)*v,vy:-Math.cos(a)*v,w:5+Math.random()*5,h:3+Math.random()*4,r:Math.random()*6,vr:(Math.random()-.5)*.35,c:col[i%col.length],o:1})}
+  var t0=performance.now();(function fr(t){var e=t-t0;g.clearRect(0,0,W,H);ps.forEach(function(p){p.vy+=H*0.00028;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;if(e>1500)p.o=Math.max(0,p.o-.025);
+    g.save();g.globalAlpha=p.o;g.translate(p.x,p.y);g.rotate(p.r);g.fillStyle=p.c;g.fillRect(-p.w/2,-p.h/2,p.w,p.h);g.restore()});
+    if(e<2600)requestAnimationFrame(fr);else c.remove()})(t0)}
 function showPaywall(){
 if(document.getElementById('pw-modal'))return;
 window._pwAuto=true;selectedPlan='life';track('paywall_view');setLeadStatus('paywall_view');notePaywall(true);
@@ -3185,7 +3207,7 @@ el.innerHTML='<div class="pw-sheet rc-sheet"><button class="pw-x" onclick="close
 '<div class="rc-legend"><span><i class="p"></i>Protéines <b>'+m.p+' g</b></span><span><i class="g"></i>Glucides <b>'+m.g+' g</b></span><span><i class="l"></i>Lipides <b>'+m.l+' g</b></span></div>'+
 (ing?'<h3 class="rc-h">Ce qu\'il te faut</h3>'+(m.q?'<p class="rc-note">Poids à cru ou à sec, sauf mention. Ils correspondent aux calories et aux macros ci-dessus.</p>':'')+'<ul class="rc-ing'+(m.q?' rc-ing-q':'')+'">'+ing+'</ul>':'')+
 (st?'<h3 class="rc-h">Préparation</h3><ol class="rc-steps">'+st+'</ol>':'')+
-(isUnlocked()?'<button class="rc-swap" onclick="swapFromModal('+di+','+mi+')">🔄 Changer ce repas</button>':'<button class="rc-swap" onclick="closeMealDetail();showPaywall()">🔒 Débloquer toute ma semaine</button>')+'</div>';
+(isUnlocked()?'<button class="rc-swap" onclick="swapFromModal('+di+','+mi+')">🔄 Changer ce repas</button>':'<button class="rc-swap" onclick="closeMealDetail();confetti();showPaywall()">🔒 Débloquer toute ma semaine</button>')+'</div>';
 document.body.appendChild(el);
 requestAnimationFrame(function(){el.classList.add('open')});
 }
