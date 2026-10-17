@@ -97,6 +97,8 @@ img{max-width:100%}
 @keyframes fx-fwd{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
 @keyframes fx-back{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:none}}
 .fx .fx-fade{animation:fx-fade .28s ease-out}
+.fx #ob-main .btn-lg.btn-full{position:sticky;bottom:calc(14px + env(safe-area-inset-bottom));z-index:5;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+.fx .ob-cash{transform:scale(.8);margin-block:-10px}
 .fx .fx-fwd{animation:fx-fwd .3s cubic-bezier(.22,1,.36,1)}
 .fx .fx-back{animation:fx-back .3s cubic-bezier(.22,1,.36,1)}
 .fx .ob-opt,.fx .ob-grid>*,.fx .menu-row,.fx .btn,.fx .pw2-plan{transition:transform .15s ease,background-color .2s,border-color .2s,box-shadow .2s}
@@ -634,6 +636,9 @@ body:has(#onboarding.active),body:has(#result.active){background:#2E2C28}
 .ob-counter.ob-lab{justify-content:center;gap:.4rem}
 .ob-lab .ob-avs img{width:34px;height:34px;border-width:2.5px;margin-left:-11px;box-shadow:0 1px 3px rgba(0,0,0,.12)}
 .ob-lab .ob-avs{padding-left:11px}
+@keyframes ob-pop{0%{transform:scale(1)}40%{transform:scale(1.08)}100%{transform:scale(1)}}
+.ob-rc-pop{animation:ob-pop .45s cubic-bezier(.22,1,.36,1)}
+.ob-rc b{display:inline-block;min-width:2ch;text-align:right}
 .ob-rc{display:inline-flex;align-items:center;gap:.3rem;background:var(--accent-bg);color:var(--accent-text);border-radius:99px;padding:.3rem .75rem;font-weight:600;font-variant-numeric:tabular-nums}
 .ob-tier{margin-top:1.1rem;padding:1rem;border:1px solid var(--border);border-radius:18px;background:var(--surface);text-align:center;display:flex;flex-direction:column;align-items:center;gap:.5rem}
 .ob-tier-chip{display:inline-block;background:var(--accent-bg);color:var(--accent-text);font-weight:800;border-radius:99px;padding:.3rem .85rem;font-size:.9375rem}
@@ -1828,7 +1833,7 @@ body.app-mode .tile.locked .tp,body.app-mode .tile.locked .tn{filter:blur(5px)}
 var D={},step=0,selGender=null;
 function fxIn(el,cls){if(!el||!labOn())return;['fx-fwd','fx-back','fx-fade'].forEach(function(c){el.classList.remove(c)});void el.offsetWidth;el.classList.add(cls)}
 function showPage(id){document.body.classList.toggle('fx',typeof labOn==='function'&&labOn());setTimeout(function(){if(typeof previewBar==='function')previewBar()},0);document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});var pg=document.getElementById(id);if(!pg.classList.contains('active'))fxIn(pg,'fx-fade');pg.classList.add('active');document.body.classList.toggle('app-mode',id==='dashboard'&&typeof appOn==='function'&&appOn());window.scrollTo(0,0);var stk=document.getElementById('sticky-cta');if(stk)stk.classList.remove('show');if(id==='landing')initReveal();if(id!=='admin')track('page_view',{page:id})}
-function beginFunnel(){track('funnel_start');step=0;D={};showPage('onboarding');renderStep()}
+function beginFunnel(){track('funnel_start');step=0;D={};window._obRc=null;window._obMeals=null;window._obBud=null;showPage('onboarding');renderStep()}
 function startOnboarding(){if(window._demoRun&&isAdmin()){beginFunnel();return}
 if(Auth.user){
 if(restoreProfile()){showDashboard();return}
@@ -1864,7 +1869,7 @@ if(s.desc)h+='<div class="ob-desc">'+s.desc+'</div>';if(step>1)h+=buildSummary()
 if(s.id==='goal')h+=goalHtml(s);
 else if(s.type==='grid'){h+='<div class="ob-grid" style="grid-template-columns:repeat('+(s.cols||3)+',1fr)">';s.options.forEach(function(o){var ic;if(o.imgId){var el=document.getElementById(o.imgId);ic=el?'<img src="'+el.src+'" alt="'+o.label+'" style="width:28px;height:28px;object-fit:contain;border-radius:4px">':o.label.charAt(0);h+='<button class="ob-opt" onclick="pick(\''+s.id+"','"+o.label.replace(/'/g,"\\'")+"')\"><div class=\"ob-icon\" style=\"background:"+o.bg+";padding:4px\">"+ic+"</div><div class=\"ob-opt-label\">"+o.label+"</div></button>"}else{h+='<button class="ob-opt" onclick="pick(\''+s.id+"','"+o.label.replace(/'/g,"\\'")+"')\"><div class=\"ob-icon\" style=\"background:"+o.bg+"\">"+o.icon+"</div><div class=\"ob-opt-label\">"+o.label+"</div></button>"}});h+='</div>'}
 else if(s.type==='list'){h+='<div class="ob-opts">';s.options.forEach(function(o){var val=o.val||o.label;var tag=o.tag?'<span class="ob-tag">'+o.tag+'</span>':'';var ic;if(o.imgId){var el=document.getElementById(o.imgId);ic=el?'<img src="'+el.src+'" alt="'+o.label+'" style="width:28px;height:28px;object-fit:contain;border-radius:4px">':o.label.charAt(0);h+='<button class="ob-opt" onclick="pick(\''+s.id+"','"+val+"')\"><div class=\"ob-icon\" style=\"background:"+o.bg+";padding:4px\">"+ic+"</div><div style=\"flex:1\"><div class=\"ob-opt-label\">"+o.label+"</div>"+(o.sub?'<div class="ob-opt-sub">'+o.sub+"</div>":"")+"</div>"+tag+"</button>"}else{h+='<button class="ob-opt" onclick="pick(\''+s.id+"','"+val+"')\"><div class=\"ob-icon\" style=\"background:"+o.bg+"\">"+o.icon+"</div><div style=\"flex:1\"><div class=\"ob-opt-label\">"+o.label+"</div>"+(o.sub?'<div class="ob-opt-sub">'+o.sub+"</div>":"")+"</div>"+tag+"</button>"}});h+='</div>'}
-else if(s.type==='slider'){var v=D[s.id]||s.default;h+='<div class="ob-slider-val" id="sv">'+v+' <small>'+s.unit+s.suffix+'</small></div><div class="ob-cash" id="ob-cash" data-n="'+cashN(v)+'">'+cashHtml(v)+'</div><input type="range" class="ob-range" min="'+s.min+'" max="'+s.max+'" value="'+v+'" oninput="updS(this)"><div class="ob-range-labels"><span>'+s.min+' '+s.unit+'</span><span>'+s.max+' '+s.unit+'</span></div>';var meals=parseInt(D.meals)||14;var ppm=(v/meals).toFixed(2).replace('.',',');h+=labOn()?'<div class="ob-tier" id="ob-ins">'+obTierHtml(v)+'</div>':'<div class="ob-insight" id="ob-ins"><strong>'+ppm+' \u20AC</strong> par repas sur '+meals+' repas/semaine</div><button class="btn btn-p btn-lg btn-full" style="margin-top:1.5rem" onclick="pick(\''+s.id+"',document.querySelector('.ob-range').value)\">Continuer \u2192</button>"}
+else if(s.type==='slider'){var v=D[s.id]||s.default;h+='<div class="ob-slider-val" id="sv">'+v+' <small>'+s.unit+s.suffix+'</small></div><div class="ob-cash" id="ob-cash" data-n="'+cashN(v)+'">'+cashHtml(v)+'</div><input type="range" class="ob-range" min="'+s.min+'" max="'+s.max+'" value="'+v+'" oninput="updS(this)"><div class="ob-range-labels"><span>'+s.min+' '+s.unit+'</span><span>'+s.max+' '+s.unit+'</span></div>';var meals=parseInt(D.meals)||14;var ppm=(v/meals).toFixed(2).replace('.',',');h+=(labOn()?'<div class="ob-tier" id="ob-ins">'+obTierHtml(v)+'</div>':'<div class="ob-insight" id="ob-ins"><strong>'+ppm+' \u20AC</strong> par repas sur '+meals+' repas/semaine</div>')+'<button class="btn btn-p btn-lg btn-full" style="margin-top:1.5rem" onclick="pick(\''+s.id+"',document.querySelector('.ob-range').value)\">Continuer \u2192</button>"}
 else if(s.type==='double-slider'){var v1=D.taille||s.s1.default,v2=D.poids||s.s2.default;h+='<div style="font-weight:600;font-size:.8125rem;color:var(--muted);margin-bottom:.25rem">'+s.s1.label+'</div><div class="ob-slider-val" id="sv1">'+v1+'<small>'+s.s1.unit+'</small></div><input type="range" class="ob-range" id="r1" min="'+s.s1.min+'" max="'+s.s1.max+'" value="'+v1+'" oninput="document.getElementById(\'sv1\').innerHTML=this.value+\'<small>'+s.s1.unit+"</small>'\"><div class=\"ob-range-labels\"><span>"+s.s1.min+s.s1.unit+"</span><span>"+s.s1.max+s.s1.unit+"</span></div>";h+='<div style="font-weight:600;font-size:.8125rem;color:var(--muted);margin-top:1.5rem;margin-bottom:.25rem">'+s.s2.label+'</div><div class="ob-slider-val" id="sv2">'+v2+'<small>'+s.s2.unit+'</small></div><input type="range" class="ob-range" id="r2" min="'+s.s2.min+'" max="'+s.s2.max+'" value="'+v2+'" oninput="document.getElementById(\'sv2\').innerHTML=this.value+\'<small>'+s.s2.unit+"</small>'\"><div class=\"ob-range-labels\"><span>"+s.s2.min+s.s2.unit+"</span><span>"+s.s2.max+s.s2.unit+"</span></div>";h+='<button class="btn btn-p btn-lg btn-full" style="margin-top:1.5rem" onclick="pickBody()">Continuer \u2192</button>'}
 else if(s.type==='stepper'){var v=D[s.id]||s.default;h+='<div class="ob-stepper"><button class="ob-stepper-btn" onclick="stepMeals(-1)">&#x2212;</button><div class="ob-stepper-val"><div class="ob-stepper-n" id="stepper-n">'+v+'</div><div class="ob-stepper-u">'+s.unit+'</div></div><button class="ob-stepper-btn" onclick="stepMeals(1)">+</button></div>';h+='<div class="ob-presets">';s.presets.forEach(function(p){var cls=p.val===v?' active':'';var tag=p.tag?'<span class="ob-tag">'+p.tag+'</span>':'';h+='<button class="ob-preset'+cls+'" data-v="'+p.val+'" onclick="setMeals('+p.val+')"><span class="pr-l">'+p.label+'</span>'+(p.sub?'<span class="pr-s">'+p.sub+'</span>':'')+tag+'</button>'});h+='</div><button class="btn btn-p btn-lg btn-full" onclick="pick(\''+s.id+"',document.getElementById('stepper-n').textContent)\">Continuer \u2192</button>"}
 else if(s.type==='avoid'){h+=avoidHtml()}
@@ -1903,7 +1908,7 @@ function avoidRender(){D.avoid=D.avoid||[];
 var c=document.getElementById('av-chips');if(c)c.innerHTML=AVOID_QUICK.map(function(x){return '<button type="button" class="av-chip'+(avoidHas(x)?' on':'')+'" data-v="'+escH(x)+'" onclick="avoidToggle(this.getAttribute(\'data-v\'))">'+escH(x)+'</button>'}).join('');
 var p=document.getElementById('av-pills');if(p)p.innerHTML=D.avoid.filter(function(x){return AVOID_QUICK.map(nrm).indexOf(nrm(x))<0}).map(function(x){return '<span class="av-pill">'+escH(x)+'<button type="button" aria-label="Retirer" data-v="'+escH(x)+'" onclick="avoidToggle(this.getAttribute(\'data-v\'))">&times;</button></span>'}).join('');
 var g=document.getElementById('av-go');if(g)g.textContent=D.avoid.length?'Continuer →':'Rien à éviter, continuer →'}
-function avoidToggle(x){D.avoid=D.avoid||[];var k=nrm(x),i=-1;D.avoid.forEach(function(a,j){if(nrm(a)===k)i=j});if(i>-1)D.avoid.splice(i,1);else if(D.avoid.length<25)D.avoid.push(x);avoidRender()}
+function avoidToggle(x){D.avoid=D.avoid||[];var k=nrm(x),i=-1;D.avoid.forEach(function(a,j){if(nrm(a)===k)i=j});if(i>-1)D.avoid.splice(i,1);else if(D.avoid.length<25)D.avoid.push(x);avoidRender();if(labOn())updateCounter()}
 function avoidAdd(x){x=String(x||'').trim();if(x.length<2)return;D.avoid=D.avoid||[];if(!avoidHas(x)&&D.avoid.length<25)D.avoid.push(x.charAt(0).toUpperCase()+x.slice(1));var q=document.getElementById('av-q');if(q)q.value='';avoidSuggest('');avoidRender()}
 function avoidSuggest(v){var box=document.getElementById('av-sug');if(!box)return;var q=nrm(v);if(q.length<1){box.innerHTML='';return}
 var list=avoidAll().filter(function(x){return nrm(x).indexOf(q)>-1&&!avoidHas(x)}).slice(0,6),exact=avoidAll().some(function(x){return nrm(x)===q});
@@ -1915,8 +1920,8 @@ function updS(el){var s=S[step];var cc=document.getElementById('ob-cash');if(cc)
 function pickBody(){D.taille=document.getElementById('r1').value;D.poids=document.getElementById('r2').value;step++;renderStep()}
 function pickG(g){selGender=g;document.getElementById('g-h').className='ob-opt'+(g==='Homme'?' selected':'');document.getElementById('g-f').className='ob-opt'+(g==='Femme'?' selected':'')}
 
-function stepMeals(d){var s=S[step];var el=document.getElementById('stepper-n');var v=parseInt(el.textContent)+d;if(v<s.min)v=s.min;if(v>s.max)v=s.max;el.textContent=v;updPresets(v)}
-function setMeals(v){document.getElementById('stepper-n').textContent=v;updPresets(v)}
+function stepMeals(d){var s=S[step];var el=document.getElementById('stepper-n');var v=parseInt(el.textContent)+d;if(v<s.min)v=s.min;if(v>s.max)v=s.max;el.textContent=v;updPresets(v);if(labOn()){window._obMeals=v;updateCounter()}}
+function setMeals(v){document.getElementById('stepper-n').textContent=v;updPresets(v);if(labOn()){window._obMeals=v;updateCounter()}}
 function updPresets(v){var btns=document.querySelectorAll('.ob-preset');btns.forEach(function(b){var bv=parseInt(b.getAttribute('data-v'));b.className=bv===v?'ob-preset active':'ob-preset'})}function finish(){if(!selGender)pickG('Homme');D.gender=selGender||'Homme';D.age=document.getElementById('r-age').value;showResult()}
 function computeMacros(){
 var p=parseInt(D.poids)||75,t=parseInt(D.taille)||175,a=parseInt(D.age)||22,b=parseInt(D.budget)||30,m=parseInt(D.meals)||14,g=D.gender||'Homme',go=D.goal||'Prise de masse';
@@ -2715,7 +2720,10 @@ if(m&&b){t='<b>'+m+'</b> repas · ≈ <b>'+(b/m).toFixed(2).replace('.',',')+' �
 else if(m){t='<b>'+m+'</b> repas par semaine'}
 else if(D.store){t='Courses chez <b>'+D.store+'</b>'}
 if(labOn()){var rc=obRecipes(window._obBud),av='';var seen={};rc.filter(function(m){return m.cat!=='petit-dej'}).forEach(function(m){var el=document.getElementById(m.img),src=el&&(el.getAttribute('src')||el.getAttribute('data-src'));if(src&&!seen[src]&&Object.keys(seen).length<3){seen[src]=1;av+='<img src="'+src+'" alt="">'}});
-  c.classList.add('ob-lab');c.innerHTML='<span class="ob-avs">'+av+'</span><span class="ob-rc">🍽️ <b>'+rc.length+'</b> recettes pour toi</span>';c.style.display='flex';return}
+  c.classList.add('ob-lab');var from=window._obRc==null?rc.length:window._obRc;window._obRc=rc.length;
+  c.innerHTML='<span class="ob-avs">'+av+'</span><span class="ob-rc'+(from!==rc.length?' ob-rc-pop':'')+'">🍽️ <b id="ob-rc-n">'+from+'</b> recettes pour toi</span>';c.style.display='flex';
+  if(from!==rc.length){var t0=performance.now(),to=rc.length;cancelAnimationFrame(window._obRcRaf);(function tick(t){var k=Math.min(1,(t-t0)/450),e=1-Math.pow(1-k,3),n=document.getElementById('ob-rc-n');if(!n)return;n.textContent=Math.round(from+(to-from)*e);if(k<1)window._obRcRaf=requestAnimationFrame(tick)})(t0)}
+  return}
 if(!t){c.style.display='none';return}
 c.innerHTML='<span class="ob-avs">'+avatarsHtml()+'</span><span>'+t+'</span>';c.style.display='flex'}
 
@@ -2917,8 +2925,8 @@ function testOn(){return true}
 // next batch in test: owner's account only
 function labOn(){return isAdmin()}
 // recipes that fit the answers so far (diet, dislikes, and the budget per meal once known)
-function obRecipes(bud){var mm=parseInt(D.meals)||14,b=bud||parseInt(D.budget)||0,ppm=b?b/mm:0;
-  return MEALS.filter(function(m){if(D.diet==='Végétarien'&&!m.veg)return false;if(mealHasAvoid(m))return false;if(ppm&&m.cat!=='petit-dej'&&mealRealCost(Object.assign({},m,{k:700/m.cal}))>ppm*1.15)return false;return true})}
+function obRecipes(bud){var mm=parseInt(window._obMeals||D.meals)||14,b=bud||parseInt(D.budget)||0,ppm=b?b/mm:0,noBk=!!(window._obMeals||D.meals)&&mm<21;
+  return MEALS.filter(function(m){if(noBk&&m.cat==='petit-dej')return false;if(D.diet==='Végétarien'&&!m.veg)return false;if(mealHasAvoid(m))return false;if(ppm&&m.cat!=='petit-dej'&&mealRealCost(Object.assign({},m,{k:700/m.cal}))>ppm*1.15)return false;return true})}
 function obTier(ppm){return ppm<1.4?['🥚','Serré','Les basiques qui nourrissent bien : œufs, riz, lentilles, pâtes, poulet. Ça marche, c\'est juste moins varié.']
   :ppm<2.2?['👌','Équilibré','La plupart de nos recettes passent. Une bonne semaine sans se priver.']
   :ppm<3.2?['😋','Confortable','Presque tout le catalogue t\'est ouvert, avec plus de viande et de poisson.']
