@@ -1876,7 +1876,7 @@ var S=[
 {id:'profile',title:'Pour finir',desc:'Derni\u00e8re question.',type:'profile'}
 ];
 function renderStep(){track('step_view',{idx:step,id:S[step].id});var _dir=window._lastStep!=null&&step<window._lastStep?'fx-back':'fx-fwd';window._lastStep=step;
-var s=S[step],pct=((step+1)/S.length*100);setSegs(step);document.getElementById('ob-pct').textContent=(step+1)+'/'+S.length;updateCounter();var h='';
+var s=S[step],pct=((step+1)/S.length*100);if(s.id==='budget')window._obBud=+(D.budget||s.default);setSegs(step);document.getElementById('ob-pct').textContent=(step+1)+'/'+S.length;updateCounter();var h='';
 if(step>0)h+='<button class="ob-back" onclick="pStep()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Retour</button>';
 h+='<div class="ob-step">\u00C9TAPE '+(step+1)+' SUR '+S.length+'</div><div class="ob-title">'+s.title+'</div>';
 if(s.desc)h+='<div class="ob-desc">'+s.desc+'</div>';if(step>1)h+=buildSummary();
