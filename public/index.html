@@ -1420,6 +1420,59 @@ body.lp-lite .ex-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;
 body.lp-lite .ex-grid::-webkit-scrollbar{display:none}
 body.lp-lite .ex-card{flex:0 0 min(76%,300px);scroll-snap-align:start}
 .lpl-only{display:none!important}
+body.lp-lite .hm.lpl-only{display:block!important}
+/* meals cards */
+.mc-opts{display:flex;flex-direction:column;gap:.75rem}
+.mc-card{display:flex;align-items:center;gap:1rem;width:100%;padding:1.1rem 1.25rem;border-radius:22px;background:var(--surface);border:1.5px solid var(--border);box-shadow:var(--shadow);color:var(--ink);font-family:var(--font);text-align:left;cursor:pointer;transition:transform .25s cubic-bezier(.3,1.5,.5,1),border-color .2s,background .2s,box-shadow .2s}
+.mc-card:active{transform:scale(.98)}
+.mc-card.active{border-color:var(--accent);background:var(--accent-bg);box-shadow:0 10px 28px rgba(5,150,105,.14)}
+.mc-n{flex:0 0 4.4rem;font-family:var(--font-d);font-weight:800;font-size:3.4rem;line-height:.9;letter-spacing:-.05em;font-variant-numeric:tabular-nums;color:var(--ink)}
+.mc-card.active .mc-n{color:var(--accent-text)}
+.mc-r{flex:1;min-width:0;display:flex;flex-direction:column;gap:.2rem}
+.mc-l{display:flex;align-items:center;gap:.45rem;font-weight:800;font-size:1rem}
+.mc-tag{font-style:normal;font-size:.625rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:.15rem .45rem;border-radius:99px;background:var(--accent);color:#fff}
+.mc-s{font-size:.8125rem;color:var(--muted);margin-bottom:.35rem}
+.mc-days,.mc-bars{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.mc-days b{font-size:.5625rem;font-weight:700;color:var(--muted);text-align:center;opacity:.7}
+.mc-bars i{height:7px;border-radius:99px;background:var(--border);transition:background .35s ease var(--d,0ms),transform .35s cubic-bezier(.3,1.6,.5,1) var(--d,0ms)}
+.mc-card.active .mc-bars i{background:var(--accent);transform:scaleY(1.15)}
+@media(hover:hover){.mc-card:hover{border-color:var(--accent-light,var(--accent));transform:translateY(-2px)}.mc-card:hover .mc-bars i{background:rgba(16,185,129,.35)}}
+.mc-other{display:block;margin:1rem auto 0;background:none;border:0;color:var(--muted);font:600 .8125rem var(--font);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+@media(prefers-reduced-motion:reduce){.mc-bars i{transition:none}}
+/* hero phone mockup */
+.hm{position:relative;width:100%;max-width:380px;height:530px;margin:1.5rem auto 0;text-align:left}
+.hm-photo{position:absolute;right:-6px;top:70px;width:62%;aspect-ratio:1;border-radius:32px;overflow:hidden;transform:rotate(7deg);box-shadow:0 30px 60px rgba(0,0,0,.18)}
+.hm-photo img{width:100%;height:100%;object-fit:cover;transform:scale(1.35)}
+.hm-phone{position:absolute;left:4%;top:18px;width:232px;height:492px;padding:7px;border-radius:40px;background:linear-gradient(145deg,#3a403b,#151816 40%,#2a2f2b);box-shadow:0 40px 80px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.08) inset;transform:rotate(-7deg);animation:hm-float 6s ease-in-out infinite}
+@keyframes hm-float{50%{transform:rotate(-7deg) translateY(-8px)}}
+.hm-screen{width:100%;height:100%;border-radius:33px;overflow:hidden;background:#101411;color:#ECF3EE;padding:.55rem .7rem;font-family:var(--font);display:flex;flex-direction:column;gap:.3rem}
+.hm-status{display:flex;align-items:center;justify-content:space-between;font-size:.5625rem;font-weight:700;padding:0 .25rem}
+.hm-isl{width:58px;height:16px;border-radius:99px;background:#000}
+.hm-sig{display:flex;gap:2px;align-items:flex-end}.hm-sig i{width:3px;background:#ECF3EE;border-radius:1px}.hm-sig i:nth-child(1){height:4px}.hm-sig i:nth-child(2){height:6px}.hm-sig i:nth-child(3){height:8px}
+.hm-brand{font-weight:800;font-size:.75rem;margin-top:.15rem}.hm-brand i{font-style:normal;color:#34D399}
+.hm-hi{font-family:var(--font-d);font-weight:800;font-size:1rem;line-height:1.1}
+.hm-sub{font-size:.5625rem;opacity:.6;margin-top:-.2rem}
+.hm-card{background:#1A201C;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:.5rem .6rem}
+.hm-bud{display:flex;align-items:center;gap:.55rem}
+.hm-ring{width:44px;height:44px;flex-shrink:0}.hm-ring-bg{stroke:rgba(255,255,255,.1)}.hm-ring-fg{stroke:#34D399}.hm-ring text{font:800 9px var(--font);fill:#ECF3EE}
+.hm-bud b{display:block;font-family:var(--font-d);font-size:.95rem}.hm-bud span{display:block;font-size:.5rem;opacity:.6}.hm-bud em{display:block;font-style:normal;font-size:.5rem;font-weight:700;color:#34D399;margin-top:.1rem}
+.hm-ct{font-size:.625rem;font-weight:800;margin-bottom:.3rem}
+.hm-m{display:grid;grid-template-columns:1fr auto;font-size:.5rem;opacity:.9;margin-bottom:.2rem;row-gap:.12rem}.hm-m:last-child{margin-bottom:0}
+.hm-m i{grid-column:1/-1;height:4px;border-radius:99px;background:rgba(255,255,255,.08);position:relative;overflow:hidden}
+.hm-m i::after{content:'';position:absolute;inset:0 auto 0 0;width:var(--w);background:var(--c);border-radius:99px}
+.hm-h{font-size:.6875rem;font-weight:800;display:flex;align-items:center;gap:.35rem;margin-top:.1rem}.hm-h em{font-style:normal;font-size:.5rem;font-weight:700;padding:.1rem .35rem;border-radius:99px;background:rgba(52,211,153,.15);color:#34D399}
+.hm-meal{display:flex;align-items:center;gap:.45rem;background:#1A201C;border-radius:11px;padding:.22rem .45rem .22rem .25rem;font-size:.5625rem;font-weight:700}
+.hm-meal img{width:26px;height:26px;border-radius:8px;object-fit:cover}
+.hm-meal span{flex:1;display:flex;flex-direction:column;line-height:1.2}.hm-meal small{font-size:.4375rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;opacity:.5}
+.hm-meal b{color:#34D399}
+.hm-tab{margin-top:auto;display:flex;align-items:center;justify-content:space-around;padding:.35rem .2rem .15rem;border-top:1px solid rgba(255,255,255,.06)}
+.hm-tab i{width:13px;height:13px;border-radius:4px;background:rgba(255,255,255,.18)}.hm-tab i:first-child{background:#34D399}
+.hm-tab span{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#34D399,#059669);display:grid;place-items:center;font-weight:800;color:#04231A;box-shadow:0 6px 14px rgba(16,185,129,.4);margin-top:-12px}
+.hm-chip{position:absolute;padding:.5rem .8rem;border-radius:14px;background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-lg);font-size:.75rem;font-weight:800;color:var(--ink);white-space:nowrap}
+.hm-c1{right:2%;top:24px;animation:hm-float2 5s ease-in-out infinite}
+.hm-c2{right:4%;bottom:70px;animation:hm-float2 5.5s ease-in-out .8s infinite}
+@keyframes hm-float2{50%{transform:translateY(-6px)}}
+@media(prefers-reduced-motion:reduce){.hm-phone,.hm-chip{animation:none}}
 body.lp-lite .ex-grid.lpl-only{display:flex!important}
 .ex-full .ex-card{border-radius:22px;box-shadow:var(--shadow-lg)}
 .ex-ph{position:relative;aspect-ratio:4/3;overflow:hidden;background:var(--bg2)}
@@ -1677,7 +1730,27 @@ body.app-mode .tile.locked .tp,body.app-mode .tile.locked .tn{filter:blur(5px)}
 <div class="hero">
   <h1>Prends du muscle<br>avec <em>25 € de courses par semaine.</em></h1><p class="hero-sub">Tes repas de la semaine et ta liste de courses, sans calcul, prêts en 2 minutes.</p><div class="hero-cta"><div class="hero-btns"><button class="btn btn-p btn-lg" onclick="startOnboarding()">Créer mon plan repas &#x2192;</button><span id="hero-google"></span></div><button class="hero-login-link" onclick="openAuth('login')">Déjà un compte ? <strong>Se connecter</strong></button><div class="hero-small"><span>Aperçu gratuit</span><span>Sans carte bancaire</span></div><div class="hero-logos-w"><div class="hero-logos-track" id="hero-logo-strip"></div></div></div>
 
-  <div class="preview-w">
+  <div class="hm lpl-only" aria-hidden="true">
+    <div class="hm-photo"><img src="/img/n-teriyaki-v2.jpg" alt="" decoding="async"></div>
+    <div class="hm-phone"><div class="hm-screen">
+      <div class="hm-status"><span>9:41</span><span class="hm-isl"></span><span class="hm-sig"><i></i><i></i><i></i></span></div>
+      <div class="hm-brand">mangereco<i>.</i></div>
+      <div class="hm-hi">Salut Lucas 👋</div><div class="hm-sub">Ta semaine pour ta prise de masse</div>
+      <div class="hm-card hm-bud"><svg viewBox="0 0 44 44" class="hm-ring"><circle cx="22" cy="22" r="18" fill="none" stroke-width="5" class="hm-ring-bg"/><circle cx="22" cy="22" r="18" fill="none" stroke-width="5" stroke-linecap="round" stroke-dasharray="108.6 113.1" transform="rotate(-90 22 22)" class="hm-ring-fg"/><text x="22" y="25.5" text-anchor="middle">96%</text></svg><div><b>24,12 €</b><span>sur 25 € cette semaine</span><em>0,88 € sous ton budget</em></div></div>
+      <div class="hm-card"><div class="hm-ct">Macros du jour</div>
+        <div class="hm-m"><span>Protéines</span><span>142 / 150 g</span><i style="--w:95%;--c:#10B981"></i></div>
+        <div class="hm-m"><span>Glucides</span><span>260 / 290 g</span><i style="--w:90%;--c:#F59E0B"></i></div>
+        <div class="hm-m"><span>Lipides</span><span>62 / 70 g</span><i style="--w:88%;--c:#60A5FA"></i></div></div>
+      <div class="hm-h">Aujourd’hui <em>3 repas</em></div>
+      <div class="hm-meal"><img src="/img/pancakes-v2.jpg" alt=""><span><small>Petit-déj</small>Pancakes protéinés</span><b>1,02 €</b></div>
+      <div class="hm-meal"><img src="/img/n-teriyaki-v2.jpg" alt=""><span><small>Déjeuner</small>Poulet teriyaki, riz</span><b>2,15 €</b></div>
+      <div class="hm-meal"><img src="/img/n-poelee-poulet-v2.jpg" alt=""><span><small>Dîner</small>Poêlée de poulet</span><b>1,93 €</b></div>
+      <div class="hm-tab"><i></i><i></i><span>+</span><i></i><i></i></div>
+    </div></div>
+    <div class="hm-chip hm-c1">🔥 142 g de protéines / jour</div>
+    <div class="hm-chip hm-c2">🛒 Liste prête · 24,12 €</div>
+  </div>
+  <div class="preview-w lpl-hide">
     <div class="preview-top">
       <div style="display:flex;align-items:center;gap:.5rem">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
@@ -1955,7 +2028,7 @@ function fxIn(el,cls){if(!el||!labOn())return;['fx-fwd','fx-back','fx-fade'].for
 // lighter landing (owner only for now): no pricing, no benefit grid, examples as a swipeable row
 function lpLite(){document.body.classList.toggle('lp-lite',typeof isAdmin==='function'&&isAdmin())}
 function showPage(id){lpLite();document.body.classList.toggle('fx',typeof labOn==='function'&&labOn());setTimeout(function(){if(typeof previewBar==='function')previewBar()},0);document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});var pg=document.getElementById(id);if(!pg.classList.contains('active'))fxIn(pg,'fx-fade');pg.classList.add('active');document.body.classList.toggle('app-mode',id==='dashboard'&&typeof appOn==='function'&&appOn());window.scrollTo(0,0);var stk=document.getElementById('sticky-cta');if(stk)stk.classList.remove('show');if(id==='landing')initReveal();if(id!=='admin')track('page_view',{page:id})}
-function beginFunnel(){track('funnel_start');step=0;D={};obSyncSteps();window._obRc=null;window._obMeals=null;window._obBud=null;showPage('onboarding');renderStep()}
+function beginFunnel(){track('funnel_start');step=0;D={};obSyncSteps();window._mcCustom=0;window._obRc=null;window._obMeals=null;window._obBud=null;showPage('onboarding');renderStep()}
 function startOnboarding(){if(window._demoRun&&isAdmin()){beginFunnel();return}
 if(Auth.user){
 if(restoreProfile()){showDashboard();return}
@@ -1993,6 +2066,7 @@ else if(s.type==='grid'){h+='<div class="ob-grid" style="grid-template-columns:r
 else if(s.type==='list'){h+='<div class="ob-opts">';s.options.forEach(function(o){var val=o.val||o.label;var tag=o.tag?'<span class="ob-tag">'+o.tag+'</span>':'';var ic;if(o.imgId){var el=document.getElementById(o.imgId);ic=el?'<img src="'+el.src+'" alt="'+o.label+'" style="width:28px;height:28px;object-fit:contain;border-radius:4px">':o.label.charAt(0);h+='<button class="ob-opt" onclick="pick(\''+s.id+"','"+val+"')\"><div class=\"ob-icon\" style=\"background:"+o.bg+";padding:4px\">"+ic+"</div><div style=\"flex:1\"><div class=\"ob-opt-label\">"+o.label+"</div>"+(o.sub?'<div class="ob-opt-sub">'+o.sub+"</div>":"")+"</div>"+tag+"</button>"}else{h+='<button class="ob-opt" onclick="pick(\''+s.id+"','"+val+"')\">"+obIc(o)+"<div style=\"flex:1\"><div class=\"ob-opt-label\">"+o.label+"</div>"+(o.sub?'<div class="ob-opt-sub">'+o.sub+"</div>":"")+"</div>"+tag+(o.ph?OB_RING:'')+"</button>"}});h+='</div>'}
 else if(s.type==='slider'){var v=D[s.id]||s.default;h+='<div class="ob-slider-val" id="sv">'+v+' <small>'+s.unit+s.suffix+'</small></div><div class="ob-cash" id="ob-cash" data-n="'+cashN(v)+'">'+cashHtml(v)+'</div><input type="range" class="ob-range" min="'+s.min+'" max="'+s.max+'" value="'+v+'" oninput="updS(this)"><div class="ob-range-labels"><span>'+s.min+' '+s.unit+'</span><span>'+s.max+' '+s.unit+'</span></div>';var meals=parseInt(D.meals)||14;var ppm=(v/meals).toFixed(2).replace('.',',');h+=(labOn()?'<div class="ob-tier" id="ob-ins">'+obTierHtml(v)+'</div>':'<div class="ob-insight" id="ob-ins"><strong>'+ppm+' \u20AC</strong> par repas sur '+meals+' repas/semaine</div>')+'<button class="btn btn-p btn-lg btn-full" style="margin-top:1.5rem" onclick="pick(\''+s.id+"',document.querySelector('.ob-range').value)\">Continuer \u2192</button>"}
 else if(s.type==='double-slider'){var v1=D.taille||s.s1.default,v2=D.poids||s.s2.default;h+='<div style="font-weight:600;font-size:.8125rem;color:var(--muted);margin-bottom:.25rem">'+s.s1.label+'</div><div class="ob-slider-val" id="sv1">'+v1+'<small>'+s.s1.unit+'</small></div><input type="range" class="ob-range" id="r1" min="'+s.s1.min+'" max="'+s.s1.max+'" value="'+v1+'" oninput="document.getElementById(\'sv1\').innerHTML=this.value+\'<small>'+s.s1.unit+"</small>'\"><div class=\"ob-range-labels\"><span>"+s.s1.min+s.s1.unit+"</span><span>"+s.s1.max+s.s1.unit+"</span></div>";h+='<div style="font-weight:600;font-size:.8125rem;color:var(--muted);margin-top:1.5rem;margin-bottom:.25rem">'+s.s2.label+'</div><div class="ob-slider-val" id="sv2">'+v2+'<small>'+s.s2.unit+'</small></div><input type="range" class="ob-range" id="r2" min="'+s.s2.min+'" max="'+s.s2.max+'" value="'+v2+'" oninput="document.getElementById(\'sv2\').innerHTML=this.value+\'<small>'+s.s2.unit+"</small>'\"><div class=\"ob-range-labels\"><span>"+s.s2.min+s.s2.unit+"</span><span>"+s.s2.max+s.s2.unit+"</span></div>";h+='<button class="btn btn-p btn-lg btn-full" style="margin-top:1.5rem" onclick="pickBody()">Continuer \u2192</button>'}
+else if(s.type==='stepper'&&mcOn()){h+=mcHtml(s)}
 else if(s.type==='stepper'){var v=D[s.id]||s.default;h+='<div class="ob-stepper"><button class="ob-stepper-btn" onclick="stepMeals(-1)">&#x2212;</button><div class="ob-stepper-val"><div class="ob-stepper-n" id="stepper-n">'+v+'</div><div class="ob-stepper-u">'+s.unit+'</div></div><button class="ob-stepper-btn" onclick="stepMeals(1)">+</button></div>';h+='<div class="ob-presets">';s.presets.forEach(function(p){var cls=p.val===v?' active':'';var tag=p.tag?'<span class="ob-tag">'+p.tag+'</span>':'';h+='<button class="ob-preset'+cls+'" data-v="'+p.val+'" onclick="setMeals('+p.val+')"><span class="pr-l">'+p.label+'</span>'+(p.sub?'<span class="pr-s">'+p.sub+'</span>':'')+tag+'</button>'});h+='</div><button class="btn btn-p btn-lg btn-full" onclick="pick(\''+s.id+"',document.getElementById('stepper-n').textContent)\">Continuer \u2192</button>"}
 else if(s.type==='swipe'){h+=swipeHtml()}
 else if(s.type==='avoid'){h+=avoidHtml()}
@@ -2117,6 +2191,15 @@ function pickBody(){D.taille=document.getElementById('r1').value;D.poids=documen
 function pickG(g){selGender=g;document.getElementById('g-h').className='ob-opt'+(g==='Homme'?' selected':'');document.getElementById('g-f').className='ob-opt'+(g==='Femme'?' selected':'')}
 
 function stepMeals(d){var s=S[step];var el=document.getElementById('stepper-n');var v=parseInt(el.textContent)+d;if(v<s.min)v=s.min;if(v>s.max)v=s.max;el.textContent=v;updPresets(v);if(labOn()){window._obMeals=v;updateCounter()}}
+// meals step as 3 big cards with a week grid (owner only for now); "Un autre nombre" falls back to the stepper
+function mcOn(){return isAdmin()&&!window._mcCustom}
+function mcHtml(s){var v=parseInt(D[s.id])||0,DL=['L','M','M','J','V','S','D'],h='<div class="mc-opts" role="radiogroup" aria-label="Repas par semaine">';
+  s.presets.forEach(function(pr){var rows=pr.val/7,bars='',k=0;for(var r=0;r<rows;r++)for(var d=0;d<7;d++){bars+='<i style="--d:'+(k*18)+'ms"></i>';k++}
+    h+='<button type="button" class="mc-card'+(pr.val===v?' active':'')+'" role="radio" aria-checked="'+(pr.val===v)+'" data-v="'+pr.val+'" onclick="mcPick('+pr.val+')"><span class="mc-n">'+pr.val+'</span><span class="mc-r"><span class="mc-l">'+pr.label+(pr.tag?'<em class="mc-tag">'+pr.tag+'</em>':'')+'</span><span class="mc-s">'+(pr.sub||'')+'</span><span class="mc-days">'+DL.map(function(x){return '<b>'+x+'</b>'}).join('')+'</span><span class="mc-bars">'+bars+'</span></span></button>'});
+  return h+'</div><button type="button" class="mc-other" onclick="window._mcCustom=1;renderStep()">Un autre nombre ?</button>'}
+function mcPick(v){if(window._mcBusy)return;window._mcBusy=1;document.querySelectorAll('.mc-card').forEach(function(b){var on=+b.getAttribute('data-v')===v;b.classList.toggle('active',on);b.setAttribute('aria-checked',on)});
+  try{if(navigator.vibrate)navigator.vibrate(8)}catch(_){}if(labOn()){window._obMeals=v;updateCounter()}
+  setTimeout(function(){window._mcBusy=0;pick('meals',String(v))},520)}
 function setMeals(v){document.getElementById('stepper-n').textContent=v;updPresets(v);if(labOn()){window._obMeals=v;updateCounter()}}
 function updPresets(v){var btns=document.querySelectorAll('.ob-preset');btns.forEach(function(b){var bv=parseInt(b.getAttribute('data-v'));b.className=bv===v?'ob-preset active':'ob-preset'})}function finish(){if(!selGender)pickG('Homme');D.gender=selGender||'Homme';D.age=document.getElementById('r-age').value;showResult()}
 function computeMacros(){
