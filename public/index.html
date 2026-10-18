@@ -2931,6 +2931,8 @@ if(labOn()){var rc=obRecipes(window._obBud),av='';var seen={};rc.filter(function
 if(!t){c.style.display='none';return}
 c.innerHTML='<span class="ob-avs">'+avatarsHtml()+'</span><span>'+t+'</span>';c.style.display='flex'}
 
+// confetti when the week is ready (owner only for now)
+function confOn(){return isAdmin()}
 function showLoading(cb){var nm=firstName();
 var store=D.store||'ton magasin';
 var photoIds=['img-chicken','img-lentil','img-wrap','img-pasta','img-bolo','img-pancakes','img-omelette2','img-tunapasta','img-ricesalad2','img-quinoabowl','img-eggstoast','img-chili2meal','img-smoothie2meal'];
@@ -2949,7 +2951,7 @@ var fill=document.getElementById('ld-fill'),pc=document.getElementById('ld-pct')
 if(fill)fill.style.width=p+'%';if(pc)pc.textContent=p+' %';
 var idx=Math.min(2,Math.floor(p/34));
 if(idx!==cur){var prev=document.getElementById('ls-'+cur);if(prev){prev.className='ld-step done';prev.querySelector('.ls-icon').innerHTML='✓'}var nx=document.getElementById('ls-'+idx);if(nx)nx.className='ld-step active';cur=idx}
-if(p>=100){clearInterval(iv);var last=document.getElementById('ls-'+cur);if(last){last.className='ld-step done';last.querySelector('.ls-icon').innerHTML='✓'}setTimeout(function(){var lo=document.getElementById('loading-screen');if(lo)lo.remove();if(cb)cb()},450)}
+if(p>=100){clearInterval(iv);var last=document.getElementById('ls-'+cur);if(last){last.className='ld-step done';last.querySelector('.ls-icon').innerHTML='✓'}setTimeout(function(){var lo=document.getElementById('loading-screen');if(lo)lo.remove();if(cb)cb();if(confOn())setTimeout(confetti,200)},450)}
 },90);
 }
 
@@ -3331,13 +3333,13 @@ function renderSignupGate(){
   showPage('onboarding');
   setSegs(S.length);document.getElementById('ob-pct').textContent='';document.getElementById('ob-counter').innerHTML='';
   var nm=firstName(),mc=computeMacros();
-  document.getElementById('ob-main').innerHTML='<div class="au-ico">🔓</div><h2 class="au-t">'+(nm?escH(nm)+', ton':'Ton')+' plan est prêt</h2><p class="au-s">'+mc.m+' repas par semaine pour '+(mc.go==='Prise de masse'?'ta prise de masse':mc.go==='Sèche'?'ta sèche':'ton maintien')+', avec '+mc.b+' € chez '+escH(D.store||'ton magasin')+'. Connecte-toi pour le voir, ça prend 10 secondes.</p>'+answerChips()+'<label class="au-optin" id="optin-lbl"><input type="checkbox" id="optin-cb" onchange="optinOk()"> J\'accepte de recevoir les e-mails de mangereco (mon plan, des rappels, des conseils et des offres). Désinscription en 1 clic.</label><div class="au-err" id="optin-err" role="alert"></div><button class="au-google" onclick="gateGoogle()">'+GSVG+'Continuer avec Google</button>';
+  document.getElementById('ob-main').innerHTML='<div class="au-ico">🔓</div><h2 class="au-t">'+(nm?escH(nm)+', ton':'Ton')+' plan est prêt</h2><p class="au-s">'+mc.m+' repas par semaine pour '+(mc.go==='Prise de masse'?'ta prise de masse':mc.go==='Sèche'?'ta sèche':'ton maintien')+', avec '+mc.b+' € chez '+escH(D.store||'ton magasin')+'. Connecte-toi pour le voir, ça prend 10 secondes.</p>'+answerChips()+'<label class="au-optin" id="optin-lbl"><input type="checkbox" id="optin-cb" onchange="optinOk()"> J\'accepte de recevoir les e-mails de mangereco (mon plan, des rappels, des conseils et des offres). Facultatif, désinscription en 1 clic.</label><div class="au-err" id="optin-err" role="alert"></div><button class="au-google" onclick="gateGoogle()">'+GSVG+'Continuer avec Google</button>';
   if(window._demoRun&&isAdmin())document.getElementById('ob-main').insertAdjacentHTML('beforeend','<button class="au-toggle" onclick="window._demoRun=false;refreshNav();showResult()">Continuer sans reconnecter (mode vidéo) →</button>');window.scrollTo(0,0);track('signup_gate_view');
 }
 function optinEl(id){var m=document.getElementById('auth-modal');return (m&&m.querySelector('#'+id))||document.getElementById(id)}
 function optinOk(){var l=optinEl('optin-lbl'),e=optinEl('optin-err');if(l)l.classList.remove('bad');if(e)e.textContent=''}
-function optinCheck(){var cb=optinEl('optin-cb');if(!cb||cb.checked){lsSet('macro_optin',true);return true}
-  var l=optinEl('optin-lbl'),e=optinEl('optin-err');if(l){l.classList.remove('bad');void l.offsetWidth;l.classList.add('bad')}if(e)e.textContent='Coche la case pour créer ton compte : ton plan et tes rappels arrivent par e-mail.';cb.focus();track('optin_blocked');return false}
+// the e-mail box is optional: an account can be created without it (no marketing e-mails then)
+function optinCheck(){var cb=optinEl('optin-cb');if(!cb||cb.checked)lsSet('macro_optin',true);else lsDel('macro_optin');return true}
 function gateGoogle(){if(!optinCheck())return;
   if(!sbOn()){toast('La connexion Google arrive très bientôt.');return}
   lsSet('macro_gate_pending',1);
@@ -3356,7 +3358,7 @@ function closeAuth(byUser){
 function renderAuth(){
   var b=document.getElementById('au-body');if(!b)return;
   var login=Auth.mode==='login';
-  var ok=login?'':'<label class="au-optin" id="optin-lbl"><input type="checkbox" id="optin-cb" onchange="optinOk()"> J\'accepte de recevoir les e-mails de mangereco (mon plan, des rappels, des conseils et des offres). Désinscription en 1 clic.</label><div class="au-err" id="optin-err" role="alert"></div>';
+  var ok=login?'':'<label class="au-optin" id="optin-lbl"><input type="checkbox" id="optin-cb" onchange="optinOk()"> J\'accepte de recevoir les e-mails de mangereco (mon plan, des rappels, des conseils et des offres). Facultatif, désinscription en 1 clic.</label><div class="au-err" id="optin-err" role="alert"></div>';
   var g=sbOn()?ok+'<button class="au-google" onclick="if(optinCheck())authGoogle()">'+GSVG+'Continuer avec Google</button><div class="au-sep"><span>ou</span></div>':'';
   b.innerHTML='<div class="au-ico">'+(login?'\u{1F44B}':'\u{1F513}')+'</div><h2 class="au-t">'+(login?'Content de te revoir':'Ton plan est prêt')+'</h2><p class="au-s">'+(login?'Connecte-toi pour retrouver ton plan.':'Crée ton compte gratuit pour voir ton plan et le retrouver quand tu veux. 30 secondes.')+'</p>'+g+
   (sbOn()?'':ok)+'<form onsubmit="return authEmail(event)"><input class="au-input" id="au-email" type="email" inputmode="email" autocomplete="email" placeholder="ton@email.fr" required><div class="au-err" id="au-err"></div><button class="btn btn-p btn-lg btn-full" id="au-go" type="submit">'+(login?'Me connecter':'Voir mon plan')+' →</button></form>'+
