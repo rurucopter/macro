@@ -1185,7 +1185,19 @@ body.cr-mode>*:not(#cr-page):not(.toast):not(script){display:none!important}
 .pw2-feats svg{width:18px;height:18px;flex-shrink:0;color:#34D399}
 .pw2-legal{margin:0;font-size:.6875rem;opacity:.55;line-height:1.45;text-align:center}
 .pw2-legal a{color:inherit}
-.pw2-mine{margin:0;font-size:.875rem;line-height:1.45;opacity:.85}.pw2-mine b{font-weight:700}
+.pw3{gap:1rem}
+.pw3-head .pw2-t{margin-bottom:.3rem}
+.pw3-mine{margin:0;font-size:.875rem;opacity:.7;line-height:1.45}
+.pw3-offer{display:inline-flex;align-items:center;gap:.45rem;align-self:flex-start;padding:.4rem .8rem;border-radius:99px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.22);font-size:.8125rem;color:#A7F3D0}
+.pw3-offer b{font-variant-numeric:tabular-nums;color:#34D399}
+.pw3-dot{width:7px;height:7px;border-radius:50%;background:#34D399;box-shadow:0 0 0 0 rgba(52,211,153,.6);animation:pw3-pulse 2s infinite}
+@keyframes pw3-pulse{70%{box-shadow:0 0 0 7px rgba(52,211,153,0)}100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}}
+.pw3 .pw2-plan{padding:.95rem 1rem}
+.pw3 .pw2-price small{opacity:.55}
+.pw3-feats{list-style:none;margin:0;padding:0;display:flex;justify-content:space-between;gap:.5rem;font-size:.8125rem;opacity:.8}
+.pw3-feats li{display:flex;align-items:center;gap:.3rem}
+.pw3-feats svg{width:15px;height:15px;color:#34D399;flex-shrink:0}
+@media(prefers-reduced-motion:reduce){.pw3-dot{animation:none}}
 .pw2-price-sub{margin:.45rem 0 0;font-size:.75rem;text-align:center;opacity:.75}
 .pw2-legal-foot{margin-top:.3rem;font-size:.625rem;opacity:.45}
 .pw2-foot{position:sticky;bottom:0;margin:0 -1.25rem;padding:.8rem 1.25rem calc(.9rem + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid rgba(255,255,255,.08)}
@@ -1226,6 +1238,17 @@ body.cr-mode>*:not(#cr-page):not(.toast):not(script){display:none!important}
 .fp-save-big b{font-family:var(--font-d);font-size:2rem;line-height:1.1;color:var(--accent-text)}
 .fp-save-big small{font-size:.8125rem;color:var(--muted)}
 .fp-save-n{margin:0;font-size:.75rem;color:var(--muted);line-height:1.45}
+.fp-save-sm{display:grid;grid-template-columns:1fr auto;gap:.35rem .9rem;align-items:center;padding:.85rem 1rem}
+.fss-l{display:flex;flex-direction:column;gap:.1rem;min-width:0}
+.fss-t{font-size:.6875rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.fss-l b{white-space:nowrap;font-family:var(--font-d);font-size:1.25rem;line-height:1.15;color:var(--accent-text);font-variant-numeric:tabular-nums}
+.fss-l small{font-size:.75rem;color:var(--muted)}
+.fss-l .fss-up{font-family:var(--font);font-weight:600;font-size:.75rem}
+.fss-r{display:flex;flex-direction:column;align-items:flex-end;padding:.5rem .7rem;border-radius:12px;background:var(--accent-bg);line-height:1.2}
+.fss-r b{font-family:var(--font-d);font-size:1rem;color:var(--accent-text);font-variant-numeric:tabular-nums}
+.fss-r span{font-size:.6875rem;color:var(--muted)}
+.fss-r s{font-size:.6875rem;color:var(--muted);margin-top:.15rem}
+.fss-n{grid-column:1/-1;margin:0;font-size:.6875rem;color:var(--muted);line-height:1.4;opacity:.85}
 .fp-more i{font-style:normal;font-size:.8rem;color:var(--muted)}
 .fp-more:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .fp-dh{display:flex;justify-content:space-between;align-items:baseline;gap:.6rem;margin-bottom:.5rem}
@@ -1392,6 +1415,10 @@ body.cr-mode>*:not(#cr-page):not(.toast):not(script){display:none!important}
 .lp-card h3{font-size:1rem;color:var(--ink);margin:0 0 .375rem;font-weight:800}
 .lp-card p{font-size:.875rem;color:var(--muted);margin:0;line-height:1.6}
 .ex-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;margin-top:1.5rem}
+body.lp-lite #tarifs,body.lp-lite #avantages,body.lp-lite .lpl-hide,body.lp-lite .ex-note{display:none!important}
+body.lp-lite .ex-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:.75rem;margin:1.25rem calc(-1*var(--g)) 0;padding:0 var(--g) .5rem;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+body.lp-lite .ex-grid::-webkit-scrollbar{display:none}
+body.lp-lite .ex-card{flex:0 0 min(76%,300px);scroll-snap-align:start}
 .ex-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
 .ex-card img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
 .ex-body{padding:.875rem 1rem 1rem}
@@ -1695,7 +1722,7 @@ body.app-mode .tile.locked .tp,body.app-mode .tile.locked .tn{filter:blur(5px)}
 <!-- PHOTO STRIP -->
 <div class="photo-strip-wrap"><div class="photo-strip" id="photo-strip" aria-hidden="true"></div></div>
 
-<div class="photo-strip-wrap" style="margin-top:.5rem"><div class="photo-strip rev" id="gym-strip" aria-hidden="true"></div></div>
+<div class="photo-strip-wrap lpl-hide" style="margin-top:.5rem"><div class="photo-strip rev" id="gym-strip" aria-hidden="true"></div></div>
 
 <div id="src-imgs" hidden aria-hidden="true"><img loading="lazy" decoding="async" id="img-chicken" src="/img/chicken-v2.jpg" alt="Poulet riz brocoli">
 <img loading="lazy" decoding="async" id="img-salmonveg" src="/img/salmon-veggies.jpg" alt="">
@@ -1843,7 +1870,7 @@ body.app-mode .tile.locked .tp,body.app-mode .tile.locked .tn{filter:blur(5px)}
   <details><summary>Quel budget faut-il pour manger pour la prise de masse ?</summary><p>Avec 25 € par semaine, ton plan muscu est complet. Un plan reste possible dès 15 €, avec moins de variété. Le plan et la liste de courses sont ajustés pour ne pas dépasser ton budget. Les prix sont des estimations : ils peuvent varier selon ton magasin.</p></details>
   <details><summary>Puis-je suivre un régime végétarien ?</summary><p>Oui. Si tu choisis « Végétarien », le plan ne propose que des repas sans viande ni poisson, avec des protéines issues des œufs, des laitages, des légumineuses et du quinoa.</p></details>
   <details><summary>Que contient l’accès complet ?</summary><p>Les recettes détaillées avec temps de préparation, les calories et les macros de chaque repas, la liste de courses triée par rayon avec le total estimé, et ton plan de la semaine.</p></details>
-  <details><summary>Qu’est-ce que le plan fondateur ?</summary><p>C’est un paiement unique de 59,99 € pour un accès à vie, limité aux 20 premiers clients. Il inclut toutes les futures nouveautés.</p></details>
+  <details class="lpl-hide"><summary>Qu’est-ce que le plan fondateur ?</summary><p>C’est un paiement unique de 59,99 € pour un accès à vie, limité aux 20 premiers clients. Il inclut toutes les futures nouveautés.</p></details>
 </section>
 
 <div class="cta-w cta-photo">
@@ -1907,7 +1934,9 @@ body.app-mode .tile.locked .tp,body.app-mode .tile.locked .tn{filter:blur(5px)}
 <script>
 var D={},step=0,selGender=null;
 function fxIn(el,cls){if(!el||!labOn())return;['fx-fwd','fx-back','fx-fade'].forEach(function(c){el.classList.remove(c)});void el.offsetWidth;el.classList.add(cls)}
-function showPage(id){document.body.classList.toggle('fx',typeof labOn==='function'&&labOn());setTimeout(function(){if(typeof previewBar==='function')previewBar()},0);document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});var pg=document.getElementById(id);if(!pg.classList.contains('active'))fxIn(pg,'fx-fade');pg.classList.add('active');document.body.classList.toggle('app-mode',id==='dashboard'&&typeof appOn==='function'&&appOn());window.scrollTo(0,0);var stk=document.getElementById('sticky-cta');if(stk)stk.classList.remove('show');if(id==='landing')initReveal();if(id!=='admin')track('page_view',{page:id})}
+// lighter landing (owner only for now): no pricing, no benefit grid, examples as a swipeable row
+function lpLite(){document.body.classList.toggle('lp-lite',typeof isAdmin==='function'&&isAdmin())}
+function showPage(id){lpLite();document.body.classList.toggle('fx',typeof labOn==='function'&&labOn());setTimeout(function(){if(typeof previewBar==='function')previewBar()},0);document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});var pg=document.getElementById(id);if(!pg.classList.contains('active'))fxIn(pg,'fx-fade');pg.classList.add('active');document.body.classList.toggle('app-mode',id==='dashboard'&&typeof appOn==='function'&&appOn());window.scrollTo(0,0);var stk=document.getElementById('sticky-cta');if(stk)stk.classList.remove('show');if(id==='landing')initReveal();if(id!=='admin')track('page_view',{page:id})}
 function beginFunnel(){track('funnel_start');step=0;D={};obSyncSteps();window._obRc=null;window._obMeals=null;window._obBud=null;showPage('onboarding');renderStep()}
 function startOnboarding(){if(window._demoRun&&isAdmin()){beginFunnel();return}
 if(Auth.user){
@@ -2732,11 +2761,14 @@ function freePage(mc,gen){var ti=todayIndex(),dates=weekDates(),nm=firstName(),r
 function fpShopOne(gen,r){var all=[];r.cats.forEach(function(c){if(c.label!=='Placard')c.items.forEach(function(it){if(it.pack)all.push(it)})});if(!all.length)return '';
   var f=gen.free||{di:todayIndex(),mi:0},m=(gen.plan[f.di]||{meals:[]}).meals[f.mi],names=(m&&m.q||[]).map(function(x){return x[0]}),it=all.filter(function(x){return names.indexOf(x.n)>-1})[0]||all[0];
   return '<div class="app-card fp-shop1"><span class="fp-shop1-t">Un article de ta liste</span><div class="mp-shop-item">'+ingPh(it.n)+'<span class="mp-shop-name">'+it.n+'<small>Besoin : '+it.qty+' · '+it.count+' repas</small></span><span class="mp-shop-price"><b>'+eur(it.cost)+'</b><small>'+(it.packs>1?it.packs+' × ':'')+escH(it.pack)+'</small></span></div></div>'}
+// compact savings card (owner only for now)
+function saveSmOn(){return isAdmin()}
 // savings from the user's own plan: cost per meal vs a fast-food menu (~10 €), if 5 meals a week replace eating out
 var FASTFOOD_EUR=10;
 function fpSavings(gen,r){var n=0;gen.plan.forEach(function(d){n+=d.meals.length});if(!n||!r.used)return '';
   var ppm=r.used/n,swap=Math.min(5,n),month=Math.round(swap*(FASTFOOD_EUR-ppm)*52/12),year=Math.round(month*12),e2=function(x){return x.toFixed(2).replace('.',',')+' €'};
   if(month<=0)return '';
+  if(saveSmOn())return '<div class="app-card fp-save-sm"><div class="fss-l"><span class="fss-t">💸 Tes économies</span><b><small class="fss-up">jusqu’à</small> '+month+' €/mois</b><small>≈ '+year+' € sur un an</small></div><div class="fss-r"><b>'+e2(ppm)+'</b><span>par repas</span><s>≈ '+FASTFOOD_EUR+' € au fast-food</s></div><p class="fss-n">Si '+swap+' repas par semaine remplacent un repas acheté dehors, avec les prix de ta liste.</p></div>';
   return '<div class="app-card fp-save"><span class="fp-save-t">💸 Ce que ton plan te fait économiser</span>'+
     '<div class="fp-save-row"><div><b>'+e2(ppm)+'</b><span>par repas avec ton plan</span></div><i aria-hidden="true">vs</i><div class="m"><b>≈ '+FASTFOOD_EUR+' €</b><span>un menu fast-food</span></div></div>'+
     '<div class="fp-save-big"><b>jusqu’à '+month+' €</b> économisés par mois<small>soit environ '+year+' € sur un an</small></div>'+
@@ -2953,7 +2985,7 @@ function pw2CdHtml(){var ms=Math.max(0,FOUNDER_END-Date.now()),sx=Math.floor(ms/
   return (d?'<b>'+d+'</b><i>j</i>':'')+'<b>'+p(h)+'</b><i>h</i><b>'+p(m)+'</b><i>min</i><b>'+p(x)+'</b><i>s</i>'}
 function pw2Html(){var closed=founderClosed(),chk='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
   var radio='<span class="pw2-radio" aria-hidden="true"></span>';
-  return '<div class="pw2" id="unlock-card"><h2 class="pw2-t">Débloque ta semaine</h2>'+(pw3On()?pw2Mine():'')+
+  return '<div class="pw2" id="unlock-card"><h2 class="pw2-t">Débloque ta semaine</h2>'+
   (closed?'':'<div class="pw2-offer"><span class="pw2-offer-t">⚡ Offre de lancement</span><div class="pw2-cd" aria-label="Temps restant">'+pw2CdHtml()+'</div><span class="pw2-offer-s">Puis l’offre à vie disparaît</span><span class="sr-only" id="founder-txt"></span></div>')+
   '<div class="pw2-plans" role="radiogroup" aria-label="Formule">'+
   '<button type="button" class="pw2-plan" id="plan-month" role="radio" onclick="selectPlan(\'month\')">'+radio+'<span class="pw2-name"><b>Mensuel</b><small>Sans engagement</small></span><span class="pw2-price"><b>9,99 €</b><small>par mois</small></span></button>'+
@@ -2962,18 +2994,27 @@ function pw2Html(){var closed=founderClosed(),chk='<svg viewBox="0 0 24 24" fill
   (closed?'':'<p class="pw2-cmp">59,99 € une fois, au lieu de 119,88 € pour 1 an en mensuel. Soit 4,99 € par mois la 1re année, puis plus rien.</p>')+
   (refActive()?'<div class="ref-pw">🎁 Parrainage : <b>−'+MACRO_CFG.refPct+' %</b> appliqué au paiement</div>':'')+
   '<ul class="pw2-feats"><li>'+chk+'Tes '+(parseInt(D.meals)||14)+' repas avec leurs recettes</li><li>'+chk+'Ta liste de courses complète, avec les prix</li><li>'+chk+'Ton suivi : calories, protéines et poids</li></ul>'+
-  (pw3On()?'<div class="pw2-foot"><button class="btn btn-p btn-lg btn-full" id="paywall-cta-btn" onclick="startCheckout()">Débloquer ma semaine →</button><p class="pw2-price-sub" id="pw2-price-sub">'+pw2PriceSub(closed?'month':'life')+'</p><p class="pw2-legal pw2-legal-foot">En continuant, tu acceptes les <a href="/cgu" target="_blank" rel="noopener">CGU</a> et tu demandes l’accès immédiat au contenu : tu renonces à ton droit de rétractation de 14 jours.</p></div></div>':'<p class="pw2-legal">Paiement sécurisé par Whop. En continuant, tu acceptes les <a href="/cgu" target="_blank" rel="noopener">CGU</a> et tu demandes l’accès immédiat au contenu : tu renonces à ton droit de rétractation de 14 jours.</p>'+'<div class="pw2-foot"><button class="btn btn-p btn-lg btn-full" id="paywall-cta-btn" onclick="startCheckout()">'+(closed?'M’abonner à 9,99 € par mois →':'Payer 59,99 € une fois →')+'</button></div></div>')}
-function pw2PriceSub(p){return p==='life'?'59,99 € une seule fois · paiement sécurisé':'9,99 € par mois · sans engagement · paiement sécurisé'}
-// the user's own plan in one line (meals, weekly cost, protein); empty if the plan is not built yet
-function pw2Mine(){try{var mc=computeMacros(),g=window._gen,n=parseInt(D.meals)||0,r=g?shopReal(g):null,x=[],nm=firstName();
+  '<p class="pw2-legal">Paiement sécurisé par Whop. En continuant, tu acceptes les <a href="/cgu" target="_blank" rel="noopener">CGU</a> et tu demandes l’accès immédiat au contenu : tu renonces à ton droit de rétractation de 14 jours.</p>'+'<div class="pw2-foot"><button class="btn btn-p btn-lg btn-full" id="paywall-cta-btn" onclick="startCheckout()">'+(closed?'M’abonner à 9,99 € par mois →':'Payer 59,99 € une fois →')+'</button></div></div>'}
+function pw3Cd(){var ms=Math.max(0,FOUNDER_END-Date.now()),m=Math.floor(ms/6e4),d=Math.floor(m/1440),h=Math.floor(m%1440/60),mi=m%60;return (d?d+' j ':'')+(h<10&&d?'0':'')+h+' h '+(mi<10?'0':'')+mi+' min'}
+function pw3Html(){var closed=founderClosed(),radio='<span class="pw2-radio" aria-hidden="true"></span>',chk='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
+  return '<div class="pw2 pw3" id="unlock-card"><div class="pw3-head"><h2 class="pw2-t">Débloque ta semaine</h2>'+pw3Mine()+'</div>'+
+  (closed?'':'<div class="pw3-offer"><span class="pw3-dot" aria-hidden="true"></span>Offre de lancement · fin dans <b class="pw3-cd">'+pw3Cd()+'</b><span class="sr-only" id="founder-txt"></span></div>')+
+  '<div class="pw2-plans" role="radiogroup" aria-label="Formule">'+
+  (closed?'':'<button type="button" class="pw2-plan pw2-life active" id="plan-life" role="radio" aria-checked="true" onclick="selectPlan(\'life\')"><span class="pw2-tag">Le plus choisi</span>'+radio+'<span class="pw2-name"><b>À vie</b><small>Paiement unique · −50 %</small></span><span class="pw2-price"><b>59,99 €</b><small>soit 4,99 €/mois la 1re année</small></span></button>')+
+  '<button type="button" class="pw2-plan'+(closed?' active':'')+'" id="plan-month" role="radio" aria-checked="'+closed+'" onclick="selectPlan(\'month\')">'+radio+'<span class="pw2-name"><b>Mensuel</b><small>Sans engagement</small></span><span class="pw2-price"><b>9,99 €</b><small>par mois</small></span></button>'+
+  '</div><ul class="pw3-feats"><li>'+chk+'Recettes</li><li>'+chk+'Liste de courses</li><li>'+chk+'Suivi</li></ul>'+
+  '<div class="pw2-foot"><button class="btn btn-p btn-lg btn-full" id="paywall-cta-btn" onclick="startCheckout()">Débloquer ma semaine →</button><p class="pw2-price-sub" id="pw2-price-sub">'+pw2PriceSub(closed?'month':'life')+'</p><p class="pw2-legal pw2-legal-foot">En continuant, tu acceptes les <a href="/cgu" target="_blank" rel="noopener">CGU</a> et l’accès immédiat au contenu, sans droit de rétractation.</p></div></div>'}
+// compact plan recap for v3: "14 repas · ~23 € / sem. · 135 g de protéines / jour"
+function pw3Mine(){try{var mc=computeMacros(),g=window._gen,n=parseInt(D.meals)||0,r=g?shopReal(g):null,x=[];
   if(g&&g.plan){n=0;g.plan.forEach(function(d){n+=(d.meals||[]).length})}
-  if(n)x.push('<b>'+n+' repas</b>');if(r&&r.used)x.push('<b>~'+r.used.toFixed(0)+' € / semaine</b>');if(mc&&mc.protG)x.push('<b>'+mc.protG+' g de protéines / jour</b>');
-  return x.length?'<p class="pw2-mine">'+(nm?escH(nm)+', ton':'Ton')+' plan : '+x.join(' · ')+'</p>':''}catch(e){return ''}}
+  if(n)x.push(n+' repas');if(r&&r.used)x.push('~'+r.used.toFixed(0)+' € / sem.');if(mc&&mc.protG)x.push(mc.protG+' g de protéines / jour');
+  return x.length?'<p class="pw3-mine">Ton plan : '+x.join(' · ')+'</p>':''}catch(e){return ''}}
+function pw2PriceSub(p){return p==='life'?'59,99 € une seule fois · paiement sécurisé':'9,99 € par mois · sans engagement · paiement sécurisé'}
 function showPaywall(){
 if(document.getElementById('pw-modal'))return;
 window._pwAuto=true;selectedPlan='life';track('paywall_view');setLeadStatus('paywall_view');notePaywall(true);
 var m=document.createElement('div');m.id='pw-modal';m.className='pw-modal';
-m.innerHTML='<div class="pw-sheet'+(labOn()?' pw2-sheet':'')+'"><button class="pw-x" onclick="closePaywall()" aria-label="Fermer">&times;</button>'+(labOn()?pw2Html():unlockCardHtml())+'</div>';
+m.innerHTML='<div class="pw-sheet'+(labOn()?' pw2-sheet':'')+'"><button class="pw-x" onclick="closePaywall()" aria-label="Fermer">&times;</button>'+(labOn()?(pw3On()?pw3Html():pw2Html()):unlockCardHtml())+'</div>';
 document.body.appendChild(m);
 requestAnimationFrame(function(){m.classList.add('open')});
 renderFounder();loadFounderCount();if(founderClosed())selectPlan('month');
@@ -2991,7 +3032,7 @@ var FOUNDER_END=Date.UTC(2026,9,20,21,59,59);
 function founderClosed(){return Date.now()>FOUNDER_END||(founderCount!==null&&founderCount>=FOUNDER_MAX)}
 function cdText(){var ms=Math.max(0,FOUNDER_END-Date.now()),sx=Math.floor(ms/1000),d=Math.floor(sx/86400),h=Math.floor(sx%86400/3600),m=Math.floor(sx%3600/60),x=sx%60;function p(n){return (n<10?'0':'')+n}
   return (d?d+' j ':'')+p(h)+' h '+p(m)+' min '+p(x)+' s'}
-setInterval(function(){document.querySelectorAll('.pw2-cd').forEach(function(e){e.innerHTML=pw2CdHtml()});if(document.getElementById('founder-txt')||document.getElementById('pr-founder-left')||document.querySelector('.fp-cd'))renderFounder()},1000);
+setInterval(function(){document.querySelectorAll('.pw2-cd').forEach(function(e){e.innerHTML=pw2CdHtml()});document.querySelectorAll('.pw3-cd').forEach(function(e){e.textContent=pw3Cd()});if(document.getElementById('founder-txt')||document.getElementById('pr-founder-left')||document.querySelector('.fp-cd'))renderFounder()},1000);
 function renderFounder(){
 var closed=founderClosed(),cd='Se termine dans '+cdText(),dur=7*864e5,pct=Math.max(0,Math.min(100,Math.round((1-(FOUNDER_END-Date.now())/dur)*100)));
 var lc=document.getElementById('pr-founder'),ll=document.getElementById('pr-founder-left');
@@ -3234,7 +3275,7 @@ function initAuth(){var _cr=/[?&]createur=([a-f0-9]{16,40})(&|$)/i.exec(location
 }
 function landingTestPrice(){var c=document.querySelector('#pr-founder .pr-price'),m=document.querySelector('#pr-founder .pr-sub-m');if(!c||!m)return;
   if(testOn()){c.innerHTML='4,99&nbsp;€ <small>/mois</small>';m.textContent='59,99 € payés une seule fois (sur 12 mois), puis plus rien à payer'}else{c.innerHTML='59,99&nbsp;€ <small>une seule fois</small>';m.textContent='soit moins de 5 € par mois la 1re année'}}
-function refreshNav(){landingTestPrice();var hg=document.getElementById('hero-google');if(hg)hg.innerHTML=(sbOn()&&!viewUser())?'<button class="au-google hero-g" onclick="heroGoogle()">'+GSVG+'Continuer avec Google</button>':'';
+function refreshNav(){landingTestPrice();lpLite();var hg=document.getElementById('hero-google');if(hg)hg.innerHTML=(sbOn()&&!viewUser())?'<button class="au-google hero-g" onclick="heroGoogle()">'+GSVG+'Continuer avec Google</button>':'';
   document.querySelectorAll('.nav-pill').forEach(function(p){
     if(p.closest('#onboarding'))return;
     var slot=p.querySelector('.nav-auth');
