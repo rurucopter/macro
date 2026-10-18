@@ -2083,7 +2083,7 @@ var D={},step=0,selGender=null;
 function fxIn(el,cls){if(!el||!labOn())return;['fx-fwd','fx-back','fx-fade'].forEach(function(c){el.classList.remove(c)});void el.offsetWidth;el.classList.add(cls)}
 // lighter landing (owner only for now): no pricing, no benefit grid, examples as a swipeable row
 function lpLite(){document.body.classList.toggle('lp-lite',true)}
-function showPage(id){lpLite();document.body.classList.toggle('mo',typeof ownerDev==='function'&&ownerDev());document.body.classList.toggle('fx',typeof labOn==='function'&&labOn());setTimeout(function(){if(typeof previewBar==='function')previewBar()},0);document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});var pg=document.getElementById(id);if(!pg.classList.contains('active'))fxIn(pg,'fx-fade');pg.classList.add('active');document.body.classList.toggle('app-mode',id==='dashboard'&&typeof appOn==='function'&&appOn());window.scrollTo(0,0);var stk=document.getElementById('sticky-cta');if(stk)stk.classList.remove('show');if(id==='landing')initReveal();if(id!=='admin')track('page_view',{page:id})}
+function showPage(id){lpLite();document.body.classList.toggle('mo',true);document.body.classList.toggle('fx',typeof labOn==='function'&&labOn());setTimeout(function(){if(typeof previewBar==='function')previewBar()},0);document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});var pg=document.getElementById(id);if(!pg.classList.contains('active'))fxIn(pg,'fx-fade');pg.classList.add('active');document.body.classList.toggle('app-mode',id==='dashboard'&&typeof appOn==='function'&&appOn());window.scrollTo(0,0);var stk=document.getElementById('sticky-cta');if(stk)stk.classList.remove('show');if(id==='landing')initReveal();if(id!=='admin')track('page_view',{page:id})}
 function beginFunnel(){track('funnel_start');step=0;D={};obSyncSteps();window._mcCustom=0;window._obRc=null;window._obMeals=null;window._obBud=null;showPage('onboarding');renderStep()}
 function startOnboarding(){if(window._demoRun&&isAdmin()){beginFunnel();return}
 if(Auth.user){
@@ -3225,7 +3225,7 @@ function pw3Cd(){var ms=Math.max(0,FOUNDER_END-Date.now()),m=Math.floor(ms/6e4),
 // test (owner only): lifetime plan shows 4,99 €/mois big, 59,99 € once in small
 function p499On(){return true}
 // test (owner only): paywall copy "Reprends la main…", countdown on the founder offer, proof buttons, no confetti on unlock
-function cpOn(){return isAdmin()}
+function cpOn(){return true}
 function pw3Html(){var closed=founderClosed(),radio='<span class="pw2-radio" aria-hidden="true"></span>',chk='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
   return '<div class="pw2 pw3" id="unlock-card"><div class="pw3-head">'+(cpOn()?'<h2 class="pw2-t">Reprends la main sur ton budget et ton physique</h2><p class="pw3-sub">Tu es à 1 bouton de changer ta vie</p>':'<h2 class="pw2-t">Débloque ta semaine</h2>')+pw3Mine()+'</div>'+
   (closed||cpOn()?'':'<div class="pw3-offer"><span class="pw3-dot" aria-hidden="true"></span>Offre de lancement · fin dans <b class="pw3-cd">'+pw3Cd()+'</b><span class="sr-only" id="founder-txt"></span></div>')+
