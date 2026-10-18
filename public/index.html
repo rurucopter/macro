@@ -2050,7 +2050,7 @@ body.app-mode .tile.locked .tp,body.app-mode .tile.locked .tn{filter:blur(5px)}
 var D={},step=0,selGender=null;
 function fxIn(el,cls){if(!el||!labOn())return;['fx-fwd','fx-back','fx-fade'].forEach(function(c){el.classList.remove(c)});void el.offsetWidth;el.classList.add(cls)}
 // lighter landing (owner only for now): no pricing, no benefit grid, examples as a swipeable row
-function lpLite(){document.body.classList.toggle('lp-lite',typeof isAdmin==='function'&&isAdmin())}
+function lpLite(){document.body.classList.toggle('lp-lite',true)}
 function showPage(id){lpLite();document.body.classList.toggle('fx',typeof labOn==='function'&&labOn());setTimeout(function(){if(typeof previewBar==='function')previewBar()},0);document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});var pg=document.getElementById(id);if(!pg.classList.contains('active'))fxIn(pg,'fx-fade');pg.classList.add('active');document.body.classList.toggle('app-mode',id==='dashboard'&&typeof appOn==='function'&&appOn());window.scrollTo(0,0);var stk=document.getElementById('sticky-cta');if(stk)stk.classList.remove('show');if(id==='landing')initReveal();if(id!=='admin')track('page_view',{page:id})}
 function beginFunnel(){track('funnel_start');step=0;D={};obSyncSteps();window._mcCustom=0;window._obRc=null;window._obMeals=null;window._obBud=null;showPage('onboarding');renderStep()}
 function startOnboarding(){if(window._demoRun&&isAdmin()){beginFunnel();return}
@@ -2102,7 +2102,7 @@ document.getElementById('ob-main').innerHTML=h;fxIn(document.getElementById('ob-
 function obIc(o){return o.ph?'<div class="ob-icon ob-ph"><img src="'+o.ph+'" alt="" loading="lazy" decoding="async"></div>':'<div class="ob-icon" style="background:'+o.bg+'">'+o.icon+'</div>'}
 var OB_RING='<span class="ob-ring" aria-hidden="true"></span>';
 // ===== swipe step "Qu'est-ce qui te donne faim ?" (owner only for now, see swOn) =====
-function swOn(){return isAdmin()}
+function swOn(){return true}
 var TASTES=[
 {k:'eco',eb:'Petit budget',t:'Ultra économique',s:'Le plus de repas pour le moins d’euros',ph:'/img/tunapasta-v2.jpg'},
 {k:'prot',eb:'Pour la muscu',t:'Riches en protéines',s:'Le plein de protéines à chaque assiette',ph:'/img/chicken-v2.jpg'},
@@ -2212,7 +2212,7 @@ if(!exact&&v.trim().length>1)h+='<button type="button" class="av-s add" data-v="
 function pick(id,val){D[id]=val;step++;if(step<S.length)renderStep();else showResult()}
 function pStep(){if(step>0){step--;renderStep()}}
 // budget dial (test): the hidden range input keeps the value so pick()/updS() work unchanged
-function bdOn(){return isAdmin()}
+function bdOn(){return true}
 var BD_SWEEP=320;
 function bdHtml(s){var v=+(D[s.id]||s.default),ticks='';
   for(var i=0;i<64;i++){var a=i/64*2*Math.PI,big=i%8===0,r1=big?136:140,r2=150;ticks+='<line x1="'+(160+Math.sin(a)*r1).toFixed(1)+'" y1="'+(160-Math.cos(a)*r1).toFixed(1)+'" x2="'+(160+Math.sin(a)*r2).toFixed(1)+'" y2="'+(160-Math.cos(a)*r2).toFixed(1)+'" class="bd-tick'+(big?' big':'')+'"/>'}
@@ -2248,7 +2248,7 @@ function pickG(g){selGender=g;document.getElementById('g-h').className='ob-opt'+
 
 function stepMeals(d){var s=S[step];var el=document.getElementById('stepper-n');var v=parseInt(el.textContent)+d;if(v<s.min)v=s.min;if(v>s.max)v=s.max;el.textContent=v;updPresets(v);if(labOn()){window._obMeals=v;updateCounter()}}
 // meals step as 3 big cards with a week grid (owner only for now); "Un autre nombre" falls back to the stepper
-function mcOn(){return isAdmin()&&!window._mcCustom}
+function mcOn(){return !window._mcCustom}
 function mcHtml(s){var v=parseInt(D[s.id])||0,DL=['L','M','M','J','V','S','D'],h='<div class="mc-opts" role="radiogroup" aria-label="Repas par semaine">';
   s.presets.forEach(function(pr){var rows=pr.val/7,bars='',k=0;for(var r=0;r<rows;r++)for(var d=0;d<7;d++){bars+='<i style="--d:'+(k*18)+'ms"></i>';k++}
     h+='<button type="button" class="mc-card'+(pr.val===v?' active':'')+'" role="radio" aria-checked="'+(pr.val===v)+'" data-v="'+pr.val+'" onclick="mcPick('+pr.val+')"><span class="mc-n">'+pr.val+'</span><span class="mc-r"><span class="mc-l">'+pr.label+(pr.tag?'<em class="mc-tag">'+pr.tag+'</em>':'')+'</span><span class="mc-s">'+(pr.sub||'')+'</span><span class="mc-days">'+DL.map(function(x){return '<b>'+x+'</b>'}).join('')+'</span><span class="mc-bars">'+bars+'</span></span></button>'});
@@ -2919,7 +2919,7 @@ function fpShopOne(gen,r){var all=[];r.cats.forEach(function(c){if(c.label!=='Pl
   var f=gen.free||{di:todayIndex(),mi:0},m=(gen.plan[f.di]||{meals:[]}).meals[f.mi],names=(m&&m.q||[]).map(function(x){return x[0]}),it=all.filter(function(x){return names.indexOf(x.n)>-1})[0]||all[0];
   return '<div class="app-card fp-shop1"><span class="fp-shop1-t">Un article de ta liste</span><div class="mp-shop-item">'+ingPh(it.n)+'<span class="mp-shop-name">'+it.n+'<small>Besoin : '+it.qty+' · '+it.count+' repas</small></span><span class="mp-shop-price"><b>'+eur(it.cost)+'</b><small>'+(it.packs>1?it.packs+' × ':'')+escH(it.pack)+'</small></span></div></div>'}
 // compact savings card (owner only for now)
-function saveSmOn(){return isAdmin()}
+function saveSmOn(){return true}
 // savings from the user's own plan: cost per meal vs a fast-food menu (~10 €), if 5 meals a week replace eating out
 var FASTFOOD_EUR=10;
 function fpSavings(gen,r){var n=0;gen.plan.forEach(function(d){n+=d.meals.length});if(!n||!r.used)return '';
@@ -3089,7 +3089,7 @@ if(!t){c.style.display='none';return}
 c.innerHTML='<span class="ob-avs">'+avatarsHtml()+'</span><span>'+t+'</span>';c.style.display='flex'}
 
 // confetti when the week is ready (owner only for now)
-function confOn(){return isAdmin()}
+function confOn(){return true}
 function showLoading(cb){var nm=firstName();
 var store=D.store||'ton magasin';
 var photoIds=['img-chicken','img-lentil','img-wrap','img-pasta','img-bolo','img-pancakes','img-omelette2','img-tunapasta','img-ricesalad2','img-quinoabowl','img-eggstoast','img-chili2meal','img-smoothie2meal'];
@@ -3300,7 +3300,7 @@ function isInsider(){return isAdmin()||isFull()}
 // features in test: visible on the owner's account only (including the "non-paying customer" preview)
 function testOn(){return true}
 // paywall v3 (owner only for now): 'Débloquer ma semaine' button, price under it, legal text under the button, own plan recap
-function pw3On(){return isAdmin()}
+function pw3On(){return true}
 // next batch in test: owner's account only
 function labOn(){return true}
 // recipes that fit the answers so far (diet, dislikes, and the budget per meal once known)
