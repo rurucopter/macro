@@ -1212,6 +1212,20 @@ body.cr-mode>*:not(#cr-page):not(.toast):not(script){display:none!important}
 .pw3{gap:1rem}
 .pw3-head .pw2-t{margin-bottom:.3rem}
 .pw3-mine{margin:0;font-size:.875rem;opacity:.7;line-height:1.45}
+.pw3-sub{margin:.15rem 0 .1rem;font-size:.9375rem;opacity:.75}
+.pw3-card-cd{display:inline-flex;align-items:center;gap:.35rem;align-self:flex-start;margin-top:.35rem;padding:.2rem .55rem;border-radius:99px;background:rgba(251,191,36,.14);color:#FCD34D;font-size:.75rem;font-weight:700;font-variant-numeric:tabular-nums}
+.pw3-card-cd{white-space:nowrap;max-width:100%}
+.pw3-card-cd b,.pw3-card-cd .pw3-cd{font-weight:800;font-size:inherit!important;line-height:inherit;letter-spacing:0;color:inherit;display:inline}
+.mo .theme-toggle{width:40px;height:40px}
+.mo .nav .btn,.mo .nav-pill .btn{min-height:40px}
+.mo .hero-login-link{display:inline-block;padding:.65rem .25rem}
+.mo #optin-cb{width:22px;height:22px;flex-shrink:0}
+.mo .mc-other{min-height:44px;padding:.75rem 0}
+.mo .av-chip{min-height:42px}
+.mo .shop-copy{min-height:40px}
+.mo .pw-x{width:40px;height:40px}
+.mo .pw2-legal,.mo .pw2-legal a{font-size:.75rem}
+.mo .mc-tag,.mo .tc{font-size:11px}
 .pw3-offer{display:inline-flex;align-items:center;gap:.45rem;align-self:flex-start;padding:.4rem .8rem;border-radius:99px;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.22);font-size:.8125rem;color:#A7F3D0}
 .pw3-offer b{font-variant-numeric:tabular-nums;color:#34D399}
 .pw3-dot{width:7px;height:7px;border-radius:50%;background:#34D399;box-shadow:0 0 0 0 rgba(52,211,153,.6);animation:pw3-pulse 2s infinite}
@@ -2069,7 +2083,7 @@ var D={},step=0,selGender=null;
 function fxIn(el,cls){if(!el||!labOn())return;['fx-fwd','fx-back','fx-fade'].forEach(function(c){el.classList.remove(c)});void el.offsetWidth;el.classList.add(cls)}
 // lighter landing (owner only for now): no pricing, no benefit grid, examples as a swipeable row
 function lpLite(){document.body.classList.toggle('lp-lite',true)}
-function showPage(id){lpLite();document.body.classList.toggle('fx',typeof labOn==='function'&&labOn());setTimeout(function(){if(typeof previewBar==='function')previewBar()},0);document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});var pg=document.getElementById(id);if(!pg.classList.contains('active'))fxIn(pg,'fx-fade');pg.classList.add('active');document.body.classList.toggle('app-mode',id==='dashboard'&&typeof appOn==='function'&&appOn());window.scrollTo(0,0);var stk=document.getElementById('sticky-cta');if(stk)stk.classList.remove('show');if(id==='landing')initReveal();if(id!=='admin')track('page_view',{page:id})}
+function showPage(id){lpLite();document.body.classList.toggle('mo',typeof ownerDev==='function'&&ownerDev());document.body.classList.toggle('fx',typeof labOn==='function'&&labOn());setTimeout(function(){if(typeof previewBar==='function')previewBar()},0);document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});var pg=document.getElementById(id);if(!pg.classList.contains('active'))fxIn(pg,'fx-fade');pg.classList.add('active');document.body.classList.toggle('app-mode',id==='dashboard'&&typeof appOn==='function'&&appOn());window.scrollTo(0,0);var stk=document.getElementById('sticky-cta');if(stk)stk.classList.remove('show');if(id==='landing')initReveal();if(id!=='admin')track('page_view',{page:id})}
 function beginFunnel(){track('funnel_start');step=0;D={};obSyncSteps();window._mcCustom=0;window._obRc=null;window._obMeals=null;window._obBud=null;showPage('onboarding');renderStep()}
 function startOnboarding(){if(window._demoRun&&isAdmin()){beginFunnel();return}
 if(Auth.user){
@@ -2940,7 +2954,7 @@ function showProof(){if(document.getElementById('proof-modal'))return;
   var media='<img class="pf-img" src="/img/'+P.img+'.jpg" alt="'+P.alt+'"><p class="pf-cap">'+P.cap+'</p>';
   el.innerHTML='<div class="pw-sheet pf-sheet" role="dialog" aria-modal="true" aria-labelledby="pf-t"><button class="pw-x" onclick="closeProof()" aria-label="Fermer">&times;</button>'+media+
     '<h2 id="pf-t">'+P.h+'</h2><p class="pf-txt">'+P.t+' À toi de voir ce que tu veux vraiment pour toi.</p>'+
-    '<button type="button" class="btn btn-p btn-lg btn-full" onclick="proofGo()">Je passe le cap →</button><button type="button" class="pf-skip" onclick="closeProof()">Plus tard</button></div>';
+    '<button type="button" class="btn btn-p btn-lg btn-full" onclick="proofGo()">'+(cpOn()?'Moi aussi, je reprends ma vie en main →':'Je passe le cap →')+'</button><button type="button" class="pf-skip" onclick="closeProof()">'+(cpOn()?'Non, je ne veux pas vraiment changer':'Plus tard')+'</button></div>';
   el.addEventListener('click',function(e){if(e.target===el)closeProof()});document.body.appendChild(el);requestAnimationFrame(function(){el.classList.add('open')})}
 function proofGo(){track('proof_cta');track('proof_cta_'+window._proofWho);window._afterProof=true;closeProof();showPaywall()}
 function closeProof(){var el=document.getElementById('proof-modal');if(el)el.remove()}
@@ -2965,7 +2979,7 @@ function freePage(mc,gen){var ti=todayIndex(),dates=weekDates(),nm=firstName(),r
   if(t)h+=fpProjection();
   h+='<div class="app-h t-money"><span class="lbl">'+ico('euro')+'Ta liste de courses</span><small>'+r.used.toFixed(2).replace('.',',')+' € / '+mc.b+' €</small></div>'+fpShopOne(gen,r)+lockBox(shopRealHtml(gen,mc.b),'euro','Ta liste de courses avec les prix','Tout ce qu\'il faut acheter pour ta semaine, au paquet près.');
   h+='<div class="fp-links"><button type="button" onclick="editProfile()">Mes réponses</button><button type="button" onclick="signOut()">Se déconnecter</button></div>';
-  h+='</div><div class="fp-cta"><div class="fp-cta-in"><span class="fp-cd"></span><button type="button" class="btn btn-p btn-lg btn-full" onclick="track(\'paywall_gate\',{from:\'free_cta\'});confetti();showPaywall()">🔓 Débloquer toute ma semaine</button></div></div>';
+  h+='</div><div class="fp-cta"><div class="fp-cta-in"><span class="fp-cd"></span><button type="button" class="btn btn-p btn-lg btn-full" onclick="track(\'paywall_gate\',{from:\'free_cta\'});if(!cpOn())confetti();showPaywall()">🔓 Débloquer toute ma semaine</button></div></div>';
   return h}
 // one readable product from the shopping list, preferably from the free meal
 function fpShopOne(gen,r){var all=[];r.cats.forEach(function(c){if(c.label!=='Placard')c.items.forEach(function(it){if(it.pack)all.push(it)})});if(!all.length)return '';
@@ -2984,7 +2998,7 @@ function fpSavings(gen,r){var n=0;gen.plan.forEach(function(d){n+=d.meals.length
     '<div class="fp-save-big"><b>jusqu’à '+month+' €</b> économisés par mois<small>soit environ '+year+' € sur un an</small></div>'+
     '<p class="fp-save-n">Si '+swap+' de tes repas de la semaine remplacent un repas acheté dehors. Calculé avec les prix de ta liste de courses.</p></div>'}
 function fpMore(b){var r=b.nextElementSibling;if(r)r.hidden=false;b.remove();window._sawMore=true;track('free_more_days')}
-function freeBanner(){return '<div class="app-card free-banner"><div><b>Ton premier repas est offert 🎁</b><span>Débloque toute ta semaine, ta liste de courses avec les prix et ton suivi du jour.</span></div><button type="button" class="lb-btn" onclick="track(\'paywall_gate\',{from:\'banner\'});confetti();showPaywall()">Débloquer</button></div>'}
+function freeBanner(){return '<div class="app-card free-banner"><div><b>Ton premier repas est offert 🎁</b><span>Débloque toute ta semaine, ta liste de courses avec les prix et ton suivi du jour.</span></div><button type="button" class="lb-btn" onclick="track(\'paywall_gate\',{from:\'banner\'});if(!cpOn())confetti();showPaywall()">Débloquer</button></div>'}
 function trkPlanMeal(di,mi){if(!isMember()){showPaywall();return}var m=window._gen.plan[di].meals[mi],key=weekKey()+'-'+di+'-'+mi,s=trkLoad(),i=-1;s.t.cal.forEach(function(x,j){if(x.plan===key)i=j});
   if(i>-1)s.t.cal.splice(i,1);else s.t.cal.push({n:m.n,k:m.cal,p:m.p,plan:key});trkSave(s)}
 function tabReglages(mc){var u=isUnlocked();
@@ -3210,11 +3224,13 @@ function pw2Html(){var closed=founderClosed(),chk='<svg viewBox="0 0 24 24" fill
 function pw3Cd(){var ms=Math.max(0,FOUNDER_END-Date.now()),m=Math.floor(ms/6e4),d=Math.floor(m/1440),h=Math.floor(m%1440/60),mi=m%60;return (d?d+' j ':'')+(h<10&&d?'0':'')+h+' h '+(mi<10?'0':'')+mi+' min'}
 // test (owner only): lifetime plan shows 4,99 €/mois big, 59,99 € once in small
 function p499On(){return true}
+// test (owner only): paywall copy "Reprends la main…", countdown on the founder offer, proof buttons, no confetti on unlock
+function cpOn(){return isAdmin()}
 function pw3Html(){var closed=founderClosed(),radio='<span class="pw2-radio" aria-hidden="true"></span>',chk='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
-  return '<div class="pw2 pw3" id="unlock-card"><div class="pw3-head"><h2 class="pw2-t">Débloque ta semaine</h2>'+pw3Mine()+'</div>'+
-  (closed?'':'<div class="pw3-offer"><span class="pw3-dot" aria-hidden="true"></span>Offre de lancement · fin dans <b class="pw3-cd">'+pw3Cd()+'</b><span class="sr-only" id="founder-txt"></span></div>')+
+  return '<div class="pw2 pw3" id="unlock-card"><div class="pw3-head">'+(cpOn()?'<h2 class="pw2-t">Reprends la main sur ton budget et ton physique</h2><p class="pw3-sub">Tu es à 1 bouton de changer ta vie</p>':'<h2 class="pw2-t">Débloque ta semaine</h2>')+pw3Mine()+'</div>'+
+  (closed||cpOn()?'':'<div class="pw3-offer"><span class="pw3-dot" aria-hidden="true"></span>Offre de lancement · fin dans <b class="pw3-cd">'+pw3Cd()+'</b><span class="sr-only" id="founder-txt"></span></div>')+
   '<div class="pw2-plans" role="radiogroup" aria-label="Formule">'+
-  (closed?'':'<button type="button" class="pw2-plan pw2-life active" id="plan-life" role="radio" aria-checked="true" onclick="selectPlan(\'life\')"><span class="pw2-tag">Le plus choisi</span>'+radio+'<span class="pw2-name"><b>À vie</b><small>Paiement unique · −50 %</small></span><span class="pw2-price">'+(p499On()?'<b>4,99 €</b><small>/mois la 1re année</small><small class="pw2-once">59,99 € une seule fois</small>':'<b>59,99 €</b><small>soit 4,99 €/mois la 1re année</small>')+'</span></button>')+
+  (closed?'':'<button type="button" class="pw2-plan pw2-life active" id="plan-life" role="radio" aria-checked="true" onclick="selectPlan(\'life\')"><span class="pw2-tag">Le plus choisi</span>'+radio+'<span class="pw2-name">'+(cpOn()?'<b>Offre fondateur</b><small>À vie · paiement unique · −50 %</small><span class="pw3-card-cd" aria-label="Fin de l’offre dans">⏳ <b class="pw3-cd">'+pw3Cd()+'</b></span><span class="sr-only" id="founder-txt"></span>':'<b>À vie</b><small>Paiement unique · −50 %</small>')+'</span><span class="pw2-price">'+(p499On()?'<b>4,99 €</b><small>/mois la 1re année</small><small class="pw2-once">59,99 € une seule fois</small>':'<b>59,99 €</b><small>soit 4,99 €/mois la 1re année</small>')+'</span></button>')+
   '<button type="button" class="pw2-plan'+(closed?' active':'')+'" id="plan-month" role="radio" aria-checked="'+closed+'" onclick="selectPlan(\'month\')">'+radio+'<span class="pw2-name"><b>Mensuel</b><small>Sans engagement</small></span><span class="pw2-price"><b>9,99 €</b><small>par mois</small></span></button>'+
   '</div><ul class="pw3-feats"><li>'+chk+'Recettes</li><li>'+chk+'Liste de courses</li><li>'+chk+'Suivi</li></ul>'+
   '<div class="pw2-foot"><button class="btn btn-p btn-lg btn-full" id="paywall-cta-btn" onclick="startCheckout()">Débloquer ma semaine →</button><p class="pw2-price-sub" id="pw2-price-sub">'+pw2PriceSub(closed?'month':'life')+'</p><p class="pw2-legal pw2-legal-foot">En continuant, tu acceptes les <a href="/cgu" target="_blank" rel="noopener">CGU</a> et l’accès immédiat au contenu, sans droit de rétractation.</p></div></div>'}
@@ -3772,7 +3788,7 @@ el.innerHTML='<div class="pw-sheet rc-sheet"><button class="pw-x" onclick="close
 '<div class="rc-legend"><span><i class="p"></i>Protéines <b>'+m.p+' g</b></span><span><i class="g"></i>Glucides <b>'+m.g+' g</b></span><span><i class="l"></i>Lipides <b>'+m.l+' g</b></span></div>'+
 (ing?'<h3 class="rc-h">Ce qu\'il te faut</h3>'+(m.q?'<p class="rc-note">Poids à cru ou à sec, sauf mention. Ils correspondent aux calories et aux macros ci-dessus.</p>':'')+'<ul class="rc-ing'+(m.q?' rc-ing-q':'')+'">'+ing+'</ul>':'')+
 (st?'<h3 class="rc-h">Préparation</h3><ol class="rc-steps">'+st+'</ol>':'')+
-(isUnlocked()?'<button class="rc-swap" onclick="swapFromModal('+di+','+mi+')">🔄 Changer ce repas</button>':'<button class="rc-swap" onclick="closeMealDetail();confetti();showPaywall()">🔒 Débloquer toute ma semaine</button>')+'</div>';
+(isUnlocked()?'<button class="rc-swap" onclick="swapFromModal('+di+','+mi+')">🔄 Changer ce repas</button>':'<button class="rc-swap" onclick="closeMealDetail();if(!cpOn())confetti();showPaywall()">🔒 Débloquer toute ma semaine</button>')+'</div>';
 document.body.appendChild(el);
 requestAnimationFrame(function(){el.classList.add('open')});
 }
