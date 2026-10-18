@@ -2063,7 +2063,7 @@ beginFunnel()}
 // owner's browser: remembered after he logs in once, so logged-out tests can be shown to him only
 function ownerDev(){if(typeof isAdmin==='function'&&isAdmin()){lsSet('macro_owner_dev',1);return true}return !!lsGet('macro_owner_dev')}
 // test: account first, then the questions (after Google, afterLogin -> showDashboard() finds no profile and starts the funnel)
-function startGateOn(){return ownerDev()}
+function startGateOn(){return true}
 function renderStartGate(){
   showPage('onboarding');setSegs(0);document.getElementById('ob-pct').textContent='';document.getElementById('ob-counter').innerHTML='';
   document.getElementById('ob-main').innerHTML='<button class="ob-back" onclick="showPage(\'landing\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Retour</button>'+
@@ -3169,7 +3169,7 @@ function pw2Html(){var closed=founderClosed(),chk='<svg viewBox="0 0 24 24" fill
   '<p class="pw2-legal">Paiement sécurisé par Whop. En continuant, tu acceptes les <a href="/cgu" target="_blank" rel="noopener">CGU</a> et tu demandes l’accès immédiat au contenu : tu renonces à ton droit de rétractation de 14 jours.</p>'+'<div class="pw2-foot"><button class="btn btn-p btn-lg btn-full" id="paywall-cta-btn" onclick="startCheckout()">'+(closed?'M’abonner à 9,99 € par mois →':'Payer 59,99 € une fois →')+'</button></div></div>'}
 function pw3Cd(){var ms=Math.max(0,FOUNDER_END-Date.now()),m=Math.floor(ms/6e4),d=Math.floor(m/1440),h=Math.floor(m%1440/60),mi=m%60;return (d?d+' j ':'')+(h<10&&d?'0':'')+h+' h '+(mi<10?'0':'')+mi+' min'}
 // test (owner only): lifetime plan shows 4,99 €/mois big, 59,99 € once in small
-function p499On(){return isAdmin()}
+function p499On(){return true}
 function pw3Html(){var closed=founderClosed(),radio='<span class="pw2-radio" aria-hidden="true"></span>',chk='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
   return '<div class="pw2 pw3" id="unlock-card"><div class="pw3-head"><h2 class="pw2-t">Débloque ta semaine</h2>'+pw3Mine()+'</div>'+
   (closed?'':'<div class="pw3-offer"><span class="pw3-dot" aria-hidden="true"></span>Offre de lancement · fin dans <b class="pw3-cd">'+pw3Cd()+'</b><span class="sr-only" id="founder-txt"></span></div>')+
