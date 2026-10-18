@@ -1416,6 +1416,24 @@ body.cr-mode>*:not(#cr-page):not(.toast):not(script){display:none!important}
 .ad-kpi span{font-size:.6875rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700}
 .ad-kpi strong{font-size:1.5rem;font-family:var(--font-d);color:var(--ink);font-variant-numeric:tabular-nums}
 .ad-kpi small{font-size:.6875rem;color:var(--muted)}
+.ad-bn{width:100%;border-collapse:collapse;font-size:.875rem;font-variant-numeric:tabular-nums;min-width:560px}
+.ad-bn th,.ad-bn td{padding:.55rem .6rem;border-bottom:1px solid var(--border);text-align:right;white-space:nowrap}
+.ad-bn thead th{font-size:.6875rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700}
+.ad-bn tbody th{text-align:left;font-weight:600;color:var(--ink)}
+.ad-bn .ad-bn-p{color:var(--ink2)}
+.ad-bn .ad-bn-t{color:var(--muted)}
+.ad-bn .ad-bn-me{font-weight:800;color:var(--ink);border-left:2px solid var(--accent)}
+.ad-bn input{width:7.5rem;padding:.35rem .5rem;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;text-align:right}
+.ad-bn-st{display:inline-block;border-radius:99px;padding:.15rem .55rem;font-size:.75rem;font-weight:700}
+.ad-bn-live{display:flex;align-items:center;gap:.45rem;margin:0 0 .5rem;font-size:.75rem;color:var(--muted)}
+.ad-bn-live i{width:8px;height:8px;border-radius:50%;background:#16A34A;box-shadow:0 0 0 0 rgba(22,163,74,.5);animation:ad-live 1.8s infinite}
+@keyframes ad-live{0%{box-shadow:0 0 0 0 rgba(22,163,74,.5)}70%{box-shadow:0 0 0 8px rgba(22,163,74,0)}100%{box-shadow:0 0 0 0 rgba(22,163,74,0)}}
+@media (prefers-reduced-motion:reduce){.ad-bn-live i{animation:none}}
+.ad-bn-st.na{background:var(--bg2);color:var(--muted);font-weight:600}
+.ad-bn-sum th,.ad-bn-sum td{font-weight:800;border-bottom:0}
+.ad-bn-st.good{background:#DCFCE7;color:#166534}
+.ad-bn-st.warn{background:#FEF3C7;color:#92400E}
+.ad-bn-st.bad{background:#FEE2E2;color:#991B1B}
 .ad-sec{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.125rem 1.25rem;margin-bottom:1rem}
 .ad-sec h2{font-family:var(--font-d);font-size:1.0625rem;font-weight:800;color:var(--ink);margin-bottom:.625rem}
 .ad-note{font-size:.75rem;color:var(--muted);margin:0 0 .625rem}
@@ -2323,7 +2341,7 @@ freshToken(function(tok){
 if(!tok){c.innerHTML='<div class="ad-wrap"><p class="ad-err">Session expirée. Déconnecte-toi puis reconnecte-toi avec Google.</p></div>';return}
 sbFetch('/rest/v1/rpc/admin_stats',{method:'POST',body:JSON.stringify({p_days:days})},tok).then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j}})}).then(function(o){
 if(!o.ok){var msg=(o.j&&(o.j.message||o.j.hint))||'Erreur';c.innerHTML='<div class="ad-wrap"><p class="ad-err">'+escH(msg)+(/admin_stats|schema cache/.test(msg)?'<br>Exécute le fichier supabase_admin.sql dans Supabase (SQL Editor) puis recharge.':'')+'</p></div>';return}
-c.innerHTML=renderAdmin(o.j,days);window.scrollTo(0,0);adCreators(tok)}).catch(function(){c.innerHTML='<div class="ad-wrap"><p class="ad-err">Impossible de joindre Supabase.</p></div>'})})}
+c.innerHTML=renderAdmin(o.j,days);window.scrollTo(0,0);adCreators(tok);adBenchLive(days)}).catch(function(){c.innerHTML='<div class="ad-wrap"><p class="ad-err">Impossible de joindre Supabase.</p></div>'})})}
 var MAIL_LABELS={A1:'Pack fondateur (+10 min après paywall)',A2:'Liste de courses floutée (J+1)',A3:'Dernier rappel fondateur (J+3)',A4:'Teaser recettes (samedi, 4 max)',F1:'Pack fondateur (anciens inscrits)',B1:'Plan prêt, fais tes courses',B2:'Liste pas ouverte (48 h)',B3:'Plan de la semaine (samedi 18 h)',B4:'Rappel renouvellement',B5:'Nouveauté (manuel)',C1:'Après résiliation',M10:'Pack fondateur +10 min (ancien)',A5:'Dernier mail fondateur (ancien)'};
 var MAIL_TEST_KEYS=['A1','A2','A3','A4','F1','B1','B2','B3','B4','C1'];
 function mailName(k){var p=String(k||'').split('-'),t=p[0]==='T',c=t?p[1]:p[0];return (t?'<b>Test</b> · ':'')+escH(c)+' · '+escH(MAIL_LABELS[c]||k)+(c==='B5'&&!t&&p.length>1?' <small class="ad-sub">'+escH(p.slice(1).join('-'))+'</small>':'')}
@@ -2418,6 +2436,26 @@ if(t.users>0){if(!last)add('bad','Aucun e-mail n’a encore été envoyé. Véri
 if((t.unsub||0)>=3&&t.mails_all>0&&t.unsub/Math.max(1,t.users)>0.1)add('warn',fmtN(t.unsub)+' désinscriptions ('+pctOf(t.unsub,t.users)+' des comptes). Espace ou raccourcis les relances.');
 if(!out.length)return '<p class="ad-empty">Pas encore assez de données pour des recommandations fiables (il faut environ 15 à 20 visiteurs par étape).</p>';
 return '<ul class="ad-ins">'+out.join('')+'</ul>'}
+// live funnel vs target ranges (period chosen at the top), refreshed every 30 s while the stats page is open
+var BENCH=[['Visiteurs de la page d’accueil','land',null,null],['Comptes créés','signups',30,50],['Paywall vu','paywall',90,100],['Paiements','paid',3,10]];
+function adBenchData(d){var ev={};(d.events||[]).forEach(function(e){ev[e.name]=e});var land=0;(d.pages||[]).forEach(function(p){if(p.page==='landing')land=p.visitors});
+  var paid=0;(d.subs||[]).forEach(function(x){var p=PLAN_INFO[x.kind];if(!p||p.p>0)paid+=x.new_period||0});
+  return {land:land,signups:(d.totals||{}).new_users||0,paywall:ev.paywall_view?ev.paywall_view.visitors:0,paid:paid,at:new Date()}}
+function benchFmt(p){return p==null?'–':(p<10?String(Math.round(p*100)/100):String(Math.round(p*10)/10)).replace('.',',')+' %'}
+function adBenchHtml(){var o=window._adBench||{};
+  var rows=BENCH.map(function(r,i){var v=o[r[1]]||0,prev=i?o[BENCH[i-1][1]]||0:0,my=i&&prev>0?v/prev*100:null,st='',lbl='';
+    if(my!=null&&prev>=10){st=my>=r[2]?'good':my>=r[2]*0.6?'warn':'bad';lbl=st==='good'?'Dans la cible':st==='warn'?'Un peu bas':'Trop bas'}else if(my!=null)lbl='Pas assez de données';
+    return '<tr><th scope="row">'+r[0]+'</th><td class="ad-bn-me">'+fmtN(v)+'</td><td class="ad-bn-p">'+benchFmt(my)+'</td><td class="ad-bn-t">'+(i?(r[3]>=100?r[2]+' % et +':r[2]+' – '+r[3]+' %'):'1 – 2 % des vues vidéo')+'</td><td>'+(lbl?'<span class="ad-bn-st '+(st||'na')+'">'+lbl+'</span>':'')+'</td></tr>'}).join('');
+  var all=o.land>0?o.paid/o.land*100:null;
+  return '<p class="ad-bn-live"><i aria-hidden="true"></i>En direct · mis à jour à '+(o.at?o.at.toLocaleTimeString('fr-FR'):'–')+'</p>'+
+    '<table class="ad-bn"><thead><tr><th></th><th>Ton site</th><th>Taux</th><th>Cible</th><th></th></tr></thead><tbody>'+rows+
+    '<tr class="ad-bn-sum"><th scope="row">Visiteur → payant</th><td></td><td class="ad-bn-p">'+benchFmt(all)+'</td><td class="ad-bn-t"></td><td></td></tr></tbody></table>'+
+    '<p class="ad-note">Chaque taux se calcule par rapport à la ligne du dessus, sur la période choisie en haut. Les vues vidéo ne sont pas mesurées par le site, donc le taux de la 1re ligne n’est pas calculable. Une pastille n’apparaît qu’à partir de 10 personnes à l’étape précédente.</p>'}
+// refresh only this table every 30 s while the stats page is visible
+function adBenchLive(days){clearInterval(window._adBenchT);window._adBenchT=setInterval(function(){
+  if(document.hidden||!document.getElementById('ad-bench')||document.querySelector('.page.active')?.id!=='admin')return;
+  freshToken(function(tok){if(!tok)return;sbFetch('/rest/v1/rpc/admin_stats',{method:'POST',body:JSON.stringify({p_days:days})},tok).then(function(r){return r.ok?r.json():null}).then(function(j){
+    if(!j)return;window._adBench=adBenchData(j);var el=document.getElementById('ad-bench');if(el)el.innerHTML=adBenchHtml()}).catch(function(){})})},30000)}
 function renderAdmin(d,days){
 var ev={};(d.events||[]).forEach(function(e){ev[e.name]=e});
 function V(n){return ev[n]?ev[n].visitors:0}
@@ -2426,6 +2464,7 @@ var t=d.totals||{},today=dKey(d.today)||new Date().toLocaleDateString('sv-SE',{t
 var tod=(d.daily||[]).filter(function(x){return dKey(x.day)===today})[0]||{visitors:0,starts:0,signups:0,checkouts:0};
 var paidToday=0;(d.paid_daily||[]).forEach(function(r){if(dKey(r.day)===today)paidToday+=r.n});
 var subs=d.subs||[],mrr=0,cash=0,paying=0;subs.forEach(function(s){var p=PLAN_INFO[s.kind];if(!p)return;mrr+=s.active*p.m;cash+=s.total*p.p;paying+=s.total});
+window._adBench=adBenchData(d);
 var fun=[['Vue de la landing',land],['Début du funnel',V('funnel_start')],['Funnel terminé',V('onboarding_done')],['Écran inscription vu',V('signup_gate_view')],['Clic Google',V('google_click')],['Inscription terminée',V('signup_completed')],['Tableau de bord vu',V('dashboard_view')],['Paywall vu',V('paywall_view')],['Clic paiement',V('checkout_click')]];
 var h='<div class="ad-wrap">';
 h+='<section class="ad-today"><div class="ad-today-head"><h2>Aujourd\'hui</h2><span>'+new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',timeZone:'Europe/Paris'})+'</span></div><div class="ad-today-kpis">'+
@@ -2433,7 +2472,7 @@ kpi('Visiteurs',fmtN(tod.visitors),'')+kpi('Débuts de funnel',fmtN(tod.starts),
 '</div></section>';
 h+=adNewVersion(d);
 h+='<div class="ad-head"><div><h1>Statistiques</h1><p>Depuis le '+new Date(d.since).toLocaleDateString('fr-FR')+' · '+escH(Auth.user.email)+'</p></div><div class="ad-per">'+[7,30,90,365].map(function(n){return '<button class="'+(n===days?'on':'')+'" onclick="showAdmin('+n+')">'+(n===365?'1 an':n+' jours')+'</button>'}).join('')+'</div></div>';
-h+='<nav class="ad-toc" aria-label="Sections">'+[['ad-s-prio','Priorités'],['ad-s-money','Argent'],['ad-s-mail','E-mails'],['ad-s-send','Envoyer'],['ad-s-free','Page gratuite'],['ad-s-fun','Parcours'],['ad-s-day','Jour par jour'],['ad-s-acq','Acquisition'],['ad-s-pw','Paywall'],['ad-s-prof','Profils'],['ad-s-users','Inscrits']].map(function(x){return '<a href="#'+x[0]+'">'+x[1]+'</a>'}).join('')+'</nav>';
+h+='<nav class="ad-toc" aria-label="Sections">'+[['ad-s-bench','Cibles'],['ad-s-prio','Priorités'],['ad-s-money','Argent'],['ad-s-mail','E-mails'],['ad-s-send','Envoyer'],['ad-s-free','Page gratuite'],['ad-s-fun','Parcours'],['ad-s-day','Jour par jour'],['ad-s-acq','Acquisition'],['ad-s-pw','Paywall'],['ad-s-prof','Profils'],['ad-s-users','Inscrits']].map(function(x){return '<a href="#'+x[0]+'">'+x[1]+'</a>'}).join('')+'</nav>';
 h+='<div class="ad-kpis">'+
 kpi('Visiteurs',fmtN(t.visitors),fmtN(t.sessions)+' sessions · '+pctOf(t.returning,t.visitors)+' reviennent')+
 kpi('Nouveaux comptes',fmtN(t.new_users),fmtN(t.users)+' au total')+
@@ -2450,6 +2489,7 @@ kpi('Temps médian du funnel',fmtMin(d.timing&&d.timing.funnel_min),'1re questio
 kpi('Arrivée → inscription',fmtMin(d.timing&&d.timing.signup_min),'médiane')+
 kpi('Inscription → paiement',d.pay_delay_days==null?'–':String(d.pay_delay_days).replace('.',',')+' j','médiane')+
 '</div>';
+h+='<section class="ad-sec" id="ad-s-bench"><h2>Ton funnel face aux cibles</h2><div class="ad-scroll" id="ad-bench">'+adBenchHtml()+'</div></section>';
 h+='<section class="ad-sec" id="ad-s-prio"><h2>À regarder en priorité</h2><p class="ad-note">Calculé automatiquement à partir des chiffres de la période.</p>'+adInsights(d,fun)+'</section>';
 h+='<section class="ad-sec" id="ad-s-money"><h2>Argent</h2>'+adTable(['Formule','Prix','Actifs','Nouveaux sur la période','Résiliés','Total clients','Encaissé estimé'],subs.map(function(s){var p=PLAN_INFO[s.kind]||{l:s.kind,p:0};return [escH(p.l),p.p?eur(p.p):'–',fmtN(s.active),fmtN(s.new_period),fmtN(s.canceled),fmtN(s.total),p.p?eur(s.total*p.p):'–']}))+
 '<h3 class="ad-h3">Paiements par jour</h3>'+adTable(['Jour','Formule','Paiements'],(d.paid_daily||[]).slice().reverse().map(function(r){return [dFr(r.day,1),escH((PLAN_INFO[r.kind]||{l:r.kind}).l),fmtN(r.n)]}))+
