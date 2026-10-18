@@ -2058,7 +2058,20 @@ if(Auth.user){
 if(restoreProfile()){showDashboard();return}
 if(sbOn()&&Auth.session){loadRemoteProfile(function(ok){if(ok)showDashboard();else beginFunnel()});return}
 }
+if(sbOn()&&!Auth.user&&startGateOn()){renderStartGate();return}
 beginFunnel()}
+// owner's browser: remembered after he logs in once, so logged-out tests can be shown to him only
+function ownerDev(){if(typeof isAdmin==='function'&&isAdmin()){lsSet('macro_owner_dev',1);return true}return !!lsGet('macro_owner_dev')}
+// test: account first, then the questions (after Google, afterLogin -> showDashboard() finds no profile and starts the funnel)
+function startGateOn(){return ownerDev()}
+function renderStartGate(){
+  showPage('onboarding');setSegs(0);document.getElementById('ob-pct').textContent='';document.getElementById('ob-counter').innerHTML='';
+  document.getElementById('ob-main').innerHTML='<button class="ob-back" onclick="showPage(\'landing\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Retour</button>'+
+    '<div class="au-ico">👋</div><h2 class="au-t">Crée ton compte pour commencer</h2><p class="au-s">Ensuite, quelques questions et ton plan repas est prêt en 2 minutes. Il reste enregistré sur ton compte, sur ton téléphone comme sur ton ordi.</p>'+
+    '<label class="au-optin" id="optin-lbl"><input type="checkbox" id="optin-cb" onchange="optinOk()"> J\'accepte de recevoir les e-mails de mangereco (mon plan, des rappels, des conseils et des offres). Facultatif, désinscription en 1 clic.</label><div class="au-err" id="optin-err" role="alert"></div>'+
+    '<button class="au-google" onclick="gateGoogle()">'+GSVG+'Continuer avec Google</button>'+
+    '<p class="au-s" style="margin-top:1rem;font-size:.8125rem">Déjà un compte ? Le même bouton te reconnecte.</p>';
+  window.scrollTo(0,0);track('start_gate_view')}
 var S=[
 {id:'gym',title:"O\u00f9 tu t'entra\u00eenes ?",desc:"On adapte tes repas \u00e0 ton rythme.",type:'grid',cols:3,options:[
 {imgId:'img-basicfit',bg:'#fff',label:'Basic-Fit'},{imgId:'img-fitnesspark',bg:'#fff',label:'Fitness Park'},{imgId:'img-orangebleue',bg:'#fff',label:"L'Orange Bleue"},{imgId:'img-keepcool',bg:'#fff',label:'Keep Cool'},{imgId:'img-neoness',bg:'#fff',label:'Neoness'},{imgId:'img-energieforme',bg:'#fff',label:'\u00C9nergie Forme'},{icon:'CMG',bg:'#1E293B',label:'CMG Sports'},{icon:'\u{1F3E0}',bg:'#64748B',label:'\u00C0 la maison'},{icon:'+',bg:'#475569',label:'Autre salle'}
@@ -3436,7 +3449,7 @@ function initAuth(){var _cr=/[?&]createur=([a-f0-9]{16,40})(&|$)/i.exec(location
 }
 function landingTestPrice(){var c=document.querySelector('#pr-founder .pr-price'),m=document.querySelector('#pr-founder .pr-sub-m');if(!c||!m)return;
   if(testOn()){c.innerHTML='4,99&nbsp;€ <small>/mois</small>';m.textContent='59,99 € payés une seule fois (sur 12 mois), puis plus rien à payer'}else{c.innerHTML='59,99&nbsp;€ <small>une seule fois</small>';m.textContent='soit moins de 5 € par mois la 1re année'}}
-function refreshNav(){landingTestPrice();lpLite();var hg=document.getElementById('hero-google');if(hg)hg.innerHTML=(sbOn()&&!viewUser())?'<button class="au-google hero-g" onclick="heroGoogle()">'+GSVG+'Continuer avec Google</button>':'';
+function refreshNav(){if(typeof ownerDev==='function')ownerDev();landingTestPrice();lpLite();var hg=document.getElementById('hero-google');if(hg)hg.innerHTML=(sbOn()&&!viewUser())?'<button class="au-google hero-g" onclick="heroGoogle()">'+GSVG+'Continuer avec Google</button>':'';
   document.querySelectorAll('.nav-pill').forEach(function(p){
     if(p.closest('#onboarding'))return;
     var slot=p.querySelector('.nav-auth');
