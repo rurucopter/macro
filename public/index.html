@@ -3227,7 +3227,7 @@ function p499On(){return true}
 // test (owner only): paywall copy "Reprends la main…", countdown on the founder offer, proof buttons, no confetti on unlock
 function cpOn(){return true}
 // test (owner only): button "Change ta vie", title with a comma
-function cp2On(){return isAdmin()}
+function cp2On(){return true}
 function pw3Html(){var closed=founderClosed(),radio='<span class="pw2-radio" aria-hidden="true"></span>',chk='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
   return '<div class="pw2 pw3" id="unlock-card"><div class="pw3-head">'+(cpOn()?'<h2 class="pw2-t">'+(cp2On()?'Reprends la main sur ton budget, ton physique':'Reprends la main sur ton budget et ton physique')+'</h2><p class="pw3-sub">Tu es à 1 bouton de changer ta vie</p>':'<h2 class="pw2-t">Débloque ta semaine</h2>')+pw3Mine()+'</div>'+
   (closed||cpOn()?'':'<div class="pw3-offer"><span class="pw3-dot" aria-hidden="true"></span>Offre de lancement · fin dans <b class="pw3-cd">'+pw3Cd()+'</b><span class="sr-only" id="founder-txt"></span></div>')+
