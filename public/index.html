@@ -672,6 +672,66 @@ body:has(#onboarding.active),body:has(#result.active){background:#2E2C28}
 .bd-ppm b{font-family:var(--font-d);font-size:1.25rem;font-variant-numeric:tabular-nums}
 .bd-ppm b span{font-size:.875rem;font-weight:600;color:var(--muted)}
 .bd-ppm small{font-size:.6875rem;color:var(--muted)}
+.dk-card{background:radial-gradient(120% 140% at 0% 0%,#24332b,#121a16);color:#fff;border-radius:24px;padding:1.1rem 1.1rem .9rem;box-shadow:0 14px 34px rgba(0,0,0,.18);margin-bottom:.85rem}
+.dk-row{display:flex;align-items:center;gap:1rem}
+.dk-ring{position:relative;width:128px;height:128px;flex-shrink:0}
+.dk-ring svg{width:100%;height:100%;overflow:visible}
+.dk-tr{fill:none;stroke:rgba(255,255,255,.1);stroke-width:12}
+.dk-arc{fill:none;stroke:#34D399;stroke-width:12;stroke-linecap:round}
+.dk-arc.over{stroke:#FBBF24}
+.dk-dot{fill:#34D399;stroke:#121a16;stroke-width:3}
+.dk-in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.dk-in b{font-family:var(--font-d);font-size:1.75rem;line-height:1;font-variant-numeric:tabular-nums}
+.dk-in span{font-size:.75rem;opacity:.65;margin-top:.2rem;font-variant-numeric:tabular-nums}
+.dk-ms{flex:1;min-width:0;display:flex;flex-direction:column;gap:.7rem}
+.dk-mh{display:flex;justify-content:space-between;align-items:baseline;gap:.4rem;font-size:.6875rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;opacity:.9}
+.dk-mh b{font-size:.9375rem;letter-spacing:0;text-transform:none;font-variant-numeric:tabular-nums}
+.dk-mh small{font-size:.75rem;font-weight:600;opacity:.6}
+.dk-bar{height:6px;border-radius:99px;background:rgba(255,255,255,.1);margin-top:.3rem;overflow:hidden}
+.dk-bar i{display:block;height:100%;border-radius:99px;background:#F87171}
+.dk-bar i.g{background:#FBBF24}
+.dk-bar i.l{background:#818CF8}
+.dk-foot{display:flex;justify-content:space-between;gap:.5rem;flex-wrap:wrap;margin-top:.85rem;padding-top:.7rem;border-top:1px solid rgba(255,255,255,.08);font-size:.8125rem;opacity:.8;font-variant-numeric:tabular-nums}
+.trio.duo{grid-template-columns:repeat(2,minmax(0,1fr))}
+.bw{display:flex;flex-direction:column;gap:.8rem}
+.bw-top{display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem;flex-wrap:wrap}
+.bw-top b{font-family:var(--font-d);font-size:2rem;line-height:1;font-variant-numeric:tabular-nums}
+.bw-top div>span{font-size:.9375rem;color:var(--muted)}
+.bw-save{background:var(--accent-bg);color:var(--accent-text);font-weight:800;font-size:.8125rem;border-radius:99px;padding:.3rem .7rem;font-variant-numeric:tabular-nums}
+.bw-save.over{background:#FEF3C7;color:#92400E}
+.bw-bars{display:grid;grid-template-columns:repeat(7,1fr);gap:.45rem;height:120px;align-items:end}
+.bw-d{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:.25rem;height:100%}
+.bw-d i{display:block;width:100%;max-width:34px;border-radius:10px;background:var(--bg2);flex-shrink:0}
+.bw-d.today i{background:linear-gradient(180deg,#34D399,#059669)}
+.bw-d small{font-size:.6875rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.bw-d span{font-size:.75rem;font-weight:700;color:var(--ink2)}
+.bw-note{margin:0;font-size:.75rem;color:var(--muted);line-height:1.4}
+.wp{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.4rem;margin:.25rem 0 1rem}
+.wp-d{display:flex;flex-direction:column;align-items:center;gap:.15rem;padding:.55rem 0;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:var(--ink2);font-family:var(--font);cursor:pointer;position:relative}
+.wp-d span{font-size:.625rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;opacity:.75}
+.wp-d b{font-family:var(--font-d);font-size:1.125rem;font-variant-numeric:tabular-nums}
+.wp-d.today::after{content:"";position:absolute;bottom:5px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.wp-d.on{background:#16211c;border-color:#16211c;color:#fff}
+.wp-d.on.today::after{background:#34D399}
+.wp-head{display:flex;justify-content:space-between;align-items:baseline;gap:.75rem;margin-bottom:.75rem}
+.wp-head h2{margin:0;font-family:var(--font-d);font-size:1.375rem}
+.wp-head h2 em{font-style:italic;font-weight:600;color:var(--accent-text)}
+.wp-head span{font-size:.8125rem;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.mcb{background:var(--surface);border:1px solid var(--border);border-radius:24px;overflow:hidden;margin-bottom:1rem;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+.mcb-ph{position:relative;aspect-ratio:16/10;background:var(--bg2);cursor:pointer}
+.mcb-ph img{width:100%;height:100%;object-fit:cover;display:block}
+.mcb-emo{display:grid;place-items:center;height:100%;font-size:3rem}
+.mcb.locked .mcb-ph img{filter:blur(10px) saturate(.8)}
+.mcb-cat{position:absolute;top:12px;left:12px;background:rgba(255,255,255,.92);color:#16211c;font-size:.6875rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border-radius:99px;padding:.3rem .7rem}
+.mcb-price{position:absolute;top:12px;right:12px;background:#16a34a;color:#fff;font-weight:800;font-size:.875rem;border-radius:99px;padding:.3rem .7rem;font-variant-numeric:tabular-nums;box-shadow:0 4px 12px rgba(0,0,0,.18)}
+.mcb-bd{padding:1rem 1rem 1.05rem;display:flex;flex-direction:column;gap:.7rem}
+.mcb-bd h3{margin:0;font-family:var(--font-d);font-size:1.1875rem;line-height:1.25}
+.mcb-chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.mcb-chips span{font-size:.75rem;font-weight:700;color:var(--ink2);background:var(--bg2);border-radius:99px;padding:.25rem .6rem;font-variant-numeric:tabular-nums}
+.mcb-chips span.k{color:#B45309;background:#FEF3C7}
+.mcb-act{display:flex;align-items:center;gap:.6rem}
+.mcb-go{flex:1;min-height:46px;border:0;border-radius:14px;background:#16211c;color:#fff;font-family:var(--font);font-weight:800;font-size:.9375rem;cursor:pointer}
+.mcb-act .menu-ck{flex-shrink:0;width:46px;height:46px}
 .ob-rc{display:inline-flex;align-items:center;gap:.3rem;background:var(--accent-bg);color:var(--accent-text);border-radius:99px;padding:.3rem .75rem;font-weight:600;font-variant-numeric:tabular-nums}
 .ob-tier{margin-top:1.1rem;padding:1rem;border:1px solid var(--border);border-radius:18px;background:var(--surface);text-align:center;display:flex;flex-direction:column;align-items:center;gap:.5rem}
 .ob-tier-chip{display:inline-block;background:var(--accent-bg);color:var(--accent-text);font-weight:800;border-radius:99px;padding:.3rem .85rem;font-size:.9375rem}
@@ -2719,7 +2779,36 @@ function shopRealHtml(gen,budget){
 function trkKey(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
 function weekDates(){var m=new Date();m.setHours(12,0,0,0);m.setDate(m.getDate()-todayIndex());var a=[];for(var i=0;i<7;i++){var d=new Date(m);d.setDate(m.getDate()+i);a.push(d)}return a}
 function ringSvg(p,col){var r=18,c=2*Math.PI*r,v=Math.max(0,Math.min(1,p));return '<svg viewBox="0 0 42 42" width="42" height="42" aria-hidden="true"><circle cx="21" cy="21" r="'+r+'" fill="none" stroke="var(--bg2)" stroke-width="4"/>'+(v>0?'<circle cx="21" cy="21" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="4" stroke-linecap="round" stroke-dasharray="'+(c*v).toFixed(1)+' '+c.toFixed(1)+'"/>':'')+'</svg>'}
-function weekDayHtml(gen,u){
+// dark calorie card: today's ring + macro bars, meals ticked and the week's calories
+function dkCalCard(mc,gen,s,eaten,obj,prot,pg){var t=s.t,cg=mc.carbG||0,fg=mc.fatG||0,carb=0,fat=0;t.cal.forEach(function(x){carb+=x.g||0;fat+=x.l||0});
+  var ti=todayIndex(),day=gen.plan[ti],key=weekKey()+'-'+ti+'-',ticked=t.cal.filter(function(x){return x.plan&&x.plan.indexOf(key)===0}).length;
+  var st=lsGet('macro_track')||{},days=st.days||{},dates=weekDates(),wk=0;dates.forEach(function(d){var x=days[trkKey(d)];if(x)wk+=x.cal.reduce(function(a,y){return a+y.k},0)});
+  if(!days[trkKey(dates[ti])])wk+=eaten;var wkGoal=Math.round((window._trkCal||mc.cal)*7);
+  var p=obj?eaten/obj:0,R=54,C=2*Math.PI*R,v=Math.max(0,Math.min(1,p)),a=v*2*Math.PI;
+  function bar(l,cur,goal,cls){return '<div class="dk-m"><div class="dk-mh"><span>'+l+'</span><b>'+trkN(Math.round(cur))+'<small> / '+trkN(goal)+' g</small></b></div><div class="dk-bar"><i class="'+cls+'" style="width:'+Math.min(100,goal?cur/goal*100:0).toFixed(1)+'%"></i></div></div>'}
+  return '<div class="dk-card"><div class="dk-row"><div class="dk-ring"><svg viewBox="0 0 132 132" aria-hidden="true"><circle cx="66" cy="66" r="'+R+'" class="dk-tr"/>'+(v>0?'<circle cx="66" cy="66" r="'+R+'" class="dk-arc'+(p>1.1?' over':'')+'" stroke-dasharray="'+(C*v).toFixed(1)+' '+C.toFixed(1)+'" transform="rotate(-90 66 66)"/>':'')+
+    '<circle cx="'+(66+Math.sin(a)*R).toFixed(1)+'" cy="'+(66-Math.cos(a)*R).toFixed(1)+'" r="7" class="dk-dot"/></svg><div class="dk-in"><b>'+trkN(eaten)+'</b><span>/ '+trkN(obj)+' kcal</span></div></div>'+
+    '<div class="dk-ms">'+bar('Protéines',prot,pg,'p')+bar('Glucides',carb,cg,'g')+bar('Lipides',fat,fg,'l')+'</div></div>'+
+    '<div class="dk-foot"><span>'+ticked+' / '+(day?day.meals.length:0)+' repas</span><span>Semaine : <b>'+trkN(wk)+'</b> / '+trkN(wkGoal)+' kcal</span></div></div>'}
+// weekly food budget: what the week's meals cost, per day, and what stays in the pocket
+function budgetWeekCard(gen,mc){var ti=todayIndex(),costs=gen.plan.map(function(d){return d.meals.reduce(function(a,m){return a+(+m.price||0)},0)}),tot=costs.reduce(function(a,x){return a+x},0),b=+mc.b||0,save=b-tot,mx=Math.max.apply(null,costs)||1;
+  if(!tot)return '';var e2=function(x){return x.toFixed(2).replace('.',',')+' €'};
+  return appH('t-money','euro','Budget de la semaine',b?'objectif '+b+' €':'')+'<div class="app-card bw"><div class="bw-top"><div><b>'+e2(tot)+'</b><span> / '+(b?b+' €':'–')+'</span></div>'+(b?'<span class="bw-save'+(save<0?' over':'')+'">'+(save>=0?'−'+e2(save)+' économisés':'+'+e2(-save)+' au-dessus')+'</span>':'')+'</div>'+
+    '<div class="bw-bars" role="img" aria-label="Coût des repas par jour">'+costs.map(function(c,i){return '<div class="bw-d'+(i===ti?' today':'')+'"><small>'+(c?c.toFixed(1).replace('.',','):'')+'</small><i style="height:'+Math.max(8,c/mx*86).toFixed(0)+'px"></i><span>'+gen.plan[i].day.charAt(0)+'</span></div>'}).join('')+'</div>'+
+    '<p class="bw-note">Coût de tes repas, calculé avec les prix de ta liste de courses (le reste des paquets sert la semaine suivante).</p></div>'}
+// week view: day pills + big photo cards
+function weekCardsHtml(gen,u){var ti=todayIndex(),di=window._dashDay!=null?window._dashDay:ti,dates=weekDates(),d=gen.plan[di],cost=d.meals.reduce(function(a,m){return a+(+m.price||0)},0);
+  var done={};(trkLoad().t.cal||[]).forEach(function(x){if(x.plan)done[x.plan]=1});
+  var h='<div class="wp" role="tablist" aria-label="Jours de la semaine">'+gen.plan.map(function(x,i){return '<button type="button" role="tab" aria-selected="'+(i===di)+'" class="wp-d'+(i===di?' on':'')+(i===ti?' today':'')+'" onclick="dashDay('+i+')"><span>'+x.day.slice(0,3)+'</span><b>'+dates[i].getDate()+'</b></button>'}).join('')+'</div>';
+  h+='<div class="wp-head"><h2>'+d.day+(di===ti?' <em>aujourd’hui</em>':' '+dates[di].getDate())+'</h2><span>'+d.meals.length+' repas · '+cost.toFixed(2).replace('.',',')+' €</span></div>';
+  d.meals.forEach(function(m,mi){var open=u||isFreeMeal(di,mi),el=m.img&&document.getElementById(m.img),key=weekKey()+'-'+di+'-'+mi,on=!!done[key];
+    h+='<article class="mcb'+(open?'':' locked')+'"><div class="mcb-ph" onclick="showMealDetail('+di+','+mi+')">'+(el?'<img src="'+(el.getAttribute('src')||el.src)+'" alt="" loading="lazy" decoding="async">':'<div class="mcb-emo">'+m.emoji+'</div>')+
+      '<span class="mcb-cat">'+(CAT_LBL[m.cat]||'Repas')+'</span>'+(m.price?'<span class="mcb-price">'+(+m.price).toFixed(2).replace('.',',')+' €</span>':'')+'</div>'+
+      '<div class="mcb-bd"><h3>'+(open?m.n:'Recette du plan complet')+'</h3><div class="mcb-chips"><span class="k">'+m.cal+' kcal</span><span>P '+m.p+' g</span><span>G '+(m.g||0)+' g</span><span>L '+(m.l||0)+' g</span>'+(m.t?'<span>'+m.t+' min</span>':'')+'</div>'+
+      '<div class="mcb-act"><button type="button" class="mcb-go" onclick="showMealDetail('+di+','+mi+')">'+(open?'Voir la recette':'🔒 Débloquer')+'</button>'+(open&&di===ti&&isMember()?'<button type="button" class="menu-ck'+(on?' on':'')+'" onclick="trkPlanMeal('+di+','+mi+');renderTab()" aria-pressed="'+on+'" aria-label="'+(on?'Retirer':'J’ai mangé')+' '+escH(m.n)+'">✓</button>':'')+'</div></div></article>'});
+  return h}
+function weekDayHtml(gen,u){return weekCardsHtml(gen,u)}
+function weekDayHtmlOld(gen,u){
   var ti=todayIndex(),di=window._dashDay!=null?window._dashDay:ti,dates=weekDates(),st=lsGet('macro_track')||{},days=st.days||{},goal=window._trkCal||2000;
   var h='<div class="ds" role="tablist" aria-label="Jours de la semaine">';
   gen.plan.forEach(function(d,i){var t=days[trkKey(dates[i])],eaten=t?t.cal.reduce(function(a,x){return a+x.k},0):0,burn=t?t.act.reduce(function(a,x){return a+x.k},0):0,p=eaten/(goal+burn);
@@ -2864,8 +2953,9 @@ function tabJour(mc,gen){
   var prot=t.cal.reduce(function(a,x){return a+(x.p||0)},0),pg=window._trkProt||mc.protG,wGoal=Math.round(trkKg()*35/250)+Math.round(mins/30);
   var d=new Date(),h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span><span class="app-date">'+d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})+'</span></div><h1 class="app-title">Bonjour'+(firstName()?' '+escH(firstName()):'')+'</h1>';
   var free=!isMember(),top=h;if(free)top+=freeBanner();h='';
-  h+='<div class="app-card hero-cal tinted t-cal"><div><div class="n">'+trkN(Math.abs(left))+'</div><div class="l">'+(left>=0?'Calories restantes':'Calories au-dessus de ton objectif')+'</div><div class="sub">Objectif '+trkN(goal)+(burn?' + '+trkN(burn)+' activité':'')+' · mangé '+trkN(eaten)+'</div><span class="pct">'+Math.round(Math.min(999,eaten/obj*100))+' % de ton objectif</span></div>'+bigRing(eaten/obj,112,12,eaten>obj*1.1?'var(--yellow)':'var(--c-cal)',ico('flame'))+'</div>';
-  h+='<div class="trio"><div class="app-card tinted t-prot">'+bigRing(prot/pg,58,7,'var(--c-prot)',ico('bolt'))+'<strong>'+trkN(prot)+' g</strong><span>Protéines / '+pg+' g</span></div>';
+  h+=dkCalCard(mc,gen,s,eaten,obj,prot,pg);
+  if(false)h+='<div class="app-card hero-cal tinted t-cal"><div><div class="n">'+trkN(Math.abs(left))+'</div><div class="l">'+(left>=0?'Calories restantes':'Calories au-dessus de ton objectif')+'</div><div class="sub">Objectif '+trkN(goal)+(burn?' + '+trkN(burn)+' activité':'')+' · mangé '+trkN(eaten)+'</div><span class="pct">'+Math.round(Math.min(999,eaten/obj*100))+' % de ton objectif</span></div>'+bigRing(eaten/obj,112,12,eaten>obj*1.1?'var(--yellow)':'var(--c-cal)',ico('flame'))+'</div>';
+  h+='<div class="trio duo">';
   h+='<div class="app-card tinted t-water bub"><button type="button" class="bub-hit" onclick="trkWater('+(t.water+1)+')" aria-label="Ajouter un verre d\'eau">'+bigRing(t.water/wGoal,58,7,'var(--c-water)',ico('drop'))+'<strong>'+t.water+'</strong><span>Verres / '+wGoal+' · touche +1</span></button>'+(t.water>0?'<button type="button" class="bub-minus" onclick="trkWater('+(t.water-1)+')" aria-label="Retirer un verre d\'eau">−</button>':'')+'</div>';
   h+='<button type="button" class="app-card tinted t-steps" onclick="stepsOpen()" aria-label="Noter tes pas du jour">'+bigRing(t.steps/s.stepGoal,58,7,'var(--c-steps)',ico('steps'))+'<strong>'+trkN(t.steps)+'</strong><span>Pas / '+trkN(s.stepGoal)+' · touche pour noter</span></button></div>';
   var head=free?viewOnly(h):h;h='';
@@ -2876,6 +2966,7 @@ function tabJour(mc,gen){
     var open=isFreeMeal(ti,mi);
     h+='<div class="app-card menu-row'+(open?'':' locked')+'">'+(el?'<img class="ph" src="'+el.src+'" alt="">':'<div class="ph">'+m.emoji+'</div>')+'<div class="bd '+(CAT_TINT[m.cat]||'')+'" onclick="showMealDetail('+ti+','+mi+')"><span class="ct">'+(CAT_LBL[m.cat]||'Repas')+(free&&open?' · offert':'')+'</span><span class="nm">'+m.n+'</span><span class="mt">'+(open?m.cal+' kcal · '+m.p+' g prot · voir la recette':'🔒 Recette avec le plan complet')+'</span></div>'+
       (free?(open?'':'<button type="button" class="menu-ck lock" onclick="showPaywall()" aria-label="Débloquer '+escH(m.n)+'">🔒</button>'):'<button type="button" class="menu-ck'+(on?' on':'')+'" onclick="trkPlanMeal('+ti+','+mi+')" aria-pressed="'+on+'" aria-label="'+(on?'Retirer':'J\'ai mangé')+' '+escH(m.n)+'">✓</button>')+'</div>'});
+  h+=budgetWeekCard(gen,mc);
   var menu=h;h='';
   // eaten list + food search
   h+=appH('t-cal','flame','Ce que tu as mangé',trkN(eaten)+' kcal')+'<div class="app-card" style="display:flex;flex-direction:column;gap:.65rem">';
@@ -3000,7 +3091,7 @@ function fpSavings(gen,r){var n=0;gen.plan.forEach(function(d){n+=d.meals.length
 function fpMore(b){var r=b.nextElementSibling;if(r)r.hidden=false;b.remove();window._sawMore=true;track('free_more_days')}
 function freeBanner(){return '<div class="app-card free-banner"><div><b>Ton premier repas est offert 🎁</b><span>Débloque toute ta semaine, ta liste de courses avec les prix et ton suivi du jour.</span></div><button type="button" class="lb-btn" onclick="track(\'paywall_gate\',{from:\'banner\'});if(!cpOn())confetti();showPaywall()">Débloquer</button></div>'}
 function trkPlanMeal(di,mi){if(!isMember()){showPaywall();return}var m=window._gen.plan[di].meals[mi],key=weekKey()+'-'+di+'-'+mi,s=trkLoad(),i=-1;s.t.cal.forEach(function(x,j){if(x.plan===key)i=j});
-  if(i>-1)s.t.cal.splice(i,1);else s.t.cal.push({n:m.n,k:m.cal,p:m.p,plan:key});trkSave(s)}
+  if(i>-1)s.t.cal.splice(i,1);else s.t.cal.push({n:m.n,k:m.cal,p:m.p,g:m.g,l:m.l,plan:key});trkSave(s)}
 function tabReglages(mc){var u=isUnlocked();
   var h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span>'+(isInsider()?'<span class="trk-tag">Mode test</span>':'')+'</div><h1 class="app-title">Réglages</h1>'+answerChips()+(u?'':freeBanner());
   h+='<div class="app-card set-list" style="margin-top:1rem;padding:.2rem 1rem"><button onclick="showResult()"><span class="row-l t-prot">'+ico('bolt')+'Mes macros</span><small>'+mc.cal+' kcal · '+mc.protG+' g prot</small></button><button onclick="editProfile()"><span class="row-l t-lunch">'+ico('list')+'Mes réponses</span><small>Budget, objectif, poids…</small></button><button onclick="'+(isMember()?'regenWeek()':'showPaywall()')+'"><span class="row-l t-cal">'+ico('refresh')+'Nouvelle semaine</span><small>'+(isMember()?'Même budget':'🔒 Avec le plan complet')+'</small></button>'+(isAdmin()?'<button onclick="startPreviewFree()"><span class="row-l t-bf">'+ico('user')+'Voir comme un client non payant</span><small>Parcours complet</small></button><button onclick="startDemoRun()"><span class="row-l t-act">'+ico('video')+'Refaire le parcours</span><small>Mode vidéo</small></button><button onclick="showAdmin()"><span class="row-l t-steps">'+ico('chart')+'Statistiques du site</span><small>Admin</small></button>':'')+'</div>';
