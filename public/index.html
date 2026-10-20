@@ -2312,7 +2312,7 @@ function swDone(){var yes=TASTES.filter(function(c){return SW.res[c.k]===1}),sw=
   '<button type="button" class="btn btn-p btn-lg btn-full sw-next" onclick="pick(\'tastes\','+JSON.stringify(SW.res).replace(/"/g,'&quot;')+')">Continuer →</button><button type="button" class="sw-again" onclick="renderStep()">Recommencer</button>';
   sw.appendChild(r);requestAnimationFrame(function(){r.classList.add('in')})}
 // test (owner only): goal first, wheels for age / height / weight, target weight as its own step
-function fn2On(){return isAdmin()}
+function fn2On(){return true}
 function fn2Steps(){if(!fn2On()||window._S2)return;window._S2=1;var gi=S.findIndex(function(x){return x.id==='goal'}),g=S.splice(gi,1)[0];S.unshift(g);
   g.title='Quel physique <em class="sw-em">vises-tu</em> ?';g.desc='On calibre tes calories autour de cet objectif.';
   var bi=S.findIndex(function(x){return x.id==='body'});S[bi]={id:'body',title:'Ton âge, ta taille, <em class="sw-em">ton poids</em> ?',desc:'Fais défiler chaque roue.',type:'wheels'};
