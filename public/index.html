@@ -763,6 +763,9 @@ body:has(#onboarding.active),body:has(#result.active){background:#2E2C28}
 .wh-i{height:48px;display:grid;place-items:center;scroll-snap-align:center;font-family:var(--font-d);font-size:1.125rem;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;cursor:pointer;transition:color .15s,font-size .15s}
 .wh-i.n1{color:var(--ink2);font-size:1.25rem}
 .wh-i.on{color:#fff;font-size:1.625rem;font-weight:800}
+.cr-restart{display:inline-flex;align-items:center;gap:.4rem;margin:-.25rem 0 1rem;min-height:44px;padding:.55rem 1rem;border:0;border-radius:99px;background:#16211c;color:#fff;font-family:var(--font);font-weight:800;font-size:.9375rem;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.15)}
+.cr-restart:active{transform:scale(.97)}
+.set-list+.cr-restart,.app-card+.cr-restart{margin-top:1rem}
 .ob-rc{display:inline-flex;align-items:center;gap:.3rem;background:var(--accent-bg);color:var(--accent-text);border-radius:99px;padding:.3rem .75rem;font-weight:600;font-variant-numeric:tabular-nums}
 .ob-tier{margin-top:1.1rem;padding:1rem;border:1px solid var(--border);border-radius:18px;background:var(--surface);text-align:center;display:flex;flex-direction:column;align-items:center;gap:.5rem}
 .ob-tier-chip{display:inline-block;background:var(--accent-bg);color:var(--accent-text);font-weight:800;border-radius:99px;padding:.3rem .85rem;font-size:.9375rem}
@@ -2589,6 +2592,11 @@ function adBenchLive(days){clearInterval(window._adBenchT);window._adBenchT=setI
   if(document.hidden||!document.getElementById('ad-bench')||document.querySelector('.page.active')?.id!=='admin')return;
   freshToken(function(tok){if(!tok)return;sbFetch('/rest/v1/rpc/admin_stats',{method:'POST',body:JSON.stringify({p_days:days})},tok).then(function(r){return r.ok?r.json():null}).then(function(j){
     if(!j)return;window._adBench=adBenchData(j);var el=document.getElementById('ad-bench');if(el)el.innerHTML=adBenchHtml()}).catch(function(){})})},30000)}
+// creators who film the funnel: how many times they replayed it and finished it over the period
+function adCreatorsV(d){var ev={};(d.events||[]).forEach(function(e){ev[e.name]=e});
+  var rows=CREATORS_V.map(function(c){var k=crKey(c),r=ev['creator_restart_'+k],f=ev['creator_done_'+k];return [escH(c[1]),escH(c[0]),'Accès complet offert','<b>'+fmtN(r?r.n:0)+'</b>',fmtN(f?f.n:0)]});
+  return '<section class="ad-sec" id="ad-s-crv"><h2>Espace créateur</h2>'+adTable(['Créateur','E-mail','Accès','Funnels recommencés','Funnels terminés'],rows)+
+    '<p class="ad-note">Compté sur la période choisie en haut. « Recommencés » = clics sur son bouton « 🎬 Recommencer le funnel » ; « Terminés » = questionnaires menés jusqu’au plan. Ajoute un créateur dans CREATORS_V et GIFT_ACCESS.</p></section>'}
 function renderAdmin(d,days){
 var ev={};(d.events||[]).forEach(function(e){ev[e.name]=e});
 function V(n){return ev[n]?ev[n].visitors:0}
@@ -2605,7 +2613,7 @@ kpi('Visiteurs',fmtN(tod.visitors),'')+kpi('Débuts de funnel',fmtN(tod.starts),
 '</div></section>';
 h+=adNewVersion(d);
 h+='<div class="ad-head"><div><h1>Statistiques</h1><p>Depuis le '+new Date(d.since).toLocaleDateString('fr-FR')+' · '+escH(Auth.user.email)+'</p></div><div class="ad-per">'+[7,30,90,365].map(function(n){return '<button class="'+(n===days?'on':'')+'" onclick="showAdmin('+n+')">'+(n===365?'1 an':n+' jours')+'</button>'}).join('')+'</div></div>';
-h+='<nav class="ad-toc" aria-label="Sections">'+[['ad-s-bench','Cibles'],['ad-s-prio','Priorités'],['ad-s-money','Argent'],['ad-s-mail','E-mails'],['ad-s-send','Envoyer'],['ad-s-free','Page gratuite'],['ad-s-fun','Parcours'],['ad-s-day','Jour par jour'],['ad-s-acq','Acquisition'],['ad-s-pw','Paywall'],['ad-s-prof','Profils'],['ad-s-users','Inscrits']].map(function(x){return '<a href="#'+x[0]+'">'+x[1]+'</a>'}).join('')+'</nav>';
+h+='<nav class="ad-toc" aria-label="Sections">'+[['ad-s-crv','Créateurs vidéo'],['ad-s-bench','Cibles'],['ad-s-prio','Priorités'],['ad-s-money','Argent'],['ad-s-mail','E-mails'],['ad-s-send','Envoyer'],['ad-s-free','Page gratuite'],['ad-s-fun','Parcours'],['ad-s-day','Jour par jour'],['ad-s-acq','Acquisition'],['ad-s-pw','Paywall'],['ad-s-prof','Profils'],['ad-s-users','Inscrits']].map(function(x){return '<a href="#'+x[0]+'">'+x[1]+'</a>'}).join('')+'</nav>';
 h+='<div class="ad-kpis">'+
 kpi('Visiteurs',fmtN(t.visitors),fmtN(t.sessions)+' sessions · '+pctOf(t.returning,t.visitors)+' reviennent')+
 kpi('Nouveaux comptes',fmtN(t.new_users),fmtN(t.users)+' au total')+
@@ -2622,6 +2630,7 @@ kpi('Temps médian du funnel',fmtMin(d.timing&&d.timing.funnel_min),'1re questio
 kpi('Arrivée → inscription',fmtMin(d.timing&&d.timing.signup_min),'médiane')+
 kpi('Inscription → paiement',d.pay_delay_days==null?'–':String(d.pay_delay_days).replace('.',',')+' j','médiane')+
 '</div>';
+h+=adCreatorsV(d);
 h+='<section class="ad-sec" id="ad-s-bench"><h2>Ton funnel face aux cibles</h2><div class="ad-scroll" id="ad-bench">'+adBenchHtml()+'</div></section>';
 h+='<section class="ad-sec" id="ad-s-prio"><h2>À regarder en priorité</h2><p class="ad-note">Calculé automatiquement à partir des chiffres de la période.</p>'+adInsights(d,fun)+'</section>';
 h+='<section class="ad-sec" id="ad-s-money"><h2>Argent</h2>'+adTable(['Formule','Prix','Actifs','Nouveaux sur la période','Résiliés','Total clients','Encaissé estimé'],subs.map(function(s){var p=PLAN_INFO[s.kind]||{l:s.kind,p:0};return [escH(p.l),p.p?eur(p.p):'–',fmtN(s.active),fmtN(s.new_period),fmtN(s.canceled),fmtN(s.total),p.p?eur(s.total*p.p):'–']}))+
@@ -3010,7 +3019,7 @@ function lockedShop(gen,b){return lockBox(shopRealHtml(gen,b),'euro','Ta liste d
 function tabJour(mc,gen){
   var s=trkLoad(),t=s.t,goal=window._trkCal||mc.cal,eaten=t.cal.reduce(function(a,x){return a+x.k},0),burn=t.act.reduce(function(a,x){return a+x.k},0),mins=t.act.reduce(function(a,x){return a+x.min},0),obj=goal+burn,left=obj-eaten;
   var prot=t.cal.reduce(function(a,x){return a+(x.p||0)},0),pg=window._trkProt||mc.protG,wGoal=Math.round(trkKg()*35/250)+Math.round(mins/30);
-  var d=new Date(),h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span><span class="app-date">'+d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})+'</span></div><h1 class="app-title">Bonjour'+(firstName()?' '+escH(firstName()):'')+'</h1>';
+  var d=new Date(),h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span><span class="app-date">'+d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})+'</span></div><h1 class="app-title">Bonjour'+(firstName()?' '+escH(firstName()):'')+'</h1>'+crBtn();
   var free=!isMember(),top=h;if(free)top+=freeBanner();h='';
   h+=dkCalCard(mc,gen,s,eaten,obj,prot,pg);
   if(false)h+='<div class="app-card hero-cal tinted t-cal"><div><div class="n">'+trkN(Math.abs(left))+'</div><div class="l">'+(left>=0?'Calories restantes':'Calories au-dessus de ton objectif')+'</div><div class="sub">Objectif '+trkN(goal)+(burn?' + '+trkN(burn)+' activité':'')+' · mangé '+trkN(eaten)+'</div><span class="pct">'+Math.round(Math.min(999,eaten/obj*100))+' % de ton objectif</span></div>'+bigRing(eaten/obj,112,12,eaten>obj*1.1?'var(--yellow)':'var(--c-cal)',ico('flame'))+'</div>';
@@ -3154,7 +3163,7 @@ function trkPlanMeal(di,mi){if(!isMember()){showPaywall();return}var m=window._g
 function tabReglages(mc){var u=isUnlocked();
   var h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span>'+(isInsider()?'<span class="trk-tag">Mode test</span>':'')+'</div><h1 class="app-title">Réglages</h1>'+answerChips()+(u?'':freeBanner());
   h+='<div class="app-card set-list" style="margin-top:1rem;padding:.2rem 1rem"><button onclick="showResult()"><span class="row-l t-prot">'+ico('bolt')+'Mes macros</span><small>'+mc.cal+' kcal · '+mc.protG+' g prot</small></button><button onclick="editProfile()"><span class="row-l t-lunch">'+ico('list')+'Mes réponses</span><small>Budget, objectif, poids…</small></button><button onclick="'+(isMember()?'regenWeek()':'showPaywall()')+'"><span class="row-l t-cal">'+ico('refresh')+'Nouvelle semaine</span><small>'+(isMember()?'Même budget':'🔒 Avec le plan complet')+'</small></button>'+(isAdmin()?'<button onclick="startPreviewFree()"><span class="row-l t-bf">'+ico('user')+'Voir comme un client non payant</span><small>Parcours complet</small></button><button onclick="startDemoRun()"><span class="row-l t-act">'+ico('video')+'Refaire le parcours</span><small>Mode vidéo</small></button><button onclick="showAdmin()"><span class="row-l t-steps">'+ico('chart')+'Statistiques du site</span><small>Admin</small></button>':'')+'</div>';
-  h+=refCard();
+  h+=crBtn()+refCard();
   h+='<div class="app-h">Compte</div><div class="app-card set-list" style="padding:.2rem 1rem"><button type="button" style="cursor:default"><span class="row-l t-muted">'+ico('user')+escH(Auth.user?Auth.user.email:'')+'</span><small>'+(u?'Plan complet':'Aperçu gratuit')+'</small></button><button onclick="signOut()">Se déconnecter</button><button class="danger" onclick="deleteMyData()">Supprimer mes données</button></div>';
   return h}
 function showDashboard(){refSend();
@@ -3515,7 +3524,13 @@ var ADMIN_EMAIL='arthurdemortiere15@gmail.com';
 // accounts with full access (plan unlocked + daily tracker), without the stats: the owner's partner
 var FULL_ACCESS=['crevatjuliette@gmail.com'];
 // accounts given paid access for free (same as a paying customer, no test tag, counted in stats)
-var GIFT_ACCESS=[];
+var GIFT_ACCESS=['mzgliam94@gmail.com'];
+// video creators: [e-mail, name shown in the admin]; they get full access (GIFT_ACCESS) + a button to replay the whole funnel
+var CREATORS_V=[['mzgliam94@gmail.com','mzgliam94']];
+function creatorV(){var e=Auth.user?String(Auth.user.email||'').toLowerCase():'';for(var i=0;i<CREATORS_V.length;i++)if(CREATORS_V[i][0]===e)return CREATORS_V[i];return null}
+function crKey(c){return String(c[0]).split('@')[0].replace(/[^a-z0-9]/g,'')}
+function creatorRestart(){var c=creatorV();if(!c)return;track('creator_restart_'+crKey(c));lsDel('macro_plan');lsDel('macro_profile');window._dashDay=null;window._proofShown=false;selGender=null;beginFunnel()}
+function crBtn(){return creatorV()?'<button type="button" class="cr-restart" onclick="creatorRestart()">🎬 Recommencer le funnel</button>':''}
 function isGift(){return !!(Auth.user&&GIFT_ACCESS.indexOf(String(Auth.user.email||'').toLowerCase())>-1)}
 function isFull(){return !!(Auth.user&&FULL_ACCESS.indexOf(String(Auth.user.email||'').toLowerCase())>-1)}
 function isInsider(){return isAdmin()||isFull()}
@@ -3703,7 +3718,7 @@ function setLeadStatus(status){if(!hasProfile())return;
   if(!(Auth.user&&Auth.session&&sbOn()))return;
   sbFetch('/rest/v1/profiles?on_conflict=user_id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:Auth.user.id,email:Auth.user.email,data:{D:D,g:selGender||null,status:status},updated_at:new Date().toISOString()})},Auth.session.access_token).catch(function(){});
 }
-function afterOnboarding(){track('onboarding_done');lsSet('macro_onb_ts',Date.now());
+function afterOnboarding(){track('onboarding_done');var _c=typeof creatorV==='function'&&creatorV();if(_c)track('creator_done_'+crKey(_c));lsSet('macro_onb_ts',Date.now());
   if(window._demoRun&&isAdmin()){window._demoRun=false;saveProfile();refreshNav();if(previewFree()){lsDel('macro_plan');showDashboard();return}showResult();return}
   saveProfile();
   if((Auth.user&&!(window._demoRun&&isAdmin()))||!authReady()){showDashboard();return}
