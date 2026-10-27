@@ -764,6 +764,15 @@ body:has(#onboarding.active),body:has(#result.active){background:#2E2C28}
 .wh-i.n1{color:var(--ink2);font-size:1.25rem}
 .wh-i.on{color:#fff;font-size:1.625rem;font-weight:800}
 .cr-restart{display:inline-flex;align-items:center;gap:.4rem;margin:-.25rem 0 1rem;min-height:44px;padding:.55rem 1rem;border:0;border-radius:99px;background:#16211c;color:#fff;font-family:var(--font);font-weight:800;font-size:.9375rem;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.15)}
+.cr-list{list-style:none;margin:0 0 .6rem;padding:0;display:flex;flex-direction:column}
+.cr-list li{display:flex;align-items:center;gap:.75rem;padding:.7rem 0;border-bottom:1px solid var(--border)}
+.cr-list li:last-child{border-bottom:0}
+.cr-list li>div{flex:1;min-width:0;display:flex;flex-direction:column}
+.cr-list li>div small{font-size:.75rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cr-list li>span{display:flex;flex-direction:column;align-items:center;min-width:72px}
+.cr-list li>span b{font-family:var(--font-d);font-size:1.375rem;font-variant-numeric:tabular-nums}
+.cr-list li>span small{font-size:.6875rem;color:var(--muted)}
+.cr-admin-go{background:var(--accent);margin-left:.4rem}
 .cr-restart:active{transform:scale(.97)}
 .set-list+.cr-restart,.app-card+.cr-restart{margin-top:1rem}
 .ob-rc{display:inline-flex;align-items:center;gap:.3rem;background:var(--accent-bg);color:var(--accent-text);border-radius:99px;padding:.3rem .75rem;font-weight:600;font-variant-numeric:tabular-nums}
@@ -3014,12 +3023,12 @@ function renderTab(){var v=document.getElementById('app-view');if(!v)return;if(w
   else if(t==='courses')h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span></div><h1 class="app-title">Courses</h1><div id="dash-shop">'+(isMember()?shopRealHtml(gen,mc.b):lockedShop(gen,mc.b))+'</div>';
   else if(t==='progres'){h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span></div><h1 class="app-title">Progrès</h1><div id="trk-prog">'+(function(p){return isMember()?p:viewOnly(p)})(trkProgressHtml(trkLoad()).replace('<h3 class="trk-sub">Mes progrès</h3>',''))+'</div>'}
   else h=tabReglages(mc);
-  v.innerHTML=h}
+  v.innerHTML=h;if(t==='reglages')crAdminLoad()}
 function lockedShop(gen,b){return lockBox(shopRealHtml(gen,b),'euro','Ta liste de courses avec les prix','Tout ce qu\'il faut acheter pour ta semaine, au paquet près, pensé pour ton budget de '+b+' €.')}
 function tabJour(mc,gen){
   var s=trkLoad(),t=s.t,goal=window._trkCal||mc.cal,eaten=t.cal.reduce(function(a,x){return a+x.k},0),burn=t.act.reduce(function(a,x){return a+x.k},0),mins=t.act.reduce(function(a,x){return a+x.min},0),obj=goal+burn,left=obj-eaten;
   var prot=t.cal.reduce(function(a,x){return a+(x.p||0)},0),pg=window._trkProt||mc.protG,wGoal=Math.round(trkKg()*35/250)+Math.round(mins/30);
-  var d=new Date(),h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span><span class="app-date">'+d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})+'</span></div><h1 class="app-title">Bonjour'+(firstName()?' '+escH(firstName()):'')+'</h1>'+crBtn();
+  var d=new Date(),h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span><span class="app-date">'+d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})+'</span></div><h1 class="app-title">Bonjour'+(firstName()?' '+escH(firstName()):'')+'</h1>'+crBtn()+(isAdmin()?'<button type="button" class="cr-restart cr-admin-go" onclick="crAdminGo()">📊 Espace créateur</button>':'');
   var free=!isMember(),top=h;if(free)top+=freeBanner();h='';
   h+=dkCalCard(mc,gen,s,eaten,obj,prot,pg);
   if(false)h+='<div class="app-card hero-cal tinted t-cal"><div><div class="n">'+trkN(Math.abs(left))+'</div><div class="l">'+(left>=0?'Calories restantes':'Calories au-dessus de ton objectif')+'</div><div class="sub">Objectif '+trkN(goal)+(burn?' + '+trkN(burn)+' activité':'')+' · mangé '+trkN(eaten)+'</div><span class="pct">'+Math.round(Math.min(999,eaten/obj*100))+' % de ton objectif</span></div>'+bigRing(eaten/obj,112,12,eaten>obj*1.1?'var(--yellow)':'var(--c-cal)',ico('flame'))+'</div>';
@@ -3163,7 +3172,7 @@ function trkPlanMeal(di,mi){if(!isMember()){showPaywall();return}var m=window._g
 function tabReglages(mc){var u=isUnlocked();
   var h='<div class="app-top"><span class="app-brand">mangereco<i>.</i></span>'+(isInsider()?'<span class="trk-tag">Mode test</span>':'')+'</div><h1 class="app-title">Réglages</h1>'+answerChips()+(u?'':freeBanner());
   h+='<div class="app-card set-list" style="margin-top:1rem;padding:.2rem 1rem"><button onclick="showResult()"><span class="row-l t-prot">'+ico('bolt')+'Mes macros</span><small>'+mc.cal+' kcal · '+mc.protG+' g prot</small></button><button onclick="editProfile()"><span class="row-l t-lunch">'+ico('list')+'Mes réponses</span><small>Budget, objectif, poids…</small></button><button onclick="'+(isMember()?'regenWeek()':'showPaywall()')+'"><span class="row-l t-cal">'+ico('refresh')+'Nouvelle semaine</span><small>'+(isMember()?'Même budget':'🔒 Avec le plan complet')+'</small></button>'+(isAdmin()?'<button onclick="startPreviewFree()"><span class="row-l t-bf">'+ico('user')+'Voir comme un client non payant</span><small>Parcours complet</small></button><button onclick="startDemoRun()"><span class="row-l t-act">'+ico('video')+'Refaire le parcours</span><small>Mode vidéo</small></button><button onclick="showAdmin()"><span class="row-l t-steps">'+ico('chart')+'Statistiques du site</span><small>Admin</small></button>':'')+'</div>';
-  h+=crBtn()+refCard();
+  h+=crAdminHtml()+crBtn()+refCard();
   h+='<div class="app-h">Compte</div><div class="app-card set-list" style="padding:.2rem 1rem"><button type="button" style="cursor:default"><span class="row-l t-muted">'+ico('user')+escH(Auth.user?Auth.user.email:'')+'</span><small>'+(u?'Plan complet':'Aperçu gratuit')+'</small></button><button onclick="signOut()">Se déconnecter</button><button class="danger" onclick="deleteMyData()">Supprimer mes données</button></div>';
   return h}
 function showDashboard(){refSend();
@@ -3530,6 +3539,15 @@ var CREATORS_V=[['mzgliam94@gmail.com','mzgliam94'],['matugc@outlook.fr','matugc
 function creatorV(){var e=Auth.user?String(Auth.user.email||'').toLowerCase():'';for(var i=0;i<CREATORS_V.length;i++)if(CREATORS_V[i][0]===e)return CREATORS_V[i];return null}
 function crKey(c){return String(c[0]).split('@')[0].replace(/[^a-z0-9]/g,'')}
 function creatorRestart(){var c=creatorV();if(!c)return;track('creator_restart_'+crKey(c));lsDel('macro_plan');lsDel('macro_profile');window._dashDay=null;window._proofShown=false;selGender=null;beginFunnel()}
+// owner: creators table inside the app (Réglages), loaded from admin_stats over 30 days
+function crAdminHtml(){return isAdmin()?'<div class="app-h" id="cr-admin-h"><span class="lbl">🎬 Espace créateur</span><small>30 derniers jours</small></div><div class="app-card cr-admin" id="cr-admin"><p class="trk-note">Chargement…</p></div>':''}
+function crAdminLoad(){var el=document.getElementById('cr-admin');if(!el||!isAdmin())return;
+  freshToken(function(tok){if(!tok){el.innerHTML='<p class="trk-note">Reconnecte-toi avec Google pour voir les chiffres.</p>';return}
+    sbFetch('/rest/v1/rpc/admin_stats',{method:'POST',body:JSON.stringify({p_days:30})},tok).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j){el.innerHTML='<p class="trk-note">Statistiques indisponibles pour le moment.</p>';return}
+      var ev={};(j.events||[]).forEach(function(e){ev[e.name]=e});
+      el.innerHTML='<ul class="cr-list">'+CREATORS_V.map(function(c){var k=crKey(c),r=ev['creator_restart_'+k],f=ev['creator_done_'+k];return '<li><div><b>'+escH(c[1])+'</b><small>'+escH(c[0])+'</small></div><span><b>'+fmtN(r?r.n:0)+'</b><small>recommencés</small></span><span><b>'+fmtN(f?f.n:0)+'</b><small>terminés</small></span></li>'}).join('')+'</ul>'+
+        '<button type="button" class="trk-link" onclick="showAdmin(30)">Voir toutes les stats →</button>'}).catch(function(){el.innerHTML='<p class="trk-note">Connexion impossible, réessaie dans un instant.</p>'})})}
+function crAdminGo(){appGo('reglages');setTimeout(function(){var e=document.getElementById('cr-admin-h');if(e)e.scrollIntoView({behavior:'smooth',block:'start'})},120)}
 function crBtn(){return creatorV()?'<button type="button" class="cr-restart" onclick="creatorRestart()">🎬 Recommencer le funnel</button>':''}
 function isGift(){return !!(Auth.user&&GIFT_ACCESS.indexOf(String(Auth.user.email||'').toLowerCase())>-1)}
 function isFull(){return !!(Auth.user&&FULL_ACCESS.indexOf(String(Auth.user.email||'').toLowerCase())>-1)}
