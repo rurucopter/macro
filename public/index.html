@@ -3524,9 +3524,9 @@ var ADMIN_EMAIL='arthurdemortiere15@gmail.com';
 // accounts with full access (plan unlocked + daily tracker), without the stats: the owner's partner
 var FULL_ACCESS=['crevatjuliette@gmail.com'];
 // accounts given paid access for free (same as a paying customer, no test tag, counted in stats)
-var GIFT_ACCESS=['mzgliam94@gmail.com','matugc@outlook.fr'];
+var GIFT_ACCESS=['mzgliam94@gmail.com','matugc@outlook.fr','tipsmanger@gmail.com'];
 // video creators: [e-mail, name shown in the admin]; they get full access (GIFT_ACCESS) + a button to replay the whole funnel
-var CREATORS_V=[['mzgliam94@gmail.com','mzgliam94'],['matugc@outlook.fr','matugc']];
+var CREATORS_V=[['mzgliam94@gmail.com','mzgliam94'],['matugc@outlook.fr','matugc'],['tipsmanger@gmail.com','tipsmanger']];
 function creatorV(){var e=Auth.user?String(Auth.user.email||'').toLowerCase():'';for(var i=0;i<CREATORS_V.length;i++)if(CREATORS_V[i][0]===e)return CREATORS_V[i];return null}
 function crKey(c){return String(c[0]).split('@')[0].replace(/[^a-z0-9]/g,'')}
 function creatorRestart(){var c=creatorV();if(!c)return;track('creator_restart_'+crKey(c));lsDel('macro_plan');lsDel('macro_profile');window._dashDay=null;window._proofShown=false;selGender=null;beginFunnel()}
