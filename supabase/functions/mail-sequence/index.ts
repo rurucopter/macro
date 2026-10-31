@@ -102,7 +102,7 @@ function build(key: string, v: V, go: Go): Mail | null {
   const sign = P("Arthur");
   const F = v.places !== 0; // founder pack still open (-1: count unknown)
   const dl = Math.max(1, Math.ceil((FOUNDER_END - Date.now()) / 864e5)); // days left
-  const nb = dl <= 1 ? "Dernier jour : l'offre se termine ce soir à 23h59" : `L'offre se termine mardi 20 octobre à 23h59 (plus que ${dl} jours)`;
+  const nb = dl <= 1 ? "Dernier jour : l'offre se termine ce soir à 23h59" : `L'offre se termine samedi 7 novembre à 23h59 (plus que ${dl} jours)`;
   const left = P(`<b>${nb}</b>. Ensuite, ce sera 9,99 €/mois.`);
   const PLAN = `/?${utm(key)}`, LISTE = `/?voir=liste&${utm(key)}`, FOND = `/?offre=fondateur&${utm(key)}`, OFFRE = `/?offre=plan&${utm(key)}`;
   const PAY = `/?payer=${F ? "fondateur" : "mensuel"}&${utm(key)}`; // straight to the Whop checkout
@@ -153,7 +153,7 @@ function build(key: string, v: V, go: Go): Mail | null {
     case "F1":
       if (!F) return null;
       subject = dl <= 1 ? "Pack fondateur : dernier jour" : `Pack fondateur : plus que ${dl} jours`;
-      body = P(hi) + P(`J'ouvre le <b>pack fondateur</b> de Mangereco jusqu'au mardi 20 octobre à 23h59 :`) +
+      body = P(hi) + P(`J'ouvre le <b>pack fondateur</b> de Mangereco jusqu'au samedi 7 novembre à 23h59 :`) +
         UL(["<b>59,99 € une seule fois</b>, pas d'abonnement", "Accès à vie à ton plan repas + ta liste de courses avec les prix", "Toutes les futures nouveautés incluses", "Prix bloqué pour toujours"]) +
         left + P("Une question ? Réponds à ce mail.") + sign;
       cta = "Devenir membre fondateur";
