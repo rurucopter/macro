@@ -2,7 +2,7 @@
 //   A  account, not paying (needs e-mail consent). Clock starts when the paywall was first seen (else at sign-up).
 //        A1 +10 min (button straight to the Whop checkout), A2 D+1 (shopping list, blurred preview), A3 D+3 (last reminder),
 //        A4 then every Saturday 18:00 Paris, 1 per week, 4 at most (recipes teaser).
-//      Everything stops as soon as the person pays. Until FOUNDER_END (Tue 20 Oct 2026 23:59 Paris) the mails push the
+//      Everything stops as soon as the person pays. Until FOUNDER_END (Sat 7 Nov 2026 23:59 Paris) the mails push the
 //      founder pack (links ?payer=fondateur / ?offre=fondateur), afterwards the 9.99 €/month plan
 //      (?payer=mensuel / ?offre=plan). The annual plan is not offered any more (hidden on the site).
 //   B  paying
@@ -41,7 +41,7 @@ const MAX_PER_RUN = 40;
 const MAX_BROADCAST = 120; // per call (Resend: 2 mails/s, the function must answer within ~150 s)
 const MAX_ATTEMPTS = 3;
 const FOUNDER_CAP = 20;
-const FOUNDER_END = Date.UTC(2026, 9, 20, 21, 59, 59); // Tue 20 Oct 2026, 23:59:59 Paris: the launch offer closes for everyone
+const FOUNDER_END = Date.UTC(2026, 10, 7, 22, 59, 59); // Sat 7 Nov 2026, 23:59:59 Paris: the relaunched founder offer closes for everyone
 const A4_MAX = 4;
 const CORS = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, apikey, content-type, x-cron-secret", "Access-Control-Allow-Methods": "POST, OPTIONS" };
 
