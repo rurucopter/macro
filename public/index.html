@@ -3431,7 +3431,7 @@ var founderCount=null,FOUNDER_MAX=20;
 var FOUNDER_END=Date.UTC(2026,9,20,21,59,59);
 // founder offer relaunched for 1 week (ends Sat 7 Nov 2026, 23:59:59 Paris) — test: owner device first
 var FOUNDER_END2=Date.UTC(2026,10,7,22,59,59);
-function fdr2On(){return typeof ownerDev==='function'&&ownerDev()}
+function fdr2On(){return true}
 function founderEnd(){return fdr2On()?FOUNDER_END2:FOUNDER_END}
 function founderClosed(){return Date.now()>founderEnd()||(founderCount!==null&&founderCount>=FOUNDER_MAX)}
 function cdText(){var ms=Math.max(0,founderEnd()-Date.now()),sx=Math.floor(ms/1000),d=Math.floor(sx/86400),h=Math.floor(sx%86400/3600),m=Math.floor(sx%3600/60),x=sx%60;function p(n){return (n<10?'0':'')+n}
