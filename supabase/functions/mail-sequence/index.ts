@@ -11,6 +11,8 @@
 //        B3 every Saturday 18:00 Paris: the plan + list of the week
 //        B4 renewal reminder, D-3 for monthly, D-7 for annual (transactional)
 //        B5 manual "nouveauté" broadcast (POST ?broadcast, see below)
+//   D  founder campaign: from DAILY_START to FOUNDER_END, 2 mails a day (9 h and 18 h Paris) to non-paying accounts with consent.
+//      Never more than DAILY_CAP marketing mails per person per day, all sequences included (transactional mails don't count).
 //   C1 seven days after a cancellation. F1 one founder mail to accounts created before SEQ_START.
 // Each (user, mail) pair is claimed in public.mail_log before sending, so a mail is never sent twice.
 // A failed send is retried twice (after 5 min, then 30 min); the error is kept in mail_log.last_error.
@@ -43,6 +45,8 @@ const MAX_ATTEMPTS = 3;
 const FOUNDER_CAP = 20;
 const FOUNDER_END = Date.UTC(2026, 10, 7, 22, 59, 59); // Sat 7 Nov 2026, 23:59:59 Paris: the relaunched founder offer closes for everyone
 const A4_MAX = 4;
+const DAILY_START = Date.UTC(2026, 10, 3, 8, 0, 0); // Tue 3 Nov 2026, 9:00 Paris
+const DAILY_CAP = 2;
 const CORS = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, apikey, content-type, x-cron-secret", "Access-Control-Allow-Methods": "POST, OPTIONS" };
 
 const esc = (s: string) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] as string));
@@ -70,6 +74,7 @@ type V = {
   prenom: string; goal: string; budget: string; meals: number; places: number;
   weekCost: number | null; plans: number; renouv: string; price: string; week: number;
   b5?: { subject: string; text: string; cta: string; to: string };
+  dIdx?: number;
 };
 type Mail = { subject: string; html: string; text: string; tx: boolean };
 type Go = (path: string) => string; // tracked link to a path of the site
@@ -88,6 +93,20 @@ const TEASER: [string, number, number, string][] = [
   ["Œufs brouillés + pommes de terre sautées", 26, 1.1, "eggs-potatoes.jpg"],
   ["Poulet grillé + riz basmati", 43, 2.1, "chicken.jpg"],
   ["Dahl de lentilles corail + riz basmati", 29, 1.4, "lentil-veggie-bowl.jpg"],
+];
+
+// Founder campaign: [subject, paragraphs, button]. Index = 2 x days since 3 Nov + (0 morning, 1 evening).
+const DAILY: [string, string[], string][] = [
+  ["Tu sais déjà quoi manger ce soir ?", ["Ton plan de la semaine est prêt : les repas, les quantités et la liste de courses avec les prix.", "Il te reste juste à le débloquer. Le pack fondateur, c'est <b>59,99 € une seule fois</b>, soit 4,99 € par mois sur la 1re année, puis plus rien à payer."], "Voir mon plan"],
+  ["Tes courses de la semaine, déjà faites", ["Plus besoin de réfléchir devant les rayons : ta liste est rangée par rayon, au paquet près, avec le prix de chaque article.", "Elle se refait toute seule chaque samedi."], "Débloquer ma liste"],
+  ["9,99 € par mois ou 59,99 € une fois ?", ["Le calcul est simple : 1 an en mensuel, c'est <b>119,88 €</b>. Le pack fondateur, c'est <b>59,99 € une seule fois</b>, à vie.", "Pas d'abonnement, rien à résilier."], "Prendre le pack fondateur"],
+  ["Pourquoi j'ai créé mangereco", ["J'ai pris 27 kg en 3 ans de muscu. Le plus dur n'a jamais été la salle : c'était de savoir quoi manger, combien, et sans exploser mon budget.", "J'ai construit mangereco pour ça : un plan calé sur tes calories, ton objectif et ton budget."], "Voir mon plan"],
+  ["Plus que quelques jours pour le pack fondateur", ["Après la fin de l'offre, il ne restera que le mensuel à 9,99 €/mois.", "Le pack fondateur te donne l'accès à vie : tes repas, ta liste de courses et ton suivi, avec toutes les futures nouveautés."], "Devenir membre fondateur"],
+  ["Ton plan change si ta vie change", ["Tu changes de budget, d'objectif ou de poids ? Ton plan se recalcule.", "Tu n'aimes pas un plat ? Tu le changes en un geste, et ta liste de courses suit."], "Voir mon plan"],
+  ["Cuisiner sans se prendre la tête", ["Chaque repas a sa recette, étape par étape, avec les quantités exactes pour tes macros.", "Tu n'as plus qu'à suivre, et à cocher tes repas pour voir tes calories et tes protéines de la journée."], "Voir mes recettes"],
+  ["Et si tu commençais cette semaine ?", ["Ton plan attend déjà. Tu peux faire tes courses dès aujourd'hui avec ta liste.", "Une question avant de te lancer ? Réponds à ce mail, c'est moi qui lis."], "Débloquer ma semaine"],
+  ["Dernier jour : l'offre fondateur se termine ce soir", ["C'est aujourd'hui que ça se joue : ce soir à 23h59, le pack fondateur disparaît.", "<b>59,99 € une seule fois</b>, puis plus rien à payer."], "Devenir membre fondateur"],
+  ["Dernières heures pour le pack fondateur", ["Dans quelques heures, seul le mensuel à 9,99 €/mois restera disponible.", "Si tu hésitais, c'est le moment. C'est mon dernier mail sur cette offre."], "Devenir membre fondateur"],
 ];
 
 const goalTxt = (g: string) => (g === "Sèche" ? "perdre du gras en gardant ton muscle" : g === "Maintien" ? "rester en forme" : "prendre du muscle");
@@ -159,6 +178,15 @@ function build(key: string, v: V, go: Go): Mail | null {
       cta = "Devenir membre fondateur";
       to = FOND;
       break;
+    case "D": {
+      if (!F) return null;
+      const M = DAILY[Math.max(0, Math.min(DAILY.length - 1, v.dIdx ?? 0))];
+      subject = M[0];
+      body = P(hi) + M[1].map((x) => P(x)).join("") + (dl <= 1 ? "" : left) + sign;
+      cta = M[2];
+      to = FOND;
+      break;
+    }
     // ---------- B: paying
     case "B1":
       tx = true;
@@ -281,11 +309,19 @@ Deno.serve(async (req) => {
 
   // ---- mail log, preloaded per batch of users
   const log = new Map<string, any>();
+  const dayStart = Date.parse(`${pt.date}T00:00:00+01:00`);
+  const TX = /^(T-|B1$|B4-)/; // tests and transactional mails don't count towards the daily cap
+  const today = new Map<string, number>();
+  const bump = (uid: string) => today.set(uid, (today.get(uid) ?? 0) + 1);
   async function loadLog(ids: string[]) {
     for (let i = 0; i < ids.length; i += 100) {
       const { data, error } = await sb.from("mail_log").select("user_id,mail_key,status,attempts,updated_at").in("user_id", ids.slice(i, i + 100));
       if (error) throw new Error("mail_log: " + error.message);
-      (data ?? []).forEach((r: any) => log.set(`${r.user_id}|${r.mail_key}`, r));
+      (data ?? []).forEach((r: any) => {
+        const k = `${r.user_id}|${r.mail_key}`;
+        if (!log.has(k) && r.status !== "failed" && !TX.test(r.mail_key) && new Date(r.updated_at).getTime() >= dayStart) bump(r.user_id);
+        log.set(k, r);
+      });
     }
   }
   const sentCount = (uid: string, prefix: string) => { let n = 0; for (const [k, r] of log) if (k.startsWith(`${uid}|${prefix}`) && r.status === "sent") n++; return n; };
@@ -299,6 +335,7 @@ Deno.serve(async (req) => {
     if (prev && !retryable(prev)) return;
     const m = build(key, v, await tracker(p.user_id, claim));
     if (!m || (p.email_unsub && !m.tx)) return;
+    if (!m.tx && (today.get(p.user_id) ?? 0) >= DAILY_CAP) return; // never more than 2 marketing mails a day
     const stamp = new Date().toISOString();
     if (!prev) {
       const { error } = await sb.from("mail_log").insert({ user_id: p.user_id, mail_key: claim, status: "pending", attempts: 1, updated_at: stamp });
@@ -309,6 +346,7 @@ Deno.serve(async (req) => {
       if (error || !data || !data.length) return; // another run took it
     }
     log.set(id, { status: "pending", attempts: (prev?.attempts ?? 0) + 1, updated_at: stamp });
+    if (!m.tx) bump(p.user_id);
     budgetLeft--;
     try {
       await deliver(p.email, p.user_id, m);
@@ -389,6 +427,10 @@ Deno.serve(async (req) => {
     v.renouv = fmtDate(new Date(now + 7 * DAY).toISOString()); v.price = "9,99 €/mois"; v.plans = 5;
     const only = url.searchParams.get("only");
     const keys = only ? [only.toUpperCase()] : ["A1", "A2", "A3", "A4", "F1", "B1", "B2", "B3", "B4", "C1"];
+    if (only && only.toUpperCase() === "D") { // the whole campaign, one mail per template
+      for (let i = 0; i < DAILY.length; i++) { v.dIdx = i; await sendTest("D", v); }
+      return json();
+    }
     for (const k of keys) await sendTest(k, v);
     return json();
   }
@@ -417,6 +459,28 @@ Deno.serve(async (req) => {
     else if (!quiet && age >= DAY && age < 3 * DAY) await once(p, "A2", v);
     else if (!quiet && age >= 3 * DAY && age < 6 * DAY) await once(p, "A3", v);
     else if (satEvening && age >= 6 * DAY && sentCount(p.user_id, "A4-") < A4_MAX) await once(p, "A4", v, `A4-w${pt.week}`);
+  }
+
+  // ---- D: founder campaign, 9 h and 18 h Paris
+  const dSlot = pt.hour >= 9 && pt.hour < 11 ? 0 : pt.hour >= 18 && pt.hour < 20 ? 1 : -1;
+  if (dSlot >= 0 && now >= DAILY_START && places !== 0 && budgetLeft > 0) {
+    const dIdx = Math.floor((Date.parse(`${pt.date}T00:00:00Z`) - Date.UTC(2026, 10, 3)) / DAY) * 2 + dSlot;
+    const { data: fans, error: de } = await sb.from("profiles").select(PCOLS).eq("email_optin", true).eq("email_unsub", false).order("created_at", { ascending: true }).limit(2000);
+    if (de) out.errors.push("daily: " + de.message);
+    const pool = (fans ?? []).filter((p: any) => p.email);
+    const poolIds = pool.map((p: any) => p.user_id);
+    const skip = new Set<string>();
+    for (let i = 0; i < poolIds.length; i += 100) {
+      const { data: subs } = await sb.from("subscriptions").select("user_id").in("user_id", poolIds.slice(i, i + 100)).or("unlocked.eq.true,paid_at.not.is.null");
+      (subs ?? []).forEach((s: any) => skip.add(s.user_id));
+    }
+    await loadLog(poolIds);
+    for (const p of pool) {
+      if (budgetLeft <= 0) break;
+      if (skip.has(p.user_id)) continue;
+      const v = info(p); v.dIdx = dIdx;
+      await once(p, "D", v, `D-${pt.date}-${dSlot ? "soir" : "matin"}`);
+    }
   }
 
   // ---- F1: one founder-offer mail to accounts created before SEQ_START (they never entered sequence A)
