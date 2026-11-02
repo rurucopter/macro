@@ -1305,7 +1305,11 @@ body.cr-mode>*:not(#cr-page):not(.toast):not(script){display:none!important}
 .pw2-price s{font-size:.8125rem;opacity:.5}
 .pw2-price small{font-size:.75rem;opacity:.6}
 .pw2-price .pw2-once{opacity:.85;font-weight:700;margin-top:.1rem}
-.pw2-price .pu-note,.pw3 .pw2-price .pu-note{opacity:1;color:#FCD34D;font-weight:700;margin-top:.1rem;white-space:nowrap}
+.pw2-plan:has(.pu-band){flex-wrap:wrap}
+.pu-band{flex:0 0 100%;display:flex;align-items:center;gap:.6rem;padding:.6rem .7rem;border-radius:12px;background:rgba(251,191,36,.16);border:1px solid rgba(251,191,36,.45);color:#FCD34D;font-size:.8125rem;line-height:1.3}
+.pu-band svg{flex-shrink:0;width:20px;height:20px}
+.pu-band>span{display:flex;flex-direction:column;min-width:0;color:#FDE68A}
+.pu-band b{font-size:.9375rem;font-weight:800;color:#FCD34D}
 .pw2-tag{position:absolute;top:-.6rem;left:1rem;background:#34D399;color:#05261a;font-size:.6875rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;border-radius:99px;padding:.15rem .6rem}
 .pw2-cmp{margin:0;font-size:.8125rem;opacity:.75;line-height:1.45}
 .pw2-feats{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.5rem}
@@ -3402,7 +3406,7 @@ function pw3Html(){var closed=founderClosed(),radio='<span class="pw2-radio" ari
   (closed||cpOn()?'':'<div class="pw3-offer"><span class="pw3-dot" aria-hidden="true"></span>Offre de lancement · fin dans <b class="pw3-cd">'+pw3Cd()+'</b><span class="sr-only" id="founder-txt"></span></div>')+
   '<div class="pw2-plans" role="radiogroup" aria-label="Formule">'+
   (closed?'':'<button type="button" class="pw2-plan pw2-life active" id="plan-life" role="radio" aria-checked="true" onclick="selectPlan(\'life\')"><span class="pw2-tag">Le plus choisi</span>'+radio+'<span class="pw2-name">'+(cpOn()?'<b>Offre fondateur</b><small>À vie · paiement unique · −50 %</small><span class="pw3-card-cd" aria-label="Fin de l’offre dans">⏳ <b class="pw3-cd">'+pw3Cd()+'</b></span><span class="sr-only" id="founder-txt"></span>':'<b>À vie</b><small>Paiement unique · −50 %</small>')+'</span><span class="pw2-price">'+(p499On()?'<b>4,99 €</b><small>/mois la 1re année</small><small class="pw2-once">59,99 € une seule fois</small>':'<b>59,99 €</b><small>soit 4,99 €/mois la 1re année</small>')+'</span></button>')+
-  '<button type="button" class="pw2-plan'+(closed?' active':'')+'" id="plan-month" role="radio" aria-checked="'+closed+'" onclick="selectPlan(\'month\')">'+radio+'<span class="pw2-name"><b>Mensuel</b><small>Sans engagement</small></span><span class="pw2-price"><b>9,99 €</b><small>par mois</small>'+(puOn()?'<small class="pu-note">11,99 € dès le 16 nov.</small>':'')+'</span></button>'+
+  '<button type="button" class="pw2-plan'+(closed?' active':'')+'" id="plan-month" role="radio" aria-checked="'+closed+'" onclick="selectPlan(\'month\')">'+radio+'<span class="pw2-name"><b>Mensuel</b><small>Sans engagement</small></span><span class="pw2-price"><b>9,99 €</b><small>par mois</small></span>'+(puOn()?'<span class="pu-band"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg><span><b>Passe à 11,99 € le 16 novembre</b>Abonne-toi avant pour garder 9,99 €</span></span>':'')+'</button>'+
   '</div><ul class="pw3-feats"><li>'+chk+'Recettes</li><li>'+chk+'Liste de courses</li><li>'+chk+'Suivi</li></ul>'+
   '<div class="pw2-foot"><button class="btn btn-p btn-lg btn-full" id="paywall-cta-btn" onclick="startCheckout()">'+(cp2On()?'Change ta vie →':'Débloquer ma semaine →')+'</button><p class="pw2-price-sub" id="pw2-price-sub">'+pw2PriceSub(closed?'month':'life')+'</p><p class="pw2-legal pw2-legal-foot">En continuant, tu acceptes les <a href="/cgu" target="_blank" rel="noopener">CGU</a> et l’accès immédiat au contenu, sans droit de rétractation.</p></div></div>'}
 // compact plan recap for v3: "14 repas · ~23 € / sem. · 135 g de protéines / jour"
