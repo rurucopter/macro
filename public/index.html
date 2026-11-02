@@ -3435,9 +3435,9 @@ var founderCount=null,FOUNDER_MAX=20;
 // launch offer ends for everyone on Tue 20 Oct 2026, 23:59:59 Paris time
 var FOUNDER_END=Date.UTC(2026,9,20,21,59,59);
 // founder offer relaunched for 1 week (ends Sat 7 Nov 2026, 23:59:59 Paris) — test: owner device first
-// test (owner only): real price rise of the monthly plan, the notice disappears by itself after the date
+// real price rise of the monthly plan, the notice disappears by itself after the date
 var PRICE_UP=Date.UTC(2026,10,15,22,59,59);
-function puOn(){return ownerDev()&&Date.now()<=PRICE_UP}
+function puOn(){return Date.now()<=PRICE_UP}
 var FOUNDER_END2=Date.UTC(2026,10,7,22,59,59);
 function fdr2On(){return true}
 function founderEnd(){return fdr2On()?FOUNDER_END2:FOUNDER_END}
