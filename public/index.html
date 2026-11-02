@@ -1305,6 +1305,7 @@ body.cr-mode>*:not(#cr-page):not(.toast):not(script){display:none!important}
 .pw2-price s{font-size:.8125rem;opacity:.5}
 .pw2-price small{font-size:.75rem;opacity:.6}
 .pw2-price .pw2-once{opacity:.85;font-weight:700;margin-top:.1rem}
+.pw2-price .pu-note,.pw3 .pw2-price .pu-note{opacity:1;color:#FCD34D;font-weight:700;margin-top:.1rem;white-space:nowrap}
 .pw2-tag{position:absolute;top:-.6rem;left:1rem;background:#34D399;color:#05261a;font-size:.6875rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;border-radius:99px;padding:.15rem .6rem}
 .pw2-cmp{margin:0;font-size:.8125rem;opacity:.75;line-height:1.45}
 .pw2-feats{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.5rem}
@@ -2108,7 +2109,7 @@ body.app-mode .tile.locked .tp,body.app-mode .tile.locked .tn{filter:blur(5px)}
   <div class="pr-grid">
     <div class="pr-card star" id="pr-founder"><h3>Offre de lancement · Pack fondateur</h3><div class="pr-price">59,99&nbsp;€ <small>une seule fois</small></div><p class="pr-sub-m">soit moins de 5 € par mois la 1re année</p><p class="pr-left" id="pr-founder-left">⏳ Se termine dans …</p><ul><li>Accès à vie</li><li>Toutes les futures nouveautés</li><li>Prix bloqué pour toujours</li></ul><button class="btn btn-p" onclick="startOnboarding()">Créer mon plan</button></div>
     <div class="pr-card" id="pr-year" hidden><h3>Annuel</h3><div class="pr-price">99&nbsp;€ <small>par an</small></div><ul><li>Soit 8,25 € par mois</li><li>Plan complet, recettes et liste de courses</li></ul><button class="btn btn-p" onclick="startOnboarding()">Créer mon plan</button></div>
-    <div class="pr-card"><h3>Mensuel</h3><div class="pr-price">9,99&nbsp;€ <small>par mois</small></div><ul><li>Plan complet, recettes et liste de courses</li></ul><button class="btn btn-p" onclick="startOnboarding()">Créer mon plan</button></div>
+    <div class="pr-card"><h3>Mensuel</h3><div class="pr-price">9,99&nbsp;€ <small>par mois</small></div><p class="pr-sub-m" id="pr-up" hidden>Passe à 11,99 € le 16 novembre. Abonne-toi avant pour garder 9,99 €.</p><ul><li>Plan complet, recettes et liste de courses</li></ul><button class="btn btn-p" onclick="startOnboarding()">Créer mon plan</button></div>
   </div>
 </section>
 
@@ -3401,7 +3402,7 @@ function pw3Html(){var closed=founderClosed(),radio='<span class="pw2-radio" ari
   (closed||cpOn()?'':'<div class="pw3-offer"><span class="pw3-dot" aria-hidden="true"></span>Offre de lancement · fin dans <b class="pw3-cd">'+pw3Cd()+'</b><span class="sr-only" id="founder-txt"></span></div>')+
   '<div class="pw2-plans" role="radiogroup" aria-label="Formule">'+
   (closed?'':'<button type="button" class="pw2-plan pw2-life active" id="plan-life" role="radio" aria-checked="true" onclick="selectPlan(\'life\')"><span class="pw2-tag">Le plus choisi</span>'+radio+'<span class="pw2-name">'+(cpOn()?'<b>Offre fondateur</b><small>À vie · paiement unique · −50 %</small><span class="pw3-card-cd" aria-label="Fin de l’offre dans">⏳ <b class="pw3-cd">'+pw3Cd()+'</b></span><span class="sr-only" id="founder-txt"></span>':'<b>À vie</b><small>Paiement unique · −50 %</small>')+'</span><span class="pw2-price">'+(p499On()?'<b>4,99 €</b><small>/mois la 1re année</small><small class="pw2-once">59,99 € une seule fois</small>':'<b>59,99 €</b><small>soit 4,99 €/mois la 1re année</small>')+'</span></button>')+
-  '<button type="button" class="pw2-plan'+(closed?' active':'')+'" id="plan-month" role="radio" aria-checked="'+closed+'" onclick="selectPlan(\'month\')">'+radio+'<span class="pw2-name"><b>Mensuel</b><small>Sans engagement</small></span><span class="pw2-price"><b>9,99 €</b><small>par mois</small></span></button>'+
+  '<button type="button" class="pw2-plan'+(closed?' active':'')+'" id="plan-month" role="radio" aria-checked="'+closed+'" onclick="selectPlan(\'month\')">'+radio+'<span class="pw2-name"><b>Mensuel</b><small>Sans engagement</small></span><span class="pw2-price"><b>9,99 €</b><small>par mois</small>'+(puOn()?'<small class="pu-note">11,99 € dès le 16 nov.</small>':'')+'</span></button>'+
   '</div><ul class="pw3-feats"><li>'+chk+'Recettes</li><li>'+chk+'Liste de courses</li><li>'+chk+'Suivi</li></ul>'+
   '<div class="pw2-foot"><button class="btn btn-p btn-lg btn-full" id="paywall-cta-btn" onclick="startCheckout()">'+(cp2On()?'Change ta vie →':'Débloquer ma semaine →')+'</button><p class="pw2-price-sub" id="pw2-price-sub">'+pw2PriceSub(closed?'month':'life')+'</p><p class="pw2-legal pw2-legal-foot">En continuant, tu acceptes les <a href="/cgu" target="_blank" rel="noopener">CGU</a> et l’accès immédiat au contenu, sans droit de rétractation.</p></div></div>'}
 // compact plan recap for v3: "14 repas · ~23 € / sem. · 135 g de protéines / jour"
@@ -3409,7 +3410,7 @@ function pw3Mine(){try{var mc=computeMacros(),g=window._gen,n=parseInt(D.meals)|
   if(g&&g.plan){n=0;g.plan.forEach(function(d){n+=(d.meals||[]).length})}
   if(n)x.push(n+' repas');if(r&&r.used)x.push('~'+r.used.toFixed(0)+' € / sem.');if(mc&&mc.protG)x.push(mc.protG+' g de protéines / jour');
   return x.length?'<p class="pw3-mine">Ton plan : '+x.join(' · ')+'</p>':''}catch(e){return ''}}
-function pw2PriceSub(p){return p==='life'?'59,99 € une seule fois · paiement sécurisé':'9,99 € par mois · sans engagement · paiement sécurisé'}
+function pw2PriceSub(p){return p==='life'?'59,99 € une seule fois · paiement sécurisé':puOn()?'9,99 € par mois, gardés si tu t’abonnes avant le 16 novembre · sans engagement':'9,99 € par mois · sans engagement · paiement sécurisé'}
 function showPaywall(){
 if(document.getElementById('pw-modal'))return;
 window._pwAuto=true;selectedPlan='life';track('paywall_view');setLeadStatus('paywall_view');notePaywall(true);
@@ -3430,6 +3431,9 @@ var founderCount=null,FOUNDER_MAX=20;
 // launch offer ends for everyone on Tue 20 Oct 2026, 23:59:59 Paris time
 var FOUNDER_END=Date.UTC(2026,9,20,21,59,59);
 // founder offer relaunched for 1 week (ends Sat 7 Nov 2026, 23:59:59 Paris) — test: owner device first
+// test (owner only): real price rise of the monthly plan, the notice disappears by itself after the date
+var PRICE_UP=Date.UTC(2026,10,15,22,59,59);
+function puOn(){return ownerDev()&&Date.now()<=PRICE_UP}
 var FOUNDER_END2=Date.UTC(2026,10,7,22,59,59);
 function fdr2On(){return true}
 function founderEnd(){return fdr2On()?FOUNDER_END2:FOUNDER_END}
@@ -3692,7 +3696,7 @@ function initAuth(){var _cr=/[?&]createur=([a-f0-9]{16,40})(&|$)/i.exec(location
     else if(sbOn()&&Auth.session)loadRemoteProfile(function(ok){if(ok){showDashboard();founderOffer()}});
   }
 }
-function landingTestPrice(){var c=document.querySelector('#pr-founder .pr-price'),m=document.querySelector('#pr-founder .pr-sub-m');if(!c||!m)return;
+function landingTestPrice(){var u=document.getElementById('pr-up');if(u)u.hidden=!puOn();var c=document.querySelector('#pr-founder .pr-price'),m=document.querySelector('#pr-founder .pr-sub-m');if(!c||!m)return;
   if(testOn()){c.innerHTML='4,99&nbsp;€ <small>/mois</small>';m.textContent='59,99 € payés une seule fois (sur 12 mois), puis plus rien à payer'}else{c.innerHTML='59,99&nbsp;€ <small>une seule fois</small>';m.textContent='soit moins de 5 € par mois la 1re année'}}
 function refreshNav(){if(typeof ownerDev==='function')ownerDev();landingTestPrice();lpLite();var hg=document.getElementById('hero-google');if(hg)hg.innerHTML=(sbOn()&&!viewUser())?'<button class="au-google hero-g" onclick="heroGoogle()">'+GSVG+'Continuer avec Google</button>':'';
   document.querySelectorAll('.nav-pill').forEach(function(p){
