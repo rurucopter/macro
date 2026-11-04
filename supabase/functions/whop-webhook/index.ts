@@ -1,5 +1,6 @@
 // Receives Whop webhooks and keeps public.subscriptions in sync:
 //   payment.succeeded        -> unlocked = true, plan kind, paid_at, renewal date
+//                               (49,99 € = coaching with Arthur: only coaching_requests.paid_at, the subscription is left alone)
 //   membership.deactivated   -> unlocked = false, canceled_at (never for the lifetime plan)
 // Deploy from the Supabase dashboard (Edge Functions, Verify JWT off). Secrets: WHOP_WEBHOOK_SECRET (+ optional FOUNDER_PLAN_ID).
 // SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are provided automatically by Supabase.
@@ -89,8 +90,13 @@ Deno.serve(async (req) => {
   // list price or up to 10 % below it (promo codes such as REPAS); the ranges of the plans do not overlap
   const near = (list: number) => total >= Math.round(list * 0.9 * 100) / 100 && total <= list + 0.01;
   const isFounder = founderPlanId ? planId === founderPlanId : near(59.99);
+  if (!isFounder && near(49.99)) {
+    const { error } = await supabase.from("coaching_requests").upsert({ user_id: userId, paid_at: new Date().toISOString(), whop_payment_id: paymentId ?? null, updated_at: new Date().toISOString() }, { onConflict: "user_id" });
+    if (error) { console.error("Failed to record coaching payment", error); return new Response("DB error", { status: 500 }); }
+    return new Response("ok", { status: 200 });
+  }
   // kind of plan from the amount charged (prices are tax-inclusive)
-  const kind = isFounder ? "life" : near(49.99) ? "downsell" : near(99) ? "year" : near(9.99) ? "month" : null;
+  const kind = isFounder ? "life" : near(99) ? "year" : near(4.99) || near(9.99) || near(11.99) ? "month" : null;
   if (!kind) console.error("Unrecognised amount, plan kind left empty", total, planId);
 
   const row: Record<string, unknown> = {

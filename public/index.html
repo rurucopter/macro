@@ -1306,6 +1306,24 @@ body.cr-mode>*:not(#cr-page):not(.toast):not(script){display:none!important}
 .pw2-price small{font-size:.75rem;opacity:.6}
 .pw2-price .pw2-once{opacity:.85;font-weight:700;margin-top:.1rem}
 .pw2-plan:has(.pu-band){flex-wrap:wrap}
+.pw2-price s{font-size:.8125rem;opacity:.6}
+.pw2-price .pw2-promo{color:#34D399}
+.co-card{border-color:rgba(251,191,36,.45);background:rgba(251,191,36,.06)}
+.co-go{margin-top:.2rem;font-size:.8125rem;font-weight:800;color:#FCD34D}
+#co-modal{z-index:310}
+.co-sheet{display:flex;flex-direction:column}
+#co-body{display:flex;flex-direction:column;gap:.55rem;text-align:left}
+#co-body .pw2-t{padding-right:2.25rem}
+.co-list{margin:0 0 .35rem;padding-left:1.1rem;line-height:1.5;font-size:.9375rem}
+.co-l{margin-top:.35rem;font-size:.875rem;font-weight:700}
+.co-slots{display:grid;grid-template-columns:repeat(3,1fr);gap:.45rem}
+.co-slot{min-height:44px;padding:.55rem .25rem;border-radius:12px;border:1.5px solid var(--border);background:transparent;color:inherit;font-family:var(--font);font-size:.875rem;font-weight:600;cursor:pointer}
+.co-slot[aria-pressed="true"]{border-color:#34D399;background:rgba(52,211,153,.14)}
+.co-ok{display:flex;align-items:flex-start;gap:.6rem;margin-top:.45rem;font-size:.875rem;line-height:1.4;cursor:pointer}
+.co-ok input{flex-shrink:0;width:20px;height:20px;margin:.05rem 0 0;accent-color:#34D399}
+.co-ok a{color:inherit}
+.co-err{margin:0;min-height:1.1em;font-size:.875rem;font-weight:600;color:#F87171}
+.co-done{margin:0 0 .5rem;line-height:1.5}
 .pu-band{flex:0 0 100%;display:flex;align-items:center;gap:.6rem;padding:.6rem .7rem;border-radius:12px;background:rgba(251,191,36,.16);border:1px solid rgba(251,191,36,.45);color:#FCD34D;font-size:.8125rem;line-height:1.3}
 .pu-band svg{flex-shrink:0;width:20px;height:20px}
 .pu-band>span{display:flex;flex-direction:column;min-width:0;color:#FDE68A}
@@ -2607,6 +2625,13 @@ function adBenchLive(days){clearInterval(window._adBenchT);window._adBenchT=setI
   freshToken(function(tok){if(!tok)return;sbFetch('/rest/v1/rpc/admin_stats',{method:'POST',body:JSON.stringify({p_days:days})},tok).then(function(r){return r.ok?r.json():null}).then(function(j){
     if(!j)return;window._adBench=adBenchData(j);var el=document.getElementById('ad-bench');if(el)el.innerHTML=adBenchHtml()}).catch(function(){})})},30000)}
 // creators who film the funnel: how many times they replayed it and finished it over the period
+// coaching requests: who to call
+function adCoachHtml(){setTimeout(adCoachLoad,0);return '<section class="ad-sec" id="ad-s-coach"><h2>Coaching : à appeler</h2><div id="ad-coach"><p class="ad-note">Chargement…</p></div></section>'}
+function adCoachLoad(){freshToken(function(tok){if(!tok)return;sbFetch('/rest/v1/rpc/admin_coaching',{method:'POST',body:'{}'},tok).then(function(r){return r.ok?r.json():null}).then(function(j){var el=document.getElementById('ad-coach');if(!el)return;
+  if(!j){el.innerHTML='<p class="ad-note">Liste indisponible pour le moment.</p>';return}
+  var sl={matin:'Matin',aprem:'Après-midi',soir:'Soir'},dt=function(x){return x?new Date(x).toLocaleDateString('fr-FR',{day:'numeric',month:'short'}):'-'};
+  el.innerHTML=adTable(['Prénom','Téléphone','Quand','E-mail','Demande','Paiement','Appel'],j.map(function(c){var u=escH(c.user_id);return [escH(c.prenom||'-'),c.phone?'<a href="tel:'+escH(c.phone.replace(/[^+0-9]/g,''))+'"><b>'+escH(c.phone)+'</b></a>':'Pas de numéro',escH(sl[c.slot]||'-'),escH(c.email||'-'),dt(c.created_at),c.paid_at?'<b>Payé</b> le '+dt(c.paid_at):'Pas encore payé','<button class="btn" onclick="adCoachCalled(\''+u+'\','+(c.called_at?'false':'true')+')">'+(c.called_at?'Appelé le '+dt(c.called_at)+' ✓':'Marquer appelé')+'</button>']}))+'<p class="ad-note">Le numéro est enregistré avant le paiement : « Pas encore payé » veut dire que la personne n’a pas fini de payer.</p>'}).catch(function(){})})}
+function adCoachCalled(u,v){freshToken(function(tok){if(!tok)return;sbFetch('/rest/v1/rpc/admin_coaching_called',{method:'POST',body:JSON.stringify({p_user:u,p_called:v})},tok).then(adCoachLoad).catch(function(){toast('Modification impossible, réessaie.')})})}
 function adCreatorsV(d){var ev={};(d.events||[]).forEach(function(e){ev[e.name]=e});
   var rows=CREATORS_V.map(function(c){var k=crKey(c),r=ev['creator_restart_'+k],f=ev['creator_done_'+k];return [escH(c[1]),escH(c[0]),'Accès complet offert','<b>'+fmtN(r?r.n:0)+'</b>',fmtN(f?f.n:0)]});
   return '<section class="ad-sec" id="ad-s-crv"><h2>Espace créateur</h2>'+adTable(['Créateur','E-mail','Accès','Funnels recommencés','Funnels terminés'],rows)+
@@ -2627,7 +2652,7 @@ kpi('Visiteurs',fmtN(tod.visitors),'')+kpi('Débuts de funnel',fmtN(tod.starts),
 '</div></section>';
 h+=adNewVersion(d);
 h+='<div class="ad-head"><div><h1>Statistiques</h1><p>Depuis le '+new Date(d.since).toLocaleDateString('fr-FR')+' · '+escH(Auth.user.email)+'</p></div><div class="ad-per">'+[7,30,90,365].map(function(n){return '<button class="'+(n===days?'on':'')+'" onclick="showAdmin('+n+')">'+(n===365?'1 an':n+' jours')+'</button>'}).join('')+'</div></div>';
-h+='<nav class="ad-toc" aria-label="Sections">'+[['ad-s-crv','Créateurs vidéo'],['ad-s-bench','Cibles'],['ad-s-prio','Priorités'],['ad-s-money','Argent'],['ad-s-mail','E-mails'],['ad-s-send','Envoyer'],['ad-s-free','Page gratuite'],['ad-s-fun','Parcours'],['ad-s-day','Jour par jour'],['ad-s-acq','Acquisition'],['ad-s-pw','Paywall'],['ad-s-prof','Profils'],['ad-s-users','Inscrits']].map(function(x){return '<a href="#'+x[0]+'">'+x[1]+'</a>'}).join('')+'</nav>';
+h+='<nav class="ad-toc" aria-label="Sections">'+[['ad-s-coach','Coaching'],['ad-s-crv','Créateurs vidéo'],['ad-s-bench','Cibles'],['ad-s-prio','Priorités'],['ad-s-money','Argent'],['ad-s-mail','E-mails'],['ad-s-send','Envoyer'],['ad-s-free','Page gratuite'],['ad-s-fun','Parcours'],['ad-s-day','Jour par jour'],['ad-s-acq','Acquisition'],['ad-s-pw','Paywall'],['ad-s-prof','Profils'],['ad-s-users','Inscrits']].map(function(x){return '<a href="#'+x[0]+'">'+x[1]+'</a>'}).join('')+'</nav>';
 h+='<div class="ad-kpis">'+
 kpi('Visiteurs',fmtN(t.visitors),fmtN(t.sessions)+' sessions · '+pctOf(t.returning,t.visitors)+' reviennent')+
 kpi('Nouveaux comptes',fmtN(t.new_users),fmtN(t.users)+' au total')+
@@ -2644,7 +2669,7 @@ kpi('Temps médian du funnel',fmtMin(d.timing&&d.timing.funnel_min),'1re questio
 kpi('Arrivée → inscription',fmtMin(d.timing&&d.timing.signup_min),'médiane')+
 kpi('Inscription → paiement',d.pay_delay_days==null?'–':String(d.pay_delay_days).replace('.',',')+' j','médiane')+
 '</div>';
-h+=adCreatorsV(d);
+h+=adCreatorsV(d);h+=adCoachHtml();
 h+='<section class="ad-sec" id="ad-s-bench"><h2>Ton funnel face aux cibles</h2><div class="ad-scroll" id="ad-bench">'+adBenchHtml()+'</div></section>';
 h+='<section class="ad-sec" id="ad-s-prio"><h2>À regarder en priorité</h2><p class="ad-note">Calculé automatiquement à partir des chiffres de la période.</p>'+adInsights(d,fun)+'</section>';
 h+='<section class="ad-sec" id="ad-s-money"><h2>Argent</h2>'+adTable(['Formule','Prix','Actifs','Nouveaux sur la période','Résiliés','Total clients','Encaissé estimé'],subs.map(function(s){var p=PLAN_INFO[s.kind]||{l:s.kind,p:0};return [escH(p.l),p.p?eur(p.p):'–',fmtN(s.active),fmtN(s.new_period),fmtN(s.canceled),fmtN(s.total),p.p?eur(s.total*p.p):'–']}))+
@@ -3406,15 +3431,15 @@ function pw3Html(){var closed=founderClosed(),radio='<span class="pw2-radio" ari
   (closed||cpOn()?'':'<div class="pw3-offer"><span class="pw3-dot" aria-hidden="true"></span>Offre de lancement · fin dans <b class="pw3-cd">'+pw3Cd()+'</b><span class="sr-only" id="founder-txt"></span></div>')+
   '<div class="pw2-plans" role="radiogroup" aria-label="Formule">'+
   (closed?'':'<button type="button" class="pw2-plan pw2-life active" id="plan-life" role="radio" aria-checked="true" onclick="selectPlan(\'life\')"><span class="pw2-tag">Le plus choisi</span>'+radio+'<span class="pw2-name">'+(cpOn()?'<b>Offre fondateur</b><small>À vie · paiement unique · −50 %</small><span class="pw3-card-cd" aria-label="Fin de l’offre dans">⏳ <b class="pw3-cd">'+pw3Cd()+'</b></span><span class="sr-only" id="founder-txt"></span>':'<b>À vie</b><small>Paiement unique · −50 %</small>')+'</span><span class="pw2-price">'+(p499On()?'<b>4,99 €</b><small>/mois la 1re année</small><small class="pw2-once">59,99 € une seule fois</small>':'<b>59,99 €</b><small>soit 4,99 €/mois la 1re année</small>')+'</span></button>')+
-  '<button type="button" class="pw2-plan'+(closed?' active':'')+'" id="plan-month" role="radio" aria-checked="'+closed+'" onclick="selectPlan(\'month\')">'+radio+'<span class="pw2-name"><b>Mensuel</b><small>Sans engagement</small></span><span class="pw2-price"><b>9,99 €</b><small>par mois</small></span>'+(puOn()?'<span class="pu-band"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg><span><b>Passe à 11,99 € le 16 novembre</b>Abonne-toi avant pour garder 9,99 €</span></span>':'')+'</button>'+
-  '</div><ul class="pw3-feats"><li>'+chk+'Recettes</li><li>'+chk+'Liste de courses</li><li>'+chk+'Suivi</li></ul>'+
+  '<button type="button" class="pw2-plan'+(closed?' active':'')+'" id="plan-month" role="radio" aria-checked="'+closed+'" onclick="selectPlan(\'month\')">'+(promoOn()?'<span class="pw2-tag">Offre de la semaine</span>':'')+radio+'<span class="pw2-name"><b>Mensuel</b><small>Sans engagement</small>'+(promoOn()?'<span class="pw3-card-cd" aria-label="Fin de l’offre dans">⏳ <b class="pw3-cd">'+pw3Cd()+'</b></span>':'')+'</span><span class="pw2-price">'+(promoOn()?'<s>9,99 €</s><b class="pw2-promo">4,99 €</b>':'<b>9,99 €</b>')+'<small>par mois</small></span>'+(puOn()&&!promoOn()?'<span class="pu-band"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg><span><b>Passe à 11,99 € le 16 novembre</b>Abonne-toi avant pour garder 9,99 €</span></span>':'')+'</button>'+
+  '</div>'+(coOn()?coCardHtml():'')+'<ul class="pw3-feats"><li>'+chk+'Recettes</li><li>'+chk+'Liste de courses</li><li>'+chk+'Suivi</li></ul>'+
   '<div class="pw2-foot"><button class="btn btn-p btn-lg btn-full" id="paywall-cta-btn" onclick="startCheckout()">'+(cp2On()?'Change ta vie →':'Débloquer ma semaine →')+'</button><p class="pw2-price-sub" id="pw2-price-sub">'+pw2PriceSub(closed?'month':'life')+'</p><p class="pw2-legal pw2-legal-foot">En continuant, tu acceptes les <a href="/cgu" target="_blank" rel="noopener">CGU</a> et l’accès immédiat au contenu, sans droit de rétractation.</p></div></div>'}
 // compact plan recap for v3: "14 repas · ~23 € / sem. · 135 g de protéines / jour"
 function pw3Mine(){try{var mc=computeMacros(),g=window._gen,n=parseInt(D.meals)||0,r=g?shopReal(g):null,x=[];
   if(g&&g.plan){n=0;g.plan.forEach(function(d){n+=(d.meals||[]).length})}
   if(n)x.push(n+' repas');if(r&&r.used)x.push('~'+r.used.toFixed(0)+' € / sem.');if(mc&&mc.protG)x.push(mc.protG+' g de protéines / jour');
   return x.length?'<p class="pw3-mine">Ton plan : '+x.join(' · ')+'</p>':''}catch(e){return ''}}
-function pw2PriceSub(p){return p==='life'?'59,99 € une seule fois · paiement sécurisé':puOn()?'9,99 € par mois, gardés si tu t’abonnes avant le 16 novembre · sans engagement':'9,99 € par mois · sans engagement · paiement sécurisé'}
+function pw2PriceSub(p){return p==='life'?'59,99 € une seule fois · paiement sécurisé':promoOn()?'4,99 € par mois · sans engagement · paiement sécurisé':puOn()?'9,99 € par mois, gardés si tu t’abonnes avant le 16 novembre · sans engagement':'9,99 € par mois · sans engagement · paiement sécurisé'}
 function showPaywall(){
 if(document.getElementById('pw-modal'))return;
 window._pwAuto=true;selectedPlan='life';track('paywall_view');setLeadStatus('paywall_view');notePaywall(true);
@@ -3424,6 +3449,33 @@ document.body.appendChild(m);
 requestAnimationFrame(function(){m.classList.add('open')});
 renderFounder();loadFounderCount();if(founderClosed())selectPlan('month');
 }
+// coaching with Arthur: the phone number is saved first, then the Whop checkout; the list is in the stats page
+function coCardHtml(){return '<button type="button" class="pw2-plan co-card" id="plan-coach" onclick="coachOpen()"><span class="pw2-name"><b>Coaching avec Arthur</b><small>Plan de nutrition + plan d’entraînement, directement avec Arthur</small><span class="co-go">Réserve ton call →</span></span><span class="pw2-price"><b>49,99 €</b><small>une seule fois</small></span></button>'}
+function coachOpen(){track('coach_open');if(!Auth.user&&authReady()){openAuth('signup',coachOpen);return}
+  if(document.getElementById('co-modal'))return;var D0=(typeof D==='object'&&D)||{};
+  var m=document.createElement('div');m.id='co-modal';m.className='pw-modal';
+  m.innerHTML='<div class="pw-sheet co-sheet" role="dialog" aria-modal="true" aria-labelledby="co-t"><button class="pw-x" onclick="coachClose()" aria-label="Fermer">&times;</button><div id="co-body">'+
+    '<h2 class="pw2-t" id="co-t">Réserve ton call avec Arthur</h2><ul class="co-list"><li>Un plan de nutrition</li><li>Un plan d’entraînement</li><li>Faits directement avec Arthur, qui t’appelle</li></ul>'+
+    '<label class="co-l" for="co-prenom">Ton prénom</label><input class="au-input" id="co-prenom" autocomplete="given-name" maxlength="60" value="'+escH(D0.prenom||'')+'">'+
+    '<label class="co-l" for="co-phone">Ton numéro de téléphone</label><input class="au-input" id="co-phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="24" placeholder="06 12 34 56 78">'+
+    '<span class="co-l" id="co-sl">Quand t’appeler ?</span><div class="co-slots" role="group" aria-labelledby="co-sl"><button type="button" class="co-slot" data-v="matin" aria-pressed="false" onclick="coachSlot(this)">Matin</button><button type="button" class="co-slot" data-v="aprem" aria-pressed="false" onclick="coachSlot(this)">Après-midi</button><button type="button" class="co-slot" data-v="soir" aria-pressed="false" onclick="coachSlot(this)">Soir</button></div>'+
+    '<label class="co-ok"><input type="checkbox" id="co-consent"><span>J’accepte qu’Arthur m’appelle à ce numéro pour mon coaching. <a href="/confidentialite" target="_blank" rel="noopener">Confidentialité</a></span></label>'+
+    '<p class="co-err" id="co-err" role="alert"></p><button class="btn btn-p btn-lg btn-full" id="co-go" onclick="coachSubmit()">Réserver mon call →</button><p class="pw2-price-sub">49,99 € une seule fois · paiement sécurisé</p></div></div>';
+  document.body.appendChild(m);requestAnimationFrame(function(){m.classList.add('open')})}
+function coachClose(){var m=document.getElementById('co-modal');if(m)m.remove()}
+function coachSlot(b){[].forEach.call(document.querySelectorAll('.co-slot'),function(x){x.setAttribute('aria-pressed',x===b?'true':'false')})}
+function coachSubmit(){var e=document.getElementById('co-err'),ph=document.getElementById('co-phone').value.trim(),n=ph.replace(/[^0-9]/g,'').length,s=document.querySelector('.co-slot[aria-pressed="true"]'),b=document.getElementById('co-go');
+  var fail=function(t){e.textContent=t;b.disabled=false};
+  if(!/^\+?[0-9 .()-]{8,24}$/.test(ph)||n<9||n>15)return fail('Entre un numéro de téléphone valide, par exemple 06 12 34 56 78.');
+  if(!s)return fail('Choisis quand Arthur peut t’appeler.');
+  if(!document.getElementById('co-consent').checked)return fail('Coche la case pour qu’Arthur puisse t’appeler.');
+  e.textContent='';b.disabled=true;
+  freshToken(function(tok){if(!tok)return fail('Reconnecte-toi à ton compte, puis réessaie.');
+    sbFetch('/rest/v1/rpc/coaching_request',{method:'POST',body:JSON.stringify({p_prenom:document.getElementById('co-prenom').value,p_phone:ph,p_slot:s.getAttribute('data-v'),p_consent:true})},tok).then(function(r){
+      if(!r.ok)throw new Error('save');track('coach_request');var url=(MACRO_CFG.checkout||{}).coaching;
+      if(url){track('coach_checkout');location.href=url+(url.indexOf('?')>-1?'&':'?')+'email='+encodeURIComponent(Auth.user.email);return}
+      document.getElementById('co-body').innerHTML='<h2 class="pw2-t">C’est noté</h2><p class="co-done">Ton numéro est bien enregistré. Le paiement du coaching ouvre très bientôt.</p><button class="btn btn-p btn-lg btn-full" onclick="coachClose()">Fermer</button>'
+    }).catch(function(){fail('L’enregistrement n’a pas marché. Vérifie ta connexion et réessaie.')})})}
 
 function selectPlan(p){if(labOn()&&document.querySelector('.pw2')){track('plan_select',{plan:p});selectedPlan=p;var cb2=document.getElementById('pw2-price-sub'),cb3=document.getElementById('paywall-cta-btn');if(cb2)cb2.textContent=pw2PriceSub(p);else if(cb3)cb3.textContent=p==='life'?'Payer 59,99 € une fois →':'M’abonner à 9,99 € par mois →';
   ['month','life'].forEach(function(k){var el=document.getElementById('plan-'+k);if(el){el.classList.toggle('active',p===k);el.setAttribute('aria-checked',p===k?'true':'false')}});return}
@@ -3438,10 +3490,14 @@ var FOUNDER_END=Date.UTC(2026,9,20,21,59,59);
 // real price rise of the monthly plan, the notice disappears by itself after the date
 var PRICE_UP=Date.UTC(2026,10,15,22,59,59);
 function puOn(){return Date.now()<=PRICE_UP}
+// test (owner only): offer of the week at 4,99 €/month and coaching with Arthur at 49,99 €
+var PROMO_END=Date.UTC(2026,10,14,22,59,59);
+function promoOn(){return ownerDev()&&Date.now()<=PROMO_END}
+function coOn(){return ownerDev()}
 var FOUNDER_END2=Date.UTC(2026,10,7,22,59,59);
 function fdr2On(){return true}
-function founderEnd(){return fdr2On()?FOUNDER_END2:FOUNDER_END}
-function founderClosed(){return Date.now()>founderEnd()||(founderCount!==null&&founderCount>=FOUNDER_MAX)}
+function founderEnd(){return promoOn()?PROMO_END:fdr2On()?FOUNDER_END2:FOUNDER_END}
+function founderClosed(){return promoOn()||Date.now()>founderEnd()||(founderCount!==null&&founderCount>=FOUNDER_MAX)}
 function cdText(){var ms=Math.max(0,founderEnd()-Date.now()),sx=Math.floor(ms/1000),d=Math.floor(sx/86400),h=Math.floor(sx%86400/3600),m=Math.floor(sx%3600/60),x=sx%60;function p(n){return (n<10?'0':'')+n}
   return (d?d+' j ':'')+p(h)+' h '+p(m)+' min '+p(x)+' s'}
 setInterval(function(){document.querySelectorAll('.pw2-cd').forEach(function(e){e.innerHTML=pw2CdHtml()});document.querySelectorAll('.pw3-cd').forEach(function(e){e.textContent=pw3Cd()});if(document.getElementById('founder-txt')||document.getElementById('pr-founder-left')||document.querySelector('.fp-cd'))renderFounder()},1000);
@@ -3496,7 +3552,7 @@ var SHOW_ANNUAL_PLAN=false;
 var MACRO_CFG={
   supabaseUrl:'https://umgzewacqmbnzmdocxsk.supabase.co',supabaseKey:'sb_publishable_2WHd-FbR8lZHgKKjfNRLFA_tqdIbqwV',
   leadsWebhook:'',
-  checkout:{month:'https://whop.com/checkout/plan_hhas7orR1hxgW/',year:'https://whop.com/mangereco/plan-complet-mangereco/',lifetime:'https://whop.com/checkout/plan_6oErhEa8DHTA1/',downsell:''},
+  checkout:{month:'https://whop.com/checkout/plan_hhas7orR1hxgW/',year:'https://whop.com/mangereco/plan-complet-mangereco/',lifetime:'https://whop.com/checkout/plan_6oErhEa8DHTA1/',downsell:'',promo:'',coaching:''},
   contact:'arthurdemortiere15@gmail.com',
   refPromo:'REPAS',refPct:5 // Whop promo code (5 %) applied to people who come through a referral link
 };
@@ -3650,7 +3706,7 @@ function sbUser(sess){
 }
 function founderOffer(){var off=lsGet('macro_offer_pending');if(!off||!Auth.user)return;if(isUnlocked()){lsDel('macro_offer_pending');return}if(!hasProfile()&&!restoreProfile())return;lsDel('macro_offer_pending');if(off==='pay-life'||off==='pay-month'){payLink(off.slice(4));return}off=off==='plan'?'plan':'fondateur';track('offer_link',{offer:off});setTimeout(function(){showPaywall()},250)}
 function payLink(plan){track('offer_link',{offer:'pay-'+plan});
-var go=function(){if(plan==='life'&&founderClosed()){showPaywall();toast('L’offre fondateur est terminée : il reste le mensuel à 9,99 €.');return}selectedPlan=plan;startCheckout()};
+var go=function(){if(plan==='life'&&founderClosed()){showPaywall();toast('L’offre fondateur est terminée : il reste le mensuel à '+(promoOn()?'4,99':'9,99')+' €.');return}selectedPlan=plan;startCheckout()};
 if(plan==='life'&&founderCount===null)loadFounderCount(go);else setTimeout(go,250)}
 function afterLogin(fromRedirect){track('login');refSend();
   if(lsGet('macro_offer_pending')){if(restoreProfile()){showDashboard();founderOffer();return}if(sbOn()&&Auth.session){loadRemoteProfile(function(ok){if(ok){showDashboard();founderOffer()}else{lsDel('macro_offer_pending');toast('Connecté ! Crée ton plan pour commencer.')}});return}}
@@ -3694,6 +3750,7 @@ function initAuth(){var _cr=/[?&]createur=([a-f0-9]{16,40})(&|$)/i.exec(location
   var _qs=location.search,_om=_qs.match(/[?&]offre=(fondateur|plan)(&|$)/),_op=_qs.match(/[?&]payer=(fondateur|mensuel)(&|$)/),_vl=/[?&]voir=liste(&|$)/.test(_qs);
   if(_op)_om=[0,_op[1]==='fondateur'?'pay-life':'pay-month'];
   if(_om||_vl){if(_om)lsSet('macro_offer_pending',_om[1]);if(_vl)lsSet('macro_goto','liste');history.replaceState(null,'',location.pathname);if(!Auth.user){if(sbOn())openAuth('login');else{lsDel('macro_offer_pending');lsDel('macro_goto')}}}
+  if(/[?&]coaching(=|&|$)/.test(location.search)&&coOn()){history.replaceState(null,'',location.pathname);setTimeout(coachOpen,300)}
   if(/[?&]admin(=|&|$)/.test(location.search)){if(isAdmin())setTimeout(function(){showAdmin()},0);else{lsSet('macro_admin_pending',1);if(!Auth.user)openAuth('login')}}
   if(Auth.user&&!/[?&](admin|home)(=|&|$)/.test(location.search)&&!location.hash){
     if(restoreProfile()){showDashboard();if(!Auth.session)founderOffer()}
@@ -3815,7 +3872,7 @@ function authEmail(e){
 function startCheckout(kind){
   track('checkout_click',{plan:kind==='downsell'?'downsell':selectedPlan});if(window._afterProof){track('checkout_after_proof');track('checkout_after_proof_'+window._proofWho)}if(window._sawMore)track('checkout_after_more');setLeadStatus('checkout_started');
   if(!Auth.user&&authReady()){openAuth('signup',function(){startCheckout(kind)});return}
-  var c=MACRO_CFG.checkout||{};var url=kind==='downsell'?(c.downsell||c.year):c[selectedPlan==='life'?'lifetime':selectedPlan];
+  var c=MACRO_CFG.checkout||{};var url=kind==='downsell'?(c.downsell||c.year):(promoOn()&&selectedPlan==='month'&&kind!=='downsell')?c.promo:c[selectedPlan==='life'?'lifetime':selectedPlan];
   if(url){var qs=[];if(Auth.user)qs.push('email='+encodeURIComponent(Auth.user.email));if(refActive())qs.push('promoCode='+encodeURIComponent(MACRO_CFG.refPromo));location.href=url+(qs.length?(url.indexOf('?')>-1?'&':'?')+qs.join('&'):'');return}
   toast('Le paiement ouvre très bientôt. Ton plan est sauvegardé, on te prévient par e-mail.');
 }

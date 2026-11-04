@@ -1,0 +1,2 @@
+-- Coaching avec Arthur : deja applique sur le projet via la migration coaching_requests (2026-11-04).
+-- Table coaching_requests sans acces direct depuis le site ; fonctions coaching_request, admin_coaching, admin_coaching_called.
