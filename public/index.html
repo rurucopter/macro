@@ -1305,6 +1305,24 @@ body.cr-mode>*:not(#cr-page):not(.toast):not(script){display:none!important}
 .pw2-price s{font-size:.8125rem;opacity:.5}
 .pw2-price small{font-size:.75rem;opacity:.6}
 .pw2-price .pw2-once{opacity:.85;font-weight:700;margin-top:.1rem}
+.lp-promo{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.25rem .75rem;width:100%;min-height:44px;padding:.6rem var(--g);border:0;background:#0F3D2E;color:#fff;font-family:var(--font);font-size:.875rem;line-height:1.35;text-align:center;cursor:pointer}
+.lp-promo[hidden],.co-sec[hidden]{display:none}
+.lp-promo s{opacity:.7}
+.lp-promo-p{color:#6EE7B7;white-space:nowrap}
+.lp-promo-cd{color:#FCD34D;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lp-promo:focus-visible{outline:2px solid #FCD34D;outline-offset:-3px}
+.co-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2rem;align-items:center;padding:1.5rem;border:1px solid var(--border);border-radius:24px;background:var(--surface)}
+.co-fig{margin:0}
+.co-fig img{display:block;width:100%;height:auto;border-radius:16px}
+.co-fig figcaption{margin-top:.5rem;font-size:.75rem;line-height:1.4;color:var(--ink2)}
+.co-txt{display:flex;flex-direction:column;align-items:flex-start;gap:.75rem}
+.co-txt .sec-t{margin:0;text-align:left}
+.co-eye{margin:0;font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-text,var(--accent))}
+.co-inc{margin:0;padding-left:1.15rem;line-height:1.5;color:var(--ink)}
+.co-inc li+li{margin-top:.25rem}
+.co-price{margin:.25rem 0 0;color:var(--ink2)}
+.co-price b{font-family:var(--font-d);font-size:1.75rem;font-weight:800;color:var(--ink)}
+@media(max-width:720px){.co-wrap{grid-template-columns:minmax(0,1fr);gap:1.25rem;padding:1rem}.co-txt .btn{width:100%;justify-content:center}}
 .pw2-plan:has(.pu-band){flex-wrap:wrap}
 .pw2-price s{font-size:.8125rem;opacity:.6}
 .pw2-price .pw2-promo{color:#34D399}
@@ -1906,6 +1924,7 @@ body.app-mode .tile.locked .tp,body.app-mode .tile.locked .tn{filter:blur(5px)}
   </div>
 </nav></div>
 
+<button type="button" class="lp-promo" id="lp-promo" hidden onclick="track('lp_promo_click');startOnboarding()"><span><b>Jusqu’au 14 novembre</b> : le mensuel à <s>9,99 €</s> <b class="lp-promo-p">4,99 €/mois</b></span><span class="lp-promo-cd">⏳ <span id="lp-promo-cd"></span></span></button>
 <div class="hero-wrap">
 <div class="hero-bg" aria-hidden="true" id="hero-bg"></div>
 <div class="hero">
@@ -2121,6 +2140,19 @@ body.app-mode .tile.locked .tp,body.app-mode .tile.locked .tn{filter:blur(5px)}
     <article class="ex-card"><div class="ex-ph"><img src="/img/n-basquaise-v2.jpg" alt="Poulet basquaise aux poivrons et riz" width="480" height="358" loading="lazy" decoding="async"><span class="ex-time">35 min</span></div><div class="ex-body"><h3>Poulet basquaise et riz</h3><p class="ex-comp">Poulet · riz · poivrons, tomate</p><div class="ex-meta"><span>612 kcal</span><span>40 g de protéines</span><span>≈ 2,63 € la portion</span></div></div></article>
   </div>
   <p class="ex-note">Portions types avant ajustement à tes besoins : ton plan adapte les quantités à ton objectif calorique.</p>
+</section>
+
+<section class="sec co-sec" id="coaching" aria-labelledby="t-coaching" style="padding-top:0" hidden>
+  <div class="co-wrap">
+    <figure class="co-fig"><img src="/img/proof-arthur.jpg" alt="Avant et après 3 ans de musculation : Arthur, fondateur de mangereco" width="1080" height="1080" loading="lazy"><figcaption>Arthur, fondateur de mangereco · +27 kg en 3 ans. Résultat personnel, les résultats varient d’une personne à l’autre.</figcaption></figure>
+    <div class="co-txt">
+      <p class="co-eye">Coaching avec Arthur</p>
+      <h2 class="sec-t" id="t-coaching">Ton programme de muscu, fait pour toi.</h2>
+      <ul class="co-inc"><li>Un appel avec Arthur</li><li>Ton programme de muscu personnalisé, adapté à ta morphologie</li><li>L’accès à vie à mangereco : tes repas et ta liste de courses</li></ul>
+      <p class="co-price"><b>59,99 €</b> une seule fois</p>
+      <button class="btn btn-p btn-lg" onclick="coachOpen()">Réserve ton call →</button>
+    </div>
+  </div>
 </section>
 
 <section class="sec" id="tarifs" aria-labelledby="t-tarifs" style="padding-top:0">
@@ -3755,7 +3787,9 @@ function initAuth(){var _cr=/[?&]createur=([a-f0-9]{16,40})(&|$)/i.exec(location
     else if(sbOn()&&Auth.session)loadRemoteProfile(function(ok){if(ok){showDashboard();founderOffer()}});
   }
 }
-function landingTestPrice(){var u=document.getElementById('pr-up');if(u)u.hidden=!puOn();var c=document.querySelector('#pr-founder .pr-price'),m=document.querySelector('#pr-founder .pr-sub-m');if(!c||!m)return;
+function lpOffers(){var p=document.getElementById('lp-promo'),c=document.getElementById('coaching'),on=promoOn();if(p)p.hidden=!on;if(c)c.hidden=!coOn();
+  if(on){var t=function(){var e=document.getElementById('lp-promo-cd');if(e)e.textContent=pw3Cd()};t();if(!window._lpCdT)window._lpCdT=setInterval(t,30000)}}
+function landingTestPrice(){lpOffers();var u=document.getElementById('pr-up');if(u)u.hidden=!puOn();var c=document.querySelector('#pr-founder .pr-price'),m=document.querySelector('#pr-founder .pr-sub-m');if(!c||!m)return;
   if(testOn()){c.innerHTML='4,99&nbsp;€ <small>/mois</small>';m.textContent='59,99 € payés une seule fois (sur 12 mois), puis plus rien à payer'}else{c.innerHTML='59,99&nbsp;€ <small>une seule fois</small>';m.textContent='soit moins de 5 € par mois la 1re année'}}
 function refreshNav(){if(typeof ownerDev==='function')ownerDev();landingTestPrice();lpLite();var hg=document.getElementById('hero-google');if(hg)hg.innerHTML=(sbOn()&&!viewUser())?'<button class="au-google hero-g" onclick="heroGoogle()">'+GSVG+'Continuer avec Google</button>':'';
   document.querySelectorAll('.nav-pill').forEach(function(p){
