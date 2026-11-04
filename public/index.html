@@ -1311,18 +1311,15 @@ body.cr-mode>*:not(#cr-page):not(.toast):not(script){display:none!important}
 .lp-promo-p{color:#6EE7B7;white-space:nowrap}
 .lp-promo-cd{color:#FCD34D;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
 .lp-promo:focus-visible{outline:2px solid #FCD34D;outline-offset:-3px}
-.co-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:2rem;align-items:center;padding:1.5rem;border:1px solid var(--border);border-radius:24px;background:var(--surface)}
-.co-fig{margin:0}
-.co-fig img{display:block;width:100%;height:auto;border-radius:16px}
-.co-fig figcaption{margin-top:.5rem;font-size:.75rem;line-height:1.4;color:var(--ink2)}
+.co-wrap{max-width:560px;margin-inline:auto;padding:1.5rem;border:1px solid var(--border);border-radius:20px;background:var(--surface)}
 .co-txt{display:flex;flex-direction:column;align-items:flex-start;gap:.75rem}
-.co-txt .sec-t{margin:0;text-align:left}
+.co-txt .sec-t{margin:0;text-align:left;font-size:clamp(1.25rem,4.5vw,1.5rem);line-height:1.25}
 .co-eye{margin:0;font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-text,var(--accent))}
 .co-inc{margin:0;padding-left:1.15rem;line-height:1.5;color:var(--ink)}
 .co-inc li+li{margin-top:.25rem}
 .co-price{margin:.25rem 0 0;color:var(--ink2)}
-.co-price b{font-family:var(--font-d);font-size:1.75rem;font-weight:800;color:var(--ink)}
-@media(max-width:720px){.co-wrap{grid-template-columns:minmax(0,1fr);gap:1.25rem;padding:1rem}.co-txt .btn{width:100%;justify-content:center}}
+.co-price b{font-family:var(--font-d);font-size:1.375rem;font-weight:800;color:var(--ink)}
+@media(max-width:720px){.co-wrap{padding:1.1rem}.co-txt .btn{width:100%;justify-content:center}}
 .pw2-plan:has(.pu-band){flex-wrap:wrap}
 .pw2-price s{font-size:.8125rem;opacity:.6}
 .pw2-price .pw2-promo{color:#34D399}
@@ -2144,13 +2141,12 @@ body.app-mode .tile.locked .tp,body.app-mode .tile.locked .tn{filter:blur(5px)}
 
 <section class="sec co-sec" id="coaching" aria-labelledby="t-coaching" style="padding-top:0" hidden>
   <div class="co-wrap">
-    <figure class="co-fig"><img src="/img/proof-arthur.jpg" alt="Avant et après 3 ans de musculation : Arthur, fondateur de mangereco" width="1080" height="1080" loading="lazy"><figcaption>Arthur, fondateur de mangereco · +27 kg en 3 ans. Résultat personnel, les résultats varient d’une personne à l’autre.</figcaption></figure>
     <div class="co-txt">
       <p class="co-eye">Coaching avec Arthur</p>
       <h2 class="sec-t" id="t-coaching">Ton programme de muscu, fait pour toi.</h2>
-      <ul class="co-inc"><li>Un appel avec Arthur</li><li>Ton programme de muscu personnalisé, adapté à ta morphologie</li><li>L’accès à vie à mangereco : tes repas et ta liste de courses</li></ul>
+      <ul class="co-inc"><li>Un appel de 30 min avec Arthur</li><li>Ton programme de muscu personnalisé, adapté à ta morphologie</li><li>L’accès à vie à mangereco : tes repas et ta liste de courses</li></ul>
       <p class="co-price"><b>59,99 €</b> une seule fois</p>
-      <button class="btn btn-p btn-lg" onclick="coachOpen()">Réserve ton call →</button>
+      <button class="btn btn-p" onclick="coachOpen()">Réserve ton call →</button>
     </div>
   </div>
 </section>
@@ -3481,12 +3477,12 @@ requestAnimationFrame(function(){m.classList.add('open')});
 renderFounder();loadFounderCount();if(founderClosed())selectPlan('month');
 }
 // coaching with Arthur: the phone number is saved first, then the Whop checkout; the list is in the stats page
-function coCardHtml(){return '<button type="button" class="pw2-plan co-card" id="plan-coach" onclick="coachOpen()"><span class="pw2-name"><b>Coaching avec Arthur</b><small>Appel avec Arthur + programme de muscu personnalisé, adapté à ta morphologie + accès à vie à mangereco</small><span class="co-go">Réserve ton call →</span></span><span class="pw2-price"><b>59,99 €</b><small>une seule fois</small></span></button>'}
+function coCardHtml(){return '<button type="button" class="pw2-plan co-card" id="plan-coach" onclick="coachOpen()"><span class="pw2-name"><b>Coaching avec Arthur</b><small>Appel de 30 min avec Arthur + programme de muscu personnalisé, adapté à ta morphologie + accès à vie à mangereco</small><span class="co-go">Réserve ton call →</span></span><span class="pw2-price"><b>59,99 €</b><small>une seule fois</small></span></button>'}
 function coachOpen(){track('coach_open');if(!Auth.user&&authReady()){openAuth('signup',coachOpen);return}
   if(document.getElementById('co-modal'))return;var D0=(typeof D==='object'&&D)||{};
   var m=document.createElement('div');m.id='co-modal';m.className='pw-modal';
   m.innerHTML='<div class="pw-sheet co-sheet" role="dialog" aria-modal="true" aria-labelledby="co-t"><button class="pw-x" onclick="coachClose()" aria-label="Fermer">&times;</button><div id="co-body">'+
-    '<h2 class="pw2-t" id="co-t">Réserve ton call avec Arthur</h2><ul class="co-list"><li>Un appel avec Arthur</li><li>Ton programme de muscu personnalisé, adapté à ta morphologie</li><li>L’accès à vie à mangereco</li></ul>'+
+    '<h2 class="pw2-t" id="co-t">Réserve ton call avec Arthur</h2><ul class="co-list"><li>Un appel de 30 min avec Arthur</li><li>Ton programme de muscu personnalisé, adapté à ta morphologie</li><li>L’accès à vie à mangereco</li></ul>'+
     '<label class="co-l" for="co-prenom">Ton prénom</label><input class="au-input" id="co-prenom" autocomplete="given-name" maxlength="60" value="'+escH(D0.prenom||'')+'">'+
     '<label class="co-l" for="co-phone">Ton numéro de téléphone</label><input class="au-input" id="co-phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="24" placeholder="06 12 34 56 78">'+
     '<span class="co-l" id="co-sl">Quand t’appeler ?</span><div class="co-slots" role="group" aria-labelledby="co-sl"><button type="button" class="co-slot" data-v="matin" aria-pressed="false" onclick="coachSlot(this)">Matin</button><button type="button" class="co-slot" data-v="aprem" aria-pressed="false" onclick="coachSlot(this)">Après-midi</button><button type="button" class="co-slot" data-v="soir" aria-pressed="false" onclick="coachSlot(this)">Soir</button></div>'+
