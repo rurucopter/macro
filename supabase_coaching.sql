@@ -1,2 +1,3 @@
--- Coaching avec Arthur : deja applique sur le projet via la migration coaching_requests (2026-11-04).
+-- Coaching avec Arthur (vendu avec le plan a vie a 59,99 EUR) : deja applique sur le projet via les migrations
+-- coaching_requests et coaching_paid_from_subscription (2026-11-04).
 -- Table coaching_requests sans acces direct depuis le site ; fonctions coaching_request, admin_coaching, admin_coaching_called.

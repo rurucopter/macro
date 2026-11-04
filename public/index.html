@@ -1323,7 +1323,6 @@ body.cr-mode>*:not(#cr-page):not(.toast):not(script){display:none!important}
 .co-ok input{flex-shrink:0;width:20px;height:20px;margin:.05rem 0 0;accent-color:#34D399}
 .co-ok a{color:inherit}
 .co-err{margin:0;min-height:1.1em;font-size:.875rem;font-weight:600;color:#F87171}
-.co-done{margin:0 0 .5rem;line-height:1.5}
 .pu-band{flex:0 0 100%;display:flex;align-items:center;gap:.6rem;padding:.6rem .7rem;border-radius:12px;background:rgba(251,191,36,.16);border:1px solid rgba(251,191,36,.45);color:#FCD34D;font-size:.8125rem;line-height:1.3}
 .pu-band svg{flex-shrink:0;width:20px;height:20px}
 .pu-band>span{display:flex;flex-direction:column;min-width:0;color:#FDE68A}
@@ -3450,17 +3449,17 @@ requestAnimationFrame(function(){m.classList.add('open')});
 renderFounder();loadFounderCount();if(founderClosed())selectPlan('month');
 }
 // coaching with Arthur: the phone number is saved first, then the Whop checkout; the list is in the stats page
-function coCardHtml(){return '<button type="button" class="pw2-plan co-card" id="plan-coach" onclick="coachOpen()"><span class="pw2-name"><b>Coaching avec Arthur</b><small>Plan de nutrition + plan d’entraînement, directement avec Arthur</small><span class="co-go">Réserve ton call →</span></span><span class="pw2-price"><b>49,99 €</b><small>une seule fois</small></span></button>'}
+function coCardHtml(){return '<button type="button" class="pw2-plan co-card" id="plan-coach" onclick="coachOpen()"><span class="pw2-name"><b>Coaching avec Arthur</b><small>Appel avec Arthur + programme de muscu personnalisé, adapté à ta morphologie + accès à vie à mangereco</small><span class="co-go">Réserve ton call →</span></span><span class="pw2-price"><b>59,99 €</b><small>une seule fois</small></span></button>'}
 function coachOpen(){track('coach_open');if(!Auth.user&&authReady()){openAuth('signup',coachOpen);return}
   if(document.getElementById('co-modal'))return;var D0=(typeof D==='object'&&D)||{};
   var m=document.createElement('div');m.id='co-modal';m.className='pw-modal';
   m.innerHTML='<div class="pw-sheet co-sheet" role="dialog" aria-modal="true" aria-labelledby="co-t"><button class="pw-x" onclick="coachClose()" aria-label="Fermer">&times;</button><div id="co-body">'+
-    '<h2 class="pw2-t" id="co-t">Réserve ton call avec Arthur</h2><ul class="co-list"><li>Un plan de nutrition</li><li>Un plan d’entraînement</li><li>Faits directement avec Arthur, qui t’appelle</li></ul>'+
+    '<h2 class="pw2-t" id="co-t">Réserve ton call avec Arthur</h2><ul class="co-list"><li>Un appel avec Arthur</li><li>Ton programme de muscu personnalisé, adapté à ta morphologie</li><li>L’accès à vie à mangereco</li></ul>'+
     '<label class="co-l" for="co-prenom">Ton prénom</label><input class="au-input" id="co-prenom" autocomplete="given-name" maxlength="60" value="'+escH(D0.prenom||'')+'">'+
     '<label class="co-l" for="co-phone">Ton numéro de téléphone</label><input class="au-input" id="co-phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="24" placeholder="06 12 34 56 78">'+
     '<span class="co-l" id="co-sl">Quand t’appeler ?</span><div class="co-slots" role="group" aria-labelledby="co-sl"><button type="button" class="co-slot" data-v="matin" aria-pressed="false" onclick="coachSlot(this)">Matin</button><button type="button" class="co-slot" data-v="aprem" aria-pressed="false" onclick="coachSlot(this)">Après-midi</button><button type="button" class="co-slot" data-v="soir" aria-pressed="false" onclick="coachSlot(this)">Soir</button></div>'+
     '<label class="co-ok"><input type="checkbox" id="co-consent"><span>J’accepte qu’Arthur m’appelle à ce numéro pour mon coaching. <a href="/confidentialite" target="_blank" rel="noopener">Confidentialité</a></span></label>'+
-    '<p class="co-err" id="co-err" role="alert"></p><button class="btn btn-p btn-lg btn-full" id="co-go" onclick="coachSubmit()">Réserver mon call →</button><p class="pw2-price-sub">49,99 € une seule fois · paiement sécurisé</p></div></div>';
+    '<p class="co-err" id="co-err" role="alert"></p><button class="btn btn-p btn-lg btn-full" id="co-go" onclick="coachSubmit()">Réserver mon call →</button><p class="pw2-price-sub">59,99 € une seule fois · paiement sécurisé</p></div></div>';
   document.body.appendChild(m);requestAnimationFrame(function(){m.classList.add('open')})}
 function coachClose(){var m=document.getElementById('co-modal');if(m)m.remove()}
 function coachSlot(b){[].forEach.call(document.querySelectorAll('.co-slot'),function(x){x.setAttribute('aria-pressed',x===b?'true':'false')})}
@@ -3472,9 +3471,8 @@ function coachSubmit(){var e=document.getElementById('co-err'),ph=document.getEl
   e.textContent='';b.disabled=true;
   freshToken(function(tok){if(!tok)return fail('Reconnecte-toi à ton compte, puis réessaie.');
     sbFetch('/rest/v1/rpc/coaching_request',{method:'POST',body:JSON.stringify({p_prenom:document.getElementById('co-prenom').value,p_phone:ph,p_slot:s.getAttribute('data-v'),p_consent:true})},tok).then(function(r){
-      if(!r.ok)throw new Error('save');track('coach_request');var url=(MACRO_CFG.checkout||{}).coaching;
-      if(url){track('coach_checkout');location.href=url+(url.indexOf('?')>-1?'&':'?')+'email='+encodeURIComponent(Auth.user.email);return}
-      document.getElementById('co-body').innerHTML='<h2 class="pw2-t">C’est noté</h2><p class="co-done">Ton numéro est bien enregistré. Le paiement du coaching ouvre très bientôt.</p><button class="btn btn-p btn-lg btn-full" onclick="coachClose()">Fermer</button>'
+      if(!r.ok)throw new Error('save');track('coach_request');track('coach_checkout');var url=MACRO_CFG.checkout.lifetime;
+      location.href=url+(url.indexOf('?')>-1?'&':'?')+'email='+encodeURIComponent(Auth.user.email)
     }).catch(function(){fail('L’enregistrement n’a pas marché. Vérifie ta connexion et réessaie.')})})}
 
 function selectPlan(p){if(labOn()&&document.querySelector('.pw2')){track('plan_select',{plan:p});selectedPlan=p;var cb2=document.getElementById('pw2-price-sub'),cb3=document.getElementById('paywall-cta-btn');if(cb2)cb2.textContent=pw2PriceSub(p);else if(cb3)cb3.textContent=p==='life'?'Payer 59,99 € une fois →':'M’abonner à 9,99 € par mois →';
@@ -3490,7 +3488,7 @@ var FOUNDER_END=Date.UTC(2026,9,20,21,59,59);
 // real price rise of the monthly plan, the notice disappears by itself after the date
 var PRICE_UP=Date.UTC(2026,10,15,22,59,59);
 function puOn(){return Date.now()<=PRICE_UP}
-// test (owner only): offer of the week at 4,99 €/month and coaching with Arthur at 49,99 €
+// test (owner only): offer of the week at 4,99 €/month and coaching with Arthur (the 59,99 € lifetime plan)
 var PROMO_END=Date.UTC(2026,10,14,22,59,59);
 function promoOn(){return ownerDev()&&Date.now()<=PROMO_END}
 function coOn(){return ownerDev()}
@@ -3552,7 +3550,7 @@ var SHOW_ANNUAL_PLAN=false;
 var MACRO_CFG={
   supabaseUrl:'https://umgzewacqmbnzmdocxsk.supabase.co',supabaseKey:'sb_publishable_2WHd-FbR8lZHgKKjfNRLFA_tqdIbqwV',
   leadsWebhook:'',
-  checkout:{month:'https://whop.com/checkout/plan_hhas7orR1hxgW/',year:'https://whop.com/mangereco/plan-complet-mangereco/',lifetime:'https://whop.com/checkout/plan_6oErhEa8DHTA1/',downsell:'',promo:'',coaching:''},
+  checkout:{month:'https://whop.com/checkout/plan_hhas7orR1hxgW/',year:'https://whop.com/mangereco/plan-complet-mangereco/',lifetime:'https://whop.com/checkout/plan_6oErhEa8DHTA1/',downsell:'',promo:''},
   contact:'arthurdemortiere15@gmail.com',
   refPromo:'REPAS',refPct:5 // Whop promo code (5 %) applied to people who come through a referral link
 };
