@@ -14,6 +14,7 @@
 //   D  founder campaign: from DAILY_START to FOUNDER_END, 3 mails a day (9 h, 13 h and 18 h Paris) to non-paying accounts with consent.
 //      Never more than DAILY_CAP marketing mails per person per day, all sequences included (transactional mails don't count).
 //      Marketing stops at DAY_MAX mails sent in the day, so that the Resend daily quota never blocks a payment mail.
+//   CO one mail to the owner for each new coaching request (first name, phone, time slot, buyer's e-mail).
 //   C1 seven days after a cancellation. F1 one founder mail to accounts created before SEQ_START.
 // Each (user, mail) pair is claimed in public.mail_log before sending, so a mail is never sent twice.
 // A failed send is retried twice (after 5 min, then 30 min); the error is kept in mail_log.last_error.
@@ -78,6 +79,7 @@ type V = {
   weekCost: number | null; plans: number; renouv: string; price: string; week: number;
   b5?: { subject: string; text: string; cta: string; to: string };
   dIdx?: number;
+  co?: { prenom: string; phone: string; slot: string; email: string };
 };
 type Mail = { subject: string; html: string; text: string; tx: boolean };
 type Go = (path: string) => string; // tracked link to a path of the site
@@ -238,6 +240,20 @@ function build(key: string, v: V, go: Go): Mail | null {
       to = b.to + (b.to.includes("?") ? "&" : "?") + utm("B5");
       break;
     }
+    // ---------- CO: for the owner
+    case "CO": {
+      const c = v.co;
+      if (!c) return null;
+      tx = true;
+      subject = `Coaching : ${c.prenom || "nouvelle demande"} à appeler`;
+      body = P(`<b>${esc(c.prenom || "Sans prénom")}</b> a réservé un call.`) +
+        P(`Téléphone : <a href="tel:${esc(c.phone.replace(/[^+0-9]/g, ""))}"><b>${esc(c.phone)}</b></a>`) +
+        P(`À appeler : ${esc(c.slot)}`) + P(`E-mail : ${esc(c.email)}`) +
+        small("Le numéro arrive avant le paiement : regarde dans ton dashboard si la personne a payé.");
+      cta = "Voir la liste";
+      to = "/?admin";
+      break;
+    }
     // ---------- C: cancelled
     case "C1":
       subject = "Qu'est-ce qui n'a pas marché ?";
@@ -317,7 +333,7 @@ Deno.serve(async (req) => {
   // ---- mail log, preloaded per batch of users
   const log = new Map<string, any>();
   const dayStart = Date.parse(`${pt.date}T00:00:00+01:00`);
-  const TX = /^(T-|B1$|B4-)/; // tests and transactional mails don't count towards the daily cap
+  const TX = /^(T-|CO$|B1$|B4-)/; // tests and transactional mails don't count towards the daily cap
   const today = new Map<string, number>();
   const bump = (uid: string) => today.set(uid, (today.get(uid) ?? 0) + 1);
   const { count: sentToday } = await sb.from("mail_log").select("user_id", { count: "exact", head: true }).eq("status", "sent").gte("sent_at", new Date(dayStart).toISOString());
@@ -439,6 +455,7 @@ Deno.serve(async (req) => {
     v.renouv = fmtDate(new Date(now + 7 * DAY).toISOString()); v.price = "9,99 €/mois"; v.plans = 5;
     const only = url.searchParams.get("only");
     const keys = only ? [only.toUpperCase()] : ["A1", "A2", "A3", "A4", "F1", "B1", "B2", "B3", "B4", "C1"];
+    v.co = { prenom: "Exemple", phone: "06 00 00 00 00", slot: "Soir", email: "exemple@mangereco.com" };
     if (only && only.toUpperCase() === "D") { // the whole campaign, one mail per template
       for (let i = 0; i < DAILY.length; i++) { v.dIdx = i; await sendTest("D", v); }
       return json();
@@ -447,6 +464,21 @@ Deno.serve(async (req) => {
     return json();
   }
   if (!cron) return deny("the admin can only send tests and broadcasts", 403);
+
+  // ---- CO: new coaching requests, to the owner
+  const { data: coach, error: ce } = await sb.from("coaching_requests").select("user_id,prenom,phone,slot").not("phone", "is", null).gt("updated_at", new Date(now - 7 * DAY).toISOString()).limit(100);
+  if (ce) out.errors.push("coaching: " + ce.message);
+  if (coach && coach.length) {
+    const cIds = coach.map((c: any) => c.user_id);
+    const cp = await profilesFor(cIds);
+    await loadLog(cIds);
+    const sl: Record<string, string> = { matin: "Matin", aprem: "Après-midi", soir: "Soir" };
+    for (const c of coach) {
+      const v = info(null);
+      v.co = { prenom: c.prenom ?? "", phone: c.phone, slot: sl[c.slot] ?? "-", email: cp.get(c.user_id)?.email ?? "-" };
+      await once({ user_id: c.user_id, email: ADMIN, email_unsub: false }, "CO", v);
+    }
+  }
 
   // ---- A: not paying (accounts created since SEQ_START, in the last 60 days)
   const quiet = pt.hour < 8 || pt.hour >= 21; // no reminder mail at night (Paris)
