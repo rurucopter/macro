@@ -1305,12 +1305,7 @@ body.cr-mode>*:not(#cr-page):not(.toast):not(script){display:none!important}
 .pw2-price s{font-size:.8125rem;opacity:.5}
 .pw2-price small{font-size:.75rem;opacity:.6}
 .pw2-price .pw2-once{opacity:.85;font-weight:700;margin-top:.1rem}
-.lp-promo{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.25rem .75rem;width:100%;min-height:44px;padding:.6rem var(--g);border:0;background:#0F3D2E;color:#fff;font-family:var(--font);font-size:.875rem;line-height:1.35;text-align:center;cursor:pointer}
-.lp-promo[hidden],.co-sec[hidden]{display:none}
-.lp-promo s{opacity:.7}
-.lp-promo-p{color:#6EE7B7;white-space:nowrap}
-.lp-promo-cd{color:#FCD34D;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
-.lp-promo:focus-visible{outline:2px solid #FCD34D;outline-offset:-3px}
+.co-sec[hidden]{display:none}
 .co-wrap{max-width:560px;margin-inline:auto;padding:1.5rem;border:1px solid var(--border);border-radius:20px;background:var(--surface)}
 .co-txt{display:flex;flex-direction:column;align-items:flex-start;gap:.75rem}
 .co-txt .sec-t{margin:0;text-align:left;font-size:clamp(1.25rem,4.5vw,1.5rem);line-height:1.25}
@@ -1921,7 +1916,6 @@ body.app-mode .tile.locked .tp,body.app-mode .tile.locked .tn{filter:blur(5px)}
   </div>
 </nav></div>
 
-<button type="button" class="lp-promo" id="lp-promo" hidden onclick="track('lp_promo_click');startOnboarding()"><span><b>Jusqu’au 14 novembre</b> : le mensuel à <s>9,99 €</s> <b class="lp-promo-p">4,99 €/mois</b></span><span class="lp-promo-cd">⏳ <span id="lp-promo-cd"></span></span></button>
 <div class="hero-wrap">
 <div class="hero-bg" aria-hidden="true" id="hero-bg"></div>
 <div class="hero">
@@ -3783,8 +3777,7 @@ function initAuth(){var _cr=/[?&]createur=([a-f0-9]{16,40})(&|$)/i.exec(location
     else if(sbOn()&&Auth.session)loadRemoteProfile(function(ok){if(ok){showDashboard();founderOffer()}});
   }
 }
-function lpOffers(){var p=document.getElementById('lp-promo'),c=document.getElementById('coaching'),on=promoOn();if(p)p.hidden=!on;if(c)c.hidden=!coOn();
-  if(on){var t=function(){var e=document.getElementById('lp-promo-cd');if(e)e.textContent=pw3Cd()};t();if(!window._lpCdT)window._lpCdT=setInterval(t,30000)}}
+function lpOffers(){var c=document.getElementById('coaching');if(c)c.hidden=!coOn()}
 function landingTestPrice(){lpOffers();var u=document.getElementById('pr-up');if(u)u.hidden=!puOn();var c=document.querySelector('#pr-founder .pr-price'),m=document.querySelector('#pr-founder .pr-sub-m');if(!c||!m)return;
   if(testOn()){c.innerHTML='4,99&nbsp;€ <small>/mois</small>';m.textContent='59,99 € payés une seule fois (sur 12 mois), puis plus rien à payer'}else{c.innerHTML='59,99&nbsp;€ <small>une seule fois</small>';m.textContent='soit moins de 5 € par mois la 1re année'}}
 function refreshNav(){if(typeof ownerDev==='function')ownerDev();landingTestPrice();lpLite();var hg=document.getElementById('hero-google');if(hg)hg.innerHTML=(sbOn()&&!viewUser())?'<button class="au-google hero-g" onclick="heroGoogle()">'+GSVG+'Continuer avec Google</button>':'';
