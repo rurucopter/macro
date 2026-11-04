@@ -11,8 +11,9 @@
 //        B3 every Saturday 18:00 Paris: the plan + list of the week
 //        B4 renewal reminder, D-3 for monthly, D-7 for annual (transactional)
 //        B5 manual "nouveauté" broadcast (POST ?broadcast, see below)
-//   D  founder campaign: from DAILY_START to FOUNDER_END, 2 mails a day (9 h and 18 h Paris) to non-paying accounts with consent.
+//   D  founder campaign: from DAILY_START to FOUNDER_END, 3 mails a day (9 h, 13 h and 18 h Paris) to non-paying accounts with consent.
 //      Never more than DAILY_CAP marketing mails per person per day, all sequences included (transactional mails don't count).
+//      Marketing stops at DAY_MAX mails sent in the day, so that the Resend daily quota never blocks a payment mail.
 //   C1 seven days after a cancellation. F1 one founder mail to accounts created before SEQ_START.
 // Each (user, mail) pair is claimed in public.mail_log before sending, so a mail is never sent twice.
 // A failed send is retried twice (after 5 min, then 30 min); the error is kept in mail_log.last_error.
@@ -29,6 +30,7 @@ const CRON_SECRET = Deno.env.get("CRON_SECRET") ?? "";
 const UNSUB_SECRET = Deno.env.get("UNSUB_SECRET") ?? "";
 const MAIL_FROM = Deno.env.get("MAIL_FROM") ?? "Arthur de Mangereco <app@mangereco.com>";
 const REQUIRE_OPTIN = (Deno.env.get("REQUIRE_OPTIN") ?? "true") !== "false";
+const DAY_MAX = +(Deno.env.get("MAIL_DAY_MAX") ?? "170"); // Resend refuses everything above ~200 a day on the current plan
 const SEQ_START = Deno.env.get("SEQ_START") ?? "2026-09-26T18:00:00Z";
 const MANAGE_URL = Deno.env.get("MANAGE_URL") ?? "";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
@@ -46,7 +48,8 @@ const FOUNDER_CAP = 20;
 const FOUNDER_END = Date.UTC(2026, 10, 7, 22, 59, 59); // Sat 7 Nov 2026, 23:59:59 Paris: the relaunched founder offer closes for everyone
 const A4_MAX = 4;
 const DAILY_START = Date.UTC(2026, 10, 3, 8, 0, 0); // Tue 3 Nov 2026, 9:00 Paris
-const DAILY_CAP = 2;
+const DAILY_CAP = 3;
+const PRICE_UP = Date.UTC(2026, 10, 15, 22, 59, 59); // the monthly plan goes to 11.99 € on Mon 16 Nov 2026
 const CORS = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Headers": "authorization, apikey, content-type, x-cron-secret", "Access-Control-Allow-Methods": "POST, OPTIONS" };
 
 const esc = (s: string) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] as string));
@@ -95,18 +98,21 @@ const TEASER: [string, number, number, string][] = [
   ["Dahl de lentilles corail + riz basmati", 29, 1.4, "lentil-veggie-bowl.jpg"],
 ];
 
-// Founder campaign: [subject, paragraphs, button]. Index = 2 x days since 3 Nov + (0 morning, 1 evening).
+// Founder campaign: [subject, paragraphs, button]. 0-3 went out on 3-4 Nov; from 5 Nov, index = 4 + 3 x days since 5 Nov + slot (9 h, 13 h, 18 h).
 const DAILY: [string, string[], string][] = [
   ["Tu sais déjà quoi manger ce soir ?", ["Ton plan de la semaine est prêt : les repas, les quantités et la liste de courses avec les prix.", "Il te reste juste à le débloquer. Le pack fondateur, c'est <b>59,99 € une seule fois</b>, soit 4,99 € par mois sur la 1re année, puis plus rien à payer."], "Voir mon plan"],
   ["Tes courses de la semaine, déjà faites", ["Plus besoin de réfléchir devant les rayons : ta liste est rangée par rayon, au paquet près, avec le prix de chaque article.", "Elle se refait toute seule chaque samedi."], "Débloquer ma liste"],
   ["9,99 € par mois ou 59,99 € une fois ?", ["Le calcul est simple : 1 an en mensuel, c'est <b>119,88 €</b>. Le pack fondateur, c'est <b>59,99 € une seule fois</b>, à vie.", "Pas d'abonnement, rien à résilier."], "Prendre le pack fondateur"],
   ["Pourquoi j'ai créé mangereco", ["J'ai pris 27 kg en 3 ans de muscu. Le plus dur n'a jamais été la salle : c'était de savoir quoi manger, combien, et sans exploser mon budget.", "J'ai construit mangereco pour ça : un plan calé sur tes calories, ton objectif et ton budget."], "Voir mon plan"],
-  ["Plus que quelques jours pour le pack fondateur", ["Après la fin de l'offre, il ne restera que le mensuel à 9,99 €/mois.", "Le pack fondateur te donne l'accès à vie : tes repas, ta liste de courses et ton suivi, avec toutes les futures nouveautés."], "Devenir membre fondateur"],
+  ["Plus que 3 jours pour le pack fondateur", ["Deux dates à retenir : <b>samedi 7 novembre à 23h59</b>, le pack fondateur s'arrête. <b>Lundi 16 novembre</b>, le mensuel passe à 11,99 €/mois.", "Le pack fondateur te donne l'accès à vie : tes repas, ta liste de courses et ton suivi, avec toutes les futures nouveautés."], "Devenir membre fondateur"],
   ["Ton plan change si ta vie change", ["Tu changes de budget, d'objectif ou de poids ? Ton plan se recalcule.", "Tu n'aimes pas un plat ? Tu le changes en un geste, et ta liste de courses suit."], "Voir mon plan"],
+  ["Le prix monte le 16 novembre", ["Je préfère te prévenir : le 16 novembre, le mensuel passe de 9,99 € à <b>11,99 € par mois</b>. Si tu t'abonnes avant, tu gardes 9,99 €.", "Et jusqu'à samedi 23h59, tu peux encore prendre le pack fondateur : <b>59,99 € une seule fois</b>, puis plus rien à payer."], "Voir les offres"],
   ["Cuisiner sans se prendre la tête", ["Chaque repas a sa recette, étape par étape, avec les quantités exactes pour tes macros.", "Tu n'as plus qu'à suivre, et à cocher tes repas pour voir tes calories et tes protéines de la journée."], "Voir mes recettes"],
   ["Et si tu commençais cette semaine ?", ["Ton plan attend déjà. Tu peux faire tes courses dès aujourd'hui avec ta liste.", "Une question avant de te lancer ? Réponds à ce mail, c'est moi qui lis."], "Débloquer ma semaine"],
+  ["Demain soir, c'est fini", ["Demain à 23h59, le pack fondateur s'arrête.", "<b>59,99 € une seule fois</b>, au lieu de 143,88 € par an au futur prix du mensuel (11,99 € par mois dès le 16 novembre)."], "Prendre le pack fondateur"],
   ["Dernier jour : l'offre fondateur se termine ce soir", ["C'est aujourd'hui que ça se joue : ce soir à 23h59, le pack fondateur disparaît.", "<b>59,99 € une seule fois</b>, puis plus rien à payer."], "Devenir membre fondateur"],
-  ["Dernières heures pour le pack fondateur", ["Dans quelques heures, seul le mensuel à 9,99 €/mois restera disponible.", "Si tu hésitais, c'est le moment. C'est mon dernier mail sur cette offre."], "Devenir membre fondateur"],
+  ["Ce soir 23h59 : fin du pack fondateur", ["Il te reste jusqu'à ce soir 23h59.", "<b>59,99 € une seule fois</b>, à vie. Pas d'abonnement, rien à résilier."], "Prendre le pack fondateur"],
+  ["Dernières heures pour le pack fondateur", ["Dans quelques heures, le pack fondateur s'arrête. Et le 16 novembre, le mensuel passe à 11,99 €/mois.", "Si tu hésitais, c'est le moment. C'est mon dernier mail sur cette offre."], "Devenir membre fondateur"],
 ];
 
 const goalTxt = (g: string) => (g === "Sèche" ? "perdre du gras en gardant ton muscle" : g === "Maintien" ? "rester en forme" : "prendre du muscle");
@@ -122,7 +128,8 @@ function build(key: string, v: V, go: Go): Mail | null {
   const F = v.places !== 0; // founder pack still open (-1: count unknown)
   const dl = Math.max(1, Math.ceil((FOUNDER_END - Date.now()) / 864e5)); // days left
   const nb = dl <= 1 ? "Dernier jour : l'offre se termine ce soir à 23h59" : `L'offre se termine samedi 7 novembre à 23h59 (plus que ${dl} jours)`;
-  const left = P(`<b>${nb}</b>. Ensuite, ce sera 9,99 €/mois.`);
+  const left = P(`<b>${nb}</b>. Le mensuel, lui, passe à 11,99 € le 16 novembre.`);
+  const up = Date.now() <= PRICE_UP ? " Ce prix passe à 11,99 € le 16 novembre." : "";
   const PLAN = `/?${utm(key)}`, LISTE = `/?voir=liste&${utm(key)}`, FOND = `/?offre=fondateur&${utm(key)}`, OFFRE = `/?offre=plan&${utm(key)}`;
   const PAY = `/?payer=${F ? "fondateur" : "mensuel"}&${utm(key)}`; // straight to the Whop checkout
   let subject = "", body = "", cta = "", to = PLAN, tx = false;
@@ -132,8 +139,8 @@ function build(key: string, v: V, go: Go): Mail | null {
       subject = F ? "Ton plan à 4,99 €/mois est prêt" : "Ton plan est prêt — 9,99 €/mois";
       body = F ? P(`${hi} ton plan à <b>4,99 € par mois</b> est prêt.`) +
                  P(`C'est le pack fondateur : <b>59,99 € payés une seule fois</b>, soit 4,99 € par mois sur la 1re année, puis plus rien à payer. Pas d'abonnement, rien à résilier.`) +
-                 P(`<b>${nb}</b>, ensuite c'est 9,99 €/mois.`) + sign
-               : P(`${hi} ton plan est prêt : tous tes repas et ta liste de courses avec les prix.`) + P("Débloque-le pour <b>9,99 €/mois</b>.") + sign;
+                 P(`<b>${nb}</b>. Le mensuel, lui, passe à 11,99 € le 16 novembre.`) + sign
+               : P(`${hi} ton plan est prêt : tous tes repas et ta liste de courses avec les prix.`) + P("Débloque-le pour <b>9,99 €/mois</b>." + up) + sign;
       cta = F ? "Débloquer mon plan à vie" : "Débloquer mon plan";
       to = PAY;
       break;
@@ -142,7 +149,7 @@ function build(key: string, v: V, go: Go): Mail | null {
       body = P(hi) + P(`Ta liste pour la semaine est faite : les quantités, les prix, rangée par rayon. Objectif : ${goalTxt(v.goal)} sans dépasser ${esc(v.budget)} €.`) +
         `<p style="margin:0 0 14px"><img src="${IMG_LIST}" width="480" alt="Aperçu flouté d'une liste de courses mangereco" style="width:100%;max-width:480px;height:auto;border-radius:14px;border:1px solid #e3e8e5;display:block"></p>` +
         (F ? P(`Débloque-la avec le <b>pack fondateur</b> : 59,99 € une fois, et elle se refait toute seule chaque samedi, à vie. ${nb}.`)
-           : P("Débloque-la pour 9,99 €/mois.")) + sign;
+           : P("Débloque-la pour 9,99 €/mois." + up)) + sign;
       cta = "Débloquer ma liste";
       to = F ? FOND : OFFRE;
       break;
@@ -150,7 +157,7 @@ function build(key: string, v: V, go: Go): Mail | null {
       subject = F ? (dl <= 1 ? "Dernier rappel : l'offre fondateur se termine ce soir" : dl === 2 ? "Dernier rappel : l'offre fondateur se termine demain" : `Dernier rappel : plus que ${dl} jours pour le pack fondateur`) : "Dernier rappel pour ton plan";
       body = P(hi) + P("C'est mon dernier rappel, promis.") +
         (F ? P(`Le pack fondateur, c'est <b>59,99 € une seule fois</b> pour ton plan repas et ta liste de courses, recalculés chaque semaine, à vie.`) + left
-           : P("Ton plan repas + ta liste de courses avec les prix, recalculés chaque semaine : 9,99 €/mois.")) +
+           : P("Ton plan repas + ta liste de courses avec les prix, recalculés chaque semaine : 9,99 €/mois." + up)) +
         P("Si quelque chose te bloque (le prix, un aliment, le plan), réponds à ce mail et dis-moi quoi.") + sign;
       cta = F ? "Devenir membre fondateur" : "Débloquer mon plan";
       to = F ? FOND : OFFRE;
@@ -164,7 +171,7 @@ function build(key: string, v: V, go: Go): Mail | null {
       body = P(hi) + P("Au menu des plans mangereco cette semaine :") +
         `<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:0 0 14px;width:100%">${picks.map(card).join("")}</table>` +
         P("Avec ton plan, tu as les quantités exactes pour tes macros et la liste de courses qui va avec.") +
-        (F ? small(`Pack fondateur : 59,99 € une fois, à vie. ${nb}.`) : small("9,99 €/mois."));
+        (F ? small(`Pack fondateur : 59,99 € une fois, à vie. ${nb}.`) : small("9,99 €/mois." + up));
       cta = "Voir mon plan de la semaine";
       to = F ? FOND : OFFRE;
       break;
@@ -182,7 +189,7 @@ function build(key: string, v: V, go: Go): Mail | null {
       if (!F) return null;
       const M = DAILY[Math.max(0, Math.min(DAILY.length - 1, v.dIdx ?? 0))];
       subject = M[0];
-      body = P(hi) + M[1].map((x) => P(x)).join("") + (dl <= 1 ? "" : left) + sign;
+      body = P(hi) + M[1].map((x) => P(x)).join("") + (dl <= 1 || M[1].join("").includes("11,99") ? "" : left) + sign;
       cta = M[2];
       to = FOND;
       break;
@@ -313,6 +320,8 @@ Deno.serve(async (req) => {
   const TX = /^(T-|B1$|B4-)/; // tests and transactional mails don't count towards the daily cap
   const today = new Map<string, number>();
   const bump = (uid: string) => today.set(uid, (today.get(uid) ?? 0) + 1);
+  const { count: sentToday } = await sb.from("mail_log").select("user_id", { count: "exact", head: true }).eq("status", "sent").gte("sent_at", new Date(dayStart).toISOString());
+  let dayCount = sentToday ?? 0;
   async function loadLog(ids: string[]) {
     for (let i = 0; i < ids.length; i += 100) {
       const { data, error } = await sb.from("mail_log").select("user_id,mail_key,status,attempts,updated_at").in("user_id", ids.slice(i, i + 100));
@@ -335,7 +344,8 @@ Deno.serve(async (req) => {
     if (prev && !retryable(prev)) return;
     const m = build(key, v, await tracker(p.user_id, claim));
     if (!m || (p.email_unsub && !m.tx)) return;
-    if (!m.tx && (today.get(p.user_id) ?? 0) >= DAILY_CAP) return; // never more than 2 marketing mails a day
+    if (!m.tx && (today.get(p.user_id) ?? 0) >= DAILY_CAP) return; // never more than 3 marketing mails a day
+    if (!m.tx && dayCount >= DAY_MAX) return; // keep the rest of the Resend quota for payment mails
     const stamp = new Date().toISOString();
     if (!prev) {
       const { error } = await sb.from("mail_log").insert({ user_id: p.user_id, mail_key: claim, status: "pending", attempts: 1, updated_at: stamp });
@@ -347,6 +357,7 @@ Deno.serve(async (req) => {
     }
     log.set(id, { status: "pending", attempts: (prev?.attempts ?? 0) + 1, updated_at: stamp });
     if (!m.tx) bump(p.user_id);
+    dayCount++;
     budgetLeft--;
     try {
       await deliver(p.email, p.user_id, m);
@@ -357,6 +368,7 @@ Deno.serve(async (req) => {
       const err = String(e).slice(0, 300);
       await sb.from("mail_log").update({ status: "failed", last_error: err, updated_at: new Date().toISOString() }).eq("user_id", p.user_id).eq("mail_key", claim);
       out.errors.push(`${claim}: ${err}`);
+      if (/quota/i.test(err)) budgetLeft = 0; // Resend refuses everything now, don't burn the other attempts
     }
   }
   const PCOLS = "user_id,email,data,created_at,email_optin,email_unsub,paywall_seen_at,list_opened_at,week_cost";
@@ -461,11 +473,11 @@ Deno.serve(async (req) => {
     else if (satEvening && age >= 6 * DAY && sentCount(p.user_id, "A4-") < A4_MAX) await once(p, "A4", v, `A4-w${pt.week}`);
   }
 
-  // ---- D: founder campaign, 9 h and 18 h Paris
-  const dSlot = pt.hour >= 9 && pt.hour < 11 ? 0 : pt.hour >= 18 && pt.hour < 20 ? 1 : -1;
+  // ---- D: founder campaign, 9 h, 13 h and 18 h Paris
+  const dSlot = pt.hour >= 9 && pt.hour < 11 ? 0 : pt.hour >= 13 && pt.hour < 15 ? 1 : pt.hour >= 18 && pt.hour < 20 ? 2 : -1;
   if (dSlot >= 0 && now >= DAILY_START && places !== 0 && budgetLeft > 0) {
-    const dIdx = Math.floor((Date.parse(`${pt.date}T00:00:00Z`) - Date.UTC(2026, 10, 3)) / DAY) * 2 + dSlot;
-    const { data: fans, error: de } = await sb.from("profiles").select(PCOLS).eq("email_optin", true).eq("email_unsub", false).order("created_at", { ascending: true }).limit(2000);
+    const dIdx = 4 + Math.floor((Date.parse(`${pt.date}T00:00:00Z`) - Date.UTC(2026, 10, 5)) / DAY) * 3 + dSlot;
+    const { data: fans, error: de } = await sb.from("profiles").select(PCOLS).eq("email_optin", true).eq("email_unsub", false).order("created_at", { ascending: false }).limit(2000); // newest first: they get it if the day budget runs out
     if (de) out.errors.push("daily: " + de.message);
     const pool = (fans ?? []).filter((p: any) => p.email);
     const poolIds = pool.map((p: any) => p.user_id);
@@ -479,7 +491,7 @@ Deno.serve(async (req) => {
       if (budgetLeft <= 0) break;
       if (skip.has(p.user_id)) continue;
       const v = info(p); v.dIdx = dIdx;
-      await once(p, "D", v, `D-${pt.date}-${dSlot ? "soir" : "matin"}`);
+      await once(p, "D", v, `D-${pt.date}-${["matin", "midi", "soir"][dSlot]}`);
     }
   }
 
