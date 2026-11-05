@@ -4072,7 +4072,8 @@ function femCrStart(){if(!femCrOk())return;var c=creatorV();try{sessionStorage.s
 function femCrStop(){var b=null;try{b=JSON.parse(sessionStorage.getItem('macro_fem_bak'));sessionStorage.removeItem('macro_fem_cr');sessionStorage.removeItem('macro_fem_bak')}catch(e){}
   if(b){if(b.p)localStorage.setItem('macro_profile',b.p);else localStorage.removeItem('macro_profile');if(b.pl)localStorage.setItem('macro_plan',b.pl);else localStorage.removeItem('macro_plan')}
   window._dashDay=null;window._femKg=null;if(window._S0)S=window._S0.slice();if(restoreProfile())saveProfile();femApply();if(hasProfile())showDashboard();else showPage('landing')}
-var REV_PART=0.4,REV_PRICE={life:59.99,month:9.99};
+// what is left after Whop fees: 8,50 € on 9,99 € (owner, 5 Nov 2026); lifetime at the same fee rate (about 15 %)
+var REV_PART=0.4,REV_NET={month:8.5,life:Math.round(59.99*8.5/9.99*100)/100};
 function revOpen(){if(document.getElementById('rev-modal'))return;var m=document.createElement('div');m.id='rev-modal';m.className='pw-modal';
   m.innerHTML='<div class="pw-sheet rev-sheet" role="dialog" aria-modal="true" aria-labelledby="rev-t"><button class="pw-x" onclick="revClose()" aria-label="Fermer">&times;</button><h2 class="pw2-t" id="rev-t">Mes revenus</h2><p class="rev-sub">Ta part : 40 % des ventes faites avec la version femmes.</p><div id="rev-body"><p class="rev-note">Chargement…</p></div></div>';
   m.addEventListener('click',function(e){if(e.target===m)revClose()});document.body.appendChild(m);requestAnimationFrame(function(){m.classList.add('open')});
@@ -4080,15 +4081,15 @@ function revOpen(){if(document.getElementById('rev-modal'))return;var m=document
   freshToken(function(tok){if(!tok){fail();return}sbFetch('/rest/v1/rpc/creator_revenue',{method:'POST',body:'{}'},tok).then(function(r){if(!r.ok)throw new Error('rpc');return r.json()}).then(revRender).catch(fail)})}
 function revClose(){var m=document.getElementById('rev-modal');if(m)m.remove()}
 function revRender(d){var b=document.getElementById('rev-body');if(!b)return;var sales=(d&&d.sales)||[],days=(d&&d.days)||[],tot=0,life=0,month=0;
-  sales.forEach(function(x){tot+=REV_PRICE[x.kind]||0;if(x.kind==='life')life++;else if(x.kind==='month')month++});
+  sales.forEach(function(x){tot+=REV_NET[x.kind]||0;if(x.kind==='life')life++;else if(x.kind==='month')month++});
   var e2=function(n){return n.toFixed(2).replace('.',',')+' €'},by={};days.forEach(function(x){by[x.d]=+x.v||0});
   var list=[];for(var i=13;i>=0;i--){var t=new Date(Date.now()-i*864e5),k=t.toLocaleDateString('en-CA',{timeZone:'Europe/Paris'});list.push({k:k,t:t,v:by[k]||0})}
   var max=Math.max(1,Math.max.apply(null,list.map(function(x){return x.v}))),today=list[list.length-1].v;
   var bars=list.map(function(x,j){var h=Math.round(x.v/max*100);return '<div class="rev-bar'+(j===list.length-1?' on':'')+'" title="'+x.v+' visiteurs"><span class="rev-v">'+x.v+'</span><i style="height:calc((100% - 34px) * '+(Math.max(2,h)/100)+')"></i><span class="rev-d">'+x.t.toLocaleDateString('fr-FR',{day:'numeric',timeZone:'Europe/Paris'})+'</span></div>'}).join('');
-  b.innerHTML='<div class="rev-kpis"><div><b>'+sales.length+'</b><span>personne'+(sales.length>1?'s ont':' a')+' payé</span></div><div><b>'+e2(tot)+'</b><span>de ventes</span></div><div class="on"><b>'+e2(tot*REV_PART)+'</b><span>pour toi (40 %)</span></div></div>'+
+  b.innerHTML='<div class="rev-kpis"><div><b>'+sales.length+'</b><span>personne'+(sales.length>1?'s ont':' a')+' payé</span></div><div><b>'+e2(tot)+'</b><span>après frais Whop</span></div><div class="on"><b>'+e2(tot*REV_PART)+'</b><span>pour toi (40 %)</span></div></div>'+
     (sales.length?'<p class="rev-note">'+[life?life+' à vie (59,99 €)':'',month?month+' en mensuel (9,99 €)':''].filter(Boolean).join(' · ')+'</p>':'')+
     '<h3 class="rev-h">Visiteurs par jour<small>'+today+' aujourd’hui</small></h3><div class="rev-chart">'+bars+'</div>'+
-    '<p class="rev-note">Depuis le lancement de la version femmes. Ventes comptées au prix payé, au premier paiement de chaque cliente. Visiteurs : personnes différentes arrivées sur le site, 14 derniers jours.</p>'}
+    '<p class="rev-note">Depuis le lancement de la version femmes. Ta part est calculée sur ce qu’il reste après les frais Whop : '+e2(REV_NET.month)+' pour un mensuel à 9,99 €, '+e2(REV_NET.life)+' pour un accès à vie à 59,99 €. Chaque cliente compte pour son premier paiement. Visiteurs : personnes différentes arrivées sur le site, 14 derniers jours.</p>'}
 function femOn(){if(femCrOn())return true;if(!ownerDev())return false;var m=/[?&]femme(=([01]))?(&|$)/.exec(location.search);if(m)lsSet('macro_fem',m[2]==='0'?0:1);return lsGet('macro_fem')!==0}
 // profiles made in the women's funnel carry D.fem, so the calculation and wording follow the profile, not the device
 function femP(){return !!(D&&D.fem)}
