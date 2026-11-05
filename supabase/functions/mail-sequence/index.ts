@@ -102,19 +102,19 @@ const TEASER: [string, number, number, string][] = [
 
 // Founder campaign: [subject, paragraphs, button]. 0-3 went out on 3-4 Nov; from 5 Nov, index = 4 + 3 x days since 5 Nov + slot (9 h, 13 h, 18 h).
 const DAILY: [string, string[], string][] = [
-  ["Tu sais déjà quoi manger ce soir ?", ["Ton plan de la semaine est prêt : les repas, les quantités et la liste de courses avec les prix.", "Il te reste juste à le débloquer. Le pack fondateur, c'est <b>59,99 € une seule fois</b>, soit 4,99 € par mois sur la 1re année, puis plus rien à payer."], "Voir mon plan"],
+  ["Tu sais déjà quoi manger ce soir ?", ["Ton plan de la semaine est prêt : les repas, les quantités et la liste de courses avec les prix.", "Il te reste juste à le débloquer. Le pack fondateur, c'est <b>59,99 € une seule fois</b>, puis plus rien à payer."], "Voir mon plan"],
   ["Tes courses de la semaine, déjà faites", ["Plus besoin de réfléchir devant les rayons : ta liste est rangée par rayon, au paquet près, avec le prix de chaque article.", "Elle se refait toute seule chaque samedi."], "Débloquer ma liste"],
   ["9,99 € par mois ou 59,99 € une fois ?", ["Le calcul est simple : 1 an en mensuel, c'est <b>119,88 €</b>. Le pack fondateur, c'est <b>59,99 € une seule fois</b>, à vie.", "Pas d'abonnement, rien à résilier."], "Prendre le pack fondateur"],
   ["Pourquoi j'ai créé mangereco", ["J'ai pris 27 kg en 3 ans de muscu. Le plus dur n'a jamais été la salle : c'était de savoir quoi manger, combien, et sans exploser mon budget.", "J'ai construit mangereco pour ça : un plan calé sur tes calories, ton objectif et ton budget."], "Voir mon plan"],
-  ["Dimanche, ça change sur mangereco", ["Je préfère te prévenir à l'avance : du <b>dimanche 8 au samedi 14 novembre</b>, le mensuel passe à <b>4,99 € par mois</b> au lieu de 9,99 €.", "Le même jour, l'accès à vie à 59,99 € passe avec le coaching : un appel avec moi et un programme de muscu personnalisé, adapté à ta morphologie."], "Voir mon plan"],
+  ["Ton plan change si tu changes", ["Ton budget, ton objectif ou ton poids bougent ? Ton plan se recalcule en quelques secondes.", "Le mensuel, c'est 9,99 € par mois, sans engagement."], "Voir mon plan"],
   ["Ton plan change si ta vie change", ["Tu changes de budget, d'objectif ou de poids ? Ton plan se recalcule.", "Tu n'aimes pas un plat ? Tu le changes en un geste, et ta liste de courses suit."], "Voir mon plan"],
-  ["Le prix monte le 16 novembre", ["Le 16 novembre, le mensuel passe de 9,99 € à <b>11,99 € par mois</b>.", "Juste avant, pendant une semaine seulement, du 8 au 14 novembre, il sera à <b>4,99 € par mois</b>. Ce sera le moment de t'abonner."], "Voir mon plan"],
+  ["Le prix monte le 16 novembre", ["Le 16 novembre, le mensuel passe de 9,99 € à <b>11,99 € par mois</b>.", "Si tu t'abonnes avant, tu gardes 9,99 € par mois."], "Voir mon plan"],
   ["Cuisiner sans se prendre la tête", ["Chaque repas a sa recette, étape par étape, avec les quantités exactes pour tes macros.", "Tu n'as plus qu'à suivre, et à cocher tes repas pour voir tes calories et tes protéines de la journée."], "Voir mes recettes"],
   ["Et si tu commençais cette semaine ?", ["Ton plan attend déjà. Tu peux faire tes courses dès aujourd'hui avec ta liste.", "Une question avant de te lancer ? Réponds à ce mail, c'est moi qui lis."], "Débloquer ma semaine"],
-  ["Dimanche : le mensuel à 4,99 €", ["À partir de dimanche et jusqu'au samedi 14 novembre, le mensuel est à <b>4,99 € par mois</b> au lieu de 9,99 €.", "Et l'accès à vie à 59,99 € passe avec le coaching : un appel avec moi et ton programme de muscu personnalisé, adapté à ta morphologie."], "Voir mon plan"],
-  ["Demain, ça change", ["Le pack fondateur s'arrête ce soir à 23h59. Demain, l'accès à vie reste à 59,99 €, mais il passe avec le coaching : un appel avec moi et ton programme de muscu personnalisé.", "Et du 8 au 14 novembre, le mensuel est à <b>4,99 € par mois</b> au lieu de 9,99 €."], "Voir mon plan"],
-  ["Ce qui t'attend demain", ["<b>Mensuel : 4,99 € par mois</b> au lieu de 9,99 €, du 8 au 14 novembre, sans engagement.", "<b>Coaching avec moi : 59,99 € une seule fois</b>. Un appel, ton programme de muscu personnalisé, adapté à ta morphologie, et l'accès à vie à mangereco."], "Voir mon plan"],
-  ["Demain, 4,99 € par mois", ["C'est demain : 7 jours avec le mensuel à <b>4,99 € par mois</b>, jusqu'au samedi 14 novembre. Le 16 novembre, il passe à 11,99 €.", "Une question avant de te lancer ? Réponds à ce mail, c'est moi qui lis."], "Voir mon plan"],
+  ["Ta liste de courses, au centime près", ["Chaque article de ta liste a son prix, rangé par rayon. Tu sais avant d'arriver en caisse combien tu vas payer.", "Le mensuel, c'est 9,99 € par mois, sans engagement. L'accès à vie, 59,99 € une seule fois."], "Voir mon plan"],
+  ["Pas d'idée pour ce soir ?", ["Ton plan a déjà la réponse pour toute la semaine : petit-déj, déjeuner et dîner, avec les quantités pour tes calories.", "Tu ouvres, tu cuisines, c'est tout."], "Voir mon plan"],
+  ["9,99 € par mois, sans engagement", ["Tu peux t'abonner pour un mois, voir ce que ça change, et arrêter quand tu veux.", "Ou payer 59,99 € une seule fois et ne plus jamais y penser."], "Voir mon plan"],
+  ["Une question avant de te lancer ?", ["Réponds simplement à ce mail, c'est moi qui lis et qui réponds.", "Ton plan t'attend déjà sur mangereco."], "Voir mon plan"],
 ];
 
 const goalTxt = (g: string) => (g === "Sèche" ? "perdre du gras en gardant ton muscle" : g === "Maintien" ? "rester en forme" : "prendre du muscle");
@@ -129,8 +129,8 @@ function build(key: string, v: V, go: Go): Mail | null {
   const sign = P("Arthur");
   const F = v.places !== 0; // founder pack still open (-1: count unknown)
   const dl = Math.max(1, Math.ceil((FOUNDER_END - Date.now()) / 864e5)); // days left
-  const nb = dl <= 1 ? "Le pack fondateur s'arrête ce soir à 23h59 : demain, l'accès à vie passe avec le coaching" : "Le pack fondateur s'arrête samedi 7 novembre à 23h59 : dimanche, l'accès à vie passe avec le coaching";
-  const left = P(`<b>${nb}</b>. Du 8 au 14 novembre, le mensuel est à 4,99 € par mois ; le 16 novembre, il passe à 11,99 €.`);
+  const nb = dl <= 1 ? "Le pack fondateur s'arrête ce soir à 23h59" : "Le pack fondateur s'arrête samedi 7 novembre à 23h59";
+  const left = P(`<b>${nb}</b>. Le 16 novembre, le mensuel passe à 11,99 €.`);
   const up = Date.now() <= PRICE_UP ? " Ce prix passe à 11,99 € le 16 novembre." : "";
   const PLAN = `/?${utm(key)}`, LISTE = `/?voir=liste&${utm(key)}`, FOND = `/?offre=fondateur&${utm(key)}`, OFFRE = `/?offre=plan&${utm(key)}`;
   const PAY = `/?payer=${F ? "fondateur" : "mensuel"}&${utm(key)}`; // straight to the Whop checkout
@@ -138,9 +138,9 @@ function build(key: string, v: V, go: Go): Mail | null {
   switch (key) {
     // ---------- A: not paying
     case "A1": // 3 lines, one button straight to the checkout
-      subject = F ? "Ton plan à 4,99 €/mois est prêt" : "Ton plan est prêt — 9,99 €/mois";
-      body = F ? P(`${hi} ton plan à <b>4,99 € par mois</b> est prêt.`) +
-                 P(`C'est le pack fondateur : <b>59,99 € payés une seule fois</b>, soit 4,99 € par mois sur la 1re année, puis plus rien à payer. Pas d'abonnement, rien à résilier.`) +
+      subject = F ? "Ton plan est prêt, à vie pour 59,99 €" : "Ton plan est prêt — 9,99 €/mois";
+      body = F ? P(`${hi} ton plan est prêt.`) +
+                 P(`C'est le pack fondateur : <b>59,99 € payés une seule fois</b>, puis plus rien à payer. Pas d'abonnement, rien à résilier.`) +
                  left + sign
                : P(`${hi} ton plan est prêt : tous tes repas et ta liste de courses avec les prix.`) + P("Débloque-le pour <b>9,99 €/mois</b>." + up) + sign;
       cta = F ? "Débloquer mon plan à vie" : "Débloquer mon plan";

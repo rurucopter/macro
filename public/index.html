@@ -2051,6 +2051,22 @@ body.fem .fl-logo{font-size:1.3rem}
 #fem-cr-bar button{background:#F0739C;color:#2B0F1C;border:0;border-radius:99px;padding:6px 12px;font:700 .78rem var(--font);cursor:pointer;min-height:30px}
 body.fem-cr{padding-top:42px}
 .cr-fem{margin-top:.5rem}
+.rev-sheet{max-width:520px}
+.rev-sub{margin:.25rem 0 1rem;color:var(--muted);font-size:.92rem}
+.rev-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rev-kpis div{background:var(--bg2);border-radius:14px;padding:12px 10px;min-width:0}
+.rev-kpis b{display:block;font-size:1.15rem;font-variant-numeric:tabular-nums;color:var(--ink)}
+.rev-kpis span{display:block;font-size:.75rem;color:var(--muted);line-height:1.3;margin-top:2px}
+.rev-kpis .on{background:var(--accent-bg)}.rev-kpis .on b{color:var(--accent)}
+.rev-h{display:flex;justify-content:space-between;align-items:baseline;font-size:1rem;margin:1.25rem 0 .5rem}
+.rev-h small{font-size:.8rem;color:var(--muted);font-weight:600}
+.rev-chart{display:flex;align-items:stretch;gap:4px;height:150px}
+.rev-bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:0}
+.rev-bar i{display:block;width:100%;max-width:22px;border-radius:5px 5px 2px 2px;background:var(--border);flex:none}
+.rev-bar.on i{background:var(--accent)}
+.rev-v{font-size:.62rem;color:var(--muted);font-variant-numeric:tabular-nums;margin-bottom:2px}
+.rev-d{font-size:.62rem;color:var(--muted);margin-top:4px;font-variant-numeric:tabular-nums}
+.rev-note{font-size:.78rem;color:var(--muted);line-height:1.5;margin:.75rem 0 0}
 body.fem .btn-p{box-shadow:0 6px 20px -6px rgba(200,51,106,.45)}
 body.fem .pw2-plan{border-color:var(--fm-line);background:var(--fm-card)}
 body.fem .pw2-plan.active{border-color:var(--fm-acc);background:var(--fm-acc-soft)}
@@ -3720,8 +3736,8 @@ function pw3Html(){var closed=founderClosed(),radio='<span class="pw2-radio" ari
   return '<div class="pw2 pw3" id="unlock-card"><div class="pw3-head">'+(femP()?'<h2 class="pw2-t">Ton plan minceur est prêt</h2><p class="pw3-sub">Tes repas, ta liste de courses et ton suivi, semaine après semaine</p>':cpOn()?'<h2 class="pw2-t">'+(cp2On()?'Reprends la main sur ton budget, ton physique':'Reprends la main sur ton budget et ton physique')+'</h2><p class="pw3-sub">Tu es à 1 bouton de changer ta vie</p>':'<h2 class="pw2-t">Débloque ta semaine</h2>')+pw3Mine()+'</div>'+
   (closed||cpOn()?'':'<div class="pw3-offer"><span class="pw3-dot" aria-hidden="true"></span>Offre de lancement · fin dans <b class="pw3-cd">'+pw3Cd()+'</b><span class="sr-only" id="founder-txt"></span></div>')+
   '<div class="pw2-plans" role="radiogroup" aria-label="Formule">'+
-  (closed?'':'<button type="button" class="pw2-plan pw2-life active" id="plan-life" role="radio" aria-checked="true" onclick="selectPlan(\'life\')"><span class="pw2-tag">Le plus choisi</span>'+radio+'<span class="pw2-name">'+(cpOn()?'<b>Offre fondateur</b><small>À vie · paiement unique · −50 %</small><span class="pw3-card-cd" aria-label="Fin de l’offre dans">⏳ <b class="pw3-cd">'+pw3Cd()+'</b></span><span class="sr-only" id="founder-txt"></span>':'<b>À vie</b><small>Paiement unique · −50 %</small>')+'</span><span class="pw2-price">'+(p499On()?'<b>4,99 €</b><small>/mois la 1re année</small><small class="pw2-once">59,99 € une seule fois</small>':'<b>59,99 €</b><small>soit 4,99 €/mois la 1re année</small>')+'</span></button>')+
-  '<button type="button" class="pw2-plan'+(closed?' active':'')+'" id="plan-month" role="radio" aria-checked="'+closed+'" onclick="selectPlan(\'month\')">'+(promoOn()?'<span class="pw2-tag">Offre de la semaine</span>':'')+radio+'<span class="pw2-name"><b>Mensuel</b><small>Sans engagement</small>'+(promoOn()?'<span class="pw3-card-cd" aria-label="Fin de l’offre dans">⏳ <b class="pw3-cd">'+pw3Cd()+'</b></span>':'')+'</span><span class="pw2-price">'+(promoOn()?'<s>9,99 €</s><b class="pw2-promo">4,99 €</b>':'<b>9,99 €</b>')+'<small>par mois</small></span>'+(puOn()&&!promoOn()?'<span class="pu-band"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg><span><b>Passe à 11,99 € le 16 novembre</b>Abonne-toi avant pour garder 9,99 €</span></span>':'')+'</button>'+
+  (closed?'':'<button type="button" class="pw2-plan pw2-life active" id="plan-life" role="radio" aria-checked="true" onclick="selectPlan(\'life\')"><span class="pw2-tag">'+(femLife()?'Le plus avantageux':'Le plus choisi')+'</span>'+radio+'<span class="pw2-name">'+(femLife()?'<b>À vie</b><small>Paiement unique, rien à résilier</small>':cpOn()?'<b>Offre fondateur</b><small>À vie · paiement unique · −50 %</small><span class="pw3-card-cd" aria-label="Fin de l’offre dans">⏳ <b class="pw3-cd">'+pw3Cd()+'</b></span><span class="sr-only" id="founder-txt"></span>':'<b>À vie</b><small>Paiement unique · −50 %</small>')+'</span><span class="pw2-price">'+(femLife()?'<b>59,99 €</b><small>une seule fois</small>':p499On()?'<b>4,99 €</b><small>/mois la 1re année</small><small class="pw2-once">59,99 € une seule fois</small>':'<b>59,99 €</b><small>soit 4,99 €/mois la 1re année</small>')+'</span></button>')+
+  '<button type="button" class="pw2-plan'+(closed?' active':'')+'" id="plan-month" role="radio" aria-checked="'+closed+'" onclick="selectPlan(\'month\')">'+(promoOn()?'<span class="pw2-tag">Offre de la semaine</span>':'')+radio+'<span class="pw2-name"><b>Mensuel</b><small>Sans engagement</small>'+(promoOn()?'<span class="pw3-card-cd" aria-label="Fin de l’offre dans">⏳ <b class="pw3-cd">'+pw3Cd()+'</b></span>':'')+'</span><span class="pw2-price">'+(promoOn()?'<s>9,99 €</s><b class="pw2-promo">4,99 €</b>':'<b>9,99 €</b>')+'<small>par mois</small></span>'+(puOn()&&!promoOn()&&!femLife()?'<span class="pu-band"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg><span><b>Passe à 11,99 € le 16 novembre</b>Abonne-toi avant pour garder 9,99 €</span></span>':'')+'</button>'+
   '</div>'+(coOn()&&!femP()?coCardHtml():'')+'<ul class="pw3-feats"><li>'+chk+'Recettes</li><li>'+chk+'Liste de courses</li><li>'+chk+'Suivi</li></ul>'+
   '<div class="pw2-foot"><button class="btn btn-p btn-lg btn-full" id="paywall-cta-btn" onclick="startCheckout()">'+(femP()?'Je commence mon plan →':cp2On()?'Change ta vie →':'Débloquer ma semaine →')+'</button><p class="pw2-price-sub" id="pw2-price-sub">'+pw2PriceSub(closed?'month':'life')+'</p><p class="pw2-legal pw2-legal-foot">En continuant, tu acceptes les <a href="/cgu" target="_blank" rel="noopener">CGU</a> et l’accès immédiat au contenu, sans droit de rétractation.</p></div></div>'}
 // compact plan recap for v3: "14 repas · ~23 € / sem. · 135 g de protéines / jour"
@@ -3729,7 +3745,7 @@ function pw3Mine(){try{var mc=computeMacros(),g=window._gen,n=parseInt(D.meals)|
   if(g&&g.plan){n=0;g.plan.forEach(function(d){n+=(d.meals||[]).length})}
   if(n)x.push(n+' repas');if(r&&r.used)x.push('~'+r.used.toFixed(0)+' € / sem.');if(mc&&mc.protG)x.push(mc.protG+' g de protéines / jour');
   return x.length?'<p class="pw3-mine">Ton plan : '+x.join(' · ')+'</p>':''}catch(e){return ''}}
-function pw2PriceSub(p){return p==='life'?'59,99 € une seule fois · paiement sécurisé':promoOn()?'4,99 € par mois · sans engagement · paiement sécurisé':puOn()?'9,99 € par mois, gardés si tu t’abonnes avant le 16 novembre · sans engagement':'9,99 € par mois · sans engagement · paiement sécurisé'}
+function pw2PriceSub(p){return p==='life'?'59,99 € une seule fois · paiement sécurisé':promoOn()?'4,99 € par mois · sans engagement · paiement sécurisé':puOn()&&!femLife()?'9,99 € par mois, gardés si tu t’abonnes avant le 16 novembre · sans engagement':'9,99 € par mois · sans engagement · paiement sécurisé'}
 function showPaywall(){
 if(document.getElementById('pw-modal'))return;
 window._pwAuto=true;selectedPlan='life';track('paywall_view');setLeadStatus('paywall_view');notePaywall(true);
@@ -3781,12 +3797,13 @@ var PRICE_UP=Date.UTC(2026,10,15,22,59,59);
 function puOn(){return Date.now()<=PRICE_UP}
 // test (owner only): offer of the week at 4,99 €/month and coaching with Arthur (the 59,99 € lifetime plan)
 var PROMO_END=Date.UTC(2026,10,14,22,59,59);
-function promoOn(){return ownerDev()&&Date.now()<=PROMO_END}
+function promoOn(){return false} // the 4,99 € week was dropped (5 Nov 2026)
 function coOn(){return ownerDev()}
 var FOUNDER_END2=Date.UTC(2026,10,7,22,59,59);
 function fdr2On(){return true}
 function founderEnd(){return promoOn()?PROMO_END:fdr2On()?FOUNDER_END2:FOUNDER_END}
-function founderClosed(){return promoOn()||Date.now()>founderEnd()||(founderCount!==null&&founderCount>=FOUNDER_MAX)}
+function femLife(){return femOn()||femP()}
+function founderClosed(){if(femLife())return false;return promoOn()||Date.now()>founderEnd()||(founderCount!==null&&founderCount>=FOUNDER_MAX)}
 function cdText(){var ms=Math.max(0,founderEnd()-Date.now()),sx=Math.floor(ms/1000),d=Math.floor(sx/86400),h=Math.floor(sx%86400/3600),m=Math.floor(sx%3600/60),x=sx%60;function p(n){return (n<10?'0':'')+n}
   return (d?d+' j ':'')+p(h)+' h '+p(m)+' min '+p(x)+' s'}
 setInterval(function(){document.querySelectorAll('.pw2-cd').forEach(function(e){e.innerHTML=pw2CdHtml()});document.querySelectorAll('.pw3-cd').forEach(function(e){e.textContent=pw3Cd()});if(document.getElementById('founder-txt')||document.getElementById('pr-founder-left')||document.querySelector('.fp-cd'))renderFounder()},1000);
@@ -3905,7 +3922,7 @@ function crAdminLoad(){var el=document.getElementById('cr-admin');if(!el||!isAdm
       el.innerHTML='<ul class="cr-list">'+CREATORS_V.map(function(c){var k=crKey(c),r=ev['creator_restart_'+k],f=ev['creator_done_'+k];return '<li><div><b>'+escH(c[1])+'</b><small>'+escH(c[0])+'</small></div><span><b>'+fmtN(r?r.n:0)+'</b><small>recommencés</small></span><span><b>'+fmtN(f?f.n:0)+'</b><small>terminés</small></span></li>'}).join('')+'</ul>'+
         '<button type="button" class="trk-link" onclick="showAdmin(30)">Voir toutes les stats →</button>'}).catch(function(){el.innerHTML='<p class="trk-note">Connexion impossible, réessaie dans un instant.</p>'})})}
 function crAdminGo(){appGo('reglages');setTimeout(function(){var e=document.getElementById('cr-admin-h');if(e)e.scrollIntoView({behavior:'smooth',block:'start'})},120)}
-function crBtn(){return creatorV()?(femCrOk()?(femCrOn()?'<button type="button" class="cr-restart cr-fem" onclick="femCrStop()">↩️ Revenir à la version actuelle</button>':'<button type="button" class="cr-restart cr-fem" onclick="femCrStart()">👀 Voir la future version femmes</button>'):'')+'<button type="button" class="cr-restart" onclick="creatorRestart()">🎬 Recommencer le funnel</button>':''}
+function crBtn(){return creatorV()?(femCrOk()?'<button type="button" class="cr-restart cr-fem" onclick="revOpen()">💰 Mes revenus</button>':'')+(femCrOk()?(femCrOn()?'<button type="button" class="cr-restart cr-fem" onclick="femCrStop()">↩️ Revenir à la version actuelle</button>':'<button type="button" class="cr-restart cr-fem" onclick="femCrStart()">👀 Voir la future version femmes</button>'):'')+'<button type="button" class="cr-restart" onclick="creatorRestart()">🎬 Recommencer le funnel</button>':''}
 function isGift(){return !!(Auth.user&&GIFT_ACCESS.indexOf(String(Auth.user.email||'').toLowerCase())>-1)}
 function isFull(){return !!(Auth.user&&FULL_ACCESS.indexOf(String(Auth.user.email||'').toLowerCase())>-1)}
 function isInsider(){return isAdmin()||isFull()}
@@ -4055,6 +4072,23 @@ function femCrStart(){if(!femCrOk())return;var c=creatorV();try{sessionStorage.s
 function femCrStop(){var b=null;try{b=JSON.parse(sessionStorage.getItem('macro_fem_bak'));sessionStorage.removeItem('macro_fem_cr');sessionStorage.removeItem('macro_fem_bak')}catch(e){}
   if(b){if(b.p)localStorage.setItem('macro_profile',b.p);else localStorage.removeItem('macro_profile');if(b.pl)localStorage.setItem('macro_plan',b.pl);else localStorage.removeItem('macro_plan')}
   window._dashDay=null;window._femKg=null;if(window._S0)S=window._S0.slice();if(restoreProfile())saveProfile();femApply();if(hasProfile())showDashboard();else showPage('landing')}
+var REV_PART=0.4,REV_PRICE={life:59.99,month:9.99};
+function revOpen(){if(document.getElementById('rev-modal'))return;var m=document.createElement('div');m.id='rev-modal';m.className='pw-modal';
+  m.innerHTML='<div class="pw-sheet rev-sheet" role="dialog" aria-modal="true" aria-labelledby="rev-t"><button class="pw-x" onclick="revClose()" aria-label="Fermer">&times;</button><h2 class="pw2-t" id="rev-t">Mes revenus</h2><p class="rev-sub">Ta part : 40 % des ventes faites avec la version femmes.</p><div id="rev-body"><p class="rev-note">Chargement…</p></div></div>';
+  m.addEventListener('click',function(e){if(e.target===m)revClose()});document.body.appendChild(m);requestAnimationFrame(function(){m.classList.add('open')});
+  var fail=function(){var b=document.getElementById('rev-body');if(b)b.innerHTML='<p class="rev-note">Tes chiffres ne sont pas encore disponibles. Réessaie un peu plus tard.</p>'};
+  freshToken(function(tok){if(!tok){fail();return}sbFetch('/rest/v1/rpc/creator_revenue',{method:'POST',body:'{}'},tok).then(function(r){if(!r.ok)throw new Error('rpc');return r.json()}).then(revRender).catch(fail)})}
+function revClose(){var m=document.getElementById('rev-modal');if(m)m.remove()}
+function revRender(d){var b=document.getElementById('rev-body');if(!b)return;var sales=(d&&d.sales)||[],days=(d&&d.days)||[],tot=0,life=0,month=0;
+  sales.forEach(function(x){tot+=REV_PRICE[x.kind]||0;if(x.kind==='life')life++;else if(x.kind==='month')month++});
+  var e2=function(n){return n.toFixed(2).replace('.',',')+' €'},by={};days.forEach(function(x){by[x.d]=+x.v||0});
+  var list=[];for(var i=13;i>=0;i--){var t=new Date(Date.now()-i*864e5),k=t.toLocaleDateString('en-CA',{timeZone:'Europe/Paris'});list.push({k:k,t:t,v:by[k]||0})}
+  var max=Math.max(1,Math.max.apply(null,list.map(function(x){return x.v}))),today=list[list.length-1].v;
+  var bars=list.map(function(x,j){var h=Math.round(x.v/max*100);return '<div class="rev-bar'+(j===list.length-1?' on':'')+'" title="'+x.v+' visiteurs"><span class="rev-v">'+x.v+'</span><i style="height:calc((100% - 34px) * '+(Math.max(2,h)/100)+')"></i><span class="rev-d">'+x.t.toLocaleDateString('fr-FR',{day:'numeric',timeZone:'Europe/Paris'})+'</span></div>'}).join('');
+  b.innerHTML='<div class="rev-kpis"><div><b>'+sales.length+'</b><span>personne'+(sales.length>1?'s ont':' a')+' payé</span></div><div><b>'+e2(tot)+'</b><span>de ventes</span></div><div class="on"><b>'+e2(tot*REV_PART)+'</b><span>pour toi (40 %)</span></div></div>'+
+    (sales.length?'<p class="rev-note">'+[life?life+' à vie (59,99 €)':'',month?month+' en mensuel (9,99 €)':''].filter(Boolean).join(' · ')+'</p>':'')+
+    '<h3 class="rev-h">Visiteurs par jour<small>'+today+' aujourd’hui</small></h3><div class="rev-chart">'+bars+'</div>'+
+    '<p class="rev-note">Depuis le lancement de la version femmes. Ventes comptées au prix payé, au premier paiement de chaque cliente. Visiteurs : personnes différentes arrivées sur le site, 14 derniers jours.</p>'}
 function femOn(){if(femCrOn())return true;if(!ownerDev())return false;var m=/[?&]femme(=([01]))?(&|$)/.exec(location.search);if(m)lsSet('macro_fem',m[2]==='0'?0:1);return lsGet('macro_fem')!==0}
 // profiles made in the women's funnel carry D.fem, so the calculation and wording follow the profile, not the device
 function femP(){return !!(D&&D.fem)}
@@ -4115,7 +4149,7 @@ function femLpFill(){var d=document.getElementById('fl-day'),ml=document.getElem
   document.getElementById('fl-day-t').textContent=eu(tot)+' la journée';
   ml.innerHTML=['Wrap poulet + crudités','Salade thon + riz froid + légumes','Riz + dinde + courgettes','Saumon + légumes vapeur + riz','Chili con carne maison','Cottage cheese + muesli + fruits'].map(find).filter(Boolean).map(function(m){
     return '<article class="fl-meal"><img src="'+src(m)+'" alt="'+escH(m.n)+'" loading="lazy" decoding="async"><div><h3>'+escH(m.n)+'</h3><div class="fl-tags"><span>'+m.cal+' kcal</span><span>'+m.p+' g de protéines</span><span class="e">≈ '+eu(m.price)+'</span>'+(m.t?'<span>'+m.t+' min</span>':'')+'</div></div></article>'}).join('');
-  var pr=document.getElementById('fl-price');if(pr)pr.textContent='Tu vois ton plan gratuitement d’abord. Ensuite, le plan complet est à '+(promoOn()?'4,99 € par mois cette semaine':'9,99 € par mois')+', sans engagement : tu résilies quand tu veux.'}
+  var pr=document.getElementById('fl-price');if(pr)pr.textContent='Tu vois ton plan gratuitement d’abord. Ensuite, le plan complet est à 9,99 € par mois, sans engagement, ou 59,99 € une seule fois pour un accès à vie.'}
 function femApply(){var on=femOn(),lp=document.getElementById('fem-lp'),cr=on&&femCrOn(),bar=document.getElementById('fem-cr-bar');document.body.classList.toggle('fem',on);document.body.classList.toggle('fem-cr',cr);if(lp)lp.hidden=!on;
   if(cr&&!bar){bar=document.createElement('div');bar.id='fem-cr-bar';bar.innerHTML='<span>Aperçu version femmes</span><button type="button" onclick="femCrStop()">Revenir à l’actuelle</button>';document.body.appendChild(bar)}else if(!cr&&bar)bar.remove();if(!on)return;
   if(!document.getElementById('fem-font')){var l=document.createElement('link');l.id='fem-font';l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Gloock&display=swap';document.head.appendChild(l)}
