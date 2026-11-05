@@ -2028,6 +2028,20 @@ body.fem .ob-title .sw-em,body.fem .sw-em{color:var(--fm-acc)}
   .fl-ft{padding-bottom:40px}
 }
 @media(prefers-reduced-motion:reduce){.fl-btn,.fl-opt,.fl-sticky{transition:none}}
+.fg{padding:18px;margin-block:12px}
+.fg-k{font-size:.74rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.fg-t{font:400 1.55rem/1.15 var(--fm-d,Georgia,serif);margin:6px 0 16px;color:var(--ink);text-wrap:balance}
+.fg-t b{font-weight:400;color:var(--accent);white-space:nowrap}
+.fg-line{height:8px;border-radius:99px;background:var(--bg2);overflow:hidden}
+.fg-line i{display:block;height:100%;width:100%;border-radius:inherit;background:linear-gradient(90deg,var(--bg2),var(--accent));transform-origin:left;animation:fg-in 1.2s ease-out both}
+@keyframes fg-in{from{transform:scaleX(.08)}to{transform:none}}
+.fg-pts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.fg-pts div:nth-child(2){text-align:center}.fg-pts div:last-child{text-align:right}
+.fg-pts b{display:block;font-size:1rem;font-variant-numeric:tabular-nums;color:var(--ink)}
+.fg-pts .on b{color:var(--accent)}
+.fg-pts span{font-size:.74rem;color:var(--muted)}
+.fg-n{margin:14px 0 0;font-size:.8rem;line-height:1.5;color:var(--muted)}
+@media(prefers-reduced-motion:reduce){.fg-line i{animation:none}}
 body.fem .btn-p{box-shadow:0 6px 20px -6px rgba(200,51,106,.45)}
 body.fem .pw2-plan{border-color:var(--fm-line);background:var(--fm-card)}
 body.fem .pw2-plan.active{border-color:var(--fm-acc);background:var(--fm-acc-soft)}
@@ -3420,6 +3434,7 @@ function freePage(mc,gen){var ti=todayIndex(),dates=weekDates(),nm=firstName(),r
   var h='<div class="app fp'+(testOn()?' fp-t':'')+'"><div class="app-top"><span class="app-brand">mangereco<i>.</i></span><span class="app-date">'+new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})+'</span></div>';
   h+='<h1 class="app-title">'+(nm?escH(nm)+', ton':'Ton')+' plan est prêt</h1><p class="fp-sub">Toute ta semaine, pensée pour '+goalTxt+' avec '+mc.b+' € chez '+escH(D.store||'ton magasin')+'.</p>';
   h+='<div class="fp-kpis"><div><b>'+mc.cal+'</b><span>kcal / jour</span></div><div><b>'+mc.protG+' g</b><span>protéines / jour</span></div><div><b>'+r.used.toFixed(0)+' €</b><span>par semaine</span></div></div>';
+  if(femP())h+=fpGoalFem();
   var t=testOn(),order=gen.plan.map(function(_,i){return i});
   if(t)order=order.slice(ti).concat(order.slice(0,ti));
   var td=gen.plan[ti]&&gen.plan[ti].totals||{cal:0,p:0},cov=mc.cal?td.cal/mc.cal:0;
@@ -3439,6 +3454,13 @@ function freePage(mc,gen){var ti=todayIndex(),dates=weekDates(),nm=firstName(),r
   h+='</div><div class="fp-cta"><div class="fp-cta-in"><span class="fp-cd"></span><button type="button" class="btn btn-p btn-lg btn-full" onclick="track(\'paywall_gate\',{from:\'free_cta\'});if(!cpOn())confetti();showPaywall()">🔓 Débloquer toute ma semaine</button></div></div>';
   return h}
 // one readable product from the shopping list, preferably from the free meal
+// women's version: the kilos she chose, and when she can reach them at the plan's pace (before the locked meals)
+function fpGoalFem(){var p=+D.poids||0,c=+D.cible||0;if(!p||!c||c>=p)return '';
+  var d=p-c,rate=cibleRate(p),w=Math.ceil(d/rate),mo=Math.round(w/4.35),f=function(n){return new Date(Date.now()+n*7*864e5).toLocaleDateString('fr-FR',{day:'numeric',month:'short'})};
+  var dur=w<9?w+' semaine'+(w>1?'s':''):'environ '+mo+' mois',half=Math.round((p+c)/2*10)/10;
+  return '<div class="app-card fg"><span class="fg-k">Ton objectif</span><p class="fg-t">Tu peux perdre tes <b>'+d+' kg</b> en '+dur+'.</p>'+
+    '<div class="fg-line" aria-hidden="true"><i></i></div><div class="fg-pts"><div><b>'+p+' kg</b><span>Aujourd’hui</span></div><div><b>'+String(half).replace('.',',')+' kg</b><span>vers le '+f(Math.ceil(w/2))+'</span></div><div class="on"><b>'+c+' kg</b><span>vers le '+f(w)+'</span></div></div>'+
+    '<p class="fg-n">Au rythme de ton plan, '+String(rate).replace('.',',')+' kg par semaine, si tu suis tes repas. C’est une estimation : chaque corps avance à son rythme.</p></div>'}
 function fpShopOne(gen,r){var all=[];r.cats.forEach(function(c){if(c.label!=='Placard')c.items.forEach(function(it){if(it.pack)all.push(it)})});if(!all.length)return '';
   var f=gen.free||{di:todayIndex(),mi:0},m=(gen.plan[f.di]||{meals:[]}).meals[f.mi],names=(m&&m.q||[]).map(function(x){return x[0]}),it=all.filter(function(x){return names.indexOf(x.n)>-1})[0]||all[0];
   return '<div class="app-card fp-shop1"><span class="fp-shop1-t">Un article de ta liste</span><div class="mp-shop-item">'+ingPh(it.n)+'<span class="mp-shop-name">'+it.n+'<small>Besoin : '+it.qty+' · '+it.count+' repas</small></span><span class="mp-shop-price"><b>'+eur(it.cost)+'</b><small>'+(it.packs>1?it.packs+' × ':'')+escH(it.pack)+'</small></span></div></div>'}
