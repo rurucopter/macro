@@ -2042,6 +2042,15 @@ body.fem .ob-title .sw-em,body.fem .sw-em{color:var(--fm-acc)}
 .fg-pts span{font-size:.74rem;color:var(--muted)}
 .fg-n{margin:14px 0 0;font-size:.8rem;line-height:1.5;color:var(--muted)}
 @media(prefers-reduced-motion:reduce){.fg-line i{animation:none}}
+body.fem .logo,body.fem .ob-brand,body.fem .app-brand,body.fem .fl-logo{font-family:var(--fm-d);font-weight:400;letter-spacing:-.01em;color:var(--fm-ink);display:inline-flex;align-items:center;gap:0}
+body.fem .ob-brand{display:flex}
+body.fem .logo:before,body.fem .ob-brand:before,body.fem .app-brand:before,body.fem .fl-logo:before{content:"";flex:none;width:.8em;height:.8em;border-radius:0 70% 0 70%;background:var(--fm-acc);box-shadow:inset -.18em .18em 0 rgba(255,255,255,.28);margin-right:.32em}
+body.fem .logo span,body.fem .ob-brand span,body.fem .app-brand i,body.fem .fl-logo i{color:var(--fm-acc)}
+body.fem .fl-logo{font-size:1.3rem}
+#fem-cr-bar{position:fixed;top:0;left:0;right:0;z-index:400;display:flex;align-items:center;justify-content:center;gap:10px;white-space:nowrap;padding:6px 12px;background:var(--fm-plum);color:#FBEFF4;font:600 .8rem var(--font)}
+#fem-cr-bar button{background:#F0739C;color:#2B0F1C;border:0;border-radius:99px;padding:6px 12px;font:700 .78rem var(--font);cursor:pointer;min-height:30px}
+body.fem-cr{padding-top:42px}
+.cr-fem{margin-top:.5rem}
 body.fem .btn-p{box-shadow:0 6px 20px -6px rgba(200,51,106,.45)}
 body.fem .pw2-plan{border-color:var(--fm-line);background:var(--fm-card)}
 body.fem .pw2-plan.active{border-color:var(--fm-acc);background:var(--fm-acc-soft)}
@@ -3896,7 +3905,7 @@ function crAdminLoad(){var el=document.getElementById('cr-admin');if(!el||!isAdm
       el.innerHTML='<ul class="cr-list">'+CREATORS_V.map(function(c){var k=crKey(c),r=ev['creator_restart_'+k],f=ev['creator_done_'+k];return '<li><div><b>'+escH(c[1])+'</b><small>'+escH(c[0])+'</small></div><span><b>'+fmtN(r?r.n:0)+'</b><small>recommencés</small></span><span><b>'+fmtN(f?f.n:0)+'</b><small>terminés</small></span></li>'}).join('')+'</ul>'+
         '<button type="button" class="trk-link" onclick="showAdmin(30)">Voir toutes les stats →</button>'}).catch(function(){el.innerHTML='<p class="trk-note">Connexion impossible, réessaie dans un instant.</p>'})})}
 function crAdminGo(){appGo('reglages');setTimeout(function(){var e=document.getElementById('cr-admin-h');if(e)e.scrollIntoView({behavior:'smooth',block:'start'})},120)}
-function crBtn(){return creatorV()?'<button type="button" class="cr-restart" onclick="creatorRestart()">🎬 Recommencer le funnel</button>':''}
+function crBtn(){return creatorV()?(femCrOk()?(femCrOn()?'<button type="button" class="cr-restart cr-fem" onclick="femCrStop()">↩️ Revenir à la version actuelle</button>':'<button type="button" class="cr-restart cr-fem" onclick="femCrStart()">👀 Voir la future version femmes</button>'):'')+'<button type="button" class="cr-restart" onclick="creatorRestart()">🎬 Recommencer le funnel</button>':''}
 function isGift(){return !!(Auth.user&&GIFT_ACCESS.indexOf(String(Auth.user.email||'').toLowerCase())>-1)}
 function isFull(){return !!(Auth.user&&FULL_ACCESS.indexOf(String(Auth.user.email||'').toLowerCase())>-1)}
 function isInsider(){return isAdmin()||isFull()}
@@ -4039,7 +4048,14 @@ function initAuth(){var _cr=/[?&]createur=([a-f0-9]{16,40})(&|$)/i.exec(location
 }
 
 // ===== test (owner only): women's weight-loss version. ?femme=0 turns it off on this device, ?femme turns it back on =====
-function femOn(){if(!ownerDev())return false;var m=/[?&]femme(=([01]))?(&|$)/.exec(location.search);if(m)lsSet('macro_fem',m[2]==='0'?0:1);return lsGet('macro_fem')!==0}
+function femCrOk(){var c=typeof creatorV==='function'&&creatorV();return !!(c&&c[1]==='tipsmanger')}
+function femCrOn(){try{return femCrOk()&&sessionStorage.getItem('macro_fem_cr')==='1'}catch(e){return false}}
+function femCrStart(){if(!femCrOk())return;var c=creatorV();try{sessionStorage.setItem('macro_fem_cr','1');sessionStorage.setItem('macro_fem_bak',JSON.stringify({p:localStorage.getItem('macro_profile'),pl:localStorage.getItem('macro_plan')}))}catch(e){return}
+  track('creator_fem_preview_'+crKey(c));lsDel('macro_plan');lsDel('macro_profile');window._dashDay=null;window._proofShown=false;selGender=null;showPage('landing')}
+function femCrStop(){var b=null;try{b=JSON.parse(sessionStorage.getItem('macro_fem_bak'));sessionStorage.removeItem('macro_fem_cr');sessionStorage.removeItem('macro_fem_bak')}catch(e){}
+  if(b){if(b.p)localStorage.setItem('macro_profile',b.p);else localStorage.removeItem('macro_profile');if(b.pl)localStorage.setItem('macro_plan',b.pl);else localStorage.removeItem('macro_plan')}
+  window._dashDay=null;window._femKg=null;if(window._S0)S=window._S0.slice();if(restoreProfile())saveProfile();femApply();if(hasProfile())showDashboard();else showPage('landing')}
+function femOn(){if(femCrOn())return true;if(!ownerDev())return false;var m=/[?&]femme(=([01]))?(&|$)/.exec(location.search);if(m)lsSet('macro_fem',m[2]==='0'?0:1);return lsGet('macro_fem')!==0}
 // profiles made in the women's funnel carry D.fem, so the calculation and wording follow the profile, not the device
 function femP(){return !!(D&&D.fem)}
 function goName(go){return femP()&&go==='Sèche'?'Perte de poids':go}
@@ -4087,7 +4103,7 @@ function femIntHtml(){var t=FEM_PAST_TXT[D.fpast]||FEM_PAST_TXT['C’est ma prem
   return '<div class="fint"><p><b>'+t[0]+'</b> '+t[1]+'</p><div class="fint-k"><b>0,5 à 1 %</b><span>de ton poids par semaine : le rythme visé par ton plan, pour une perte qui dure.</span></div></div>'+
   '<button class="btn btn-p btn-lg btn-full" style="margin-top:1.5rem" onclick="pick(\'fint\',1)">Continuer →</button>'}
 // landing: the first question is on the page; answering it starts the funnel at question 2
-function femStart(kg){window._femKg=kg||null;track('fem_start',{kg:kg||''});
+function femStart(kg){window._femKg=kg||null;track('fem_start',{kg:kg||''});if(femCrOn()){beginFunnel();return}
   if(isAdmin()){if(!window._demoRun&&!previewFree()){lsSet('macro_preview_bak',{p:localStorage.getItem('macro_profile'),pl:localStorage.getItem('macro_plan')});lsSet('macro_preview_free',1)}
     window._demoRun=true;lsDel('macro_plan');beginFunnel();return}
   if(Auth.user){if(restoreProfile()){showDashboard();return}if(sbOn()&&Auth.session){loadRemoteProfile(function(ok){if(ok)showDashboard();else beginFunnel()});return}}
@@ -4100,7 +4116,8 @@ function femLpFill(){var d=document.getElementById('fl-day'),ml=document.getElem
   ml.innerHTML=['Wrap poulet + crudités','Salade thon + riz froid + légumes','Riz + dinde + courgettes','Saumon + légumes vapeur + riz','Chili con carne maison','Cottage cheese + muesli + fruits'].map(find).filter(Boolean).map(function(m){
     return '<article class="fl-meal"><img src="'+src(m)+'" alt="'+escH(m.n)+'" loading="lazy" decoding="async"><div><h3>'+escH(m.n)+'</h3><div class="fl-tags"><span>'+m.cal+' kcal</span><span>'+m.p+' g de protéines</span><span class="e">≈ '+eu(m.price)+'</span>'+(m.t?'<span>'+m.t+' min</span>':'')+'</div></div></article>'}).join('');
   var pr=document.getElementById('fl-price');if(pr)pr.textContent='Tu vois ton plan gratuitement d’abord. Ensuite, le plan complet est à '+(promoOn()?'4,99 € par mois cette semaine':'9,99 € par mois')+', sans engagement : tu résilies quand tu veux.'}
-function femApply(){var on=femOn(),lp=document.getElementById('fem-lp');document.body.classList.toggle('fem',on);if(lp)lp.hidden=!on;if(!on)return;
+function femApply(){var on=femOn(),lp=document.getElementById('fem-lp'),cr=on&&femCrOn(),bar=document.getElementById('fem-cr-bar');document.body.classList.toggle('fem',on);document.body.classList.toggle('fem-cr',cr);if(lp)lp.hidden=!on;
+  if(cr&&!bar){bar=document.createElement('div');bar.id='fem-cr-bar';bar.innerHTML='<span>Aperçu version femmes</span><button type="button" onclick="femCrStop()">Revenir à l’actuelle</button>';document.body.appendChild(bar)}else if(!cr&&bar)bar.remove();if(!on)return;
   if(!document.getElementById('fem-font')){var l=document.createElement('link');l.id='fem-font';l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Gloock&display=swap';document.head.appendChild(l)}
   femLpFill();
   if(!window._femSt){window._femSt=1;window.addEventListener('scroll',function(){var st=document.getElementById('fl-sticky'),q=document.querySelector('.fl-quiz'),e=document.querySelector('.fl-end');if(!st||!q||!document.body.classList.contains('fem'))return;
