@@ -1904,10 +1904,247 @@ body.app-mode .tile.locked .tp,body.app-mode .tile.locked .tn{filter:blur(5px)}
 .sw-chip-0{padding:.5rem .9rem}
 .sw-again{margin-top:.75rem;background:none;border:0;color:var(--muted);font:600 .8125rem var(--font);cursor:pointer;align-self:center}
 @media(prefers-reduced-motion:reduce){.sw-card,.sw-card.gone,.sw-recap{transition:opacity .2s}.sw-nudge{animation:none}}
+
+/* ===== test (owner only): women's weight-loss version, body.fem (see femOn) ===== */
+.fem-lp[hidden]{display:none!important}
+body.fem{--fm-bg:#FFF6F3;--fm-bg2:#FBE8E2;--fm-card:#FFFFFF;--fm-ink:#2B1624;--fm-ink2:#553A4B;--fm-muted:#7A5F6F;--fm-line:rgba(43,22,36,.11);--fm-acc:#C8336A;--fm-acc-h:#A3244F;--fm-acc-soft:rgba(200,51,106,.09);--fm-on:#FFFFFF;--fm-peach:#FFCDB8;--fm-sage:#4F7D5E;--fm-plum:#2B1624;--fm-d:'Gloock',Georgia,'Times New Roman',serif}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) body.fem{--fm-bg:#1B1218;--fm-bg2:#251921;--fm-card:#2D1F28;--fm-ink:#F8ECF1;--fm-ink2:#DCC5D0;--fm-muted:#B59DAA;--fm-line:rgba(255,255,255,.1);--fm-acc:#F0739C;--fm-acc-h:#F79BB9;--fm-acc-soft:rgba(240,115,156,.13);--fm-on:#2B0F1C;--fm-peach:#5E3530;--fm-sage:#8FBF9D;--fm-plum:#120B10}}
+:root[data-theme="dark"] body.fem{--fm-bg:#1B1218;--fm-bg2:#251921;--fm-card:#2D1F28;--fm-ink:#F8ECF1;--fm-ink2:#DCC5D0;--fm-muted:#B59DAA;--fm-line:rgba(255,255,255,.1);--fm-acc:#F0739C;--fm-acc-h:#F79BB9;--fm-acc-soft:rgba(240,115,156,.13);--fm-on:#2B0F1C;--fm-peach:#5E3530;--fm-sage:#8FBF9D;--fm-plum:#120B10}
+body.fem,body.fem #onboarding,body.fem #result,body.fem #dashboard,body.fem #legal,body.fem .pw-modal,body.fem .downsell-overlay,body.fem .loading-overlay{
+  --bg:var(--fm-bg);--bg2:var(--fm-bg2);--surface:var(--fm-card);--ink:var(--fm-ink);--ink2:var(--fm-ink2);--muted:var(--fm-muted);--faint:var(--fm-muted);--border:var(--fm-line);
+  --accent:var(--fm-acc);--accent-hover:var(--fm-acc-h);--accent-light:var(--fm-peach);--accent-bg:var(--fm-acc-soft);--accent-text:var(--fm-acc-h);--accent-strong:var(--fm-acc-h);--on-accent:var(--fm-on);
+  --grad:linear-gradient(135deg,var(--fm-acc) 0%,var(--fm-acc-h) 100%);--grad-strong:linear-gradient(135deg,var(--fm-acc) 0%,var(--fm-acc-h) 100%);
+  --nav-bg:color-mix(in srgb,var(--fm-bg) 86%,transparent);--glass:color-mix(in srgb,var(--fm-card) 78%,transparent);--glass-border:var(--fm-line);--c-lunch:var(--fm-acc)}
+body.fem{background:var(--fm-bg);color:var(--fm-ink)}
+body.fem #landing>:not(.fem-lp){display:none!important}
+body.fem .ob-grid:has(#g-h){display:none}
+body.fem .ob-title .sw-em,body.fem .sw-em{color:var(--fm-acc)}
+.fem-lp{--fl-w:1080px;font-family:var(--font);color:var(--fm-ink);background:var(--fm-bg);padding-inline:16px;overflow-x:clip}
+.fem-lp *{box-sizing:border-box}
+.fl-in{max-width:var(--fl-w);margin-inline:auto}
+.fl-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:14px}
+.fl-logo{font-weight:800;font-size:1.15rem;letter-spacing:-.02em;color:var(--fm-ink)}.fl-logo i{color:var(--fm-acc);font-style:normal}
+.fl-nav-r{display:flex;align-items:center;gap:6px}
+.fl-link{background:none;border:0;color:var(--fm-ink2);font:600 .9rem var(--font);padding:10px 8px;cursor:pointer;border-radius:10px}
+.fl-link:hover{color:var(--fm-acc)}
+.fem-lp .theme-toggle{color:var(--fm-ink2)}
+.fl-btn{display:inline-flex;align-items:center;justify-content:center;gap:.4em;min-height:48px;padding:0 1.4rem;border-radius:999px;border:0;background:var(--fm-acc);color:var(--fm-on);font:700 1rem var(--font);cursor:pointer;transition:background .2s,transform .2s;text-decoration:none}
+.fl-btn:hover{background:var(--fm-acc-h)}.fl-btn:active{transform:scale(.98)}
+.fl-btn:focus-visible,.fl-opt:focus-visible,.fl-link:focus-visible,.fem-lp summary:focus-visible{outline:3px solid var(--fm-acc);outline-offset:3px}
+.fl-btn-s{min-height:40px;padding:0 1rem;font-size:.9rem}
+.fl-hero{display:grid;gap:28px;padding-block:18px 40px;align-items:center}
+.fl-eye{display:inline-flex;align-items:center;gap:.5em;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--fm-sage);margin:0 0 14px}
+.fl-eye:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--fm-sage)}
+.fl-h1{font-family:var(--fm-d);font-weight:400;font-size:clamp(2.35rem,8.4vw,4.1rem);line-height:1.02;letter-spacing:-.015em;margin:0 0 16px;text-wrap:balance}
+.fl-h1 em{font-style:normal;color:var(--fm-acc);background:linear-gradient(transparent 68%,var(--fm-peach) 68%,var(--fm-peach) 92%,transparent 92%)}
+.fl-sub{font-size:1.06rem;line-height:1.55;color:var(--fm-ink2);margin:0 0 22px;max-width:34em}
+.fl-quiz{background:var(--fm-card);border:1px solid var(--fm-line);border-radius:22px;padding:18px;box-shadow:0 18px 50px -24px rgba(43,22,36,.28)}
+.fl-q{font-weight:800;font-size:1.05rem;margin:0 0 12px}
+.fl-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fl-opt{min-height:56px;border-radius:14px;border:1.5px solid var(--fm-line);background:var(--fm-bg);color:var(--fm-ink);font:700 1rem var(--font);cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 14px;transition:border-color .15s,background .15s,transform .15s;text-align:left}
+.fl-opt:after{content:"→";color:var(--fm-acc);font-weight:800}
+.fl-opt:hover{border-color:var(--fm-acc);background:var(--fm-acc-soft)}.fl-opt:active{transform:scale(.98)}
+.fl-small{display:flex;flex-wrap:wrap;gap:6px 14px;margin:12px 0 0;font-size:.8rem;color:var(--fm-muted)}
+.fl-small span:before{content:"✓ ";color:var(--fm-sage);font-weight:800}
+.fl-vis{position:relative;max-width:460px;width:100%;margin-inline:auto}
+.fl-photo{border-radius:28px;overflow:hidden;aspect-ratio:4/5;background:var(--fm-bg2)}
+.fl-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.fl-day{position:absolute;left:-6px;right:24px;bottom:-22px;background:var(--fm-card);border:1px solid var(--fm-line);border-radius:20px;padding:12px 14px;box-shadow:0 20px 50px -20px rgba(43,22,36,.4)}
+.fl-day-h{display:flex;justify-content:space-between;align-items:baseline;font-size:.78rem;font-weight:700;color:var(--fm-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em}
+.fl-day-h b{color:var(--fm-ink);font-size:.95rem;text-transform:none;letter-spacing:0}
+.fl-m{display:grid;grid-template-columns:40px 1fr auto;gap:10px;align-items:center;padding:6px 0;border-top:1px solid var(--fm-line)}
+.fl-m:first-of-type{border-top:0}
+.fl-m img{width:40px;height:40px;border-radius:10px;object-fit:cover}
+.fl-m span{font-size:.86rem;font-weight:600;line-height:1.25;min-width:0}.fl-m small{display:block;color:var(--fm-muted);font-weight:600;font-size:.72rem}
+.fl-m b{font-variant-numeric:tabular-nums;font-size:.9rem}
+.fl-sec{padding-block:56px}
+.fl-lab{font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--fm-acc);margin:0 0 10px}
+.fl-h2{font-family:var(--fm-d);font-weight:400;font-size:clamp(1.9rem,5.6vw,2.8rem);line-height:1.08;margin:0 0 14px;text-wrap:balance;max-width:20em}
+.fl-p{font-size:1.02rem;line-height:1.6;color:var(--fm-ink2);max-width:36em;margin:0}
+.fl-pain{background:var(--fm-bg2);border-radius:28px;padding:32px 22px;display:grid;gap:22px}
+.fl-week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;max-width:440px}
+.fl-week div{border-radius:10px;padding:10px 0 8px;text-align:center;font-size:.72rem;font-weight:700;color:var(--fm-muted);background:var(--fm-card);border:1px solid var(--fm-line)}
+.fl-week i{display:block;margin:6px auto 0;width:10px;height:10px;border-radius:50%;background:var(--fm-sage)}
+.fl-week .ko i{background:transparent;border:2px solid var(--fm-acc)}
+.fl-week-c{font-size:.82rem;color:var(--fm-muted);margin:8px 0 0}
+.fl-steps{display:grid;gap:14px;margin-top:26px;counter-reset:fl}
+.fl-step{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start;background:var(--fm-card);border:1px solid var(--fm-line);border-radius:20px;padding:18px}
+.fl-step:before{counter-increment:fl;content:counter(fl);width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--fm-acc-soft);color:var(--fm-acc);font:400 1.35rem var(--fm-d)}
+.fl-step h3,.fl-sci h3{font-size:1.05rem;margin:2px 0 4px;font-weight:800}
+.fl-step p,.fl-sci p{margin:0;color:var(--fm-ink2);line-height:1.55;font-size:.95rem}
+.fl-scis{display:grid;gap:12px;margin-top:26px}
+.fl-sci{padding:20px 0 0;border-top:2px solid var(--fm-ink)}
+.fl-sci .k{font:400 2rem/1 var(--fm-d);color:var(--fm-acc);display:block;margin-bottom:10px}
+.fl-sci sup{font-size:.7em;color:var(--fm-muted)}
+.fl-refs{margin:22px 0 0;padding:0;list-style:none;font-size:.76rem;color:var(--fm-muted);display:grid;gap:4px;line-height:1.45}
+.fl-cmp-w{overflow-x:auto;margin-top:24px}
+.fl-cmp{width:100%;min-width:300px;border-collapse:separate;border-spacing:0;font-size:.95rem}
+.fl-cmp th,.fl-cmp td{padding:14px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--fm-line);line-height:1.45}
+.fl-cmp thead th{font-size:.78rem;text-transform:uppercase;letter-spacing:.07em;color:var(--fm-muted);border-bottom:2px solid var(--fm-ink)}
+.fl-cmp thead th:last-child{color:var(--fm-acc)}
+.fl-cmp td:first-child{color:var(--fm-muted)}
+.fl-cmp td:last-child{font-weight:700;background:var(--fm-acc-soft)}
+.fl-cmp tr:last-child td{border-bottom:0}
+.fl-meals{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin-top:24px;padding-bottom:6px;scrollbar-width:none}
+.fl-meals::-webkit-scrollbar{display:none}
+.fl-meal{flex:0 0 72%;max-width:290px;scroll-snap-align:start;background:var(--fm-card);border:1px solid var(--fm-line);border-radius:20px;overflow:hidden}
+.fl-meal img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.fl-meal div{padding:12px 14px 14px}
+.fl-meal h3{font-size:.98rem;margin:0 0 8px;font-weight:800;line-height:1.3}
+.fl-tags{display:flex;flex-wrap:wrap;gap:6px}
+.fl-tags span{font-size:.74rem;font-weight:700;padding:4px 8px;border-radius:999px;background:var(--fm-bg2);color:var(--fm-ink2);font-variant-numeric:tabular-nums}
+.fl-tags span.e{background:var(--fm-acc-soft);color:var(--fm-acc-h)}
+.fl-note{font-size:.8rem;color:var(--fm-muted);margin:12px 0 0}
+.fl-faq{margin-top:20px;border-top:1px solid var(--fm-line)}
+.fl-faq details{border-bottom:1px solid var(--fm-line)}
+.fl-faq summary{cursor:pointer;list-style:none;padding:18px 32px 18px 0;font-weight:700;font-size:1rem;position:relative}
+.fl-faq summary::-webkit-details-marker{display:none}
+.fl-faq summary:after{content:"+";position:absolute;right:4px;top:14px;font:400 1.5rem var(--fm-d);color:var(--fm-acc)}
+.fl-faq details[open] summary:after{content:"−"}
+.fl-faq p{margin:0 0 18px;color:var(--fm-ink2);line-height:1.6;max-width:40em}
+.fl-end{background:var(--fm-plum);color:#FBEFF4;border-radius:28px;padding:40px 22px;text-align:center;margin-block:20px 40px}
+.fl-end .fl-h2{color:#FBEFF4;margin-inline:auto}
+.fl-end p{color:#E2CBD6;margin:0 auto 22px;max-width:30em;line-height:1.55}
+.fl-end .fl-btn{background:#F0739C;color:#2B0F1C}.fl-end .fl-btn:hover{background:#F79BB9}
+.fl-ft{padding-block:10px 110px;font-size:.82rem;color:var(--fm-muted);display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center}
+.fl-ft a{color:var(--fm-muted)}
+.fl-sticky{position:fixed;left:0;right:0;bottom:0;z-index:60;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--fm-bg) 90%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--fm-line);transform:translateY(110%);transition:transform .3s}
+.fl-sticky.show{transform:none}
+.fl-sticky .fl-btn{width:100%;max-width:480px;margin-inline:auto;display:flex}
+.fint{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:20px;margin-top:8px}
+.fint p{margin:0 0 14px;line-height:1.6;color:var(--ink2);font-size:1rem}
+.fint-k{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;background:var(--accent-bg);border-radius:16px;padding:14px;margin-top:4px}
+.fint-k b{font:400 1.7rem/1 var(--fm-d);color:var(--accent)}
+.fint-k span{font-size:.88rem;line-height:1.45;color:var(--ink2)}
+@media(min-width:760px){
+  .fem-lp{padding-inline:28px}
+  .fl-hero{grid-template-columns:1.08fr .92fr;gap:56px;padding-block:36px 72px}
+  .fl-pain{grid-template-columns:1.1fr .9fr;align-items:center;padding:48px}
+  .fl-steps{grid-template-columns:repeat(3,1fr)}
+  .fl-scis{grid-template-columns:repeat(3,1fr);gap:28px}
+  .fl-meal{flex-basis:31%}
+  .fl-end{padding:64px 40px}
+  .fl-sticky{display:none}
+  .fl-ft{padding-bottom:40px}
+}
+@media(prefers-reduced-motion:reduce){.fl-btn,.fl-opt,.fl-sticky{transition:none}}
+body.fem .btn-p{box-shadow:0 6px 20px -6px rgba(200,51,106,.45)}
+body.fem .pw2-plan{border-color:var(--fm-line);background:var(--fm-card)}
+body.fem .pw2-plan.active{border-color:var(--fm-acc);background:var(--fm-acc-soft)}
+body.fem .pw2-plan:focus-visible{outline-color:var(--fm-acc)}
+body.fem .pw2-radio{border-color:var(--fm-line)}
+body.fem .pw2-plan.active .pw2-radio{border-color:var(--fm-acc)}
+body.fem .pw2-plan.active .pw2-radio::after{background:var(--fm-acc)}
+body.fem .pw2-promo{color:var(--fm-acc)}
+body.fem .pw2-tag{background:var(--fm-acc);color:var(--fm-on)}
+body.fem .pw3-card-cd{background:var(--fm-bg2);color:var(--fm-acc-h)}
 </style>
 
 <!-- LANDING -->
 <div id="landing" class="page active" role="main">
+<div class="fem-lp" id="fem-lp" hidden>
+<div class="fl-in">
+<header class="fl-nav"><span class="fl-logo">mangereco<i>.</i></span><div class="fl-nav-r"><button class="theme-toggle" onclick="toggleTheme()" aria-label="Changer de thème"><svg class="ti-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg><svg class="ti-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg></button><button class="fl-link" onclick="openAuth('login')">Se connecter</button></div></header>
+
+<section class="fl-hero" aria-labelledby="fl-t">
+  <div>
+    <p class="fl-eye">Plan repas minceur · courses comprises</p>
+    <h1 class="fl-h1" id="fl-t">Perds du poids en mangeant <em>de vrais repas.</em></h1>
+    <p class="fl-sub">Tes repas de la semaine, calculés pour toi, avec la liste de courses qui va avec. Sans régime strict, sans compter les calories, dès 25 € par semaine.</p>
+    <div class="fl-quiz" role="group" aria-labelledby="fl-q">
+      <p class="fl-q" id="fl-q">Combien de kilos veux-tu perdre ?</p>
+      <div class="fl-opts">
+        <button type="button" class="fl-opt" onclick="femStart('1 à 5 kg')">1 à 5 kg</button>
+        <button type="button" class="fl-opt" onclick="femStart('5 à 10 kg')">5 à 10 kg</button>
+        <button type="button" class="fl-opt" onclick="femStart('10 à 20 kg')">10 à 20 kg</button>
+        <button type="button" class="fl-opt" onclick="femStart('Plus de 20 kg')">Plus de 20 kg</button>
+      </div>
+      <p class="fl-small"><span>2 minutes</span><span>Aperçu gratuit</span><span>Sans carte bancaire</span></p>
+    </div>
+  </div>
+  <div class="fl-vis" aria-hidden="true">
+    <div class="fl-photo"><img src="/img/salmonveg-v2.jpg" alt="" decoding="async" fetchpriority="high"></div>
+    <div class="fl-day" id="fl-day"></div>
+  </div>
+</section>
+</div>
+
+<section class="fl-sec" aria-labelledby="fl-t2"><div class="fl-in fl-pain">
+  <div>
+    <p class="fl-lab">Le vrai problème</p>
+    <h2 class="fl-h2" id="fl-t2">Ce n’est pas ta volonté. C’est le jeudi soir.</h2>
+    <p class="fl-p">Le lundi, tu manges bien. Le jeudi, plus d’idées, le frigo est vide, et tu commandes. Ce qui fait tenir, ce n’est pas un régime plus dur : c’est de savoir à l’avance quoi manger et quoi acheter.</p>
+  </div>
+  <div>
+    <div class="fl-week"><div>L<i></i></div><div>M<i></i></div><div>M<i></i></div><div class="ko">J<i></i></div><div class="ko">V<i></i></div><div class="ko">S<i></i></div><div class="ko">D<i></i></div></div>
+    <p class="fl-week-c">Une semaine sans plan : ça tient jusqu’au mercredi.</p>
+  </div>
+</div></section>
+
+<section class="fl-sec" style="padding-top:0" aria-labelledby="fl-t3"><div class="fl-in">
+  <p class="fl-lab">Comment ça marche</p>
+  <h2 class="fl-h2" id="fl-t3">Prêt en 2 minutes, pour toute la semaine.</h2>
+  <div class="fl-steps">
+    <div class="fl-step"><div><h3>Tu réponds à quelques questions</h3><p>Ton objectif, ton quotidien, ton budget, ce que tu aimes et ce que tu ne manges pas.</p></div></div>
+    <div class="fl-step"><div><h3>Ton plan se calcule</h3><p>Tes calories et tes protéines, puis des repas qui rentrent dedans et dans ton budget.</p></div></div>
+    <div class="fl-step"><div><h3>Tu fais tes courses avec ta liste</h3><p>Triée par rayon, avec le total estimé dans ton magasin. Tu coches, tu cuisines, c’est tout.</p></div></div>
+  </div>
+</div></section>
+
+<section class="fl-sec" style="padding-top:0" aria-labelledby="fl-t4"><div class="fl-in">
+  <p class="fl-lab">Pourquoi ça marche</p>
+  <h2 class="fl-h2" id="fl-t4">Trois règles simples, appuyées par la recherche.</h2>
+  <div class="fl-scis">
+    <div class="fl-sci"><span class="k">−20 %</span><h3>Un déficit doux, pas une privation</h3><p>Ton plan vise environ 20 % de calories en moins que tes besoins, jamais sous 1 200 kcal. Le rythme visé : 0,5 à 1 % de ton poids par semaine, celui qu’on peut tenir.</p></div>
+    <div class="fl-sci"><span class="k">1,6 g</span><h3>Des protéines à chaque repas</h3><p>Ce sont elles qui calent le plus longtemps, et elles aident à garder tes muscles pendant que tu perds du poids.<sup>1</sup></p></div>
+    <div class="fl-sci"><span class="k">7 jours</span><h3>Tout est prévu à l’avance</h3><p>Chez plus de 40 000 adultes français, planifier ses repas allait avec une alimentation plus variée et moins de surpoids.<sup>2</sup></p></div>
+  </div>
+  <ol class="fl-refs"><li>1. Leidy et al., « The role of protein in weight loss and maintenance », American Journal of Clinical Nutrition, 2015.</li><li>2. Ducrot et al., étude NutriNet-Santé, International Journal of Behavioral Nutrition and Physical Activity, 2017. Une association, pas une preuve de cause à effet.</li></ol>
+</div></section>
+
+<section class="fl-sec" style="padding-top:0" aria-labelledby="fl-t5"><div class="fl-in">
+  <p class="fl-lab">La différence</p>
+  <h2 class="fl-h2" id="fl-t5">Rien à voir avec tes régimes d’avant.</h2>
+  <div class="fl-cmp-w"><table class="fl-cmp">
+    <thead><tr><th scope="col">Un régime classique</th><th scope="col">Ton plan mangereco</th></tr></thead>
+    <tbody>
+      <tr><td>Une liste d’aliments interdits</td><td>Des pâtes, des currys, des wraps, en portions adaptées</td></tr>
+      <tr><td>La faim en fin de journée</td><td>Des protéines et des légumes à chaque repas</td></tr>
+      <tr><td>Des produits minceur hors de prix</td><td>Tes courses habituelles, dès 25 € par semaine</td></tr>
+      <tr><td>Tu improvises chaque soir</td><td>Ta semaine et ta liste de courses déjà prêtes</td></tr>
+    </tbody>
+  </table></div>
+</div></section>
+
+<section class="fl-sec" style="padding-top:0" aria-labelledby="fl-t6"><div class="fl-in">
+  <p class="fl-lab">Dans ton assiette</p>
+  <h2 class="fl-h2" id="fl-t6">Des repas qui ressemblent à des repas.</h2>
+  <div class="fl-meals" id="fl-meals"></div>
+  <p class="fl-note">Portions de base. Ton plan ajuste les quantités à tes calories. Prix estimés, ils varient selon ton magasin.</p>
+</div></section>
+
+<section class="fl-sec" style="padding-top:0" aria-labelledby="fl-t7"><div class="fl-in">
+  <p class="fl-lab">Questions fréquentes</p>
+  <h2 class="fl-h2" id="fl-t7">Avant de commencer.</h2>
+  <div class="fl-faq">
+    <details><summary>Est-ce que je dois compter les calories ?</summary><p>Non. Le calcul est fait pour toi à partir de ton âge, ta taille, ton poids et ton quotidien (formule de Mifflin-St Jeor). Tu suis tes repas, les portions sont déjà ajustées.</p></details>
+    <details><summary>C’est un régime ?</summary><p>Non, c’est un plan repas. Aucun aliment n’est interdit : tu manges des plats normaux, en quantités adaptées à ton objectif. Ton plan ne descend jamais sous 1 200 kcal par jour.</p></details>
+    <details><summary>Je n’ai pas le temps de cuisiner.</summary><p>Tu choisis 1, 2 ou 3 repas par jour. Les recettes sont simples, la plupart se préparent en moins de 30 minutes, et la liste de courses est faite pour toi.</p></details>
+    <details><summary>Je suis végétarienne, ou j’ai des allergies.</summary><p>Tu l’indiques pendant les questions : ton plan et ta liste de courses ne contiendront que des repas compatibles. En cas d’allergie, vérifie toujours les étiquettes.</p></details>
+    <details><summary>Combien ça coûte ?</summary><p id="fl-price">Tu vois ton plan gratuitement d’abord. Le plan complet est sans engagement, tu résilies quand tu veux.</p></details>
+    <details><summary>Je suis enceinte, j’allaite, ou j’ai un trouble alimentaire.</summary><p>Dans ces cas, ne commence pas de perte de poids sans en parler à ton médecin ou ta sage-femme. mangereco ne remplace pas un avis médical.</p></details>
+  </div>
+</div></section>
+
+<div class="fl-in"><section class="fl-end" aria-labelledby="fl-t8">
+  <h2 class="fl-h2" id="fl-t8">Ta semaine peut être prête ce soir.</h2>
+  <p>Quelques questions, et tu sais quoi manger et quoi acheter jusqu’à dimanche.</p>
+  <button type="button" class="fl-btn" onclick="femStart()">Je crée mon plan →</button>
+</section></div>
+
+<footer class="fl-ft"><span>© 2026 mangereco.</span><a href="/mentions-legales">Mentions légales</a><a href="/cgu">CGU</a><a href="/confidentialite">Confidentialité</a><a href="mailto:arthurdemortiere15@gmail.com">Contact</a></footer>
+<div class="fl-sticky" id="fl-sticky"><button type="button" class="fl-btn" onclick="femStart()">Je crée mon plan →</button></div>
+</div>
 <div class="nav-w"><nav class="nav">
   <div class="nav-pill">
     <div class="logo" onclick="showPage('landing')">mangereco<span>.</span></div>
@@ -2230,8 +2467,8 @@ var D={},step=0,selGender=null;
 function fxIn(el,cls){if(!el||!labOn())return;['fx-fwd','fx-back','fx-fade'].forEach(function(c){el.classList.remove(c)});void el.offsetWidth;el.classList.add(cls)}
 // lighter landing (owner only for now): no pricing, no benefit grid, examples as a swipeable row
 function lpLite(){document.body.classList.toggle('lp-lite',true)}
-function showPage(id){lpLite();document.body.classList.toggle('mo',true);document.body.classList.toggle('fx',typeof labOn==='function'&&labOn());setTimeout(function(){if(typeof previewBar==='function')previewBar()},0);document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});var pg=document.getElementById(id);if(!pg.classList.contains('active'))fxIn(pg,'fx-fade');pg.classList.add('active');document.body.classList.toggle('app-mode',id==='dashboard'&&typeof appOn==='function'&&appOn());window.scrollTo(0,0);var stk=document.getElementById('sticky-cta');if(stk)stk.classList.remove('show');if(id==='landing')initReveal();if(id!=='admin')track('page_view',{page:id})}
-function beginFunnel(){fn2Steps();track('funnel_start');step=0;D={};obSyncSteps();window._mcCustom=0;window._obRc=null;window._obMeals=null;window._obBud=null;showPage('onboarding');renderStep()}
+function showPage(id){lpLite();if(typeof femApply==='function')femApply();document.body.classList.toggle('mo',true);document.body.classList.toggle('fx',typeof labOn==='function'&&labOn());setTimeout(function(){if(typeof previewBar==='function')previewBar()},0);document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active')});var pg=document.getElementById(id);if(!pg.classList.contains('active'))fxIn(pg,'fx-fade');pg.classList.add('active');document.body.classList.toggle('app-mode',id==='dashboard'&&typeof appOn==='function'&&appOn());window.scrollTo(0,0);var stk=document.getElementById('sticky-cta');if(stk)stk.classList.remove('show');if(id==='landing')initReveal();if(id!=='admin')track('page_view',{page:id})}
+function beginFunnel(){fn2Steps();track('funnel_start');step=0;D={};obSyncSteps();femSteps();window._mcCustom=0;window._obRc=null;window._obMeals=null;window._obBud=null;showPage('onboarding');renderStep()}
 function startOnboarding(){if(window._demoRun&&isAdmin()){beginFunnel();return}
 if(Auth.user){
 if(restoreProfile()){showDashboard();return}
@@ -2278,6 +2515,7 @@ if(step>0)h+='<button class="ob-back" onclick="pStep()"><svg viewBox="0 0 24 24"
 h+='<div class="ob-step">\u00C9TAPE '+(step+1)+' SUR '+S.length+'</div><div class="ob-title">'+s.title+'</div>';
 if(s.desc)h+='<div class="ob-desc">'+s.desc+'</div>';if(step>1&&s.type!=='swipe')h+=buildSummary();
 if(s.id==='goal'&&fn2On())h+=goal2Html(s);
+else if(s.type==='fint')h+=femIntHtml();
 else if(s.type==='wheels')h+=whHtml();
 else if(s.type==='cible')h+=cibleStepHtml();
 else if(s.id==='goal')h+=goalHtml(s);
@@ -2378,7 +2616,7 @@ var GOAL2=[['Sèche','Perdre du gras','Déficit léger, protéines hautes pour g
 function goal2Html(s){return '<div class="g2">'+GOAL2.map(function(o,i){
   return '<button type="button" class="g2-c g2-'+o[3]+(D.goal===o[0]?' on':'')+'" style="--d:'+(i*90)+'ms" onclick="goal2Pick(\''+o[0]+'\')"><img class="g2-img" src="/img/goal-'+o[3]+'.jpg" alt="" decoding="async" fetchpriority="high"><span class="g2-t"><b>'+o[1]+'</b><small>'+o[2]+'</small><span class="g2-chip">'+o[4]+'</span></span><span class="g2-ck" aria-hidden="true"></span></button>'}).join('')+'</div>'}
 function goal2Pick(v){D.goal=v;if(!cibleOn())delete D.cible;document.querySelectorAll('.g2-c').forEach(function(b){b.classList.toggle('on',b.getAttribute('onclick').indexOf("'"+v+"'")>-1)});setTimeout(function(){step++;renderStep()},260)}
-function cibleStepHtml(){var g=S.filter(function(x){return x.id==='goal'})[0],h=goalHtml(g),i=h.indexOf('<div id="ob-target">');return i>-1?h.slice(i):''}
+function cibleStepHtml(){var g=S.filter(function(x){return x.id==='goal'})[0]||{options:[]},h=goalHtml(g),i=h.indexOf('<div id="ob-target">');return i>-1?h.slice(i):''}
 var WH=[['age','Âge',14,80,22,'ans'],['taille','Taille',140,210,175,'cm'],['poids','Poids',40,160,75,'kg']],WH_H=48;
 function whHtml(){return '<div class="wh-wrap">'+WH.map(function(w){var v=+(D[w[0]]||w[4]),it='';for(var n=w[2];n<=w[3];n++)it+='<div class="wh-i" data-v="'+n+'">'+n+'</div>';
   return '<div class="wh-col"><span class="wh-l">'+w[1]+'</span><div class="wh-box"><div class="wh-sel" aria-hidden="true"></div><div class="wh" id="wh-'+w[0]+'" data-k="'+w[0]+'" data-min="'+w[2]+'" data-v="'+v+'" tabindex="0" role="spinbutton" aria-label="'+w[1]+'" aria-valuemin="'+w[2]+'" aria-valuemax="'+w[3]+'" aria-valuenow="'+v+'"><div class="wh-pad"></div>'+it+'<div class="wh-pad"></div></div></div><span class="wh-u">'+w[5]+'</span></div>'}).join('')+'</div>'+
@@ -2398,7 +2636,7 @@ function goalHtml(s){var h='<div class="ob-opts">';s.options.forEach(function(o)
 function goalPick(v){var had=cibleOn();D.goal=v;if(!cibleOn()){delete D.cible;step++;renderStep();return}renderStep();var t=document.getElementById('ob-target');if(t&&!had)setTimeout(function(){t.scrollIntoView({behavior:'smooth',block:'center'})},60)}
 function goalNext(){var r3=document.getElementById('r3');if(r3)D.cible=r3.value;step++;if(step<S.length)renderStep();else showResult()}
 function cibleOn(){return D.goal==='Prise de masse'||D.goal==='Sèche'}
-function cibleRange(p){return D.goal==='Sèche'?[Math.max(40,p-40),p-1]:[p+1,Math.min(180,p+25)]}
+function cibleRange(p){if(femP()&&D.goal==='Sèche'){var t=(+D.taille||165)/100,lo=Math.max(40,p-40,Math.ceil(18.5*t*t));return [Math.min(lo,p-1),p-1]}return D.goal==='Sèche'?[Math.max(40,p-40),p-1]:[p+1,Math.min(180,p+25)]}
 function cibleRate(p){return D.goal==='Sèche'?Math.max(0.3,Math.round(p*0.007*10)/10):0.3} // kg per week: cut ≈ 0.7 % of body weight, lean bulk 0.3
 function cibleInit(){var r3=document.getElementById('r3');if(!r3)return;
   var p=+D.poids||75,rg=cibleRange(p),c=+D.cible;r3.min=rg[0];r3.max=rg[1];r3.value=c>=rg[0]&&c<=rg[1]?c:(D.goal==='Sèche'?Math.max(rg[0],p-5):Math.min(rg[1],p+5));
@@ -2480,9 +2718,9 @@ function setMeals(v){document.getElementById('stepper-n').textContent=v;updPrese
 function updPresets(v){var btns=document.querySelectorAll('.ob-preset');btns.forEach(function(b){var bv=parseInt(b.getAttribute('data-v'));b.className=bv===v?'ob-preset active':'ob-preset'})}function finish(){if(!selGender)pickG('Homme');D.gender=selGender||'Homme';var _ra=document.getElementById('r-age');if(_ra)D.age=_ra.value;showResult()}
 function computeMacros(){
 var p=parseInt(D.poids)||75,t=parseInt(D.taille)||175,a=parseInt(D.age)||22,b=parseInt(D.budget)||30,m=parseInt(D.meals)||14,g=D.gender||'Homme',go=D.goal||'Prise de masse';
-var bmr=g==='Homme'?10*p+6.25*t-5*a+5:10*p+6.25*t-5*a-161;var tdee=Math.round(bmr*1.55);
+var bmr=g==='Homme'?10*p+6.25*t-5*a+5:10*p+6.25*t-5*a-161;var tdee=Math.round(bmr*(femP()&&FEM_AF[D.fact]||1.55));
 var cal=go==='Prise de masse'?Math.round(tdee*1.15):go==='Sèche'?Math.round(tdee*0.8):tdee;
-var protG=Math.round(p*1.8),protC=protG*4,fatC=Math.round(cal*0.25),fatG=Math.round(fatC/9),carbC=cal-protC-fatC,carbG=Math.round(carbC/4);
+if(femP()&&cal<1200)cal=1200;var protG=femP()?Math.round(1.6*Math.min(p,+D.cible||p)):Math.round(p*1.8),protC=protG*4,fatC=Math.round(cal*0.25),fatG=Math.round(fatC/9),carbC=cal-protC-fatC,carbG=Math.round(carbC/4);
 var protM=Math.round(protG/(m/7));
 return{p:p,t:t,a:a,b:b,m:m,g:g,go:go,cal:cal,protG:protG,protC:protC,fatC:fatC,fatG:fatG,carbC:carbC,carbG:carbG,protM:protM};
 }
@@ -2490,7 +2728,7 @@ function hasProfile(){return !!(D&&D.poids&&D.taille)}
 function todayIndex(){var d=new Date().getDay();return d===0?6:d-1}
 function editProfile(){closeMenu();track('edit_profile');step=0;showPage('onboarding');renderStep()}
 var PAGE_LABELS={landing:'Landing page',onboarding:'Funnel (questions)',result:'Écran macros',dashboard:'Tableau de bord',legal:'Pages légales'};
-var STEP_LABELS={gym:'Salle de sport',store:'Magasin',meals:'Repas par semaine',budget:'Budget',diet:'Régime',goal:'Objectif',body:'Taille et poids',profile:'Prénom, sexe, âge',avoid:'Allergies et aliments évités'};
+var STEP_LABELS={flose:'Femmes · kilos à perdre',fmot:'Femmes · motivation',fpast:'Femmes · ce qui a freiné',fint:'Femmes · bonne nouvelle',fact:'Femmes · activité',cible:'Poids cible',tastes:'Goûts (swipe)',gym:'Salle de sport',store:'Magasin',meals:'Repas par semaine',budget:'Budget',diet:'Régime',goal:'Objectif',body:'Taille et poids',profile:'Prénom, sexe, âge',avoid:'Allergies et aliments évités'};
 var EVENT_LABELS={mail_link:'Lien « voir ma liste » d’un mail',offer_link:'Lien d’offre d’un mail',lp_view:'Vue landing',funnel_start:'Début du funnel',step_view:'Étape du funnel vue',onboarding_done:'Funnel terminé',signup_gate_view:'Écran inscription vu',google_click:'Clic « Continuer avec Google »',signup:'Nouveau compte',signup_completed:'Inscription terminée',login:'Connexion',dashboard_view:'Tableau de bord vu',result_view:'Écran macros vu',paywall_view:'Paywall vu',plan_select:'Plan choisi',checkout_click:'Clic paiement',meal_open:'Recette ouverte',optin_blocked:'Inscription bloquée (case e-mail non cochée)',paywall_gate:'Recette bloquée (paywall)',magic_link_sent:'Lien e-mail envoyé',edit_profile:'Profil modifié',page_view:'Page vue',free_more_days:'Clic « Voir les autres jours » (page gratuite)',proof_view:'Fenêtre preuve vue (après la croix)',proof_view_A:'Preuve vue : A (Arthur, prise de masse)',proof_view_B:'Preuve vue : B (Benjamin, perte de poids)',proof_view_V:'Preuve vue : V (Valentine, perte de poids)',proof_cta:'Clic « Je passe le cap »',proof_cta_A:'« Je passe le cap » après A (Arthur)',proof_cta_B:'« Je passe le cap » après B (Benjamin)',proof_cta_V:'« Je passe le cap » après V (Valentine)',checkout_after_proof:'Clic paiement après la preuve',checkout_after_proof_A:'Clic paiement après A (Arthur)',checkout_after_proof_B:'Clic paiement après B (Benjamin)',checkout_after_proof_V:'Clic paiement après V (Valentine)',checkout_after_more:'Clic paiement après « autres jours »'};
 var STATUS_LABELS={signed_up:'Inscrit',paywall_view:'Paywall vu',checkout_started:'Paiement lancé'};
 function fmtN(n){return Number(n||0).toLocaleString('fr-FR')}
@@ -2750,7 +2988,7 @@ var CAT_LBL={'petit-dej':'Petit-déj','dejeuner':'Déjeuner','diner':'Dîner'};
 function firstName(){var n=String(D.prenom||(Auth.user?(Auth.user.name||''):'')).trim().split(/\s+/)[0]||'';return n?n.charAt(0).toUpperCase()+n.slice(1):''}
 function answerChips(){
 var mc=computeMacros(),c=[];
-c.push('🎯 '+mc.go);if(D.cible&&cibleOn()&&+D.cible!==+D.poids)c.push('⚖️ '+D.poids+' → '+D.cible+' kg');c.push('💰 '+mc.b+' € / semaine');
+c.push('🎯 '+goName(mc.go));if(D.cible&&cibleOn()&&+D.cible!==+D.poids)c.push('⚖️ '+D.poids+' → '+D.cible+' kg');c.push('💰 '+mc.b+' € / semaine');
 if(D.store)c.push('🛒 '+D.store);
 if(D.gym)c.push('🏋️ '+D.gym);
 c.push('🍽️ '+mc.m+' repas / semaine');
@@ -2995,7 +3233,7 @@ function trkDay(){return trkKey(new Date())}
 // recommended daily steps for the plan's goal: bulk = move for health without burning the surplus,
 // cut = extra burn for the deficit, maintain = where health benefits level off (lower from 60 y.o.)
 function trkStepRec(){var go=D.goal||'Prise de masse',old=(parseInt(D.age)||22)>=60,kg=trkKg();
-  if(go==='Sèche'){var v=old?9000:12000;return {v:v,why:'Pour ta sèche : ces pas brûlent environ <b>'+trkN(trkStepKcal(v))+' kcal</b> par jour, ce qui aide ton déficit sans fatiguer ta muscu.'}}
+  if(go==='Sèche'){var v=old?9000:12000;return {v:v,why:femP()?'Pour perdre du poids : ces pas brûlent environ <b>'+trkN(trkStepKcal(v))+' kcal</b> par jour, ce qui aide ton déficit en douceur.':'Pour ta sèche : ces pas brûlent environ <b>'+trkN(trkStepKcal(v))+' kcal</b> par jour, ce qui aide ton déficit sans fatiguer ta muscu.'}}
   if(go==='Prise de masse')return {v:old?7000:8000,why:'Pour ta prise de masse : assez pour ta santé et ta récup, sans brûler le surplus de calories qui te fait prendre du muscle.'};
   return {v:old?7500:10000,why:'Pour ton maintien : c\'est le niveau où les bienfaits pour la santé sont les plus nets.'}}
 function trkStepKcal(n){return n*trkKg()*0.0005} // ≈ 0.5 kcal per kg per 1 000 steps
@@ -3173,12 +3411,12 @@ function showProof(){if(document.getElementById('proof-modal'))return;
   var media='<img class="pf-img" src="/img/'+P.img+'.jpg" alt="'+P.alt+'"><p class="pf-cap">'+P.cap+'</p>';
   el.innerHTML='<div class="pw-sheet pf-sheet" role="dialog" aria-modal="true" aria-labelledby="pf-t"><button class="pw-x" onclick="closeProof()" aria-label="Fermer">&times;</button>'+media+
     '<h2 id="pf-t">'+P.h+'</h2><p class="pf-txt">'+P.t+' À toi de voir ce que tu veux vraiment pour toi.</p>'+
-    '<button type="button" class="btn btn-p btn-lg btn-full" onclick="proofGo()">'+(cpOn()?'Moi aussi, je reprends ma vie en main →':'Je passe le cap →')+'</button><button type="button" class="pf-skip" onclick="closeProof()">'+(cpOn()?'Non, je ne veux pas vraiment changer':'Plus tard')+'</button></div>';
+    '<button type="button" class="btn btn-p btn-lg btn-full" onclick="proofGo()">'+(femP()?'Moi aussi, je commence →':cpOn()?'Moi aussi, je reprends ma vie en main →':'Je passe le cap →')+'</button><button type="button" class="pf-skip" onclick="closeProof()">'+(femP()?'Plus tard':cpOn()?'Non, je ne veux pas vraiment changer':'Plus tard')+'</button></div>';
   el.addEventListener('click',function(e){if(e.target===el)closeProof()});document.body.appendChild(el);requestAnimationFrame(function(){el.classList.add('open')})}
 function proofGo(){track('proof_cta');track('proof_cta_'+window._proofWho);window._afterProof=true;closeProof();showPaywall()}
 function closeProof(){var el=document.getElementById('proof-modal');if(el)el.remove()}
 function freePage(mc,gen){var ti=todayIndex(),dates=weekDates(),nm=firstName(),r=shopReal(gen);
-  var goalTxt=mc.go==='Prise de masse'?'ta prise de masse':mc.go==='Sèche'?'ta sèche':'ton maintien';
+  var goalTxt=goTxt(mc.go);
   var h='<div class="app fp'+(testOn()?' fp-t':'')+'"><div class="app-top"><span class="app-brand">mangereco<i>.</i></span><span class="app-date">'+new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})+'</span></div>';
   h+='<h1 class="app-title">'+(nm?escH(nm)+', ton':'Ton')+' plan est prêt</h1><p class="fp-sub">Toute ta semaine, pensée pour '+goalTxt+' avec '+mc.b+' € chez '+escH(D.store||'ton magasin')+'.</p>';
   h+='<div class="fp-kpis"><div><b>'+mc.cal+'</b><span>kcal / jour</span></div><div><b>'+mc.protG+' g</b><span>protéines / jour</span></div><div><b>'+r.used.toFixed(0)+' €</b><span>par semaine</span></div></div>';
@@ -3232,7 +3470,7 @@ var mc=computeMacros();
 var gen=getWeekPlan(mc.cal,mc.protG,mc.carbG,mc.fatG,mc.m,mc.b);
 window._gen=gen;window._plan=gen.plan;
 var ti=todayIndex(),u=isUnlocked(),nm=firstName();
-var goalTxt=mc.go==='Prise de masse'?'ta prise de masse':mc.go==='Sèche'?'ta sèche':'ton maintien';
+var goalTxt=goTxt(mc.go);
 var h='<div class="dash-wrap">';
 h+='<div class="dash-greet"><h1>Bonjour'+(nm?' '+escH(nm):'')+'</h1><p>Voici ta semaine, pensée pour '+goalTxt+'.</p>'+answerChips()+'</div>';
 if(!u)h+='<div class="dash-lock"><div class="dl-ico">🔒</div><div class="dl-txt"><strong>Ton plan est prêt, il te manque la clé.</strong><span>Débloque toutes les recettes, les macros de chaque repas et la liste de courses.</span></div><button class="btn btn-p" onclick="showPaywall()">Débloquer</button></div>';
@@ -3347,7 +3585,7 @@ function buildSummary(){
 var labels={gym:'\u{1F3CB}️',store:'\u{1F6D2}',meals:'\u{1F372}',budget:'\u{1F4B0}',diet:'\u{1F957}',goal:'\u{1F3AF}',avoid:'\u{1F6AB}'};
 var suffixes={budget:'€/sem',meals:' repas/sem'};
 var sm='';
-for(var k in D){if(D[k]&&labels[k]&&!(Array.isArray(D[k])&&!D[k].length)){sm+='<span class="ob-chip">'+labels[k]+' '+(Array.isArray(D[k])?D[k].join(', '):D[k])+(suffixes[k]||'')+'</span>'}}
+for(var k in D){if(D[k]&&labels[k]&&!(Array.isArray(D[k])&&!D[k].length)){sm+='<span class="ob-chip">'+labels[k]+' '+(Array.isArray(D[k])?D[k].join(', '):k==='goal'?goName(D[k]):D[k])+(suffixes[k]||'')+'</span>'}}
 return sm?'<div class="ob-summary">'+sm+'</div>':'';
 }
 
@@ -3381,8 +3619,8 @@ var store=D.store||'ton magasin';
 var photoIds=['img-chicken','img-lentil','img-wrap','img-pasta','img-bolo','img-pancakes','img-omelette2','img-tunapasta','img-ricesalad2','img-quinoabowl','img-eggstoast','img-chili2meal','img-smoothie2meal'];
 var tiles=photoIds.concat(photoIds).map(function(id){var el=document.getElementById(id);return el?'<div class="ld-tile"><img class="ld-photo" src="'+el.src+'" alt=""></div>':''}).join('');
 var mcL=computeMacros();var dietTxt=(D.diet&&D.diet!=='Je mange de tout')?' '+String(D.diet).toLowerCase():'';
-var labels=['Calcul de tes besoins ('+mcL.go.toLowerCase()+', '+mcL.p+' kg)','Choix de repas'+dietTxt+' que tu vas aimer','Optimisation pour '+mcL.b+' € chez '+store];
-var capTxt=[mcL.go,mcL.b+' €',D.store,D.gym].filter(Boolean).join(' · ');
+var labels=['Calcul de tes besoins ('+goName(mcL.go).toLowerCase()+', '+mcL.p+' kg)','Choix de repas'+dietTxt+' que tu vas aimer','Optimisation pour '+mcL.b+' € chez '+store];
+var capTxt=[goName(mcL.go),mcL.b+' €',D.store,D.gym].filter(Boolean).join(' · ');
 var steps=labels.map(function(l,i){return '<div class="ld-step'+(i===0?' active':'')+'" id="ls-'+i+'"><span class="ls-icon"></span>'+l+'</div>'}).join('');
 var el=document.createElement('div');el.className='loading-overlay';el.id='loading-screen';
 el.innerHTML='<div class="ld-card"><div class="ld-brand">mangereco<span>.</span></div><div class="ld-prices"><div class="ld-track">'+tiles+'</div></div><div class="ld-cap">'+escH(capTxt)+'</div><h2>'+(nm?escH(nm)+', on':'On')+' compose ta semaine…</h2><div class="ld-steps">'+steps+'</div><div class="ld-bar"><div class="ld-fill" id="ld-fill"></div></div><div class="ld-pct" id="ld-pct">0 %</div></div>';
@@ -3448,13 +3686,13 @@ function cpOn(){return true}
 // test (owner only): button "Change ta vie", title with a comma
 function cp2On(){return true}
 function pw3Html(){var closed=founderClosed(),radio='<span class="pw2-radio" aria-hidden="true"></span>',chk='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
-  return '<div class="pw2 pw3" id="unlock-card"><div class="pw3-head">'+(cpOn()?'<h2 class="pw2-t">'+(cp2On()?'Reprends la main sur ton budget, ton physique':'Reprends la main sur ton budget et ton physique')+'</h2><p class="pw3-sub">Tu es à 1 bouton de changer ta vie</p>':'<h2 class="pw2-t">Débloque ta semaine</h2>')+pw3Mine()+'</div>'+
+  return '<div class="pw2 pw3" id="unlock-card"><div class="pw3-head">'+(femP()?'<h2 class="pw2-t">Ton plan minceur est prêt</h2><p class="pw3-sub">Tes repas, ta liste de courses et ton suivi, semaine après semaine</p>':cpOn()?'<h2 class="pw2-t">'+(cp2On()?'Reprends la main sur ton budget, ton physique':'Reprends la main sur ton budget et ton physique')+'</h2><p class="pw3-sub">Tu es à 1 bouton de changer ta vie</p>':'<h2 class="pw2-t">Débloque ta semaine</h2>')+pw3Mine()+'</div>'+
   (closed||cpOn()?'':'<div class="pw3-offer"><span class="pw3-dot" aria-hidden="true"></span>Offre de lancement · fin dans <b class="pw3-cd">'+pw3Cd()+'</b><span class="sr-only" id="founder-txt"></span></div>')+
   '<div class="pw2-plans" role="radiogroup" aria-label="Formule">'+
   (closed?'':'<button type="button" class="pw2-plan pw2-life active" id="plan-life" role="radio" aria-checked="true" onclick="selectPlan(\'life\')"><span class="pw2-tag">Le plus choisi</span>'+radio+'<span class="pw2-name">'+(cpOn()?'<b>Offre fondateur</b><small>À vie · paiement unique · −50 %</small><span class="pw3-card-cd" aria-label="Fin de l’offre dans">⏳ <b class="pw3-cd">'+pw3Cd()+'</b></span><span class="sr-only" id="founder-txt"></span>':'<b>À vie</b><small>Paiement unique · −50 %</small>')+'</span><span class="pw2-price">'+(p499On()?'<b>4,99 €</b><small>/mois la 1re année</small><small class="pw2-once">59,99 € une seule fois</small>':'<b>59,99 €</b><small>soit 4,99 €/mois la 1re année</small>')+'</span></button>')+
   '<button type="button" class="pw2-plan'+(closed?' active':'')+'" id="plan-month" role="radio" aria-checked="'+closed+'" onclick="selectPlan(\'month\')">'+(promoOn()?'<span class="pw2-tag">Offre de la semaine</span>':'')+radio+'<span class="pw2-name"><b>Mensuel</b><small>Sans engagement</small>'+(promoOn()?'<span class="pw3-card-cd" aria-label="Fin de l’offre dans">⏳ <b class="pw3-cd">'+pw3Cd()+'</b></span>':'')+'</span><span class="pw2-price">'+(promoOn()?'<s>9,99 €</s><b class="pw2-promo">4,99 €</b>':'<b>9,99 €</b>')+'<small>par mois</small></span>'+(puOn()&&!promoOn()?'<span class="pu-band"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg><span><b>Passe à 11,99 € le 16 novembre</b>Abonne-toi avant pour garder 9,99 €</span></span>':'')+'</button>'+
-  '</div>'+(coOn()?coCardHtml():'')+'<ul class="pw3-feats"><li>'+chk+'Recettes</li><li>'+chk+'Liste de courses</li><li>'+chk+'Suivi</li></ul>'+
-  '<div class="pw2-foot"><button class="btn btn-p btn-lg btn-full" id="paywall-cta-btn" onclick="startCheckout()">'+(cp2On()?'Change ta vie →':'Débloquer ma semaine →')+'</button><p class="pw2-price-sub" id="pw2-price-sub">'+pw2PriceSub(closed?'month':'life')+'</p><p class="pw2-legal pw2-legal-foot">En continuant, tu acceptes les <a href="/cgu" target="_blank" rel="noopener">CGU</a> et l’accès immédiat au contenu, sans droit de rétractation.</p></div></div>'}
+  '</div>'+(coOn()&&!femP()?coCardHtml():'')+'<ul class="pw3-feats"><li>'+chk+'Recettes</li><li>'+chk+'Liste de courses</li><li>'+chk+'Suivi</li></ul>'+
+  '<div class="pw2-foot"><button class="btn btn-p btn-lg btn-full" id="paywall-cta-btn" onclick="startCheckout()">'+(femP()?'Je commence mon plan →':cp2On()?'Change ta vie →':'Débloquer ma semaine →')+'</button><p class="pw2-price-sub" id="pw2-price-sub">'+pw2PriceSub(closed?'month':'life')+'</p><p class="pw2-legal pw2-legal-foot">En continuant, tu acceptes les <a href="/cgu" target="_blank" rel="noopener">CGU</a> et l’accès immédiat au contenu, sans droit de rétractation.</p></div></div>'}
 // compact plan recap for v3: "14 repas · ~23 € / sem. · 135 g de protéines / jour"
 function pw3Mine(){try{var mc=computeMacros(),g=window._gen,n=parseInt(D.meals)||0,r=g?shopReal(g):null,x=[];
   if(g&&g.plan){n=0;g.plan.forEach(function(d){n+=(d.meals||[]).length})}
@@ -3777,7 +4015,75 @@ function initAuth(){var _cr=/[?&]createur=([a-f0-9]{16,40})(&|$)/i.exec(location
     else if(sbOn()&&Auth.session)loadRemoteProfile(function(ok){if(ok){showDashboard();founderOffer()}});
   }
 }
-function lpOffers(){var c=document.getElementById('coaching');if(c)c.hidden=!coOn()}
+
+// ===== test (owner only): women's weight-loss version. ?femme=0 turns it off on this device, ?femme turns it back on =====
+function femOn(){if(!ownerDev())return false;var m=/[?&]femme(=([01]))?(&|$)/.exec(location.search);if(m)lsSet('macro_fem',m[2]==='0'?0:1);return lsGet('macro_fem')!==0}
+// profiles made in the women's funnel carry D.fem, so the calculation and wording follow the profile, not the device
+function femP(){return !!(D&&D.fem)}
+function goName(go){return femP()&&go==='Sèche'?'Perte de poids':go}
+function goTxt(go){return go==='Prise de masse'?'ta prise de masse':go==='Sèche'?(femP()?'ta perte de poids':'ta sèche'):'ton maintien'}
+var FEM_AF={'Assise la plupart du temps':1.2,'Je bouge un peu':1.375,'Sport 2 à 3 fois par semaine':1.55,'Très active':1.725};
+var FEM_IC={kg:function(t){return '<b style="font:400 1rem var(--fm-d);color:#fff">'+t+'</b>'},sv:function(d){return '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+d+'</svg>'}};
+var FEM_PAST_TXT={
+ 'Des régimes trop stricts':['Plus un régime interdit d’aliments, plus on finit par craquer.','Ton plan garde des plats que tu aimes, comme les pâtes, les currys ou les wraps, en portions adaptées.'],
+ 'La faim et les fringales':['La faim vient souvent de repas trop légers en protéines et en fibres.','Ton plan en met à chaque repas, et ton déficit reste léger : environ 20 % sous tes besoins.'],
+ 'Pas le temps de cuisiner':['Le manque de temps fait plus échouer que le manque de motivation.','Ton plan choisit des recettes simples, et ta liste de courses est déjà faite. Tu n’as plus qu’à cuisiner.'],
+ 'Manger sain coûte trop cher':['Manger équilibré n’a pas besoin de produits minceur.','Ton plan part de ton budget, dès 25 € par semaine, avec des produits de ton magasin habituel.'],
+ 'C’est ma première fois':['Tu pars sur de bonnes bases.','Pas de régime extrême : des repas normaux, des portions justes et un rythme que tu peux tenir.']};
+var FEM_STEPS=[
+{id:'flose',title:'Combien de kilos veux-tu <em class="sw-em">perdre</em> ?',desc:'Il n’y a pas de mauvaise réponse.',type:'list',options:[
+ {icon:FEM_IC.kg('−5'),bg:'#4F7D5E',label:'1 à 5 kg',sub:'Retrouver mes sensations'},{icon:FEM_IC.kg('−10'),bg:'#B8547A',label:'5 à 10 kg',sub:'Un vrai changement'},{icon:FEM_IC.kg('−20'),bg:'#C8336A',label:'10 à 20 kg',sub:'Un objectif sur plusieurs mois'},{icon:FEM_IC.kg('20+'),bg:'#7A2E52',label:'Plus de 20 kg',sub:'Pas à pas, sans pression'}]},
+{id:'fmot',title:'Qu’est-ce qui compte le plus <em class="sw-em">pour toi</em> ?',desc:'On s’en souviendra pour te garder motivée.',type:'list',options:[
+ {icon:FEM_IC.sv('<path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 00-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 000-7.8z"/>'),bg:'#C8336A',label:'Me sentir bien dans mes vêtements'},
+ {icon:FEM_IC.sv('<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>'),bg:'#D9822B',label:'Avoir plus d’énergie'},
+ {icon:FEM_IC.sv('<path d="M11 20A7 7 0 019.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10z"/><path d="M2 21c0-3 1.9-5.4 5.1-6"/>'),bg:'#4F7D5E',label:'Prendre soin de ma santé'},
+ {icon:FEM_IC.sv('<path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z"/>'),bg:'#7A2E52',label:'Être fière de moi'}]},
+{id:'fpast',title:'Qu’est-ce qui t’a <em class="sw-em">freinée</em> les autres fois ?',desc:'Ton plan sera pensé pour ça.',type:'list',options:[
+ {icon:FEM_IC.sv('<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/>'),bg:'#7A2E52',label:'Des régimes trop stricts'},
+ {icon:FEM_IC.sv('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),bg:'#D9822B',label:'La faim et les fringales'},
+ {icon:FEM_IC.sv('<path d="M5 3h14M5 21h14M7 3c0 5 10 5 10 9s-10 4-10 9M17 3c0 5-10 5-10 9"/>'),bg:'#B8547A',label:'Pas le temps de cuisiner'},
+ {icon:FEM_IC.sv('<path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M6 6L5 3H2"/>'),bg:'#4F7D5E',label:'Manger sain coûte trop cher'},
+ {icon:FEM_IC.sv('<path d="M12 3v18M3 12h18"/>'),bg:'#C8336A',label:'C’est ma première fois'}]},
+{id:'fint',title:'Bonne nouvelle',desc:'',type:'fint'},
+{id:'fact',title:'Ton quotidien ressemble <em class="sw-em">plutôt</em> à…',desc:'Pour estimer ce que tu dépenses dans la journée.',type:'list',options:[
+ {icon:FEM_IC.sv('<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>'),bg:'#7A2E52',label:'Assise la plupart du temps',sub:'Bureau, cours, voiture'},
+ {icon:FEM_IC.sv('<circle cx="13" cy="4" r="2"/><path d="M10 22l2-7-3-3 2-5 4 4h3M7 13l2-3"/>'),bg:'#B8547A',label:'Je bouge un peu',sub:'Marche, debout une partie de la journée'},
+ {icon:FEM_IC.sv('<path d="M6.5 6.5l11 11M4 9l5-5M15 20l5-5M2 11l2-2M20 13l2-2"/>'),bg:'#C8336A',label:'Sport 2 à 3 fois par semaine'},
+ {icon:FEM_IC.sv('<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>'),bg:'#4F7D5E',label:'Très active',sub:'Sport presque tous les jours ou métier physique'}]}];
+var FEM_TASTE={k:'prot',eb:'Qui cale bien',t:'Riches en protéines',s:'Pour tenir jusqu’au repas suivant',ph:'/img/chicken-v2.jpg'},_tasteProt=null;
+// swap the funnel to the women's version for this run (called by beginFunnel right after D is reset)
+function femSteps(){if(!window._S0)window._S0=S.slice();if(_tasteProt===null)_tasteProt=TASTES[1];
+  if(!femOn()){S=window._S0.slice();TASTES[1]=_tasteProt;WH[0][2]=14;return}
+  var by={};window._S0.forEach(function(x){by[x.id]=x});
+  D.fem=1;D.goal='Sèche';selGender='Femme';D.gender='Femme';TASTES[1]=FEM_TASTE;WH[0][2]=18;
+  S=FEM_STEPS.concat([by.store,by.meals,by.budget,by.diet,by.avoid,by.tastes,
+    {id:'body',title:'Ton âge, ta taille, <em class="sw-em">ton poids</em> ?',desc:'Fais défiler chaque roue. Ça reste entre nous.',type:'wheels'},
+    {id:'cible',title:'Ton poids <em class="sw-em">objectif</em> ?',desc:'On calcule une date réaliste, à un rythme doux.',type:'cible'},
+    by.profile]).filter(Boolean);
+  if(window._femKg){D.flose=window._femKg;step=1}window._femKg=null}
+function femIntHtml(){var t=FEM_PAST_TXT[D.fpast]||FEM_PAST_TXT['C’est ma première fois'];
+  return '<div class="fint"><p><b>'+t[0]+'</b> '+t[1]+'</p><div class="fint-k"><b>0,5 à 1 %</b><span>de ton poids par semaine : le rythme visé par ton plan, pour une perte qui dure.</span></div></div>'+
+  '<button class="btn btn-p btn-lg btn-full" style="margin-top:1.5rem" onclick="pick(\'fint\',1)">Continuer →</button>'}
+// landing: the first question is on the page; answering it starts the funnel at question 2
+function femStart(kg){window._femKg=kg||null;track('fem_start',{kg:kg||''});
+  if(isAdmin()){if(!window._demoRun&&!previewFree()){lsSet('macro_preview_bak',{p:localStorage.getItem('macro_profile'),pl:localStorage.getItem('macro_plan')});lsSet('macro_preview_free',1)}
+    window._demoRun=true;lsDel('macro_plan');beginFunnel();return}
+  if(Auth.user){if(restoreProfile()){showDashboard();return}if(sbOn()&&Auth.session){loadRemoteProfile(function(ok){if(ok)showDashboard();else beginFunnel()});return}}
+  beginFunnel()}
+function femLpFill(){var d=document.getElementById('fl-day'),ml=document.getElementById('fl-meals');if(!d||d.getAttribute('data-ok'))return;d.setAttribute('data-ok',1);
+  var find=function(n){return MEALS.filter(function(m){return m.n===n})[0]},src=function(m){var el=m&&m.img&&document.getElementById(m.img);return el?el.getAttribute('src'):''},eu=function(x){return x.toFixed(2).replace('.',',')+' €'};
+  var day=[['Petit-déj','Cottage cheese + muesli + fruits'],['Déjeuner','Wrap poulet + crudités'],['Dîner','Saumon + légumes vapeur + riz']].map(function(x){return [x[0],find(x[1])]}).filter(function(x){return x[1]}),tot=0;
+  d.innerHTML='<div class="fl-day-h">Aujourd’hui<b id="fl-day-t"></b></div>'+day.map(function(x){tot+=x[1].price;return '<div class="fl-m"><img src="'+src(x[1])+'" alt=""><span><small>'+x[0]+'</small>'+escH(x[1].n)+'</span><b>'+eu(x[1].price)+'</b></div>'}).join('');
+  document.getElementById('fl-day-t').textContent=eu(tot)+' la journée';
+  ml.innerHTML=['Wrap poulet + crudités','Salade thon + riz froid + légumes','Riz + dinde + courgettes','Saumon + légumes vapeur + riz','Chili con carne maison','Cottage cheese + muesli + fruits'].map(find).filter(Boolean).map(function(m){
+    return '<article class="fl-meal"><img src="'+src(m)+'" alt="'+escH(m.n)+'" loading="lazy" decoding="async"><div><h3>'+escH(m.n)+'</h3><div class="fl-tags"><span>'+m.cal+' kcal</span><span>'+m.p+' g de protéines</span><span class="e">≈ '+eu(m.price)+'</span>'+(m.t?'<span>'+m.t+' min</span>':'')+'</div></div></article>'}).join('');
+  var pr=document.getElementById('fl-price');if(pr)pr.textContent='Tu vois ton plan gratuitement d’abord. Ensuite, le plan complet est à '+(promoOn()?'4,99 € par mois cette semaine':'9,99 € par mois')+', sans engagement : tu résilies quand tu veux.'}
+function femApply(){var on=femOn(),lp=document.getElementById('fem-lp');document.body.classList.toggle('fem',on);if(lp)lp.hidden=!on;if(!on)return;
+  if(!document.getElementById('fem-font')){var l=document.createElement('link');l.id='fem-font';l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Gloock&display=swap';document.head.appendChild(l)}
+  femLpFill();
+  if(!window._femSt){window._femSt=1;window.addEventListener('scroll',function(){var st=document.getElementById('fl-sticky'),q=document.querySelector('.fl-quiz'),e=document.querySelector('.fl-end');if(!st||!q||!document.body.classList.contains('fem'))return;
+    var lp=document.getElementById('landing');var past=q.getBoundingClientRect().bottom<0,end=e&&e.getBoundingClientRect().top<innerHeight;st.classList.toggle('show',!!(lp&&lp.classList.contains('active')&&past&&!end))},{passive:true})}}
+function lpOffers(){femApply();var c=document.getElementById('coaching');if(c)c.hidden=!coOn()}
 function landingTestPrice(){lpOffers();var u=document.getElementById('pr-up');if(u)u.hidden=!puOn();var c=document.querySelector('#pr-founder .pr-price'),m=document.querySelector('#pr-founder .pr-sub-m');if(!c||!m)return;
   if(testOn()){c.innerHTML='4,99&nbsp;€ <small>/mois</small>';m.textContent='59,99 € payés une seule fois (sur 12 mois), puis plus rien à payer'}else{c.innerHTML='59,99&nbsp;€ <small>une seule fois</small>';m.textContent='soit moins de 5 € par mois la 1re année'}}
 function refreshNav(){if(typeof ownerDev==='function')ownerDev();landingTestPrice();lpLite();var hg=document.getElementById('hero-google');if(hg)hg.innerHTML=(sbOn()&&!viewUser())?'<button class="au-google hero-g" onclick="heroGoogle()">'+GSVG+'Continuer avec Google</button>':'';
@@ -3836,7 +4142,7 @@ function renderSignupGate(){
   showPage('onboarding');
   setSegs(S.length);document.getElementById('ob-pct').textContent='';document.getElementById('ob-counter').innerHTML='';
   var nm=firstName(),mc=computeMacros();
-  document.getElementById('ob-main').innerHTML='<div class="au-ico">🔓</div><h2 class="au-t">'+(nm?escH(nm)+', ton':'Ton')+' plan est prêt</h2><p class="au-s">'+mc.m+' repas par semaine pour '+(mc.go==='Prise de masse'?'ta prise de masse':mc.go==='Sèche'?'ta sèche':'ton maintien')+', avec '+mc.b+' € chez '+escH(D.store||'ton magasin')+'. Connecte-toi pour le voir, ça prend 10 secondes.</p>'+answerChips()+'<label class="au-optin" id="optin-lbl"><input type="checkbox" id="optin-cb" onchange="optinOk()"> J\'accepte de recevoir les e-mails de mangereco (mon plan, des rappels, des conseils et des offres). Facultatif, désinscription en 1 clic.</label><div class="au-err" id="optin-err" role="alert"></div><button class="au-google" onclick="gateGoogle()">'+GSVG+'Continuer avec Google</button>';
+  document.getElementById('ob-main').innerHTML='<div class="au-ico">🔓</div><h2 class="au-t">'+(nm?escH(nm)+', ton':'Ton')+' plan est prêt</h2><p class="au-s">'+mc.m+' repas par semaine pour '+goTxt(mc.go)+', avec '+mc.b+' € chez '+escH(D.store||'ton magasin')+'. Connecte-toi pour le voir, ça prend 10 secondes.</p>'+answerChips()+'<label class="au-optin" id="optin-lbl"><input type="checkbox" id="optin-cb" onchange="optinOk()"> J\'accepte de recevoir les e-mails de mangereco (mon plan, des rappels, des conseils et des offres). Facultatif, désinscription en 1 clic.</label><div class="au-err" id="optin-err" role="alert"></div><button class="au-google" onclick="gateGoogle()">'+GSVG+'Continuer avec Google</button>';
   if(window._demoRun&&isAdmin())document.getElementById('ob-main').insertAdjacentHTML('beforeend','<button class="au-toggle" onclick="window._demoRun=false;refreshNav();showResult()">Continuer sans reconnecter (mode vidéo) →</button>');window.scrollTo(0,0);track('signup_gate_view');
 }
 function optinEl(id){var m=document.getElementById('auth-modal');return (m&&m.querySelector('#'+id))||document.getElementById(id)}
