@@ -3922,7 +3922,7 @@ function crAdminLoad(){var el=document.getElementById('cr-admin');if(!el||!isAdm
       el.innerHTML='<ul class="cr-list">'+CREATORS_V.map(function(c){var k=crKey(c),r=ev['creator_restart_'+k],f=ev['creator_done_'+k];return '<li><div><b>'+escH(c[1])+'</b><small>'+escH(c[0])+'</small></div><span><b>'+fmtN(r?r.n:0)+'</b><small>recommencés</small></span><span><b>'+fmtN(f?f.n:0)+'</b><small>terminés</small></span></li>'}).join('')+'</ul>'+
         '<button type="button" class="trk-link" onclick="showAdmin(30)">Voir toutes les stats →</button>'}).catch(function(){el.innerHTML='<p class="trk-note">Connexion impossible, réessaie dans un instant.</p>'})})}
 function crAdminGo(){appGo('reglages');setTimeout(function(){var e=document.getElementById('cr-admin-h');if(e)e.scrollIntoView({behavior:'smooth',block:'start'})},120)}
-function crBtn(){return creatorV()?(femCrOk()?'<button type="button" class="cr-restart cr-fem" onclick="revOpen()">💰 Mes revenus</button>':'')+(femCrOk()?(femCrOn()?'<button type="button" class="cr-restart cr-fem" onclick="femCrStop()">↩️ Revenir à la version actuelle</button>':'<button type="button" class="cr-restart cr-fem" onclick="femCrStart()">👀 Voir la future version femmes</button>'):'')+'<button type="button" class="cr-restart" onclick="creatorRestart()">🎬 Recommencer le funnel</button>':''}
+function crBtn(){return creatorV()?(femCrOk()?'<button type="button" class="cr-restart cr-fem" onclick="revOpen()">💰 Mes revenus</button>':'')+(femCrOk()?(femCrOn()?'<button type="button" class="cr-restart cr-fem" onclick="femCrStop()">↩️ Revenir à la version actuelle</button>':'<button type="button" class="cr-restart cr-fem" onclick="femCrStart()">👀 Voir la version femmes</button>'):'')+'<button type="button" class="cr-restart" onclick="creatorRestart()">🎬 Recommencer le funnel</button>':''}
 function isGift(){return !!(Auth.user&&GIFT_ACCESS.indexOf(String(Auth.user.email||'').toLowerCase())>-1)}
 function isFull(){return !!(Auth.user&&FULL_ACCESS.indexOf(String(Auth.user.email||'').toLowerCase())>-1)}
 function isInsider(){return isAdmin()||isFull()}
@@ -4090,7 +4090,9 @@ function revRender(d){var b=document.getElementById('rev-body');if(!b)return;var
     (sales.length?'<p class="rev-note">'+[life?life+' à vie (59,99 €)':'',month?month+' en mensuel (9,99 €)':''].filter(Boolean).join(' · ')+'</p>':'')+
     '<h3 class="rev-h">Visiteurs par jour<small>'+today+' aujourd’hui</small></h3><div class="rev-chart">'+bars+'</div>'+
     '<p class="rev-note">Depuis le lancement de la version femmes. Ta part est calculée sur ce qu’il reste après les frais Whop : '+e2(REV_NET.month)+' pour un mensuel à 9,99 €, '+e2(REV_NET.life)+' pour un accès à vie à 59,99 €. Chaque cliente compte pour son premier paiement. Visiteurs : personnes différentes arrivées sur le site, 14 derniers jours.</p>'}
-function femOn(){if(femCrOn())return true;if(!ownerDev())return false;var m=/[?&]femme(=([01]))?(&|$)/.exec(location.search);if(m)lsSet('macro_fem',m[2]==='0'?0:1);return lsGet('macro_fem')!==0}
+function femOn(){if(femCrOn())return true;if(ownerDev()){var m=/[?&]femme(=([01]))?(&|$)/.exec(location.search);if(m)lsSet('macro_fem',m[2]==='0'?0:1);return lsGet('macro_fem')!==0}return !femOld()}
+// public since 6 Nov 2026: someone who already made a plan, or is signed in without a women's profile, keeps the current version
+function femOld(){if(femP())return false;var p=lsGet('macro_profile');if(p&&p.D&&p.D.poids)return !p.D.fem;return !!(typeof Auth!=='undefined'&&Auth.user)}
 // profiles made in the women's funnel carry D.fem, so the calculation and wording follow the profile, not the device
 function femP(){return !!(D&&D.fem)}
 function goName(go){return femP()&&go==='Sèche'?'Perte de poids':go}

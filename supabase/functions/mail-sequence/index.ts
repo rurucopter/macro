@@ -79,6 +79,7 @@ type V = {
   weekCost: number | null; plans: number; renouv: string; price: string; week: number;
   b5?: { subject: string; text: string; cta: string; to: string };
   dIdx?: number;
+  fem?: boolean; // profile made in the women's funnel
   co?: { prenom: string; phone: string; slot: string; email: string };
 };
 type Mail = { subject: string; html: string; text: string; tx: boolean };
@@ -127,13 +128,15 @@ function build(key: string, v: V, go: Go): Mail | null {
   const UL = (items: string[]) => `<ul style="line-height:1.55;padding-left:20px;margin:0 0 14px">${items.map((i) => `<li style="margin:0 0 4px">${i}</li>`).join("")}</ul>`;
   const small = (h: string) => `<p style="line-height:1.5;margin:0 0 14px;font-size:14px;color:#3d4a44">${h}</p>`;
   const sign = P("Arthur");
-  const F = v.places !== 0; // founder pack still open (-1: count unknown)
+  const W = !!v.fem; // women's version: 59,99 € for life is always on sale there, so no founder countdown and no rise
+  const F = !W && v.places !== 0; // founder pack still open (-1: count unknown)
   const dl = Math.max(1, Math.ceil((FOUNDER_END - Date.now()) / 864e5)); // days left
   const nb = dl <= 1 ? "Le pack fondateur s'arrête ce soir à 23h59" : "Le pack fondateur s'arrête samedi 7 novembre à 23h59";
   const left = P(`<b>${nb}</b>. Le 16 novembre, le mensuel passe à 11,99 €.`);
-  const up = Date.now() <= PRICE_UP ? " Ce prix passe à 11,99 € le 16 novembre." : "";
+  const m9 = W ? "9,99 €/mois, ou 59,99 € une seule fois pour un accès à vie" : "9,99 €/mois";
+  const up = !W && Date.now() <= PRICE_UP ? " Ce prix passe à 11,99 € le 16 novembre." : "";
   const PLAN = `/?${utm(key)}`, LISTE = `/?voir=liste&${utm(key)}`, FOND = `/?offre=fondateur&${utm(key)}`, OFFRE = `/?offre=plan&${utm(key)}`;
-  const PAY = `/?payer=${F ? "fondateur" : "mensuel"}&${utm(key)}`; // straight to the Whop checkout
+  const PAY = W ? OFFRE : `/?payer=${F ? "fondateur" : "mensuel"}&${utm(key)}`; // straight to the Whop checkout
   let subject = "", body = "", cta = "", to = PLAN, tx = false;
   switch (key) {
     // ---------- A: not paying
@@ -142,16 +145,16 @@ function build(key: string, v: V, go: Go): Mail | null {
       body = F ? P(`${hi} ton plan est prêt.`) +
                  P(`C'est le pack fondateur : <b>59,99 € payés une seule fois</b>, puis plus rien à payer. Pas d'abonnement, rien à résilier.`) +
                  left + sign
-               : P(`${hi} ton plan est prêt : tous tes repas et ta liste de courses avec les prix.`) + P("Débloque-le pour <b>9,99 €/mois</b>." + up) + sign;
+               : P(`${hi} ton plan est prêt : tous tes repas et ta liste de courses avec les prix.`) + P(`Débloque-le pour <b>${m9}</b>.` + up) + sign;
       cta = F ? "Débloquer mon plan à vie" : "Débloquer mon plan";
       to = PAY;
       break;
     case "A2":
       subject = `Ta liste de courses à ${esc(v.budget)} € est prête`;
-      body = P(hi) + P(`Ta liste pour la semaine est faite : les quantités, les prix, rangée par rayon. Objectif : ${goalTxt(v.goal)} sans dépasser ${esc(v.budget)} €.`) +
+      body = P(hi) + P(`Ta liste pour la semaine est faite : les quantités, les prix, rangée par rayon. Objectif : ${W ? "perdre du poids" : goalTxt(v.goal)} sans dépasser ${esc(v.budget)} €.`) +
         `<p style="margin:0 0 14px"><img src="${IMG_LIST}" width="480" alt="Aperçu flouté d'une liste de courses mangereco" style="width:100%;max-width:480px;height:auto;border-radius:14px;border:1px solid #e3e8e5;display:block"></p>` +
         (F ? P(`Débloque-la avec le <b>pack fondateur</b> : 59,99 € une fois, et elle se refait toute seule chaque samedi, à vie. ${nb}.`)
-           : P("Débloque-la pour 9,99 €/mois." + up)) + sign;
+           : P(`Débloque-la pour ${m9}.` + up)) + sign;
       cta = "Débloquer ma liste";
       to = F ? FOND : OFFRE;
       break;
@@ -159,7 +162,7 @@ function build(key: string, v: V, go: Go): Mail | null {
       subject = F ? (dl <= 1 ? "Dernier rappel : l'offre fondateur se termine ce soir" : dl === 2 ? "Dernier rappel : l'offre fondateur se termine demain" : `Dernier rappel : plus que ${dl} jours pour le pack fondateur`) : "Dernier rappel pour ton plan";
       body = P(hi) + P("C'est mon dernier rappel, promis.") +
         (F ? P(`Le pack fondateur, c'est <b>59,99 € une seule fois</b> pour ton plan repas et ta liste de courses, recalculés chaque semaine, à vie.`) + left
-           : P("Ton plan repas + ta liste de courses avec les prix, recalculés chaque semaine : 9,99 €/mois." + up)) +
+           : P(`Ton plan repas + ta liste de courses avec les prix, recalculés chaque semaine : ${m9}.` + up)) +
         P("Si quelque chose te bloque (le prix, un aliment, le plan), réponds à ce mail et dis-moi quoi.") + sign;
       cta = F ? "Devenir membre fondateur" : "Débloquer mon plan";
       to = F ? FOND : OFFRE;
@@ -173,7 +176,7 @@ function build(key: string, v: V, go: Go): Mail | null {
       body = P(hi) + P("Au menu des plans mangereco cette semaine :") +
         `<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:0 0 14px;width:100%">${picks.map(card).join("")}</table>` +
         P("Avec ton plan, tu as les quantités exactes pour tes macros et la liste de courses qui va avec.") +
-        (F ? small(`Pack fondateur : 59,99 € une fois, à vie. ${nb}.`) : small("9,99 €/mois." + up));
+        (F ? small(`Pack fondateur : 59,99 € une fois, à vie. ${nb}.`) : small(`${m9}.` + up));
       cta = "Voir mon plan de la semaine";
       to = F ? FOND : OFFRE;
       break;
@@ -322,7 +325,7 @@ Deno.serve(async (req) => {
     const first = String(D.prenom || "").trim().split(/\s+/)[0];
     return {
       prenom: first ? first.charAt(0).toUpperCase() + first.slice(1) : "", goal: D.goal || "", budget: String(D.budget || "25"),
-      meals: +D.meals || 0, places, weekCost: p && p.week_cost ? +p.week_cost : null, plans: 1, renouv: "", price: "", week: pt.week,
+      meals: +D.meals || 0, places, fem: D.fem == 1, weekCost: p && p.week_cost ? +p.week_cost : null, plans: 1, renouv: "", price: "", week: pt.week,
     };
   };
   const tracker = async (uid: string, claim: string): Promise<Go> => {
