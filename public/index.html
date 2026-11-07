@@ -1937,11 +1937,12 @@ body.fem .ob-title .sw-em,body.fem .sw-em{color:var(--fm-acc)}
 .fl-eye:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--fm-sage)}
 .fl-h1{font-family:var(--fm-d);font-weight:400;font-size:clamp(2.35rem,8.4vw,4.1rem);line-height:1.02;letter-spacing:-.015em;margin:0 0 16px;text-wrap:balance}
 .fl-h1 em{font-style:normal;color:var(--fm-acc);background:linear-gradient(transparent 68%,var(--fm-peach) 68%,var(--fm-peach) 92%,transparent 92%)}
-.fl-sub{font-size:1.06rem;line-height:1.55;color:var(--fm-ink2);margin:0 0 22px;max-width:34em}
-.fl-quiz{background:var(--fm-card);border:1px solid var(--fm-line);border-radius:22px;padding:18px;box-shadow:0 18px 50px -24px rgba(43,22,36,.28)}
-.fl-q{font-weight:800;font-size:1.05rem;margin:0 0 12px}
+.fl-sub{font-size:1.06rem;line-height:1.5;color:var(--fm-ink2);margin:0 0 20px;max-width:34em}
+.fl-quiz{background:var(--fm-card);border:2px solid var(--fm-acc);border-radius:24px;padding:20px 18px 16px;box-shadow:0 22px 50px -22px rgba(200,51,106,.45)}
+.fl-go{display:inline-block;margin:0 0 10px;padding:5px 11px;border-radius:999px;background:var(--fm-acc);color:var(--fm-on);font-size:.74rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.fl-q{font-family:var(--fm-d);font-weight:400;font-size:clamp(1.6rem,6.4vw,2rem);line-height:1.12;margin:0 0 16px;text-wrap:balance}
 .fl-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.fl-opt{min-height:56px;border-radius:14px;border:1.5px solid var(--fm-line);background:var(--fm-bg);color:var(--fm-ink);font:700 1rem var(--font);cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 14px;transition:border-color .15s,background .15s,transform .15s;text-align:left}
+.fl-opt{min-height:64px;border-radius:16px;border:2px solid color-mix(in srgb,var(--fm-acc) 30%,transparent);background:var(--fm-acc-soft);color:var(--fm-ink);font:800 1.05rem var(--font);white-space:nowrap;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 14px;transition:border-color .15s,background .15s,transform .15s;text-align:left}
 .fl-opt:after{content:"→";color:var(--fm-acc);font-weight:800}
 .fl-opt:hover{border-color:var(--fm-acc);background:var(--fm-acc-soft)}.fl-opt:active{transform:scale(.98)}
 .fl-small{display:flex;flex-wrap:wrap;gap:6px 14px;margin:12px 0 0;font-size:.8rem;color:var(--fm-muted)}
@@ -2087,10 +2088,10 @@ body.fem .pw3-card-cd{background:var(--fm-bg2);color:var(--fm-acc-h)}
 
 <section class="fl-hero" aria-labelledby="fl-t">
   <div>
-    <p class="fl-eye">Plan repas minceur · courses comprises</p>
     <h1 class="fl-h1" id="fl-t">Perds du poids en mangeant <em>de vrais repas.</em></h1>
-    <p class="fl-sub">Tes repas de la semaine, calculés pour toi, avec la liste de courses qui va avec. Sans régime strict, sans compter les calories, dès 25 € par semaine.</p>
+    <p class="fl-sub">Tes repas et ta liste de courses, dès 25 € par semaine.</p>
     <div class="fl-quiz" role="group" aria-labelledby="fl-q">
+      <p class="fl-go">Commence ici · 2 minutes</p>
       <p class="fl-q" id="fl-q">Combien de kilos veux-tu perdre ?</p>
       <div class="fl-opts">
         <button type="button" class="fl-opt" onclick="femStart('1 à 5 kg')">1 à 5 kg</button>
@@ -2098,7 +2099,7 @@ body.fem .pw3-card-cd{background:var(--fm-bg2);color:var(--fm-acc-h)}
         <button type="button" class="fl-opt" onclick="femStart('10 à 20 kg')">10 à 20 kg</button>
         <button type="button" class="fl-opt" onclick="femStart('Plus de 20 kg')">Plus de 20 kg</button>
       </div>
-      <p class="fl-small"><span>2 minutes</span><span>Aperçu gratuit</span><span>Sans carte bancaire</span></p>
+      <p class="fl-small"><span>Aperçu gratuit</span><span>Sans carte bancaire</span></p>
     </div>
   </div>
   <div class="fl-vis" aria-hidden="true">
@@ -2112,7 +2113,7 @@ body.fem .pw3-card-cd{background:var(--fm-bg2);color:var(--fm-acc-h)}
   <div>
     <p class="fl-lab">Le vrai problème</p>
     <h2 class="fl-h2" id="fl-t2">Ce n’est pas ta volonté. C’est le jeudi soir.</h2>
-    <p class="fl-p">Le lundi, tu manges bien. Le jeudi, plus d’idées, le frigo est vide, et tu commandes. Ce qui fait tenir, ce n’est pas un régime plus dur : c’est de savoir à l’avance quoi manger et quoi acheter.</p>
+    <p class="fl-p">Le lundi, tu manges bien. Le jeudi, frigo vide, tu commandes. Ce qui fait tenir : savoir à l’avance quoi manger.</p>
   </div>
   <div>
     <div class="fl-week"><div>L<i></i></div><div>M<i></i></div><div>M<i></i></div><div class="ko">J<i></i></div><div class="ko">V<i></i></div><div class="ko">S<i></i></div><div class="ko">D<i></i></div></div>
@@ -2124,9 +2125,9 @@ body.fem .pw3-card-cd{background:var(--fm-bg2);color:var(--fm-acc-h)}
   <p class="fl-lab">Comment ça marche</p>
   <h2 class="fl-h2" id="fl-t3">Prêt en 2 minutes, pour toute la semaine.</h2>
   <div class="fl-steps">
-    <div class="fl-step"><div><h3>Tu réponds à quelques questions</h3><p>Ton objectif, ton quotidien, ton budget, ce que tu aimes et ce que tu ne manges pas.</p></div></div>
-    <div class="fl-step"><div><h3>Ton plan se calcule</h3><p>Tes calories et tes protéines, puis des repas qui rentrent dedans et dans ton budget.</p></div></div>
-    <div class="fl-step"><div><h3>Tu fais tes courses avec ta liste</h3><p>Triée par rayon, avec le total estimé dans ton magasin. Tu coches, tu cuisines, c’est tout.</p></div></div>
+    <div class="fl-step"><div><h3>Tu réponds à quelques questions</h3><p>Objectif, budget, ce que tu aimes.</p></div></div>
+    <div class="fl-step"><div><h3>Ton plan se calcule</h3><p>Des repas adaptés à tes calories et à ton budget.</p></div></div>
+    <div class="fl-step"><div><h3>Tu fais tes courses avec ta liste</h3><p>Triée par rayon, avec le prix total.</p></div></div>
   </div>
 </div></section>
 
@@ -2134,9 +2135,9 @@ body.fem .pw3-card-cd{background:var(--fm-bg2);color:var(--fm-acc-h)}
   <p class="fl-lab">Pourquoi ça marche</p>
   <h2 class="fl-h2" id="fl-t4">Trois règles simples, appuyées par la recherche.</h2>
   <div class="fl-scis">
-    <div class="fl-sci"><span class="k">−20 %</span><h3>Un déficit doux, pas une privation</h3><p>Ton plan vise environ 20 % de calories en moins que tes besoins, jamais sous 1 200 kcal. Le rythme visé : 0,5 à 1 % de ton poids par semaine, celui qu’on peut tenir.</p></div>
-    <div class="fl-sci"><span class="k">1,6 g</span><h3>Des protéines à chaque repas</h3><p>Ce sont elles qui calent le plus longtemps, et elles aident à garder tes muscles pendant que tu perds du poids.<sup>1</sup></p></div>
-    <div class="fl-sci"><span class="k">7 jours</span><h3>Tout est prévu à l’avance</h3><p>Chez plus de 40 000 adultes français, planifier ses repas allait avec une alimentation plus variée et moins de surpoids.<sup>2</sup></p></div>
+    <div class="fl-sci"><span class="k">−20 %</span><h3>Un déficit doux, pas une privation</h3><p>Environ 20 % de calories en moins, jamais sous 1 200 kcal.</p></div>
+    <div class="fl-sci"><span class="k">1,6 g</span><h3>Des protéines à chaque repas</h3><p>Elles calent le plus longtemps et protègent tes muscles.<sup>1</sup></p></div>
+    <div class="fl-sci"><span class="k">7 jours</span><h3>Tout est prévu à l’avance</h3><p>Planifier ses repas va avec moins de surpoids (40 000 adultes suivis).<sup>2</sup></p></div>
   </div>
   <ol class="fl-refs"><li>1. Leidy et al., « The role of protein in weight loss and maintenance », American Journal of Clinical Nutrition, 2015.</li><li>2. Ducrot et al., étude NutriNet-Santé, International Journal of Behavioral Nutrition and Physical Activity, 2017. Une association, pas une preuve de cause à effet.</li></ol>
 </div></section>
@@ -2177,7 +2178,7 @@ body.fem .pw3-card-cd{background:var(--fm-bg2);color:var(--fm-acc-h)}
 
 <div class="fl-in"><section class="fl-end" aria-labelledby="fl-t8">
   <h2 class="fl-h2" id="fl-t8">Ta semaine peut être prête ce soir.</h2>
-  <p>Quelques questions, et tu sais quoi manger et quoi acheter jusqu’à dimanche.</p>
+  <p>2 minutes de questions, et ta semaine est prête.</p>
   <button type="button" class="fl-btn" onclick="femStart()">Je crée mon plan →</button>
 </section></div>
 
